@@ -10,6 +10,48 @@
  * governing permissions and limitations under the License.
  */
 
+@font-face {
+  font-family: FSMePro;
+  src: url(fonts/FSMePro.woff);
+  font-display: swap
+}
+
+@font-face {
+  font-family: GothamRounded;
+  src: url(fonts/GothamRnd-Medium_Web.woff);
+  font-weight: 400;
+  font-display: swap
+}
+
+@font-face {
+  font-family: GothamRounded;
+  src: url(fonts/GothamRnd-Book_Web.woff);
+  font-weight: 300;
+  font-display: swap
+}
+
+@font-face {
+  font-family: FSAlbertExtraBold;
+  src: url(fonts/fa-light-300.woff2);
+  font-display: swap
+}
+
+@font-face {
+  font-family: FSMeWebBold;
+  src: url(fonts/FSMePro.woff);
+  font-display: swap
+}
+
+@font-face {
+  font-family: fsmepro-normal-400-fallback;
+  size-adjust:100.871%;src: local("Arial")
+}
+
+@font-face {
+  font-family: gothamrounded-normal-400-fallback;
+  size-adjust:112.991%;src: local("Arial")
+}
+
  :root {
   /* colors */
   --link-color: #035fe6;
@@ -20,8 +62,8 @@
   --text-color: #000;
 
   /* fonts */
-  --body-font-family: 'helvetica neue', helvetica, ubuntu, roboto, noto, sans-serif;
-  --heading-font-family: var(--body-font-family);
+  --body-font-family: FSMePro,fsmepro-normal-400-fallback, Arial, Helvetica, sans-serif;
+  --heading-font-family: GothamRounded, gothamrounded-normal-400-fallback, Arial, Helvetica, sans-serif;
   --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
   /* body sizes */
