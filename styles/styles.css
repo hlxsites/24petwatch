@@ -62,6 +62,7 @@
   --overlay-background-color: #eee;
   --highlight-background-color: #ccc;
   --text-color: #000;
+   --heading-text-color: #333f48;
 
   /* fonts */
   --body-font-family: 'FSMePro', fsmepro-normal-400-fallback, arial, helvetica, sans-serif;
@@ -74,11 +75,11 @@
   --body-font-size-xs: 16px;
 
   /* heading sizes */
-  --heading-font-size-xxl: 48px;
-  --heading-font-size-xl: 40px;
-  --heading-font-size-l: 32px;
-  --heading-font-size-m: 24px;
-  --heading-font-size-s: 20px;
+  --heading-font-size-xxl: 1.75rem;
+  --heading-font-size-xl: 1.3125rem;
+  --heading-font-size-l: 1.125rem;
+  --heading-font-size-m: 1rem;
+  --heading-font-size-s: 0.9375rem;
   --heading-font-size-xs: 18px;
 
   /* nav height */
@@ -123,6 +124,7 @@ h4, h5, h6 {
   margin-top: 1em;
   margin-bottom: .5em;
   scroll-margin: calc(var(--nav-height) + 1em);
+  color: var(--heading-text-color);
 }
 
 h1 { font-size: var(--heading-font-size-xxl) }
