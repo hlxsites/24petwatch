@@ -18,6 +18,12 @@
 }
 
 @font-face {
+  font-family: FSMePro;
+  src: url('/fonts/FSMePro.woff');
+  font-display: swap
+}
+
+@font-face {
   font-family: 'fsmepro-normal-400-fallback';
   font-style: normal;
   font-weight: 400;
@@ -36,7 +42,7 @@
   ascent-override: 83.51%;
   descent-override: 20.88%;
   line-gap-override: 0.00%;
-  size-adjust: 114.96%;
+  size-adjust: 112.991%;
 }
 
 :root {
