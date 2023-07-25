@@ -340,6 +340,10 @@ main .section.light-gray-bg {
   background-color: #FBFBFB;
 }
 
+main .section.warm-white-bg {
+  background-color: #fff1d6;
+}
+
 main .section.highlight {
   font-family: var(--heading-font-family);
   text-align: center;
