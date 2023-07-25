@@ -20,7 +20,7 @@
 
 .cards > ul > li {
   background-color: var(--background-color);
-  box-shadow: 0 2px 6px 0 rgba(0,0,0,.22);
+  box-shadow: 0 2px 6px 0 rgb(0 0 0 / 22%);
 }
 
 .cards .cards-card-body {

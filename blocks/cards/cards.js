@@ -20,9 +20,7 @@ export default function decorate(block) {
       if (div.children.length === 1 && div.querySelector('picture')) {
         div.className = 'cards-card-image';
         wrapInAnchor(div, href);
-      }
-
-      else {
+      } else {
         div.className = 'cards-card-body';
         const h4 = li.querySelector('h4');
         wrapInAnchor(h4, href);
