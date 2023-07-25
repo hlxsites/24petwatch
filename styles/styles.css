@@ -54,7 +54,7 @@
   src: local(arial);
 }
 
- :root {
+:root {
   /* colors */
   --link-color: #035fe6;
   --link-hover-color: #136ff6;
@@ -62,7 +62,8 @@
   --overlay-background-color: #eee;
   --highlight-background-color: #ccc;
   --text-color: #000;
-   --heading-text-color: #333f48;
+  --text-secondary-color: #bf0d3e;
+  --heading-text-color: #333f48;
 
   /* fonts */
   --body-font-family: 'FSMePro', fsmepro-normal-400-fallback, arial, helvetica, sans-serif;

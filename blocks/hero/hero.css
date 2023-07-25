@@ -1,39 +1,102 @@
 /* block specific CSS goes here */
 
+:root {
+  --heading-font-size-xxl: 2.1875rem;
+  --heading-font-size-m: 18px;
+}
+
 main .hero-container > div {
   max-width: unset;
 }
-  
+
 main .hero-container {
   padding: 0;
 }
-  
+
 main .hero {
   position: relative;
-  padding: 32px;
+  padding: 32px .9375rem;
   min-height: 300px;
+}
+
+main .hero > div > div:first-child {
+  text-align: center;
+  -webkit-font-smoothing: antialiased;
+  padding-left: .9375rem;
+  padding-right: .9375rem;
+}
+
+main .hero > div > div:last-child {
+  margin-left: 8.33%;
+  width: 83.33%;
 }
 
 main .hero h1 {
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  color: white;
+  margin: 1.125rem auto;
+  text-align: left;
+  display: inline-block;
+  font-weight: 400;
 }
 
-main .hero picture {
-  position: absolute;
-  z-index: -1;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  object-fit: cover;
-  box-sizing: border-box;
+main .hero h1 em {
+  color: var(--text-secondary-color);
+  font-style: normal;
+}
+
+main .hero h4 {
+  font-weight: 100;
+  margin-top: 0;
+}
+
+main .hero .button-container {
+  margin-bottom: 0;
 }
 
 main .hero img {
-  object-fit: cover;
+  object-fit: fill;
   width: 100%;
   height: 100%;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --heading-font-size-xxl: 3rem;
+    --heading-font-size-m: 1.625rem;
+  }
+
+  main .hero {
+    max-width: 73.123rem;
+    margin: 0 auto;
+  }
+
+  main .hero > div {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 0;
+    padding-left: .9375rem;
+    padding-right: .9375rem;
+  }
+
+  main .hero h1 {
+    display: block;
+  }
+
+  main .hero h4 {
+    font-weight: 400;
+    text-align: left;
+  }
+
+  main .hero > div > div:first-child {
+    padding-top: 12%;
+  }
+
+  main .hero > div > div:last-child {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  main .hero img {
+    object-fit: contain;
+  }
 }
