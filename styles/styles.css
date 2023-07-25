@@ -308,7 +308,7 @@ main img {
 }
 
 main .section {
-  padding: 3.075rem 1.875rem;
+  padding: 1.875rem;
 }
 
 @media (min-width: 900px) {
@@ -324,9 +324,19 @@ main .section.teal-bg {
   color: white;
 }
 
+main .section.gray-bg {
+  background-color: #e7e9ea;
+}
+
+main .section.light-gray-bg {
+  background-color: #FBFBFB;
+}
+
 main .section.highlight {
   font-family: var(--heading-font-family);
   text-align: center;
+  padding-top: 3.075rem;
+  padding-bottom: 3.075rem;
 }
 
 main .section.highlight p {
