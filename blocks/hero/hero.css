@@ -44,9 +44,11 @@ main .hero h1 em {
   font-style: normal;
 }
 
-main .hero h4 {
+main .hero p:not([class*="button"]) {
   font-weight: 100;
   margin-top: 0;
+  font-family: var(--heading-font-family);
+  font-size: var(--heading-font-size-m)
 }
 
 main .hero .button-container {
@@ -82,13 +84,13 @@ main .hero img {
     display: block;
   }
 
-  main .hero h4 {
+  main .hero p:not([class*="button"]) {
     font-weight: 400;
-    text-align: left;
   }
 
   main .hero > div > div:first-child {
     padding-top: 12%;
+    text-align: left;
   }
 
   main .hero > div > div:last-child {
