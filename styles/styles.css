@@ -64,6 +64,10 @@
   --text-color: #333f48;
   --text-secondary-color: #bf0d3e;
   --heading-text-color: #333f48;
+  --button-primary-color: #bf0d3e;
+  --button-secondary-color: #007680;
+  --button-primary-hover-color: #e8104d;
+  --button-secondary-hover-color: #33bfcc;
 
   /* fonts */
   --body-font-family: 'FSMePro', fsmepro-normal-400-fallback, arial, helvetica, sans-serif;
@@ -221,26 +225,32 @@ a:hover {
 /* buttons */
 a.button:any-link, button {
   font-family: var(--body-font-family);
-  display: inline-block;
+  display: block;
   box-sizing: border-box;
   text-decoration: none;
   border: 2px solid transparent;
-  padding: 5px 30px;
+  padding: .875rem 1.625rem;
   text-align: center;
   font-style: normal;
   font-weight: 600;
   cursor: pointer;
   color: var(--background-color);
-  background-color: var(--link-color);
+  background-color: var(--button-primary-color);
   margin: 16px 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-radius: 30px;
+  border-radius: .625rem;
+}
+
+@media (min-width: 768px) {
+  a.button:any-link, button {
+    display: inline-block;
+  }
 }
 
 a.button:hover, a.button:focus, button:hover, button:focus  {
-  background-color: var(--link-hover-color);
+  background-color: var(--button-primary-hover-color);
   cursor: pointer;
 }
 
@@ -250,9 +260,11 @@ button:disabled, button:disabled:hover {
 }
 
 a.button.secondary, button.secondary {
-  background-color: unset;
-  border: 2px solid currentcolor;
-  color: var(--text-color)
+  background-color: var(--button-secondary-color);
+}
+
+a.button.secondary:hover, button.secondary:focus {
+  background-color: var(--button-secondary-hover-color);
 }
 
 main input {
