@@ -1,5 +1,11 @@
 /* below the fold CSS goes here */
 @font-face {
+    font-family: FSMePro;
+    src: url('/fonts/FSMePro.woff');
+    font-display: swap
+}
+
+@font-face {
     font-family: GothamRounded;
     src: url('/fonts/GothamRnd-Book_Web.woff');
     font-weight: 300;

@@ -18,21 +18,25 @@
 }
 
 @font-face {
-  font-family: FSMePro;
-  src: url('/fonts/FSMePro.woff');
-  font-display: swap
-}
-
-@font-face {
   font-family: 'fsmepro-normal-400-fallback';
-  size-adjust: 100.871%;
-  src: local(arial);
+  font-style: normal;
+  font-weight: 400;
+  src: local('Arial');
+  ascent-override: 89.90%;
+  descent-override: 26.76%;
+  line-gap-override: 0.00%;
+  size-adjust: 102.01%;
 }
 
 @font-face {
   font-family: 'gothamrounded-normal-400-fallback';
-  size-adjust: 112.991%;
-  src: local(arial);
+  font-style: normal;
+  font-weight: 400;
+  src: local('Arial');
+  ascent-override: 83.51%;
+  descent-override: 20.88%;
+  line-gap-override: 0.00%;
+  size-adjust: 114.96%;
 }
 
 :root {
