@@ -51,10 +51,18 @@ export function getAlloyInitScript() {
  * @returns {{edgeConfigId: string, orgId: string}}
  */
 function getDatastreamConfiguration() {
-  // Pet Insurance Agency Ltd
+  const { hostname } = window.location;
+  let edgeConfigId = '17e9e2de-4a10-40e0-8ea8-3cb636776970';
+  if (hostname?.endsWith('petwatch.com')) {
+    edgeConfigId = '3843429b-2a2d-43ce-9227-6aa732ddf7da';
+  }
+  if (hostname?.endsWith('hlx.page') || hostname?.endsWith('hlx.live')) {
+    edgeConfigId = '1b0ec0ce-b541-4d0f-a78f-fb2a6ca8713c';
+  }
+
   return {
-    edgeConfigId: '17e9e2de-4a10-40e0-8ea8-3cb636776970',
-    orgId: '53E06E76604280A10A495E65@AdobeOrg',
+    edgeConfigId,
+    orgId: '53E06E76604280A10A495E65@AdobeOrg', // Pet Insurance Agency Ltd
   };
 }
 
@@ -66,6 +74,7 @@ function getDatastreamConfiguration() {
 function enhanceAnalyticsEvent(options) {
   const experiment = getExperimentDetails();
   options.xdm[CUSTOM_SCHEMA_NAMESPACE] = {
+    server: 'Franklin',
     ...options.xdm[CUSTOM_SCHEMA_NAMESPACE],
     ...(experiment ? { experiment } : {}), // add experiment details, if existing, to all events
   };
