@@ -74,10 +74,12 @@ function getDatastreamConfiguration() {
 function enhanceAnalyticsEvent(options) {
   const experiment = getExperimentDetails();
   options.xdm[CUSTOM_SCHEMA_NAMESPACE] = {
-    server: 'Franklin',
     ...options.xdm[CUSTOM_SCHEMA_NAMESPACE],
     ...(experiment ? { experiment } : {}), // add experiment details, if existing, to all events
   };
+  if(options.xdm.web && options.xdm.web.webPageDetails) {
+    options.xdm.web.webPageDetails.server = 'Franklin';
+  }
   console.debug(`enhanceAnalyticsEvent complete: ${JSON.stringify(options)}`);
 }
 
