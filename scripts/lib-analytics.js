@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* global alloy */
 
 /**
  * Customer's XDM schema namespace
@@ -113,7 +114,6 @@ export function createInlineScript(document, element, innerHTML, type) {
  * @returns {Promise<*>}
  */
 export async function analyticsSetConsent(approved) {
-  // eslint-disable-next-line no-undef
   return alloy('setConsent', {
     consent: [{
       standard: 'Adobe',
@@ -132,7 +132,6 @@ export async function analyticsSetConsent(approved) {
  * @returns {Promise<*>}
  */
 export async function analyticsTrackPageViews(document, additionalXdmFields = {}) {
-  // eslint-disable-next-line no-undef
   return alloy('sendEvent', {
     documentUnloading: true,
     xdm: {
@@ -158,18 +157,13 @@ export async function analyticsTrackPageViews(document, additionalXdmFields = {}
  * @returns {Promise<void>}
  */
 export async function setupAnalyticsTrackingWithAlloy(document) {
-  console.log('analytics setup started');
-  const pageView = analyticsTrackPageViews(document); // track page view early
-
   await import('./alloy.min.js');
 
   await alloy('configure', getAlloyConfiguration(document));
 
   // Custom logic can be inserted here in order to support early tracking before alloy library
   // loads, for e.g. for page views
-  analyticsTrackPageViews(document)
-
-  console.log('analytics setup completed');
+  analyticsTrackPageViews(document);
 }
 
 /**
@@ -181,7 +175,6 @@ export async function setupAnalyticsTrackingWithAlloy(document) {
  * @returns {Promise<*>}
  */
 export async function analyticsTrackLinkClicks(element, linkType = 'other', additionalXdmFields = {}) {
-  // eslint-disable-next-line no-undef
   return alloy('sendEvent', {
     documentUnloading: true,
     xdm: {
