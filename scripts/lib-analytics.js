@@ -50,7 +50,7 @@ export function getAlloyInitScript() {
  * @returns {{edgeConfigId: string, orgId: string}}
  */
 function getDatastreamConfiguration() {
-  // Pet something
+  // Pet Insurance Agency Ltd
   return {
     edgeConfigId: '17e9e2de-4a10-40e0-8ea8-3cb636776970',
     orgId: '53E06E76604280A10A495E65@AdobeOrg',
