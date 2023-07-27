@@ -17,7 +17,29 @@ export default async function decorate(block) {
 
     // decorate footer DOM
     const footer = document.createElement('div');
-    footer.innerHTML = html;
+    footer.classList.add('footer-section-wrapper');
+
+    // transform given html
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+
+    const container = doc.querySelectorAll('div');
+    container.forEach((div) => {
+      div.classList.add('footer-container');
+      const headings = div.querySelectorAll('h1, h2, h3');
+      headings.forEach((h2) => {
+        const headingSection = document.createElement('div');
+        headingSection.classList.add('footer-heading-section');
+        h2.classList.add('footer-heading');
+
+        const nextSibling = h2.nextElementSibling;
+        headingSection.appendChild(h2);
+        headingSection.appendChild(nextSibling);
+        footer.appendChild(headingSection);
+      });
+    });
+
+    // footer.innerHTML = html;
 
     decorateIcons(footer);
     block.append(footer);

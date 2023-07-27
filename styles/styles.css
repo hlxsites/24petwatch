@@ -59,6 +59,9 @@
   --button-secondary-color: #007680;
   --button-primary-hover-color: #e8104d;
   --button-secondary-hover-color: #33bfcc;
+  --footer-background-color: #333f48;
+  --footer-list-background-color: #e7e9ea;
+  --footer-font-color: #fff;
 
   /* fonts */
   --body-font-family: 'FSMePro', fsmepro-normal-400-fallback, arial, helvetica, sans-serif;
