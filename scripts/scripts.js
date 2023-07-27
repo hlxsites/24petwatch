@@ -14,7 +14,6 @@ import {
 } from './lib-franklin.js';
 
 import {
-  analyticsSetConsent,
   createInlineScript,
   getAlloyInitScript,
   setupAnalyticsTrackingWithAlloy,
@@ -101,7 +100,6 @@ async function loadLazy(doc) {
   sampleRUM.observe(main.querySelectorAll('picture > img'));
 
   await setupAnalyticsTrackingWithAlloy(document);
-  await analyticsSetConsent(true);
 }
 
 /**
