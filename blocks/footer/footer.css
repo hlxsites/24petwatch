@@ -28,9 +28,24 @@ footer .footer p {
   margin: 0;
 }
 
-footer .footer p:has(picture) {
+footer .footer .footer-logo  {
   display: flex;
+  flex-direction: column;
   justify-content: center;
+  align-items: center;
+  gap: 20px;
+}
+
+footer .footer .footer-logo p {
+  max-width: 170px;
+  max-height: 88px;
+}
+
+footer .footer .footer-logo img {
+  max-width: 100%;
+  max-height: 88px;
+  height: auto;
+  width: auto;
 }
 
 footer .footer ul {
@@ -97,7 +112,7 @@ footer .footer .footer-heading-section:has(h3) ul {
     padding: 65px 90pt;
   }
 
-  footer .footer .footer-section-wrapper {
+  footer .footer .footer-heading-wrapper {
     display: flex;
     gap: 16px;
   }
@@ -122,6 +137,10 @@ footer .footer .footer-heading-section:has(h3) ul {
 
   footer .footer .footer-heading-section:has(h3)::after {
     display: none;
+  }
+
+  footer .footer .footer-logo  {
+    flex-direction: row;
   }
 }
 

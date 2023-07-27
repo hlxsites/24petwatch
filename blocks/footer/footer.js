@@ -27,19 +27,32 @@ export default async function decorate(block) {
     container.forEach((div) => {
       div.classList.add('footer-container');
       const headings = div.querySelectorAll('h1, h2, h3');
-      headings.forEach((h2) => {
-        const headingSection = document.createElement('div');
-        headingSection.classList.add('footer-heading-section');
-        h2.classList.add('footer-heading');
+      if (headings.length > 0) {
+        const headingWrapper = document.createElement('div');
+        headingWrapper.classList.add('footer-heading-wrapper');
+        headings.forEach((h2) => {
+          const headingSection = document.createElement('div');
+          headingSection.classList.add('footer-heading-section');
+          h2.classList.add('footer-heading');
 
-        const nextSibling = h2.nextElementSibling;
-        headingSection.appendChild(h2);
-        headingSection.appendChild(nextSibling);
-        footer.appendChild(headingSection);
-      });
+          const nextSibling = h2.nextElementSibling;
+          headingSection.appendChild(h2);
+          headingSection.appendChild(nextSibling);
+          headingWrapper.appendChild(headingSection);
+        });
+        footer.appendChild(headingWrapper);
+      }
+
+      const logos = div.querySelectorAll('p:has(picture)');
+      if (logos.length > 0) {
+        const logo = document.createElement('div');
+        logo.classList.add('footer-logo');
+        logos.forEach((img) => {
+          logo.appendChild(img);
+        });
+        footer.appendChild(logo);
+      }
     });
-
-    // footer.innerHTML = html;
 
     decorateIcons(footer);
     block.append(footer);
