@@ -158,6 +158,7 @@ export async function analyticsTrackPageViews(document, additionalXdmFields = {}
  * @returns {Promise<void>}
  */
 export async function setupAnalyticsTrackingWithAlloy(document) {
+  console.log('analytics setup started')
   // eslint-disable-next-line no-undef
   const configure = alloy('configure', getAlloyConfiguration(document));
 
@@ -168,6 +169,7 @@ export async function setupAnalyticsTrackingWithAlloy(document) {
   await import('./alloy.min.js');
   await configure;
   await pageView;
+  console.log('analytics setup completed')
 }
 
 /**
