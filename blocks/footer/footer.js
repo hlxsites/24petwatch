@@ -30,13 +30,19 @@ export default async function decorate(block) {
       if (headings.length > 0) {
         const headingWrapper = document.createElement('div');
         headingWrapper.classList.add('footer-heading-wrapper');
-        headings.forEach((h2) => {
+        headings.forEach((heading) => {
           const headingSection = document.createElement('div');
           headingSection.classList.add('footer-heading-section');
-          h2.classList.add('footer-heading');
+          heading.classList.add('footer-heading');
+          if (heading.tagName === 'H3') {
+            heading.nextElementSibling.classList.add('collapsed');
+            heading.addEventListener('click', () => {
+              heading.nextElementSibling.classList.toggle('collapsed');
+            });
+          }
 
-          const nextSibling = h2.nextElementSibling;
-          headingSection.appendChild(h2);
+          const nextSibling = heading.nextElementSibling;
+          headingSection.appendChild(heading);
           headingSection.appendChild(nextSibling);
           headingWrapper.appendChild(headingSection);
         });
