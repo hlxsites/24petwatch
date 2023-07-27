@@ -27,6 +27,8 @@ export default async function decorate(block) {
     container.forEach((div) => {
       div.classList.add('footer-container');
       const headings = div.querySelectorAll('h1, h2, h3');
+      const logos = div.querySelectorAll('p:has(picture)');
+
       if (headings.length > 0) {
         const headingWrapper = document.createElement('div');
         headingWrapper.classList.add('footer-heading-wrapper');
@@ -47,16 +49,15 @@ export default async function decorate(block) {
           headingWrapper.appendChild(headingSection);
         });
         footer.appendChild(headingWrapper);
-      }
-
-      const logos = div.querySelectorAll('p:has(picture)');
-      if (logos.length > 0) {
+      } else if (logos.length > 0) {
         const logo = document.createElement('div');
         logo.classList.add('footer-logo');
         logos.forEach((img) => {
           logo.appendChild(img);
         });
         footer.appendChild(logo);
+      } else {
+        footer.appendChild(div);
       }
     });
 

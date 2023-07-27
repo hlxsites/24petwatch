@@ -70,6 +70,46 @@ footer .footer .footer-heading-section ul {
   color: var(--footer-font-color);
 }
 
+footer .footer .footer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+footer .footer .footer-container ul {
+  display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  padding: 0;
+  gap: 6px;
+}
+
+footer .footer a,
+footer .footer li {
+  color: var(--text-color);
+  font-family: var(--heading-font-family);
+  font-style: normal;
+  font-weight: 400;
+  font-size: 9pt;
+  line-height: 22px;
+  white-space: pre-wrap;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+footer .footer .footer-container li,
+footer .footer .footer-container p {
+  color: var(--footer-font-color);
+  min-width: 75pt;
+  display: flex;
+  justify-content: center;
+}
+
+footer .footer .footer-container p {
+  font-size: .75rem;
+  line-height: 1.313rem;
+  margin: 1.25rem;
+}
+
 footer .footer .footer-heading-section {
   position: relative;
   margin-bottom: 1.25rem;
@@ -92,19 +132,6 @@ footer .footer .footer-heading-section:has(h3)::after {
 
 footer .footer .footer-heading-section:has(h3):has(.collapsed)::after {
     transform: rotate(135deg);
-}
-
-footer .footer a,
-footer .footer li {
-  color: var(--text-color);
-  font-family: var(--heading-font-family);
-  font-style: normal;
-  font-weight: 400;
-  font-size: 9pt;
-  line-height: 22px;
-  white-space: pre-wrap;
-  text-decoration: underline;
-  cursor: pointer;
 }
 
 footer .footer .footer-heading-section li {
@@ -146,6 +173,10 @@ footer .footer .footer-heading-section:has(h3) ul {
   footer .footer div > ul {
     padding-bottom: 40px;
     flex-direction: row;
+  }
+
+  footer .footer .footer-container ul {
+    display: flex;
   }
 
   footer .footer .footer-heading-section:has(h3) ul {
