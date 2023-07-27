@@ -1,7 +1,7 @@
 import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
 
 const host = 'https://www.24petwatch.com';
-const sitesearchUrl = 'https://little-forest-58aa.david8603.workers.dev/?url=https://www.24petwatch.com/bin/24pethealth/sitesearch.json';
+const sitesearchUrl = 'https://www.24petwatch.com/bin/24pethealth/sitesearch.json';
 const sitesearchPayload = JSON.stringify({
   context: '/content/24petwatch/us/en/blog/jcr:content/root/container/container_177885842/container_51910998/contentsearchresults',
   resultsPerPage: 3,
