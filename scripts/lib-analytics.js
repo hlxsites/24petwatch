@@ -52,12 +52,12 @@ export function getAlloyInitScript() {
  */
 function getDatastreamConfiguration() {
   const { hostname } = window.location;
-  let edgeConfigId = '17e9e2de-4a10-40e0-8ea8-3cb636776970';
+  let edgeConfigId = '17e9e2de-4a10-40e0-8ea8-3cb636776970'; // 24petwatch(DEV)
   if (hostname?.endsWith('petwatch.com')) {
-    edgeConfigId = '3843429b-2a2d-43ce-9227-6aa732ddf7da';
+    edgeConfigId = '3843429b-2a2d-43ce-9227-6aa732ddf7da'; // 24petwatch(PROD)
   }
   if (hostname?.endsWith('hlx.page') || hostname?.endsWith('hlx.live')) {
-    edgeConfigId = '1b0ec0ce-b541-4d0f-a78f-fb2a6ca8713c';
+    edgeConfigId = '1b0ec0ce-b541-4d0f-a78f-fb2a6ca8713c'; // 24petwatch(STAGE)
   }
 
   return {
