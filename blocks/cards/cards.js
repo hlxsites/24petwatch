@@ -34,6 +34,9 @@ async function populateBlogTeaser(block) {
   const response = await fetch(sitesearchUrl, {
     method: 'POST',
     body: sitesearchPayload,
+    headers: {
+      'Content-Type': 'application/json',
+    },
   });
   const blogItems = await response.json();
 
