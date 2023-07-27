@@ -158,18 +158,18 @@ export async function analyticsTrackPageViews(document, additionalXdmFields = {}
  * @returns {Promise<void>}
  */
 export async function setupAnalyticsTrackingWithAlloy(document) {
-  console.log('analytics setup started')
-  // eslint-disable-next-line no-undef
-  const configure = alloy('configure', getAlloyConfiguration(document));
-
-  // Custom logic can be inserted here in order to support early tracking before alloy library
-  // loads, for e.g. for page views
+  console.log('analytics setup started');
   const pageView = analyticsTrackPageViews(document); // track page view early
 
   await import('./alloy.min.js');
-  await configure;
-  await pageView;
-  console.log('analytics setup completed')
+
+  await alloy('configure', getAlloyConfiguration(document));
+
+  // Custom logic can be inserted here in order to support early tracking before alloy library
+  // loads, for e.g. for page views
+  analyticsTrackPageViews(document)
+
+  console.log('analytics setup completed');
 }
 
 /**
