@@ -10,7 +10,15 @@ footer {
   padding: 26px 37px;
 }
 
-footer h1, h2, h3 {
+footer .footer {
+  max-width: 1200px;
+  margin: 1.25rem auto;
+}
+
+footer .footer h1,
+footer .footer h2,
+footer .footer h3,
+footer .footer h4 {
   font-size: var(--body-font-size-s);
   text-align: left;
   color: var(--footer-font-color);
@@ -19,13 +27,9 @@ footer h1, h2, h3 {
   padding: 0;
 }
 
-footer h3 {
+footer .footer h3,
+footer .footer h4 {
   cursor: pointer;
-}
-
-footer .footer {
-  max-width: 1200px;
-  margin: 1.25rem auto;
 }
 
 footer .footer .collapsed {
@@ -115,7 +119,13 @@ footer .footer .footer-heading-section {
   margin-bottom: 1.25rem;
 }
 
-footer .footer .footer-heading-section:has(h3)::after {
+footer .footer .footer-subheading-container {
+  position: relative;
+  margin-top: 1.25rem;
+}
+
+footer .footer .footer-heading-section:has(h3)::after,
+footer .footer .footer-heading-section:has(h4) .footer-subheading-container::after {
   content: "";
   display: block;
   box-sizing: border-box;
@@ -130,7 +140,8 @@ footer .footer .footer-heading-section:has(h3)::after {
   color: var(--footer-font-color);
 }
 
-footer .footer .footer-heading-section:has(h3):has(.collapsed)::after {
+footer .footer .footer-heading-section:has(h3):has(.collapsed)::after,
+footer .footer .footer-heading-section:has(h4):has(.collapsed) .footer-subheading-container::after {
     transform: rotate(135deg);
 }
 
@@ -143,7 +154,8 @@ footer .footer .footer-heading-section:has(h2) a {
   color: var(--footer-font-color);
 }
 
-footer .footer .footer-heading-section:has(h3) ul {
+footer .footer .footer-heading-section:has(h3) ul,
+footer .footer .footer-heading-section:has(h4) ul{
   background-color: var(--footer-list-background-color);
 }
 
@@ -179,11 +191,13 @@ footer .footer .footer-heading-section:has(h3) ul {
     display: flex;
   }
 
-  footer .footer .footer-heading-section:has(h3) ul {
+  footer .footer .footer-heading-section:has(h3) ul,
+  footer .footer .footer-heading-section:has(h4) ul {
     background-color: unset;
   }
 
-  footer .footer .footer-heading-section:has(h3)::after {
+  footer .footer .footer-heading-section:has(h3)::after,
+  footer .footer .footer-heading-section:has(h4) .footer-subheading-container::after {
     display: none;
   }
 
