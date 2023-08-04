@@ -102,16 +102,27 @@ export default async function decorate(block) {
     const nav = document.createElement('nav');
     nav.id = 'nav';
     nav.innerHTML = html;
-
-    const classes = ['brand', 'sections', 'tools'];
+    const classes = ['top', 'bottom', 'tools'];
     classes.forEach((c, i) => {
       const section = nav.children[i];
-      if (section) section.classList.add(`nav-${c}`);
+      if (section) {
+        section.classList.add(`nav-${c}`);
+        if (c === 'top') {
+          const child = section.innerHTML;
+          section.innerHTML = '';
+          const notification = document.createElement('div');
+          notification.id = 'notification_start';
+          notification.classList.add('cmp-container');
+          notification.innerHTML = child;
+          section.appendChild(notification);
+        }
+        section.classList.add('nav-sections');
+      }
     });
 
-    const navSections = nav.querySelector('.nav-sections');
+    const navSections = nav.querySelector('nav-sections');
     if (navSections) {
-      navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
+      navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {.
         if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
         navSection.addEventListener('click', () => {
           if (isDesktop.matches) {
@@ -127,10 +138,10 @@ export default async function decorate(block) {
     const hamburger = document.createElement('div');
     hamburger.classList.add('nav-hamburger');
     hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-        <span class="nav-hamburger-icon"></span>
+      <span class="nav-hamburger-icon"></span>
       </button>`;
     hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
-    nav.prepend(hamburger);
+    nav.append(hamburger);
     nav.setAttribute('aria-expanded', 'false');
     // prevent mobile nav behavior on window resize
     toggleMenu(nav, navSections, isDesktop.matches);
