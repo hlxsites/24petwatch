@@ -86,6 +86,22 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 }
 
 /**
+ * decorates the langaugae menu, mainly the nav
+ * @param {Element} block The header block element
+ */
+function decorateLanguage(block,html) {
+  if (html.hasChildNodes()) {
+    const languageNav = document.createElement('div');
+    languageNav.classList.add('languagenavigation');
+    const nav = document.createElement('nav');
+    nav.classList.add('cmp-languagenavigation');
+    let children = html.childNodes;
+    for (const node of children) {
+      console.log(node);
+    }
+  }
+}
+/**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -99,30 +115,65 @@ export default async function decorate(block) {
     const html = await resp.text();
 
     // decorate nav DOM
+    const tmpdiv = document.createElement('div');
+    tmpdiv.innerHTML = html;
     const nav = document.createElement('nav');
     nav.id = 'nav';
-    nav.innerHTML = html;
-    const classes = ['top', 'bottom', 'tools'];
-    classes.forEach((c, i) => {
-      const section = nav.children[i];
-      if (section) {
-        section.classList.add(`nav-${c}`);
-        if (c === 'top') {
-          const child = section.innerHTML;
-          section.innerHTML = '';
-          const notification = document.createElement('div');
-          notification.id = 'notification_start';
-          notification.classList.add('cmp-container');
-          notification.innerHTML = child;
-          section.appendChild(notification);
-        }
-        section.classList.add('nav-sections');
-      }
-    });
+    nav.classList.add('page-header');
+    if (tmpdiv.childElementCount > 0) {
+      const section = tmpdiv.children[0];
+      const pageheadernotificationBar = document.createElement('div');
+      pageheadernotificationBar.classList.add('page-header__notificationBar');
+      pageheadernotificationBar.classList.add('nav-top');
+      pageheadernotificationBar.classList.add('nav-sections');
+      const headerContainer = document.createElement('div');
+      headerContainer.classList.add('cmp-container');
+      decorateLanguage(headerContainer,section.children[0].children[0]);
+      section.children[0].removeChild(section.children[0].children[0]);
+      pageheadernotificationBar.append(headerContainer);
+      headerContainer.append(section);
+      nav.append(pageheadernotificationBar);
+    }
+    if (tmpdiv.childElementCount > 1) {
+      const section = tmpdiv.children[0];
+      const brandImage = section.querySelector('picture');
+      console.log('print picture');
+      console.log(brandImage);
+      const brandLink = document.createElement('a');
+      brandLink.setAttribute('href', '/');
+      brandLink.innerHTML = brandImage.innerHTML;
+      section.querySelector('ul > li').innerHTML = '';
+      section.querySelector('ul > li').appendChild(brandLink);
+      const emelement = section.querySelector('em').parentNode;
+      emelement.innerHTML = `<div class="page-header__get-quote cmp-button--styleprimary ">
+<a id="button-56f5d74eb3" class="cmp-button" href="/ca/lost-pet-protection/lps-quote" aria-label="Get started" data-cmp-clickable="" data-cmp-data-layer="{&quot;button-56f5d74eb3&quot;:{&quot;@type&quot;:&quot;pethealth/components/button&quot;,&quot;repo:modifyDate&quot;:&quot;2023-05-18T21:16:53Z&quot;,&quot;dc:title&quot;:&quot;Get started&quot;,&quot;xdm:linkURL&quot;:&quot;/content/24petwatch/ca/en/lost-pet-protection/lps-quote.html&quot;}}">
+    
+    
 
-    const navSections = nav.querySelector('nav-sections');
+    <span class="cmp-button__text">Get started</span>
+</a>
+</div>`;
+      const pageHeaderContainer = document.createElement('div');
+      pageHeaderContainer.classList.add('page-header__container');
+      pageHeaderContainer.classList.add('nav-bottom');
+      pageHeaderContainer.classList.add('nav-sections');
+      pageHeaderContainer.classList.add('nav-brand');
+      pageHeaderContainer.append(section);
+      nav.append(pageHeaderContainer);
+    }
+    tmpdiv.innerHTML = '';
+    tmpdiv.remove();
+    const navBrand = nav.querySelector('.nav-brand');
+    const navBrandLink = document.createElement('a');
+    navBrandLink.setAttribute('href', '/');
+    navBrandLink.setAttribute('aria-label', 'Home');
+    navBrandLink.innerHTML = navBrand.innerHTML;
+    navBrand.innerHTML = '';
+    navBrand.appendChild(navBrandLink);
+
+    const navSections = nav.querySelector('.nav-sections');
     if (navSections) {
-      navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {.
+      navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
         if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
         navSection.addEventListener('click', () => {
           if (isDesktop.matches) {
@@ -132,16 +183,21 @@ export default async function decorate(block) {
           }
         });
       });
+      // add contactus link
+      const contactUs = navSections.querySelector('a[href=""]');
+      if (contactUs) {
+        contactUs.setAttribute('href', '#contactus-form');
+      }
     }
 
     // hamburger for mobile
     const hamburger = document.createElement('div');
     hamburger.classList.add('nav-hamburger');
     hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-      <span class="nav-hamburger-icon"></span>
+        <span class="nav-hamburger-icon"></span>
       </button>`;
     hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
-    nav.append(hamburger);
+    nav.prepend(hamburger);
     nav.setAttribute('aria-expanded', 'false');
     // prevent mobile nav behavior on window resize
     toggleMenu(nav, navSections, isDesktop.matches);
@@ -152,5 +208,14 @@ export default async function decorate(block) {
     navWrapper.className = 'nav-wrapper';
     navWrapper.append(nav);
     block.append(navWrapper);
+
+    const headers = block.querySelectorAll('ul > li > a');
+    const url = new URL(window.location);
+    headers.forEach((header) => {
+      const headerUrl = new URL(header.href);
+      if (url.pathname === headerUrl.pathname && !headerUrl.hash) {
+        header.classList.add('active');
+      }
+    });
   }
 }
