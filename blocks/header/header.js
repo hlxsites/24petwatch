@@ -93,12 +93,29 @@ function decorateLanguage(block,html) {
   if (html.hasChildNodes()) {
     const languageNav = document.createElement('div');
     languageNav.classList.add('languagenavigation');
-    const nav = document.createElement('nav');
-    nav.classList.add('cmp-languagenavigation');
-    let children = html.childNodes;
-    for (const node of children) {
-      console.log(node);
-    }
+    languageNav.innerHTML = `<div class="languagenavigation"><nav id="languagenavigation-100b993b79" class="cmp-languagenavigation">
+            <div class="cmp-languagenavigation__item--active">
+        <span class="cmp-languagenavigation__item-imgWp" data-country="US" data-language="en" data-pagepath="/content/24petwatch/us/en" lang="en-US">
+        </span>
+        <span class="cmp-languagenavigation__item-arrow"></span>
+    </div>
+<ul class="cmp-languagenavigation__group">
+<li class="cmp-languagenavigation__item cmp-languagenavigation__item--countrycode-CA cmp-languagenavigation__item--langcode-en-CA cmp-languagenavigation__item--level-0">
+<a data-cmp-clickable="" class="cmp-languagenavigation__item-link" href="/ca" hreflang="en-CA" rel="alternate" title="Canada">
+<ul class="cmp-languagenavigation__group"></ul>
+<span class="cmp-languagenavigation__item-title" lang="en-CA">Canada</span>
+</a>
+</li>
+<li class="cmp-languagenavigation__item cmp-languagenavigation__item--countrycode-US cmp-languagenavigation__item--langcode-en-US cmp-languagenavigation__item--level-0 cmp-languagenavigation__item--active hide">
+<a data-cmp-clickable="" class="cmp-languagenavigation__item-link" href="/" hreflang="en-US" rel="alternate" title="US">
+<ul class="cmp-languagenavigation__group"></ul>
+<span class="cmp-languagenavigation__item-title" lang="en-US">US</span>
+</a>
+</li>
+</ul>
+</nav>
+  </div>`;
+  block.appendChild(languageNav);
   }
 }
 /**
@@ -146,13 +163,10 @@ export default async function decorate(block) {
       section.querySelector('ul > li').appendChild(brandLink);
       const emelement = section.querySelector('em').parentNode;
       emelement.innerHTML = `<div class="page-header__get-quote cmp-button--styleprimary ">
-<a id="button-56f5d74eb3" class="cmp-button" href="/ca/lost-pet-protection/lps-quote" aria-label="Get started" data-cmp-clickable="" data-cmp-data-layer="{&quot;button-56f5d74eb3&quot;:{&quot;@type&quot;:&quot;pethealth/components/button&quot;,&quot;repo:modifyDate&quot;:&quot;2023-05-18T21:16:53Z&quot;,&quot;dc:title&quot;:&quot;Get started&quot;,&quot;xdm:linkURL&quot;:&quot;/content/24petwatch/ca/en/lost-pet-protection/lps-quote.html&quot;}}">
-    
-    
-
-    <span class="cmp-button__text">Get started</span>
-</a>
-</div>`;
+      <a id="button-56f5d74eb3" class="cmp-button" href="/ca/lost-pet-protection/lps-quote" aria-label="Get started" data-cmp-clickable="" data-cmp-data-layer="{&quot;button-56f5d74eb3&quot;:{&quot;@type&quot;:&quot;pethealth/components/button&quot;,&quot;repo:modifyDate&quot;:&quot;2023-05-18T21:16:53Z&quot;,&quot;dc:title&quot;:&quot;Get started&quot;,&quot;xdm:linkURL&quot;:&quot;/content/24petwatch/ca/en/lost-pet-protection/lps-quote.html&quot;}}">
+      <span class="cmp-button__text">Get started</span>
+      </a>
+      </div>`;
       const pageHeaderContainer = document.createElement('div');
       pageHeaderContainer.classList.add('page-header__container');
       pageHeaderContainer.classList.add('nav-bottom');
@@ -163,6 +177,7 @@ export default async function decorate(block) {
     }
     tmpdiv.innerHTML = '';
     tmpdiv.remove();
+    /*
     const navBrand = nav.querySelector('.nav-brand');
     const navBrandLink = document.createElement('a');
     navBrandLink.setAttribute('href', '/');
@@ -170,7 +185,7 @@ export default async function decorate(block) {
     navBrandLink.innerHTML = navBrand.innerHTML;
     navBrand.innerHTML = '';
     navBrand.appendChild(navBrandLink);
-
+    */
     const navSections = nav.querySelector('.nav-sections');
     if (navSections) {
       navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {

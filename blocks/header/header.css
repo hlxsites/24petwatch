@@ -308,6 +308,57 @@ header nav .nav-sections ul > li > ul > li {
   }
 }
 
+nav div div ul li {
+  float: left;
+}
+
+nav div div ul li a {
+  display: inline-block;
+  text-decoration: none;
+}
+nav div div ul {
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  position: relative;
+}
+
+nav div div ul li{
+  display: inline-block;
+}
+/* Hide Dropdown by Default*/
+nav div div ul ul {
+  display: none;
+  position: absolute;
+  top: 60px;
+}
+
+/* Display Dropdown on Hover */
+nav div div ul li:hover > ul {
+  display: inherit;
+}
+/* Fisrt Tier Dropdown */
+nav div div ul ul li{
+  width: 170px;
+  float: none;
+  display: list-item;
+  position: relative;
+
+}
+
+/* ============ Second, Third and More Tiers ===========*/
+nav div div ul ul ul li {
+  position: relative;
+  top: -60px;
+  left: 170px;
+}
+
+/* Change this in order to change the Dropdown symbol */
+li > a::after { content: ' +';}
+li > a:only-child::after {
+  content: '';
+}
+
 /* tools */
 header nav .nav-tools {
   grid-area: tools;
@@ -367,4 +418,27 @@ nav.cmp-languagenavigation [lang=EN-US]:before {
   text-align: center;
   display: block;
   padding: 6px 0;
+}
+
+.cmp-navigation {
+  position: relative;
+}
+
+.cmp-navigation__group {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cmp-navigation__item--level-0 {
+  display: inline-block;
+  position: relative;
+  padding-right: 2rem;
+  margin-right: 1.5rem;
+}
+
+.cmp-experiencefragment--cart-flow-header ul li, .cmp-experiencefragment--header ul li, .cmp-experiencefragment--lps-quote-header ul li, .cmp-experiencefragment--social-media-header ul li, .cmp-experiencefragment--trial-flow-header ul li {
+  list-style-type: none;
 }
