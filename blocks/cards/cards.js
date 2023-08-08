@@ -36,7 +36,7 @@ async function populateBlogTeaser(block) {
     body: sitesearchPayload,
     headers: {
       'Content-Type': 'application/json',
-      referrer: "",
+      referer: "",
       mode: "cors",
     },
   });
