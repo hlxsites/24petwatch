@@ -38,8 +38,8 @@ async function populateBlogTeaser(block) {
       'Content-Type': 'application/json',
       'User-Agent': null,
     },
-    referrer: "",
-    mode: "cors",
+    referrer: '',
+    referrerPolicy: 'no-referrer'
   });
   const blogItems = await response.json();
 
