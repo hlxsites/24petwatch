@@ -37,9 +37,7 @@ async function populateBlogTeaser(block) {
     headers: {
       'Content-Type': 'application/json',
       'User-Agent': null,
-    },
-    referrer: '',
-    referrerPolicy: 'no-referrer'
+    }
   });
   const blogItems = await response.json();
 
