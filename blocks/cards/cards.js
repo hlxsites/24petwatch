@@ -37,6 +37,7 @@ async function populateBlogTeaser(block) {
     headers: {
       'Content-Type': 'application/json',
       referrer: "",
+      mode: "cors",
     },
   });
   const blogItems = await response.json();
