@@ -95,7 +95,7 @@ function decorateLanguage(block,html) {
     const country = window.location.pathname.startsWith('/ca')? 'ca' : 'us';
     const languageNav = document.createElement('div');
     languageNav.classList.add('languagenavigation');
-    languageNav.innerHTML = `<div class="cmp-languagenavigation__item--active">
+    languageNav.innerHTML = `<div class="cmp-languagenavigation__item--active"><nav class="cmp-languagenavigation">
         <span class="cmp-languagenavigation__item-imgWp" data-country="US" data-language="en" data-pagepath="/content/24petwatch/us/en" lang="en-US">
         </span>
         <span class="cmp-languagenavigation__item-arrow"></span>
@@ -113,7 +113,8 @@ function decorateLanguage(block,html) {
 <span class="cmp-languagenavigation__item-title" lang="en-US">US</span>
 </a>
 </li>
-</ul>`;
+</ul>
+</nav>`;
   block.appendChild(languageNav);
   }
 }

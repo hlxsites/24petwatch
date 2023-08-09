@@ -377,16 +377,16 @@ header nav .nav-tools {
   position: relative;
 }
 
-.cmp-languagenavigation [lang=EN-US]:before {
+.cmp-languagenavigation [lang=EN-US]::before {
   content: url(/icons/USAFlag.svg);
 }
-.cmp-languagenavigation [lang=EN-CA]:before {
+.cmp-languagenavigation [lang=EN-CA]::before {
   content: url(/icons/canadaFlag.svg);
 }
-.cmp-languagenavigation__item-imgWp [lang=EN-US]:before {
+.cmp-languagenavigation__item-imgWp [lang=EN-US]::before {
   content: url(/icons/USAFlag.svg);
 }
-.cmp-languagenavigation [lang]:before {
+.cmp-languagenavigation [lang]::before {
   display: inline-block;
   margin-right: 0.25rem;
   position: relative;
