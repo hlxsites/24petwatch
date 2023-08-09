@@ -373,16 +373,29 @@ header nav .nav-tools {
   align-items: center;
 }
 
-nav.cmp-languagenavigation {
+.cmp-languagenavigation {
   position: relative;
 }
 
-nav.cmp-languagenavigation [lang=EN-US]:before {
-  content: url(../../../etc.clientlibs/24petwatch/clientlibs/clientlib-site-base/resources/images/USAFlag.svg);
+.cmp-languagenavigation [lang=EN-US]:before {
+  content: url(/icons/USAFlag.svg);
+}
+.cmp-languagenavigation [lang=EN-CA]:before {
+  content: url(/icons/canadaFlag.svg);
+}
+.cmp-languagenavigation__item-imgWp [lang=EN-US]:before {
+  content: url(/icons/USAFlag.svg);
+}
+.cmp-languagenavigation [lang]:before {
+  display: inline-block;
+  margin-right: 0.25rem;
+  position: relative;
+  width: 30px;
+  top: 3px;
 }
 
 .cmp-languagenavigation__item--active .cmp-languagenavigation__item-arrow {
-  background-image: url(../../../etc.clientlibs/24petwatch/clientlibs/clientlib-site-base/resources/images/arrow-down.svg);
+  background-image: url(/icons/arrow-down.svg);
   background-position: 50%;
   background-repeat: no-repeat;
   background-size: 10px;
@@ -390,6 +403,29 @@ nav.cmp-languagenavigation [lang=EN-US]:before {
   height: 1pc;
   display: inline-block;
   margin-left: 0.3125rem;
+}
+
+.cmp-languagenavigation__item {
+  text-align: center;
+  display: block;
+  padding: 6px 0;
+}
+.cmp-languagenavigation__item--active .cmp-languagenavigation__item-link {
+  width: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  text-transform: uppercase;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+.cmp-languagenavigation__item--active .cmp-languagenavigation__item-title {
+  --text-opacity: 1;
+  color: #337ab7;
+  color: rgba(51,122,183,var(--text-opacity));
+  font-size: .875rem;
+  vertical-align: text-bottom;
 }
 
 .cmp-languagenavigation__group {
@@ -436,4 +472,33 @@ nav.cmp-languagenavigation [lang=EN-US]:before {
 
 .cmp-experiencefragment--cart-flow-header ul li, .cmp-experiencefragment--header ul li, .cmp-experiencefragment--lps-quote-header ul li, .cmp-experiencefragment--social-media-header ul li, .cmp-experiencefragment--trial-flow-header ul li {
   list-style-type: none;
+}
+
+.page-header__notificationBar>.cmp-container {
+  margin-left: auto!important;
+  margin-right: auto!important;
+  max-width: 73.123rem!important;
+  float: none!important;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+}
+
+.page-header__container, .page-header__notificationBar>.cmp-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.page-header__notificationBar {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  --bg-opacity: 1;
+  background-color: #e7e9ea;
+  background-color: rgba(231,233,234,var(--bg-opacity));
+  display: none;
 }

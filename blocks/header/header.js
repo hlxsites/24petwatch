@@ -91,10 +91,11 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
  */
 function decorateLanguage(block,html) {
   if (html.hasChildNodes()) {
+    console.log(window.location.pathname);
+    const country = window.location.pathname.startsWith('/ca')? 'ca' : 'us';
     const languageNav = document.createElement('div');
     languageNav.classList.add('languagenavigation');
-    languageNav.innerHTML = `<div class="languagenavigation"><nav id="languagenavigation-100b993b79" class="cmp-languagenavigation">
-            <div class="cmp-languagenavigation__item--active">
+    languageNav.innerHTML = `<div class="cmp-languagenavigation__item--active">
         <span class="cmp-languagenavigation__item-imgWp" data-country="US" data-language="en" data-pagepath="/content/24petwatch/us/en" lang="en-US">
         </span>
         <span class="cmp-languagenavigation__item-arrow"></span>
@@ -112,9 +113,7 @@ function decorateLanguage(block,html) {
 <span class="cmp-languagenavigation__item-title" lang="en-US">US</span>
 </a>
 </li>
-</ul>
-</nav>
-  </div>`;
+</ul>`;
   block.appendChild(languageNav);
   }
 }
