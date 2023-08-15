@@ -93,7 +93,7 @@
   --heading-font-weight: 400;
 
   /* nav height */
-  --nav-height: 64px;
+  --nav-height: 95px;
 }
 
 @media (min-width: 768px) {

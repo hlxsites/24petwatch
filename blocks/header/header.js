@@ -1,7 +1,7 @@
-import { getMetadata, decorateIcons } from '../../scripts/lib-franklin.js';
+import { getMetadata, decorateIcons, decorateButtons } from '../../scripts/lib-franklin.js';
 
 // media query match that indicates mobile/tablet width
-const isDesktop = window.matchMedia('(min-width: 900px)');
+const isDesktop = window.matchMedia('(min-width: 768px)');
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -46,18 +46,28 @@ function toggleAllNavSections(sections, expanded = false) {
   });
 }
 
+function closeAllMenus(nav, navSections) {
+  const wrapper = nav.closest('.nav-wrapper');
+  nav.setAttribute('aria-expanded', 'false');
+  wrapper?.setAttribute('aria-expanded', 'false');
+  wrapper?.querySelector('.nav-secondary')?.querySelector('.language-selector')?.setAttribute('aria-expanded', 'false');
+  toggleAllNavSections(navSections, 'false');
+}
+
 /**
  * Toggles the entire nav
  * @param {Element} nav The container element
  * @param {Element} navSections The nav sections within the container element
- * @param {*} forceExpanded Optional param to force nav expand behavior when not null
+ * @param {*} closeAll Optional param to force nav expand behavior when not null
  */
-function toggleMenu(nav, navSections, forceExpanded = null) {
-  const expanded = forceExpanded !== null ? !forceExpanded : nav.getAttribute('aria-expanded') === 'true';
+function toggleMenu(nav, navSections, closeAll = null) {
+  const expanded = closeAll !== null ? !closeAll : nav.getAttribute('aria-expanded') === 'true';
   const button = nav.querySelector('.nav-hamburger button');
-  document.body.style.overflowY = (expanded || isDesktop.matches) ? '' : 'hidden';
+  const wrapper = nav.closest('.nav-wrapper');
+
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded || isDesktop.matches ? 'false' : 'true');
+  wrapper?.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  toggleAllNavSections(navSections, expanded);
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
@@ -85,6 +95,34 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   }
 }
 
+function decorateLanguageSelector(block) {
+  const languageSelector = document.createElement('li');
+  languageSelector.classList.add('language-selector');
+  languageSelector.innerHTML = `<span class="icon icon-flagusa"></span>
+      <ul>
+        <li><a href="https://www.24petwatch.com/ca" hreflang="en-CA" rel="alternate" title="Canada"><span class="icon icon-flagcanada"></span>Canada</a></li>
+      </ul>`;
+  block.querySelector(':scope > ul').prepend(languageSelector);
+
+  languageSelector.setAttribute('aria-expanded', 'false');
+  languageSelector.addEventListener('click', () => {
+    if (!isDesktop.matches) {
+      const expanded = languageSelector.getAttribute('aria-expanded') === 'true';
+      languageSelector.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+    }
+  });
+  languageSelector.addEventListener('mouseenter', () => {
+    if (isDesktop.matches) {
+      languageSelector.setAttribute('aria-expanded', 'true');
+    }
+  });
+  languageSelector.addEventListener('mouseleave', () => {
+    if (isDesktop.matches) {
+      languageSelector.setAttribute('aria-expanded', 'false');
+    }
+  });
+}
+
 /**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -92,6 +130,8 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
 export default async function decorate(block) {
   // fetch nav content
   const navMeta = getMetadata('nav');
+  block.textContent = '';
+
   const navPath = navMeta ? new URL(navMeta).pathname : '/nav';
   const resp = await fetch(`${navPath}.plain.html`);
 
@@ -103,7 +143,7 @@ export default async function decorate(block) {
     nav.id = 'nav';
     nav.innerHTML = html;
 
-    const classes = ['brand', 'sections', 'tools'];
+    const classes = ['brand', 'get-quote', 'sections', 'secondary'];
     classes.forEach((c, i) => {
       const section = nav.children[i];
       if (section) section.classList.add(`nav-${c}`);
@@ -114,10 +154,17 @@ export default async function decorate(block) {
       navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
         if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
         navSection.addEventListener('click', () => {
+          const expanded = navSection.getAttribute('aria-expanded') === 'true';
+          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        });
+        navSection.addEventListener('mouseenter', () => {
           if (isDesktop.matches) {
-            const expanded = navSection.getAttribute('aria-expanded') === 'true';
-            toggleAllNavSections(navSections);
-            navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+            navSection.setAttribute('aria-expanded', 'true');
+          }
+        });
+        navSection.addEventListener('mouseleave', () => {
+          if (isDesktop.matches) {
+            navSection.setAttribute('aria-expanded', 'false');
           }
         });
       });
@@ -127,16 +174,21 @@ export default async function decorate(block) {
     const hamburger = document.createElement('div');
     hamburger.classList.add('nav-hamburger');
     hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-        <span class="nav-hamburger-icon"></span>
+        <span></span><span></span><span></span>
       </button>`;
     hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
     nav.prepend(hamburger);
     nav.setAttribute('aria-expanded', 'false');
     // prevent mobile nav behavior on window resize
     toggleMenu(nav, navSections, isDesktop.matches);
-    isDesktop.addEventListener('change', () => toggleMenu(nav, navSections, isDesktop.matches));
+    isDesktop.addEventListener('change', () => closeAllMenus(nav, navSections));
+
+    // language selector
+    const secondaryMenu = nav.querySelector('.nav-secondary');
+    decorateLanguageSelector(secondaryMenu);
 
     decorateIcons(nav);
+    decorateButtons(nav);
     const navWrapper = document.createElement('div');
     navWrapper.className = 'nav-wrapper';
     navWrapper.append(nav);
