@@ -1,3 +1,11 @@
+:root {
+  --header-height: var(--nav-height);
+}
+
+header {
+  height: var(--header-height);
+}
+
 /* header and nav layout */
 header .nav-wrapper {
   background-color: var(--background-color);
@@ -34,12 +42,16 @@ header nav {
 }
 
 @media (min-width: 768px) {
+  :root {
+    --nav-height: 95px;
+    --header-height: calc(44px + var(--nav-height));
+  }
+
   header nav {
     display: flex;
     justify-content: space-between;
     padding: 0;
     margin-top: 44.5px;
-    height: 95px;
     gap: 0;
   }
 
@@ -50,15 +62,14 @@ header nav {
 }
 
 @media (min-width: 900px) {
-  header nav {
-    height: 119px;
+  :root {
+    --nav-height: 119px;
   }
 }
 
 @media (min-width: 1300px) {
-  header nav {
-    justify-content: flex-start;
-    height: 95px;
+  :root {
+    --nav-height: 95px;
   }
 }
 
