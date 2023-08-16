@@ -50,6 +50,7 @@
   --link-color: #007680;
   --link-hover-color: #23527c;
   --background-color: #fff;
+  --background-color-secondary: e7e9ea;
   --overlay-background-color: #eee;
   --highlight-background-color: #ccc;
   --text-color: #333f48;
@@ -62,6 +63,7 @@
   --footer-background-color: #333f48;
   --footer-list-background-color: #e7e9ea;
   --footer-font-color: #fff;
+  --nav-secondary-color: e5e5e5;
 
   /* fonts */
   --body-font-family: 'FSMePro', fsmepro-normal-400-fallback, arial, helvetica, sans-serif;

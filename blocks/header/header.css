@@ -152,7 +152,7 @@ header nav[aria-expanded="true"] .nav-hamburger button > span:nth-child(2) {
   --transform-scale-y: 1;
 
   transform: translateX(var(--transform-translate-x)) translateY(var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y));
-  top: .875rem
+  top: 0.875rem
 }
 
 header nav[aria-expanded="true"] .nav-hamburger button > span:nth-child(3) {
@@ -165,7 +165,7 @@ header nav[aria-expanded="true"] .nav-hamburger button > span:nth-child(3) {
   --transform-scale-y: 1;
 
   transform: translateX(var(--transform-translate-x)) translateY(var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y));
-  top: .875rem
+  top: 0.875rem
 }
 
 /* brand */
@@ -241,11 +241,11 @@ header nav .nav-sections > ul > li {
   font-weight: 400;
   font-size: 1.3125rem;
   line-height: 1.938rem;
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: 1px solid var(--nav-secondary-color);
 }
 
 header nav .nav-sections ul > li[aria-expanded="true"] {
-  background-color: #e7e9ea;
+  background-color: var(--background-color-secondary);
 }
 
 header nav .nav-sections ul > li > a {
@@ -459,9 +459,9 @@ header nav > .nav-secondary > ul {
 header nav > .nav-secondary > ul > li {
   display: flex;
   flex-direction: column-reverse;
-  background-color: #e7e9ea;
+  background-color: var(--background-color-secondary);
   padding: 10px;
-  border-bottom: 1px solid #fff;
+  border-bottom: 1px solid white;
   text-align: center;
   font-weight: 300;
 }
@@ -473,7 +473,7 @@ header nav > .nav-secondary > ul > li {
     top: 0;
     left: 0;
     position: absolute;
-    background-color: #e7e9ea;
+    background-color: var(--background-color-secondary);
     margin: 0;
     padding-top: 0.5rem;
     padding-bottom: 0.7rem;
@@ -547,7 +547,7 @@ header nav > .nav-secondary .language-selector > ul {
 }
 
 header nav > .nav-secondary .language-selector[aria-expanded="true"] > ul {
-  background-color: #e7e9ea;
+  background-color: var(--background-color-secondary);
   display: flex;
   justify-content: center;
 }
@@ -558,7 +558,7 @@ header nav > .nav-secondary .language-selector > ul > li {
 }
 
 header nav > .nav-secondary .language-selector > ul > li > a {
-  color: #007680;
+  color: var(--link-color);
   font-size: 0.875rem;
   text-decoration: none;
   font-family: var(--body-font-family);
@@ -570,7 +570,7 @@ header nav > .nav-secondary .language-selector > ul > li > a {
 
 @media (min-width: 768px) {
   header nav > .nav-secondary .language-selector[aria-expanded="true"] {
-    background-color: #e7e9ea;
+    background-color: var(--background-color-secondary);
     position: relative;
   }
 
