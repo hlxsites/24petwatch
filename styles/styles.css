@@ -50,7 +50,7 @@
   --link-color: #007680;
   --link-hover-color: #23527c;
   --background-color: #fff;
-  --background-color-secondary: e7e9ea;
+  --background-color-secondary: #e7e9ea;
   --overlay-background-color: #eee;
   --highlight-background-color: #ccc;
   --text-color: #333f48;
@@ -96,6 +96,7 @@
 
   /* nav height */
   --nav-height: 95px;
+  --header-height: var(--nav-height);
 }
 
 @media (min-width: 768px) {
@@ -111,6 +112,22 @@
     --heading-line-height-xl: 3.125rem;
     --heading-line-height-l: 2.813rem;
     --heading-line-height-m: 2.25rem;
+
+    /* nav height */
+    --nav-height: 95px;
+    --header-height: calc(44px + var(--nav-height));
+  }
+}
+
+@media (min-width: 900px) {
+  :root {
+    --nav-height: 119px;
+  }
+}
+
+@media (min-width: 1300px) {
+  :root {
+    --nav-height: 95px;
   }
 }
 
