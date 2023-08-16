@@ -1,5 +1,8 @@
 import { getMetadata, decorateIcons, decorateButtons } from '../../scripts/lib-franklin.js';
 
+let positionY = 0;
+const SCROLL_STEP = 25;
+
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 768px)');
 
@@ -193,5 +196,18 @@ export default async function decorate(block) {
     navWrapper.className = 'nav-wrapper';
     navWrapper.append(nav);
     block.append(navWrapper);
+
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
+        navWrapper.classList.remove('slide-down');
+        navWrapper.classList.add('slide-up');
+      }
+      if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
+        navWrapper.classList.remove('slide-up');
+        navWrapper.classList.add('slide-down');
+      }
+
+      positionY = window.pageYOffset;
+    }, false);
   }
 }

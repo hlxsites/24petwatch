@@ -13,6 +13,8 @@ header .nav-wrapper {
   z-index: 2;
   position: fixed;
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 22%);
+  will-change: transform;
+  transition: transform .2s linear;
 }
 
 header .nav-wrapper[aria-expanded="true"] {
@@ -583,4 +585,35 @@ header nav > .nav-secondary .language-selector > ul > li > a {
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, .22);
     width: 75pt;
   }
+}
+
+/* animations */
+@keyframes slide-up {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-100%);
+  }
+}
+
+.nav-wrapper.slide-up {
+  animation-name: slide-up;
+  transform: translateY(-100%);
+}
+
+@keyframes slide-down {
+  0% {
+    transform: translateY(-100%);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.nav-wrapper.slide-down {
+  animation-name: slide-down;
+  transform: translateY(0);
 }
