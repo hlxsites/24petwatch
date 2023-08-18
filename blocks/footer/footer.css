@@ -30,10 +30,7 @@ footer .footer h4 {
 footer .footer h3,
 footer .footer h4 {
   cursor: pointer;
-}
-
-footer .footer .collapsed {
-    display: none;
+  user-select: none;
 }
 
 footer .footer p {
@@ -87,9 +84,14 @@ footer .footer .footer-container {
 
 footer .footer .footer-container ul {
   display: grid;
-    grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   padding: 0;
   gap: 6px;
+}
+
+footer .footer .footer-heading-section.collapsed > ul,
+footer .footer .footer-subheading-container.collapsed > ul {
+  display: none;
 }
 
 footer .footer a,
@@ -129,8 +131,8 @@ footer .footer .footer-subheading-container {
   margin-top: 1.25rem;
 }
 
-footer .footer .footer-heading-section:has(h3)::after,
-footer .footer .footer-heading-section:has(h4) .footer-subheading-container::after {
+footer .footer .footer-heading-section:not(.h2-container)::after,
+footer .footer .footer-heading-section:not(.h2-container) .footer-subheading-container::after {
   content: "";
   display: block;
   box-sizing: border-box;
@@ -145,8 +147,8 @@ footer .footer .footer-heading-section:has(h4) .footer-subheading-container::aft
   color: var(--footer-font-color);
 }
 
-footer .footer .footer-heading-section:has(h3):has(.collapsed)::after,
-footer .footer .footer-heading-section:has(h4):has(.collapsed) .footer-subheading-container::after {
+footer .footer .footer-heading-section.collapsed:not(.h2-container)::after,
+footer .footer .footer-heading-section:not(.h2-container) .footer-subheading-container.collapsed::after {
     transform: rotate(135deg);
 }
 
@@ -154,8 +156,8 @@ footer .footer .footer-heading-section li {
   padding: 11px 0 15px 60px;
 }
 
-footer .footer .footer-heading-section:has(h2) li,
-footer .footer .footer-heading-section:has(h2) a {
+footer .footer .footer-heading-section.h2-container li,
+footer .footer .footer-heading-section.h2-container a {
   color: var(--footer-font-color);
   white-space: nowrap;
 }
@@ -164,15 +166,8 @@ footer .footer .footer-heading-section:first-of-type li {
   padding: 11px 0 15px 8px;
 }
 
-footer .footer .footer-heading-section:has(h3) ul,
-footer .footer .footer-heading-section:has(h4) ul{
+footer .footer .footer-heading-section:not(.h2-container) ul {
   background-color: var(--footer-list-background-color);
-}
-
-footer .footer .footer-heading-section li:has(.icon) {
-  display: flex;
-  align-items: center;
-  gap: 7px;
 }
 
 footer .footer .footer-heading-section li a span.icon {
@@ -212,13 +207,14 @@ footer .footer .footer-heading-section li a span.icon {
     display: flex;
   }
 
-  footer .footer .footer-heading-section:has(h3) ul,
-  footer .footer .footer-heading-section:has(h4) ul {
+  footer .footer .footer-heading-section.collapsed > ul,
+  footer .footer .footer-subheading-container.collapsed > ul {
     background-color: unset;
+    display: block;
   }
 
-  footer .footer .footer-heading-section:has(h3)::after,
-  footer .footer .footer-heading-section:has(h4) .footer-subheading-container::after {
+  footer .footer .footer-heading-section.collapsed:not(.h2-container)::after,
+  footer .footer .footer-heading-section:not(.h2-container) .footer-subheading-container.collapsed::after {
     display: none;
   }
 
@@ -228,14 +224,6 @@ footer .footer .footer-heading-section li a span.icon {
 
   footer .footer .footer-logo > p:first-of-type img {
     max-height: 30px;
-  }
-
-  footer .footer .collapsed {
-    display: block;
-  }
-
-  footer .footer .footer-heading-section li:has(.icon) {
-    padding: 8px 8px 8px 0;
   }
 }
 

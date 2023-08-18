@@ -39,9 +39,8 @@ export default async function decorate(block) {
         headings.forEach((heading) => {
           heading.classList.add('footer-heading');
           if (heading.tagName === 'H3') {
-            heading.nextElementSibling.classList.add('collapsed');
             heading.addEventListener('click', () => {
-              heading.nextElementSibling.classList.toggle('collapsed');
+              heading.parentElement.classList.toggle('collapsed');
             });
           }
 
@@ -50,17 +49,18 @@ export default async function decorate(block) {
           if (heading.tagName === 'H4') {
             const subheadingContainer = document.createElement('div');
             subheadingContainer.classList.add('footer-subheading-container');
-            nextSibling.classList.add('collapsed');
+            subheadingContainer.classList.add('collapsed');
 
             subheadingContainer.addEventListener('click', () => {
-              nextSibling.classList.toggle('collapsed');
+              subheadingContainer.classList.toggle('collapsed');
             });
 
             heading.classList.add('footer-subheading');
+            const subList = heading.nextElementSibling;
             subheadingContainer.appendChild(heading);
+            subheadingContainer.appendChild(subList);
             if (currentSection) {
               currentSection.appendChild(subheadingContainer);
-              currentSection.appendChild(nextSibling);
             }
           } else {
             currentSection = document.createElement('div');
@@ -68,6 +68,12 @@ export default async function decorate(block) {
             currentSection.appendChild(heading);
             currentSection.appendChild(nextSibling);
             headingWrapper.appendChild(currentSection);
+
+            if (currentSection.querySelector('h2')) {
+              currentSection.classList.add('h2-container');
+            } else {
+              currentSection.classList.add('collapsed');
+            }
 
             [...currentSection.querySelectorAll('span.icon')].forEach((icon) => {
               if (icon.nextElementSibling.tagName === 'A') {
