@@ -207,14 +207,14 @@ footer .footer .footer-heading-section li a span.icon {
     display: flex;
   }
 
-  footer .footer .footer-heading-section.collapsed > ul,
-  footer .footer .footer-subheading-container.collapsed > ul {
+  footer .footer .footer-heading-section:not(.h2-container) > ul,
+  footer .footer .footer-subheading-container:not(.h2-container) > ul {
     background-color: unset;
     display: block;
   }
 
-  footer .footer .footer-heading-section.collapsed:not(.h2-container)::after,
-  footer .footer .footer-heading-section:not(.h2-container) .footer-subheading-container.collapsed::after {
+  footer .footer .footer-heading-section:not(.h2-container)::after,
+  footer .footer .footer-heading-section:not(.h2-container) .footer-subheading-container::after {
     display: none;
   }
 
