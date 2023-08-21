@@ -101,6 +101,8 @@ async function initializeConversionTracking() {
     const { element } = data;
     // eslint-disable-next-line no-undef
     if (element && alloy) {
+      // form tracking related logic should be added here if need be.
+      // see https://github.com/adobe/franklin-rum-conversion#integration-with-analytics-solutions
       if (element.tagName === 'A') {
         conversionEvent = {
           event: 'Link Click',
