@@ -94,10 +94,7 @@ async function initializeConversionTracking() {
   const { initConversionTracking } = await import('../plugins/rum-conversion/src/index.js');
   await initConversionTracking.call(context, document);
 
-  // Declare conversionEvent, bufferTimeoutId and tempConversionEvent outside the convert function to persist them for buffering between
-  // subsequent convert calls
   let conversionEvent;
-  let tempConversionEvent;
 
   // call upon conversion events, sends them to alloy
   sampleRUM.always.on('convert', async (data) => {
@@ -120,7 +117,6 @@ async function initializeConversionTracking() {
               : {}),
           },
         });
-        tempConversionEvent = undefined;
         conversionEvent = undefined;
       }
     }
