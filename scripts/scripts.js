@@ -12,6 +12,8 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
+  getMetadata,
+  toClassName,
 } from './lib-franklin.js';
 
 import {
@@ -104,6 +106,14 @@ async function loadLazy(doc) {
 
   await setupAnalyticsTrackingWithAlloy(document);
   analyticsSetConsent(true);
+
+  const context = {
+    getMetadata,
+    toClassName,
+  };
+  // eslint-disable-next-line import/no-relative-packages
+  const { initConversionTracking } = await import('../plugins/rum-conversion/src/index.js');
+  await initConversionTracking.call(context, document);
 }
 
 /**
