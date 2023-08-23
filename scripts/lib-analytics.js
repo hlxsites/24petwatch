@@ -208,3 +208,65 @@ export async function analyticsTrackLinkClicks(element, linkType = 'other', addi
     },
   });
 }
+
+/**
+ * Sends an analytics event to alloy
+ * @param xdmData - the xdm data object
+ * @returns {Promise<*>}
+ */
+async function sendAnalyticsEvent(xdmData) {
+  // eslint-disable-next-line no-undef
+  if (!alloy) {
+    console.warn('alloy not initialized, cannot send analytics event');
+    return Promise.resolve();
+  }
+  // eslint-disable-next-line no-undef
+  return alloy('sendEvent', {
+    documentUnloading: true,
+    xdm: xdmData,
+  });
+}
+
+export async function analyticsTrackConversion(data, additionalXdmFields = {}) {
+  const { source: conversionName, target: conversionValue, element } = data;
+
+  const xdmData = {
+    eventType: 'web.webinteraction.conversion',
+    [CUSTOM_SCHEMA_NAMESPACE]: {
+      conversion: {
+        conversionComplete: 1,
+        conversionName,
+        conversionValue,
+      },
+      ...additionalXdmFields,
+    },
+  };
+
+  if (element.tagName === 'FORM') {
+    xdmData.eventType = 'web.formFilledOut';
+    const formId = element?.id || element?.dataset?.action;
+    xdmData[CUSTOM_SCHEMA_NAMESPACE].form = {
+      ...(formId && { formId }),
+      // don't count as form complete, as this event should be tracked separately,
+      // track only the details of the form together with the conversion
+      formComplete: 0,
+    };
+  } else if (element.tagName === 'A') {
+    xdmData.eventType = 'web.webinteraction.linkClicks';
+    xdmData.web = {
+      webInteraction: {
+        URL: `${element.href}`,
+        // eslint-disable-next-line no-nested-ternary
+        name: `${element.text ? element.text.trim() : (element.innerHTML ? element.innerHTML.trim() : '')}`,
+        linkClicks: {
+          // don't count as link click, as this event should be tracked separately,
+          // track only the details of the link with the conversion
+          value: 0,
+        },
+        type: 'other',
+      },
+    };
+  }
+
+  return sendAnalyticsEvent(xdmData);
+}

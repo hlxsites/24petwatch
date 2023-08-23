@@ -1,3 +1,4 @@
+/* global alloy */
 import {
   sampleRUM,
   buildBlock,
@@ -21,7 +22,7 @@ import {
   createInlineScript,
   getAlloyInitScript,
   setupAnalyticsTrackingWithAlloy,
-  analyticsTrackLinkClicks,
+  analyticsTrackConversion,
 } from './lib-analytics.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -94,34 +95,15 @@ async function initializeConversionTracking() {
   const { initConversionTracking } = await import('../plugins/rum-conversion/src/index.js');
   await initConversionTracking.call(context, document);
 
-  let conversionEvent;
-
   // call upon conversion events, sends them to alloy
   sampleRUM.always.on('convert', async (data) => {
     const { element } = data;
-    // eslint-disable-next-line no-undef
-    if (element && alloy) {
-      // form tracking related logic should be added here if need be.
-      // see https://github.com/adobe/franklin-rum-conversion#integration-with-analytics-solutions
-      if (element.tagName === 'A') {
-        conversionEvent = {
-          event: 'Link Click',
-          ...(data.source ? { conversionName: data.source } : {}),
-          ...(data.target ? { conversionValue: data.target } : {}),
-        };
-        analyticsTrackLinkClicks(element, 'other', {
-          conversion: {
-            ...(conversionEvent.conversionName
-              ? { conversionName: `${conversionEvent.conversionName}` }
-              : {}),
-            ...(conversionEvent.conversionValue
-              ? { conversionValue: `${conversionEvent.conversionValue}` }
-              : {}),
-          },
-        });
-        conversionEvent = undefined;
-      }
+    if (!element || !alloy) {
+      return;
     }
+    // form tracking related logic should be added here if need be.
+    // see https://github.com/adobe/franklin-rum-conversion#integration-with-analytics-solutions
+    analyticsTrackConversion({ ...data });
   });
 }
 
