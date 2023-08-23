@@ -193,7 +193,7 @@ export async function analyticsTrackLinkClicks(element, linkType = 'other', addi
       eventType: 'web.webinteraction.linkClicks',
       web: {
         webInteraction: {
-          linkURL: `${element.href}`,
+          URL: `${element.href}`,
           // eslint-disable-next-line no-nested-ternary
           name: `${element.text ? element.text.trim() : (element.innerHTML ? element.innerHTML.trim() : '')}`,
           linkClicks: {
