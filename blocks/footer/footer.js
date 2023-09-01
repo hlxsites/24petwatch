@@ -6,7 +6,7 @@ import {
   isMobile,
 } from '../../scripts/lib-franklin.js';
 
-const socialMediaTargets = ['Instagram', 'Twitter', 'Facebook'];
+const socialNetworks = ['Instagram', 'Twitter', 'Facebook'];
 
 /**
  * instruments the tracking in the footer
@@ -30,11 +30,13 @@ function instrumentTrackingEvents(footer) {
         });
 
         // track social media clicks
-        const social = socialMediaTargets.find((social) => linkUrl.includes(social.toLowerCase()));
-        if (social) {
+        const socialNetwork = socialNetworks
+          .find((social) => linkUrl.includes(social.toLowerCase()));
+
+        if (socialNetwork) {
           trackGTMEvent('social_interactions', {
             page_location: pageLocation,
-            social_network: social,
+            social_network: socialNetwork,
           });
         }
 
@@ -44,7 +46,7 @@ function instrumentTrackingEvents(footer) {
             page_url: pageUrl,
           });
         }
-      })
+      });
     });
 }
 

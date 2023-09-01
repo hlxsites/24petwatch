@@ -58,7 +58,7 @@ export function getGTMInitScript() {
   window.dataLayer.push({
     event:'gtm.js',
     'gtm.start': new Date().getTime(),
-  });`
+  });`;
 }
 
 /**
@@ -200,7 +200,7 @@ export async function setupAnalyticsTrackingWithAlloy(document) {
  * @returns {Promise<void>}
  */
 export async function setupAnalyticsTrackingWithGTM() {
-  setTimeout(() => createInlineScript(document, document.body, GTM_LOAD_SCRIPT, "text/javascript"), 3000);
+  setTimeout(() => createInlineScript(document, document.body, GTM_LOAD_SCRIPT, 'text/javascript'), 3000);
 }
 
 /**

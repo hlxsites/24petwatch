@@ -7,7 +7,7 @@ import {
   isTablet,
   isDesktop,
 } from '../../scripts/lib-franklin.js';
-import { trackGTMEvent } from "../../scripts/lib-analytics.js";
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
 let positionY = 0;
 const SCROLL_STEP = 25;
@@ -164,7 +164,7 @@ function instrumentTrackingEvents(header) {
         if (title === 'Report a Lost or Found Pet') {
           trackGTMEvent('pet_lost_found_report_click');
         }
-      })
+      });
     });
 }
 

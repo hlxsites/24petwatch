@@ -128,7 +128,7 @@ function instrumentTrackingEvents(main) {
             link_url: linkUrl,
           });
         }
-      })
+      });
     });
 }
 
