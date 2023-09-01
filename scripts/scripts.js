@@ -21,8 +21,10 @@ import {
   analyticsSetConsent,
   createInlineScript,
   getAlloyInitScript,
+  getGTMInitScript,
   setupAnalyticsTrackingWithAlloy,
-  analyticsTrackConversion,
+  setupAnalyticsTrackingWithGTM,
+  analyticsTrackConversion, trackGTMEvent,
 } from './lib-analytics.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
@@ -80,6 +82,7 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   if (main) {
     createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
+    createInlineScript(document, document.body, getGTMInitScript(), 'text/javascript');
     decorateMain(main);
     document.body.classList.add('appear');
     await waitForLCP(LCP_BLOCKS);
@@ -108,6 +111,28 @@ async function initializeConversionTracking() {
 }
 
 /**
+ * instruments the tracking in the main
+ * @param {Element} main The main element
+ */
+function instrumentTrackingEvents(main) {
+  main.querySelectorAll('a')
+    .forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const linkText = (e.target.textContent || '').trim();
+        const linkUrl = e.target.href;
+
+        // track cta clicks on main
+        if (e.target.classList.contains('button')) {
+          trackGTMEvent('cta_click', {
+            link_text: linkText,
+            link_url: linkUrl,
+          });
+        }
+      })
+    });
+}
+
+/**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
  */
@@ -128,8 +153,10 @@ async function loadLazy(doc) {
   sampleRUM.observe(main.querySelectorAll('picture > img'));
 
   await setupAnalyticsTrackingWithAlloy(document);
+  await setupAnalyticsTrackingWithGTM();
   analyticsSetConsent(true);
   await initializeConversionTracking();
+  instrumentTrackingEvents(main);
 }
 
 /**

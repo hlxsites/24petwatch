@@ -1,4 +1,52 @@
-import { readBlockConfig, decorateIcons, decorateLinks } from '../../scripts/lib-franklin.js';
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import {
+  readBlockConfig,
+  decorateIcons,
+  decorateLinks,
+  isMobile,
+} from '../../scripts/lib-franklin.js';
+
+const socialMediaTargets = ['Instagram', 'Twitter', 'Facebook'];
+
+/**
+ * instruments the tracking in the footer
+ * @param {Element} footer The footer block element
+ */
+function instrumentTrackingEvents(footer) {
+  footer.querySelectorAll('a')
+    .forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const menuLocation = isMobile.matches ? 'mobile' : 'footer';
+        const pageLocation = window.location.pathname;
+        const pageUrl = window.location.href;
+        const linkText = (e.target.textContent || '').trim();
+        const linkUrl = e.target.href;
+
+        // track navigation events
+        trackGTMEvent('navigation', {
+          menu_location: menuLocation,
+          link_text: linkText,
+          link_url: linkUrl,
+        });
+
+        // track social media clicks
+        const social = socialMediaTargets.find((social) => linkUrl.includes(social.toLowerCase()));
+        if (social) {
+          trackGTMEvent('social_interactions', {
+            page_location: pageLocation,
+            social_network: social,
+          });
+        }
+
+        // track clicks to call
+        if (linkUrl.startsWith('tel')) {
+          trackGTMEvent('click_to_call', {
+            page_url: pageUrl,
+          });
+        }
+      })
+    });
+}
 
 /**
  * loads and decorates the footer
@@ -97,6 +145,7 @@ export default async function decorate(block) {
 
     decorateIcons(footer);
     decorateLinks(footer);
+    instrumentTrackingEvents(footer);
     block.append(footer);
   }
 }

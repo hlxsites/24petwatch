@@ -3,14 +3,14 @@ import {
   decorateIcons,
   decorateButtons,
   decorateLinks,
+  isMobile,
+  isTablet,
+  isDesktop,
 } from '../../scripts/lib-franklin.js';
+import { trackGTMEvent } from "../../scripts/lib-analytics.js";
 
 let positionY = 0;
 const SCROLL_STEP = 25;
-
-// media query match that indicates mobile/tablet width
-const isTablet = window.matchMedia('(min-width: 768px)');
-const isDesktop = window.matchMedia('(min-width: 900px)');
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -133,6 +133,42 @@ function decorateLanguageSelector(block) {
 }
 
 /**
+ * instruments the tracking in the header
+ * @param {Element} header The header block element
+ */
+function instrumentTrackingEvents(header) {
+  header.querySelectorAll('a')
+    .forEach((anchor) => {
+      anchor.addEventListener('click', (e) => {
+        const menuLocation = isMobile.matches ? 'mobile' : 'header';
+        const linkText = (e.target.textContent || '').trim();
+        const linkUrl = e.target.href;
+        const title = (e.target.title || '').trim();
+
+        // track navigation events
+        trackGTMEvent('navigation', {
+          menu_location: menuLocation,
+          link_text: linkText,
+          link_url: linkUrl,
+        });
+
+        // track cta clicks on header
+        if (e.target.classList.contains('button')) {
+          trackGTMEvent('cta_click', {
+            link_text: linkText,
+            link_url: linkUrl,
+          });
+        }
+
+        // track report lost and found pet
+        if (title === 'Report a Lost or Found Pet') {
+          trackGTMEvent('pet_lost_found_report_click');
+        }
+      })
+    });
+}
+
+/**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -211,6 +247,7 @@ export default async function decorate(block) {
     decorateIcons(nav);
     decorateButtons(nav);
     decorateLinks(nav);
+    instrumentTrackingEvents(nav);
     const navWrapper = document.createElement('div');
     navWrapper.className = 'nav-wrapper';
     navWrapper.append(nav);

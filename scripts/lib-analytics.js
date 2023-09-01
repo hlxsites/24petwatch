@@ -16,6 +16,10 @@
  * @type {string}
  */
 const CUSTOM_SCHEMA_NAMESPACE = '_pethealthinc';
+const GTM_LOAD_SCRIPT = `(function(w,d,s,l,i){var f=d.getElementsByTagName(s)[0],
+  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+  })(window,document,'script','dataLayer','GTM-MNF423K');`;
 
 /**
  * Returns experiment id and variant running
@@ -42,6 +46,19 @@ export function getExperimentDetails() {
 export function getAlloyInitScript() {
   return `!function(n,o){o.forEach(function(o){n[o]||((n.__alloyNS=n.__alloyNS||[]).push(o),n[o]=
   function(){var u=arguments;return new Promise(function(i,l){n[o].q.push([i,l,u])})},n[o].q=[])})}(window,["alloy"]);`;
+}
+
+/**
+ * Returns script that initializes a queue for each GTM instance,
+ * in order to be ready to receive events before the google martech stack is loaded
+ * @type {string}
+ */
+export function getGTMInitScript() {
+  return `window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push({
+    event:'gtm.js',
+    'gtm.start': new Date().getTime(),
+  });`
 }
 
 /**
@@ -179,6 +196,14 @@ export async function setupAnalyticsTrackingWithAlloy(document) {
 }
 
 /**
+ * Creates the required datalayer object required for google stack
+ * @returns {Promise<void>}
+ */
+export async function setupAnalyticsTrackingWithGTM() {
+  setTimeout(() => createInlineScript(document, document.body, GTM_LOAD_SCRIPT, "text/javascript"), 3000);
+}
+
+/**
  * Basic tracking for link clicks with alloy
  * Documentation: https://experienceleague.adobe.com/docs/experience-platform/edge/data-collection/track-links.html
  * @param element
@@ -269,4 +294,11 @@ export async function analyticsTrackConversion(data, additionalXdmFields = {}) {
   }
 
   return sendAnalyticsEvent(xdmData);
+}
+
+export async function trackGTMEvent(event, payload = {}) {
+  window.dataLayer.push({
+    event,
+    ...payload,
+  });
 }

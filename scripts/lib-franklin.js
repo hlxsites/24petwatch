@@ -660,6 +660,11 @@ export function setup() {
   }
 }
 
+// media queries that indicates mobile/tablet width
+export const isMobile = window.matchMedia('(max-width: 767px)');
+export const isTablet = window.matchMedia('(min-width: 768px)');
+export const isDesktop = window.matchMedia('(min-width: 900px)');
+
 /**
  * Auto initializiation.
  */
