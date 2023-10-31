@@ -13,6 +13,11 @@ import {
   waitForLCP,
   loadBlocks,
   loadCSS,
+  getMetadata,
+  getAllMetadata,
+  isDesktop,
+  isMobile,
+  isTablet,
 } from './lib-franklin.js';
 
 import {
@@ -27,9 +32,25 @@ import {
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
+const AUDIENCES = {
+  mobile: () => isMobile,
+  tablet: () => isTablet,
+  desktop: () => isDesktop,
+  // define your custom audiences here as needed
+};
+
 window.hlx.plugins.add('rum-conversion', {
   url: '/plugins/rum-conversion/src/index.js',
   load: 'lazy',
+});
+
+window.hlx.plugins.add('experience-decisioning', {
+  condition: () => getMetadata('experiment')
+    || Object.keys(getAllMetadata('campaign')).length
+    || Object.keys(getAllMetadata('audience')).length,
+  options: { audiences: AUDIENCES },
+  load: 'eager',
+  url: '/plugins/experience-decisioning/src/index.js',
 });
 
 /**
