@@ -7,11 +7,13 @@ import createHeader from './header.js';
 import createHero from './hero.js';
 import createMetadata from './metadata.js';
 import createBold from './bold.js';
+import blogBanner from './blogBanner.js';
 
 export const transformers = [
   createBold,
   createFullLayoutSection,
-  createHero,
+  blogBanner,
+  // createHero,
   createHomepage,
   createCards,
   createFeatureImage,
