@@ -25,6 +25,24 @@ const createMetadata = (main, document) => {
     delete meta.Title;
   }
 
+  // Get blog article tags
+  const blogTags = document.querySelectorAll('div.cmp-contentfragment__element--tag > dd.cmp-contentfragment__element-value');
+  if( blogTags ) {
+    for( let i = 0; i < blogTags.length; i += 1 ) {
+      meta.Tags = blogTags[i].innerHTML.replace('<br>', ' ');
+    }
+  }
+
+  // Get blog related articles
+  // Assumes that related articles are rendered as the only ul on the page, if not, related articles are borked for the page
+  const relatedArticles = document.querySelector('ul.cmp-image-list__list');
+  if ( relatedArticles ){
+    const articleLinks = relatedArticles.querySelectorAll('a.cmp-image-list__item-title-link');
+    for ( let i = 0; i < articleLinks.length; i += 0 ) {
+      meta.Related = articleLinks[i].getAttribute('href');
+    }
+  }
+
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(block);
 
