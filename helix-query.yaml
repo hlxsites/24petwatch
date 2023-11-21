@@ -18,6 +18,9 @@ indices:
       description:
         select: head > meta[property="og:description"]
         value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: attribute(el, "content")
   blog_ca:
     include:
       - /ca/blog/**
@@ -34,4 +37,7 @@ indices:
         value: attribute(el, "content")
       description:
         select: head > meta[property="og:description"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
         value: attribute(el, "content")
