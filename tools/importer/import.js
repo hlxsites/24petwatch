@@ -13,6 +13,7 @@
 /* eslint-disable class-methods-use-this */
 
 // helix-importer-ui <-> node compatibility:
+
 import {
   xfTransformers, xfAsyncTransformers, transformers, postTransformers,
 } from './transformers/index.js';
@@ -68,20 +69,6 @@ export default {
     postTransformers.forEach(
       (fn) => fn.call(this, main, document, params, url),
     );
-
-
-    // Try to remove dts and dds that are not needed
-    const dts = document.querySelectorAll('dt');
-    const dds = document.querySelectorAll('dd');
-    if ( dts ) {
-      for( let i = 0; i < dts.length; i += 1) {
-        if( dts[i].textContent === 'Image' || dts[i].textContent === 'Title' || dts[i].textContent === 'Author Bio' || dts[i].textContent === 'Tag' )
-          {
-            dts[i].remove();
-            dds[i].remove();
-           }
-         }
-      }
 
     return main;
   },

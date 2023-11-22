@@ -8,11 +8,14 @@ import createHero from './hero.js';
 import createMetadata from './metadata.js';
 import createBold from './bold.js';
 import blogBanner from './blogBanner.js';
+import createBlogArticle from './blogArticle.js';
+import cleanBlog from './cleanBlog.js';
 
 export const transformers = [
   createBold,
   createFullLayoutSection,
   blogBanner,
+  createBlogArticle,
   // createHero,
   createHomepage,
   createCards,
@@ -33,4 +36,5 @@ export const preTransformers = [
 
 export const postTransformers = [
   createMetadata,
+  cleanBlog
 ];
