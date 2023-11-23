@@ -29,7 +29,9 @@ const createMetadata = (main, document) => {
   const blogTags = document.querySelectorAll('div.cmp-contentfragment__element--tag > dd.cmp-contentfragment__element-value');
   if( blogTags ) {
     for( let i = 0; i < blogTags.length; i += 1 ) {
-      meta.Tags = blogTags[i].innerHTML.replace('<br>', ' ');
+      meta.Tags = blogTags[i].innerHTML.trim()
+        .replaceAll('24petwatch:newletter/topic/','',)
+        .replaceAll('<br>', ',');
     }
   }
 
