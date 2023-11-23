@@ -401,6 +401,12 @@ body.blog-post .default-content-wrapper {
   padding: 0 0.9375rem;
 }
 
+body.blog-post .default-content-wrapper p.author {
+  font-family: var(--heading-font-family);
+  font-size: 1.3125rem;
+  font-weight: 300;
+}
+
 main .section.highlight p em {
   display: block;
   font-size: 2.5rem;
