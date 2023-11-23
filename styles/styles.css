@@ -381,6 +381,10 @@ main .section.highlight p {
 }
 
 /* Blog post styles */
+body.blog-post main .section {
+  padding: 0.9375rem;
+}
+
 body.blog-post main h1, body.blog-post main h2, body.blog-post main h3 {
   text-align: left;
 }
@@ -396,7 +400,7 @@ body.blog-post main h2 {
   line-height: 2.25rem;
 }
 
-body.blog-post .default-content-wrapper {
+body.blog-post main .section > div {
   font-size: 1.125rem;
   padding: 0 0.9375rem;
 }
@@ -421,6 +425,10 @@ main .section.heading-light h2 {
 }
 
 @media (min-width: 768px) {
+  body.blog-post main .section {
+    padding: 1.875rem;
+  }
+
   main .section.highlight p {
     font-size: 1.625rem;
     line-height: 2.25rem;
