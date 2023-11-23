@@ -63,6 +63,7 @@ export default {
       'nav',
       'div.imagelist',
       'div.cmp-experiencefragment--blog-page-cta-component',
+      'div.cmp-layout-manual-articles',
     ]);
 
     // create the metadata block and append it to the main element

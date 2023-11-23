@@ -45,6 +45,11 @@ const createMetadata = (main, document) => {
     }
   }
 
+  const author = document.querySelector('div.cmp-contentfragment__element--byline dd');
+  if (author) {
+      meta.Author = author.textContent.trim().replace(/^By /, '');
+  }
+
   const block = WebImporter.Blocks.getMetadataBlock(document, meta);
   main.append(block);
 
