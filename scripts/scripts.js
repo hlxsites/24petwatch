@@ -59,11 +59,8 @@ function buildBlockPostPage(main) {
   if (lastContentSection) {
     lastContentSection.appendChild(socialMediaButtons.cloneNode(true));
 
-    const lostPetTeaser = document.createRange().createContextualFragment('<div class="lost-pet-teaser">Lost Pet Teaser Block Placeholder</div>');
-    lastContentSection.appendChild(lostPetTeaser);
-
-    const similarBlogs = document.createRange().createContextualFragment('<div class="similar-blogs">Similar Blogs Block Placeholder</div>');
-    lastContentSection.appendChild(similarBlogs);
+    const fragment = document.createRange().createContextualFragment('<div><div class="fragment">/fragments/blog-footer</div></div>');
+    lastContentSection.parentElement.appendChild(fragment);
   }
 }
 
@@ -73,6 +70,10 @@ function buildBlockPostPage(main) {
  */
 function buildAutoBlocks(main) {
   try {
+    if (main.parentNode !== document.body) {
+      return;
+    }
+
     if (!document.body.classList.contains('blog-post')) {
       buildHeroBlock(main);
     } else {
