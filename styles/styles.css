@@ -385,6 +385,12 @@ body.blog-post main .section {
   padding: 0.9375rem;
 }
 
+body.blog-post main .section > div {
+  margin: 1.25rem auto;
+  font-size: 1.125rem;
+  padding: 0 0.9375rem;
+}
+
 body.blog-post main h1, body.blog-post main h2, body.blog-post main h3 {
   text-align: left;
 }
@@ -398,11 +404,6 @@ body.blog-post main h1 {
 body.blog-post main h2 {
   font-size: 1.625rem;
   line-height: 2.25rem;
-}
-
-body.blog-post main .section > div {
-  font-size: 1.125rem;
-  padding: 0 0.9375rem;
 }
 
 body.blog-post .default-content-wrapper p.author {
