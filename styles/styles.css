@@ -380,6 +380,27 @@ main .section.highlight p {
   margin-bottom: 0;
 }
 
+/* Blog post styles */
+body.blog-post main h1, body.blog-post main h2, body.blog-post main h3 {
+  text-align: left;
+}
+
+body.blog-post main h1 {
+  font-size: 2.1875rem;
+  line-height: 2.813rem;
+  font-weight: 300;
+}
+
+body.blog-post main h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+}
+
+body.blog-post .default-content-wrapper {
+  font-size: 1.125rem;
+  padding: 0 0.9375rem;
+}
+
 main .section.highlight p em {
   display: block;
   font-size: 2.5rem;

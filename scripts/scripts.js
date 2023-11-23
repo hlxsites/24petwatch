@@ -44,13 +44,38 @@ function buildHeroBlock(main) {
   }
 }
 
+function buildBlockPostPage(main) {
+  // Below h1
+  const h1 = main.querySelector('h1');
+  const socialMediaButtons = document.createRange().createContextualFragment('<div class="sharing">Sharing Block Placeholder</div>');
+  if (h1) {
+    h1.parentElement.insertBefore(socialMediaButtons.cloneNode(true), h1.nextSibling);
+  }
+
+  // Below last content
+  const lastContentSection = main.querySelector('* > div:last-of-type');
+  if (lastContentSection) {
+    lastContentSection.appendChild(socialMediaButtons.cloneNode(true));
+
+    const lostPetTeaser = document.createRange().createContextualFragment('<div class="lost-pet-teaser">Lost Pet Teaser Block Placeholder</div>');
+    lastContentSection.appendChild(lostPetTeaser);
+
+    const similarBlogs = document.createRange().createContextualFragment('<div class="similar-blogs">Similar Blogs Block Placeholder</div>');
+    lastContentSection.appendChild(similarBlogs);
+  }
+}
+
 /**
  * Builds all synthetic blocks in a container element.
  * @param {Element} main The container element
  */
 function buildAutoBlocks(main) {
   try {
-    buildHeroBlock(main);
+    if (!document.body.classList.contains('blog-post')) {
+      buildHeroBlock(main);
+    } else {
+      buildBlockPostPage(main);
+    }
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
