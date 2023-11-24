@@ -119,6 +119,48 @@
   border-bottom: 2px solid var(--text-color);
 }
 
+.cards-filterselect {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.cards-filterselect .total, .cards-filterselect label {
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  line-height: 1.625rem;
+}
+
+.cards-filterselect select {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 1rem 1rem 1rem 0;
+  width: 100%;
+  font-size: 18px;
+}
+
+.cards-filterselect .select-group {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid var(--text-color);
+  max-width: 300px;
+  margin: 0 0 2rem;
+}
+
+.cards-filterselect .select-group::after {
+  content: '';
+  justify-self: end;
+  width: 11px;
+  height: 11px;
+  margin-top: 13px;
+  background-image: url('/icons/arrow-down.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-bottom: 1rem;
+}
+
 @media (min-width: 768px) {
   .cards > ul {
     grid-template-columns: 1fr 1fr 1fr;

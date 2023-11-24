@@ -2,6 +2,16 @@ import { createOptimizedPicture, getMetadata } from '../../scripts/lib-franklin.
 
 const isCanada = window.location.pathname.startsWith('/ca/');
 
+async function getTagFilters() {
+  let index = new URL(`${isCanada ? '/ca' : ''}/blog/tag-filters.json`, window.location.origin);
+  if (!window.location.hostname.includes('24petwatch.com')) {
+    index = new URL(`https://main--24petwatch--hlxsites.hlx.page${isCanada ? '/ca' : ''}/blog/tag-filters.json`); // TODO .live
+  }
+  const response = await fetch(index);
+  const json = await response.json();
+  return json.data;
+}
+
 async function loadBlogPosts() {
   let index = new URL(`${isCanada ? '/ca' : ''}/blog/query-index.json`, window.location.origin);
   if (!window.location.hostname.includes('24petwatch.com')) {
@@ -68,6 +78,7 @@ const fetchBlogPosts = async (page = 1, tags = [], searchTerm = '', pagesize = 9
     items: data.slice(start, end),
     pages: Math.ceil(total / pagesize),
     currentPage,
+    total,
   };
 };
 
@@ -172,6 +183,38 @@ function createSearchBox(block, searchTerm) {
   block.closest('.cards-wrapper').querySelector('.cards-searchbar form').addEventListener('submit', onSubmit);
 }
 
+async function createFilterSelect(block, total, currentTag) {
+  const tags = await getTagFilters();
+
+  const onChange = (e) => {
+    const newUrl = new URL(window.location);
+    if (e.target.value !== '') {
+      newUrl.searchParams.set('tag', e.target.value);
+    } else {
+      newUrl.searchParams.delete('tag');
+    }
+    newUrl.searchParams.set('page', 1);
+    window.history.pushState({}, '', newUrl.toString());
+    // eslint-disable-next-line no-use-before-define
+    decorate(block);
+  };
+
+  const filterselect = document.createRange().createContextualFragment(`
+    <div class="cards-filterselect">
+      <div class="total">${total} Results</div>
+      <label for="filter">Filter by:</label>
+      <div class="select-group">
+        <select id="filter">
+          <option value="">Topic</option>
+          ${tags.map(({ Name, Value }) => `<option value="${Value}" ${Value === currentTag ? 'selected="selected"' : ''}>${Name}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+  `);
+  block.closest('.cards-wrapper').insertBefore(filterselect, block.closest('.cards-wrapper').querySelector('.block'));
+  block.closest('.cards-wrapper').querySelector('.cards-filterselect select').addEventListener('change', onChange);
+}
+
 async function populateBlogTeaser(block) {
   const tags = getMetadata('article:tag').split(', ');
   const response = await fetchBlogPosts(1, tags, '', 3);
@@ -186,7 +229,10 @@ async function populateBlogGrid(block) {
   const searchParams = new URLSearchParams(window.location.search);
   const page = parseInt(searchParams.get('page'), 10) || 1;
   const searchTerm = searchParams.get('search') || '';
-  const { items, pages, currentPage } = await fetchBlogPosts(page, [], searchTerm.replace(/[^a-zA-Z0-9 ]/g, ''), 9);
+  const tags = (searchParams.get('tag') ? [searchParams.get('tag')] : []).map((t) => t.replace(/[^a-z0-9-]/g, ''));
+  const {
+    items, pages, currentPage, total,
+  } = await fetchBlogPosts(page, tags, searchTerm.replace(/[^a-zA-Z0-9 ]/g, ''), 9);
   items.forEach((item) => {
     const card = document.createElement('div');
     card.appendChild(createBlogCard(item));
@@ -198,9 +244,10 @@ async function populateBlogGrid(block) {
       <h3>Sorry, there are no results that match your search</h3>
       <p>Please check your spelling or try again using different keywords</p>
     `));
+  } else {
+    createFilterSelect(block, total, tags.length > 0 ? tags[0] : null);
   }
 
-  // TODO: Filter by tags
   createSearchBox(block, searchTerm);
   createPagination(block, pages, currentPage);
 }
