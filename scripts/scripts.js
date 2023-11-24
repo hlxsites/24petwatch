@@ -52,7 +52,7 @@ function buildBlockPostPage(main) {
   if (h1) {
     const author = getMetadata('author');
     if (author) {
-      const authorElem = document.createRange().createContextualFragment(`<p class="author">${author}</p>`);
+      const authorElem = document.createRange().createContextualFragment(`<p class="author">By ${author}</p>`);
       h1.parentElement.insertBefore(authorElem, h1.nextSibling);
     }
     h1.parentElement.insertBefore(socialMediaButtons.cloneNode(true), h1.nextSibling);
