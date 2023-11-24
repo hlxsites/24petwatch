@@ -79,6 +79,7 @@
   list-style-type: none;
   display: flex;
   gap: 0.5rem;
+  padding: 0;
   justify-content: center;
 }
 
@@ -97,6 +98,24 @@
   background-color: var(--text-color);
   color: var(--background-color);
   pointer-events: none;
+}
+
+.cards-searchbar {
+  padding: 0.9375rem;
+  box-shadow: 0 4px 3px #00000040;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.cards-searchbar label {
+  display: none;
+}
+
+.cards-searchbar input {
+  max-width: unset;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 2px solid var(--text-color);
 }
 
 @media (min-width: 768px) {

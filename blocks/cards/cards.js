@@ -142,6 +142,35 @@ function createPagination(block, pages, currentPage) {
   block.closest('.cards-wrapper').querySelectorAll('.cards-pagination a').forEach((a) => a.addEventListener('click', onPaginate));
 }
 
+function createSearchBox(block, searchTerm) {
+  const onSubmit = (e) => {
+    const newSearchTerm = e.target.querySelector('input').value;
+    const newUrl = new URL(window.location);
+    if (newSearchTerm !== '') {
+      newUrl.searchParams.set('search', newSearchTerm);
+    } else {
+      newUrl.searchParams.delete('search');
+    }
+    newUrl.searchParams.set('page', 1);
+    window.history.pushState({}, '', newUrl.toString());
+    e.preventDefault();
+    // eslint-disable-next-line no-use-before-define
+    decorate(block);
+  };
+
+  const searchbar = document.createRange().createContextualFragment(`
+    <div class="cards-searchbar">
+      <form>
+        <label for="search">Search</label>
+        <input type="search" id="search" name="search" placeholder="Search blog" value="${searchTerm}">
+      </form>
+      ${searchTerm ? `<div class="searchbar-results">Search results for "${searchTerm}"</div>` : ''}
+    </div>
+  `);
+  block.closest('.cards-wrapper').prepend(searchbar);
+  block.closest('.cards-wrapper').querySelector('.cards-searchbar form').addEventListener('submit', onSubmit);
+}
+
 async function populateBlogTeaser(block) {
   const tags = getMetadata('article:tag').split(', ');
   const response = await fetchBlogPosts(1, tags, '', 3);
@@ -163,13 +192,19 @@ async function populateBlogGrid(block) {
     block.appendChild(card);
   });
 
-  // TODO: Display search box
+  if (items.length === 0) {
+    block.closest('.cards-wrapper').prepend(document.createRange().createContextualFragment(`
+      <h3>Sorry, there are no results that match your search</h3>
+      <p>Please check your spelling or try again using different keywords</p>
+    `));
+  }
+
   // TODO: Filter by tags
+  createSearchBox(block, searchTerm);
   createPagination(block, pages, currentPage);
 }
 
 export default async function decorate(block) {
-  // TODO: Clean
   const isBlogTeaser = block.classList.contains('blog-teaser');
   if (isBlogTeaser) {
     await populateBlogTeaser(block);
@@ -178,7 +213,7 @@ export default async function decorate(block) {
   const isBlogGrid = block.classList.contains('blog-grid');
   if (isBlogGrid) {
     block.textContent = '';
-    block.closest('.cards-wrapper').querySelector('.cards-pagination')?.remove();
+    block.closest('.cards-wrapper').querySelectorAll(':scope > *:not(.block)').forEach((e) => e.remove());
     await populateBlogGrid(block);
   }
 
@@ -189,7 +224,6 @@ export default async function decorate(block) {
     li.innerHTML = row.innerHTML;
     [...li.children].forEach((div) => {
       const href = li.querySelector('a')?.href;
-
       if (div.children.length === 1 && div.querySelector('picture')) {
         div.className = 'cards-card-image';
         wrapInAnchor(div, href);
