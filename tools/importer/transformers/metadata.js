@@ -16,7 +16,7 @@ const createMetadata = (main, document) => {
   const img = document.querySelector('body img:first-child');
   if (img && img.src) {
     const el = document.createElement('img');
-    el.src = img.src;
+    el.src = img.src.replace('https://www.24petwatch.com', '');
     meta.Image = el;
   }
 
