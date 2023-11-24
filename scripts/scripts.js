@@ -47,7 +47,7 @@ function buildHeroBlock(main) {
 function buildBlockPostPage(main) {
   // Below h1
   const h1 = main.querySelector('h1');
-  const socialMediaButtons = document.createRange().createContextualFragment('<div class="sharing">Sharing Block Placeholder</div>');
+  const socialMediaButtons = document.createRange().createContextualFragment('<div class="sharing"></div>');
 
   if (h1) {
     const author = h1.parentElement.querySelector('h1 + p > em');
