@@ -5,7 +5,7 @@ const isCanada = window.location.pathname.startsWith('/ca/');
 async function getTagFilters() {
   let index = new URL(`${isCanada ? '/ca' : ''}/blog/tag-filters.json`, window.location.origin);
   if (!window.location.hostname.includes('24petwatch.com')) {
-    index = new URL(`https://main--24petwatch--hlxsites.hlx.page${isCanada ? '/ca' : ''}/blog/tag-filters.json`); // TODO .live
+    index = new URL(`https://main--24petwatch--hlxsites.hlx.live${isCanada ? '/ca' : ''}/blog/tag-filters.json`);
   }
   const response = await fetch(index);
   const json = await response.json();
