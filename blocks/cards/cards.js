@@ -38,7 +38,11 @@ async function loadBlogPosts() {
 const fetchBlogPosts = async (page = 1, tags = [], searchTerm = '', pagesize = 9) => {
   let { data, total } = await loadBlogPosts();
 
-  // TODO filter by tags
+  // Filter by tags
+  if (tags.length > 0) {
+    data = data.filter(({ tags: blogTag }) => tags.some((t) => blogTag.includes(t)));
+    total = data.length;
+  }
 
   // Filter by search term
   if (searchTerm) {
@@ -83,14 +87,11 @@ function createBlogCard(item = {}) {
     path = new URL(path, 'https://www.24petwatch.com').toString();
   }
   try {
-    if (image === '0') {
-      throw new Error('invalid');
-    }
     image = new URL(image, window.location);
-  } catch (e) {
-    // TODO: Dummy image until images are available in index
-    image = new URL('https://www.24petwatch.com/content/24petwatch/us/en/blog/gifts-for-dog-lovers-2023.thumb.319.319.png');
-  }
+    image.hostname = window.location.hostname;
+    image.port = window.location.port;
+    image.protocol = window.location.protocol;
+  } catch (e) { /* ignore */ }
   if (title.startsWith('24Petwatch: ')) {
     title = title.replace('24Petwatch: ', '');
   }
@@ -237,8 +238,6 @@ export default async function decorate(block) {
   });
 
   [...ul.querySelectorAll('img')]
-    // TODO: Do not optimize absolute images for now
-    .filter((img) => !(img.src || '').startsWith('http'))
     .forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
   block.textContent = '';
   block.append(ul);
