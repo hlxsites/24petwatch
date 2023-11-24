@@ -50,11 +50,12 @@ function buildBlockPostPage(main) {
   const socialMediaButtons = document.createRange().createContextualFragment('<div class="sharing">Sharing Block Placeholder</div>');
 
   if (h1) {
-    const author = getMetadata('author');
+    const author = h1.parentElement.querySelector('h1 + p > em');
     if (author) {
-      const authorElem = document.createRange().createContextualFragment(`<p class="author">By ${author}</p>`);
-      h1.parentElement.insertBefore(authorElem, h1.nextSibling);
+      const authorElem = document.createRange().createContextualFragment(`<p class="author">${author.innerText}</p>`);
+      author.parentElement.replaceWith(authorElem);
     }
+
     h1.parentElement.insertBefore(socialMediaButtons.cloneNode(true), h1.nextSibling);
   }
 
