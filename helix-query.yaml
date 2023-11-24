@@ -4,6 +4,8 @@ indices:
   blog_us:
     include:
       - /blog/**
+    exclude:
+      - /blog/
     target: /blog/query-index.json
     properties:
       lastModified:
@@ -31,6 +33,8 @@ indices:
   blog_ca:
     include:
       - /ca/blog/**
+    exclude:
+      - /ca/blog/
     target: /ca/blog/query-index.json
     properties:
       lastModified:
@@ -53,4 +57,4 @@ indices:
         value: attribute(el, "content")
       tags:
         select: head > meta[name="tags"]
-        value: attribute(el, "content")
+        value: attribute(el, "content"), '([^,]+)')
