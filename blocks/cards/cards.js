@@ -2,28 +2,68 @@ import { createOptimizedPicture, getMetadata } from '../../scripts/lib-franklin.
 
 const isCanada = window.location.pathname.startsWith('/ca/');
 
-// eslint-disable-next-line no-unused-vars
-const fetchBlogPosts = async (page = 1, tags = [], pagesize = 9) => {
-  // TODO: Fetch whole index and cache it in sessionStorage to enable filtering and fulltext search
+async function loadBlogPosts() {
   let index = new URL(`${isCanada ? '/ca' : ''}/blog/query-index.json`, window.location.origin);
   if (!window.location.hostname.includes('24petwatch.com')) {
     index = new URL(`https://main--24petwatch--hlxsites.hlx.live${isCanada ? '/ca' : ''}/blog/query-index.json`);
   }
+  const chunkSize = 100;
+  const loadChunk = async (offset) => {
+    index.searchParams.set('limit', chunkSize);
+    index.searchParams.set('offset', offset);
 
-  const limit = pagesize;
-  const offset = (page - 1) * pagesize;
-  index.searchParams.set('limit', limit);
-  index.searchParams.set('offset', offset);
+    const response = await fetch(index);
+    const json = await response.json();
 
-  const response = await fetch(index);
-  const json = await response.json();
+    // Check if more has to be loaded
+    if (json.total > offset + chunkSize) {
+      return {
+        data: [...json.data, ...(await loadChunk(offset + 100)).data],
+        total: json.total,
+      };
+    }
+    return {
+      data: json.data,
+      total: json.total,
+    };
+  };
 
-  // TODO: Filter by tags once available in index
+  if (!window.blogPosts) {
+    window.blogPosts = await loadChunk(0);
+  }
+  return window.blogPosts;
+}
+
+// eslint-disable-next-line no-unused-vars
+const fetchBlogPosts = async (page = 1, tags = [], searchTerm = '', pagesize = 9) => {
+  let { data, total } = await loadBlogPosts();
+
+  // TODO filter by tags
+
+  // Filter by search term
+  if (searchTerm) {
+    data = data
+      .filter(({ title, description }) => title.toLowerCase().includes(searchTerm.toLowerCase())
+        || description.toLowerCase().includes(searchTerm.toLowerCase()));
+    total = data.length;
+  }
+
+  // Filter by page
+  const start = (page - 1) * pagesize;
+  const end = start + pagesize;
+
+  let currentPage = page;
+  if (currentPage > Math.ceil(total / pagesize)) {
+    currentPage = Math.ceil(total / pagesize);
+  }
+  if (currentPage < 1) {
+    currentPage = 1;
+  }
 
   return {
-    items: json.data,
-    pages: Math.ceil(json.total / pagesize),
-    currentPage: Math.max(1, page, Math.ceil(json.total / pagesize)),
+    items: data.slice(start, end),
+    pages: Math.ceil(total / pagesize),
+    currentPage,
   };
 };
 
@@ -71,9 +111,40 @@ function createBlogCard(item = {}) {
   `);
 }
 
+function createPagination(block, pages, currentPage) {
+  let pageSet = new Set([1, pages, currentPage, currentPage - 1, currentPage + 1]);
+  pageSet = Array.from(pageSet)
+    .filter((a) => a > 0 && a <= pages)
+    .sort((a, b) => a - b);
+
+  const onPaginate = (e) => {
+    const hrefPage = parseInt(new URL(e.target.href).searchParams.get('page'), 10);
+    const newUrl = new URL(window.location);
+    newUrl.searchParams.set('page', hrefPage);
+    window.history.pushState({}, '', newUrl.toString());
+    e.preventDefault();
+    // eslint-disable-next-line no-use-before-define
+    decorate(block);
+  };
+
+  const pagination = document.createRange().createContextualFragment(`
+    <div class="cards-pagination">
+      <ul>
+        ${currentPage > 1 ? `<li class="prev"><a href="?page=${currentPage - 1}">Prev</a></li>` : ''}
+        ${pageSet.map((p, index) => {
+    const item = index > 0 && p - pageSet[index - 1] > 1 ? '<li class="dots">...</li>' : '';
+    return `${item}<li class="${p === currentPage ? 'active' : ''}"><a href="?page=${p}">${p}</a></li>`;
+  }).join('')}
+        ${currentPage < pages ? `<li class="next"><a href="?page=${currentPage + 1}">Next</a></li>` : ''}
+      </ul>
+    </div>`);
+  block.closest('.cards-wrapper').appendChild(pagination);
+  block.closest('.cards-wrapper').querySelectorAll('.cards-pagination a').forEach((a) => a.addEventListener('click', onPaginate));
+}
+
 async function populateBlogTeaser(block) {
   const tags = getMetadata('article:tag').split(', ');
-  const response = await fetchBlogPosts(1, tags, 3);
+  const response = await fetchBlogPosts(1, tags, '', 3);
   response.items.forEach((item) => {
     const card = document.createElement('div');
     card.appendChild(createBlogCard(item));
@@ -81,10 +152,34 @@ async function populateBlogTeaser(block) {
   });
 }
 
+async function populateBlogGrid(block) {
+  const searchParams = new URLSearchParams(window.location.search);
+  const page = parseInt(searchParams.get('page'), 10) || 1;
+  const searchTerm = searchParams.get('search') || '';
+  const { items, pages, currentPage } = await fetchBlogPosts(page, [], searchTerm.replace(/[^a-zA-Z0-9 ]/g, ''), 9);
+  items.forEach((item) => {
+    const card = document.createElement('div');
+    card.appendChild(createBlogCard(item));
+    block.appendChild(card);
+  });
+
+  // TODO: Display search box
+  // TODO: Filter by tags
+  createPagination(block, pages, currentPage);
+}
+
 export default async function decorate(block) {
+  // TODO: Clean
   const isBlogTeaser = block.classList.contains('blog-teaser');
   if (isBlogTeaser) {
     await populateBlogTeaser(block);
+  }
+
+  const isBlogGrid = block.classList.contains('blog-grid');
+  if (isBlogGrid) {
+    block.textContent = '';
+    block.closest('.cards-wrapper').querySelector('.cards-pagination')?.remove();
+    await populateBlogGrid(block);
   }
 
   /* change to ul, li */
