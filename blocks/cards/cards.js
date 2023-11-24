@@ -1,11 +1,13 @@
-import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
+import { createOptimizedPicture, getMetadata } from '../../scripts/lib-franklin.js';
+
+const isCanada = window.location.pathname.startsWith('/ca/');
 
 // eslint-disable-next-line no-unused-vars
 const fetchBlogPosts = async (page = 1, tags = [], pagesize = 9) => {
   // TODO: Fetch whole index and cache it in sessionStorage to enable filtering and fulltext search
-  let index = new URL('/blog/query-index.json', window.location.origin);
+  let index = new URL(`${isCanada ? '/ca' : ''}/blog/query-index.json`, window.location.origin);
   if (!window.location.hostname.includes('24petwatch.com')) {
-    index = new URL('https://main--24petwatch--hlxsites.hlx.live/blog/query-index.json');
+    index = new URL(`https://main--24petwatch--hlxsites.hlx.live${isCanada ? '/ca' : ''}/blog/query-index.json`);
   }
 
   const limit = pagesize;
@@ -70,7 +72,7 @@ function createBlogCard(item = {}) {
 }
 
 async function populateBlogTeaser(block) {
-  const tags = Array.from(document.head.querySelectorAll('meta[property="article:tag"]')).map((m) => m.getAttribute('content'));
+  const tags = getMetadata('article:tag').split(', ');
   const response = await fetchBlogPosts(1, tags, 3);
   response.items.forEach((item) => {
     const card = document.createElement('div');

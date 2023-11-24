@@ -48,9 +48,13 @@ function buildBlockPostPage(main) {
   // Below h1
   const h1 = main.querySelector('h1');
   const socialMediaButtons = document.createRange().createContextualFragment('<div class="sharing">Sharing Block Placeholder</div>');
-  const author = document.createRange().createContextualFragment('<p class="author">By Maranda Elswick, DVM</p>');
+
   if (h1) {
-    h1.parentElement.insertBefore(author, h1.nextSibling);
+    const author = getMetadata('author');
+    if (author) {
+      const authorElem = document.createRange().createContextualFragment(`<p class="author">${author}</p>`);
+      h1.parentElement.insertBefore(authorElem, h1.nextSibling);
+    }
     h1.parentElement.insertBefore(socialMediaButtons.cloneNode(true), h1.nextSibling);
   }
 
