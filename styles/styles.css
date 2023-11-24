@@ -235,7 +235,13 @@ a:hover {
   color: var(--link-hover-color);
 }
 
-a[href*="//"]:not([href^="https://www.24petwatch.com"]):not([href^="https://24petwatch.com"]):not([href*="tel:"]):not([href^=localhost]):after {
+a[href*="//"]
+  :not([href^="https://www.24petwatch.com"])
+  :not([href^="https://24petwatch.com"])
+  :not([href*="tel:"])
+  :not([href^=localhost])
+  :not(.cards a)
+  :after {
   font-family: 'Font Awesome 6 Pro', sans-serif;
   content: "";
   margin:.3rem;

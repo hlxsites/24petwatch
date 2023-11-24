@@ -1,12 +1,28 @@
 import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
 
-const host = 'https://www.24petwatch.com';
-const sitesearchUrl = `https://${window.location.hostname.includes('aem-stage') ? 'aem-stage' : 'www'}.24petwatch.com/bin/24pethealth/sitesearch.json`;
-const sitesearchPayload = JSON.stringify({
-  context: '/content/24petwatch/us/en/blog/jcr:content/root/container/container_177885842/container_51910998/contentsearchresults',
-  resultsPerPage: 3,
-  requestedPage: 1,
-});
+// eslint-disable-next-line no-unused-vars
+const fetchBlogPosts = async (page = 1, tags = [], pagesize = 9) => {
+  let index = new URL('/blog/query-index.json', window.location.origin);
+  if (!window.location.hostname.includes('24petwatch.com')) {
+    index = new URL('https://main--24petwatch--hlxsites.hlx.live/blog/query-index.json');
+  }
+
+  const limit = pagesize;
+  const offset = (page - 1) * pagesize;
+  index.searchParams.set('limit', limit);
+  index.searchParams.set('offset', offset);
+
+  const response = await fetch(index);
+  const json = await response.json();
+
+  // TODO: Filter by tags once available in index
+
+  return {
+    items: json.data,
+    pages: Math.ceil(json.total / pagesize),
+    currentPage: Math.max(1, page, Math.ceil(json.total / pagesize)),
+  };
+};
 
 function wrapInAnchor(element, href) {
   const anchor = document.createElement('a');
@@ -17,33 +33,45 @@ function wrapInAnchor(element, href) {
 }
 
 function createBlogCard(item = {}) {
-  const blogThumbnail = `${host}${item.url.replace('.html', '')}.thumb.319.319.png`;
-  const blogUrl = `${host}${item.url.substring(item.url.indexOf('/blog')).replace('.html', '')}`;
+  let { title, image } = item;
+  const { path, description } = item;
 
-  return `<div>
-            <picture><img loading="lazy" alt="${item.name}" src="${blogThumbnail}"></picture>
-        </div>
-        <div>
-            <h4>${item.name}</h4>
-            <p>${item.description}</p>
-            <p><a href="${blogUrl}">Read more</a></p>
-        </div>`;
+  try {
+    if (image === '0') {
+      throw new Error('invalid');
+    }
+    image = new URL(image, window.location);
+  } catch (e) {
+    // TODO: Dummy image until images are available in index
+    image = new URL('https://www.24petwatch.com/content/24petwatch/us/en/blog/gifts-for-dog-lovers-2023.thumb.319.319.png');
+  }
+  if (title.startsWith('24Petwatch: ')) {
+    title = title.replace('24Petwatch: ', '');
+  }
+
+  return document.createRange().createContextualFragment(`
+    <div>
+      <picture>
+        <img loading="lazy" alt="${title}" src="${image.toString()}">
+      </picture>
+    </div>
+    <div>
+      <h4>${title}</h4>
+      <p>${description}</p>
+      <p>
+        <a href="${path}">Read more</a>
+      </p>
+    </div>
+  `);
 }
 
 async function populateBlogTeaser(block) {
-  const response = await fetch(sitesearchUrl, {
-    method: 'POST',
-    body: sitesearchPayload,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const blogItems = await response.json();
-
-  (blogItems.results || []).forEach((item) => {
+  const tags = Array.from(document.head.querySelectorAll('meta[property="article:tag"]')).map((m) => m.getAttribute('content'));
+  const response = await fetchBlogPosts(1, tags, 3);
+  response.items.forEach((item) => {
     const card = document.createElement('div');
-    card.innerHTML = createBlogCard(item);
-    block.append(card);
+    card.appendChild(createBlogCard(item));
+    block.appendChild(card);
   });
 }
 
@@ -74,7 +102,8 @@ export default async function decorate(block) {
   });
 
   [...ul.querySelectorAll('img')]
-    .filter((img) => !(img.src || '').startsWith('http')) // do not optimize absolute images for now
+    // TODO: Do not optimize absolute images for now
+    .filter((img) => !(img.src || '').startsWith('http'))
     .forEach((img) => img.closest('picture').replaceWith(createOptimizedPicture(img.src, img.alt, false, [{ width: '750' }])));
   block.textContent = '';
   block.append(ul);
