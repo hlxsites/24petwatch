@@ -12,6 +12,11 @@ import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 let positionY = 0;
 const SCROLL_STEP = 25;
 
+const urls = {
+  'usa': {url: '/', name: 'US', icon: 'icon-flagusa', lang: 'en-US'},
+  'canada': {url:'/ca/', name: 'Canada', icon: 'icon-flagcanada', lang: 'en-CA'},
+}
+
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
@@ -105,11 +110,18 @@ function toggleMenu(nav, navSections, closeAll = null) {
 }
 
 function decorateLanguageSelector(block) {
+  let currentCountry = urls['usa'];
+  let alternateCountry = urls['canada'];
+  if (window.location.pathname.startsWith('/ca/')) {
+    currentCountry = urls['canada'];
+    alternateCountry = urls['usa'];
+  }
+
   const languageSelector = document.createElement('li');
   languageSelector.classList.add('language-selector');
-  languageSelector.innerHTML = `<span class="icon icon-flagusa"></span>
+  languageSelector.innerHTML = `<span class="icon ${currentCountry.icon}"></span>
       <ul>
-        <li><a href="https://www.24petwatch.com/ca" hreflang="en-CA" rel="alternate" title="Canada"><span class="icon icon-flagcanada"></span>Canada</a></li>
+        <li><a href="${alternateCountry.url}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"></span>${alternateCountry.name}</a></li>
       </ul>`;
   block.querySelector(':scope > ul').prepend(languageSelector);
 
@@ -176,8 +188,12 @@ export default async function decorate(block) {
   // fetch nav content
   const navMeta = getMetadata('nav');
   block.textContent = '';
+  let baseHeaderUrl = '/fragments/header/master';
+  if (window.location.hostname !== 'www.24petwatch.com') {
+    baseHeaderUrl = `https://main--24petwatch-crosswalk--hlxsites.hlx.live/fragments/header/master`;
+  }
 
-  const navPath = navMeta ? new URL(navMeta).pathname : '/fragments/header/master';
+  const navPath = navMeta ? new URL(navMeta).pathname : baseHeaderUrl;
   const resp = await fetch(`${navPath}.plain.html`);
 
   if (false) {
