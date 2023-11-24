@@ -397,7 +397,8 @@ body.blog-post main .section > div {
   padding: 0 0.9375rem;
 }
 
-body.blog-post main h1, body.blog-post main h2, body.blog-post main h3 {
+body.blog-post main h1, body.blog-post main h2, body.blog-post main h3, body.blog-post main h4,
+body.blog-index main h1, body.blog-index main h2, body.blog-index main h3, body.blog-index main h4 {
   text-align: left;
 }
 
