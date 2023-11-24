@@ -2,6 +2,7 @@ import { createOptimizedPicture } from '../../scripts/lib-franklin.js';
 
 // eslint-disable-next-line no-unused-vars
 const fetchBlogPosts = async (page = 1, tags = [], pagesize = 9) => {
+  // TODO: Fetch whole index and cache it in sessionStorage to enable filtering and fulltext search
   let index = new URL('/blog/query-index.json', window.location.origin);
   if (!window.location.hostname.includes('24petwatch.com')) {
     index = new URL('https://main--24petwatch--hlxsites.hlx.live/blog/query-index.json');
@@ -33,9 +34,12 @@ function wrapInAnchor(element, href) {
 }
 
 function createBlogCard(item = {}) {
-  let { title, image } = item;
-  const { path, description } = item;
+  let { title, image, path } = item;
+  const { description } = item;
 
+  if (!window.location.hostname.includes('24petwatch.com')) {
+    path = new URL(path, 'https://www.24petwatch.com').toString();
+  }
   try {
     if (image === '0') {
       throw new Error('invalid');
