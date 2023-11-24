@@ -13,10 +13,10 @@ const createMetadata = (main, document) => {
     meta.Description = desc.content;
   }
 
-  const img = document.querySelector('[property="og:image"]');
-  if (img && img.content) {
+  const img = document.querySelector('body img:first-child');
+  if (img && img.src) {
     const el = document.createElement('img');
-    el.src = img.content;
+    el.src = img.src;
     meta.Image = el;
   }
 
