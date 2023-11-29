@@ -20,6 +20,13 @@ const createMetadata = (main, document) => {
     meta.Image = el;
   }
 
+  const metaImage = document.querySelector('[property="og:image"]');
+  if (metaImage) {
+    const el = document.createElement('img');
+    el.src = metaImage.content.replace('https://www.24petwatch.com', '');
+    meta.Image = el;
+  }
+
   if (meta.Title && (meta.Title === 'Footer' || meta.Title === 'Header')) {
     meta.Robots = 'noindex, nofollow';
     delete meta.Title;
