@@ -1,3 +1,5 @@
+/* stylelint-disable no-descending-specificity */
+
 .cards {
   --heading-font-size-m: 1.125rem;
 }
@@ -64,6 +66,7 @@
 }
 
 .cards > ul > li img {
+  display: inline-block;
   width: 100%;
   aspect-ratio: 4 / 3;
   object-fit: cover;
@@ -71,6 +74,91 @@
 
 .cards .wrapping-anchor {
   text-decoration: none;
+}
+
+.cards-pagination ul {
+  list-style-type: none;
+  display: flex;
+  gap: 0.5rem;
+  padding: 0;
+  justify-content: center;
+}
+
+.cards-pagination ul li > a {
+  font-family: var(--body-font-family);
+  font-size: .75rem;
+  line-height: 1.313rem;
+  color: var(--text-color);
+  text-decoration: none;
+  border: 2px solid var(--text-color);
+  border-radius: 10px;
+  padding: 5px 10px;
+}
+
+.cards-pagination ul li.active > a {
+  background-color: var(--text-color);
+  color: var(--background-color);
+  pointer-events: none;
+}
+
+.cards-searchbar {
+  padding: 0.9375rem;
+  box-shadow: 0 4px 3px #00000040;
+  border-radius: 10px;
+  margin-bottom: 40px;
+}
+
+.cards-searchbar label {
+  display: none;
+}
+
+.cards-searchbar input {
+  max-width: unset;
+  border: 0;
+  border-radius: 0;
+  border-bottom: 2px solid var(--text-color);
+}
+
+.cards-filterselect {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+}
+
+.cards-filterselect .total, .cards-filterselect label {
+  font-family: var(--heading-font-family);
+  font-weight: 700;
+  line-height: 1.625rem;
+}
+
+.cards-filterselect select {
+  appearance: none;
+  background-color: transparent;
+  border: none;
+  padding: 1rem 1rem 1rem 0;
+  width: 100%;
+  font-size: 18px;
+}
+
+.cards-filterselect .select-group {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid var(--text-color);
+  max-width: 300px;
+  margin: 0 0 2rem;
+}
+
+.cards-filterselect .select-group::after {
+  content: '';
+  justify-self: end;
+  width: 11px;
+  height: 11px;
+  margin-top: 13px;
+  background-image: url('/icons/arrow-down.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  padding-bottom: 1rem;
 }
 
 @media (min-width: 768px) {

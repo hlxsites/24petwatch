@@ -180,7 +180,7 @@ export default async function decorate(block) {
   const navPath = navMeta ? new URL(navMeta).pathname : '/fragments/header/master';
   const resp = await fetch(`${navPath}.plain.html`);
 
-  if (resp.ok) {
+  if (false) {
     const html = await resp.text();
 
     // decorate nav DOM

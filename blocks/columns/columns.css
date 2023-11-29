@@ -32,6 +32,63 @@
   text-align: center;
 }
 
+.columns.teaser {
+  background-color: #fff1d6;
+  border-radius: 0.625rem;
+  overflow: hidden;
+}
+
+.columns.teaser > div, .columns.gray > div {
+  padding: 0;
+}
+
+.columns.teaser p a.button.primary {
+  width: 100%;
+}
+
+.columns.teaser > div > .columns-img-col {
+  order: 1;
+}
+
+.columns.teaser > div > div {
+  font-size: 1rem;
+  line-height: 1.5625rem;
+}
+
+.columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
+  margin-bottom: 1.25rem;
+  padding-left: 0.9375rem;
+  padding-right: 0.9375rem;
+}
+
+.columns.teaser p.button-container, .columns.gray p.button-container {
+  margin: 0;
+}
+
+.columns.teaser p.button-container a.buttonm, .columns.gray p.button-container a.button {
+  margin: 0.3125rem auto;
+}
+
+.columns.gray p.button-container a.button {
+  display: inline-block;
+  border: 0.1875rem solid var(--text-color);
+  background: var(--background-color);
+  color: var(--text-color);
+}
+
+.columns.gray p.button-container a.button:hover {
+  background: #d0dfe8;
+}
+
+.columns.teaser > div > div h3 {
+  font-size: 1.3125rem;
+  line-height: 1.938rem;
+}
+
+.columns.gray {
+  background-color: #e7e9ea;
+}
+
 @media (min-width: 768px) {
   .columns > div {
     align-items: center;
@@ -44,7 +101,6 @@
   .columns > div > div {
     flex: 1;
     order: unset;
-
   }
 
   .columns > div > .columns-img-col {
@@ -53,5 +109,13 @@
 
   .columns h2 {
     text-align: left;
+  }
+
+  .columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
+    padding: 3.125rem;
+  }
+
+  .columns.teaser > div > .columns-img-col {
+    order: unset;
   }
 }
