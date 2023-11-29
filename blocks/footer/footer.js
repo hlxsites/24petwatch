@@ -68,7 +68,7 @@ export default async function decorate(block) {
   const footerPath = cfg.footer || baseFooterUrl;
   const resp = await fetch(`${footerPath}.plain.html`, window.location.pathname.endsWith('/footer') ? { cache: 'reload' } : {});
 
-  if (false) {
+  if (resp.ok) {
     const html = await resp.text();
 
     // decorate footer DOM
