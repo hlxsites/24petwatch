@@ -14,6 +14,16 @@
   width: auto;
 }
 
+.columns.columns.small-image .columns-img-col {
+  width: 100px;
+  flex-shrink: 1;
+  flex-grow: 0.1;
+}
+
+.columns.small-image img {
+  max-width: 100px;
+}
+
 .columns > div > div {
   order: 1;
 }
