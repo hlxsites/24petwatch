@@ -60,9 +60,8 @@ export default async function decorate(block) {
 
   let baseFooterUrl = '/fragments/footer/master';
   if (window.location.hostname !== 'www.24petwatch.com') {
-    baseFooterUrl = `https://main--24petwatch-crosswalk--hlxsites.hlx.live/fragments/footer/master`;
+    baseFooterUrl = 'https://main--24petwatch-crosswalk--hlxsites.hlx.live/fragments/footer/master';
   }
-
 
   // fetch footer content
   const footerPath = cfg.footer || baseFooterUrl;
