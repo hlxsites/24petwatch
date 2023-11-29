@@ -94,9 +94,10 @@ function createBlogCard(item = {}) {
   let { title, image, path } = item;
   const { description } = item;
 
-  if (!window.location.hostname.includes('24petwatch.com')) {
-    path = new URL(path, 'https://www.24petwatch.com').toString();
+  if (!window.location.hostname.includes('localhost')) {
+    path = new URL(path, 'https://main--24petwatch--hlxsites.hlx.live').toString();
   }
+
   try {
     image = new URL(image, window.location);
     image.hostname = window.location.hostname;

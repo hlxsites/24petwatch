@@ -391,6 +391,11 @@ body.blog-post main .section {
   padding: 0.9375rem;
 }
 
+body.blog-post main picture {
+  display: flex;
+  justify-content: center;
+}
+
 body.blog-post main .section > div {
   margin: 1.25rem auto;
   font-size: 1.125rem;
