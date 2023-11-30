@@ -5,7 +5,7 @@ indices:
     include:
       - /blog/**
     exclude:
-      - /blog/
+      - /blog
     target: /blog/query-index.json
     properties:
       lastModified:
@@ -34,7 +34,7 @@ indices:
     include:
       - /ca/blog/**
     exclude:
-      - /ca/blog/
+      - /ca/blog
     target: /ca/blog/query-index.json
     properties:
       lastModified:
@@ -56,5 +56,6 @@ indices:
         select: head > meta[name="author"]
         value: attribute(el, "content")
       tags:
-        select: head > meta[name="tags"]
-        value: attribute(el, "content"), '([^,]+)')
+        select: head > meta[property="article:tag"]
+        values: |
+          match(attribute(el, 'content'), '([^,]+)')

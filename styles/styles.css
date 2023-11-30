@@ -235,7 +235,13 @@ a:hover {
   color: var(--link-hover-color);
 }
 
-a[href*="//"]:not([href^="https://www.24petwatch.com"]):not([href^="https://24petwatch.com"]):not([href*="tel:"]):not([href^=localhost]):after {
+a[href*="//"]
+  :not([href^="https://www.24petwatch.com"])
+  :not([href^="https://24petwatch.com"])
+  :not([href*="tel:"])
+  :not([href^=localhost])
+  :not(.cards a)
+  :after {
   font-family: 'Font Awesome 6 Pro', sans-serif;
   content: "";
   margin:.3rem;
@@ -380,6 +386,44 @@ main .section.highlight p {
   margin-bottom: 0;
 }
 
+/* Blog post styles */
+body.blog-post main .section {
+  padding: 0.9375rem;
+}
+
+body.blog-post main picture {
+  display: flex;
+  justify-content: center;
+}
+
+body.blog-post main .section > div {
+  margin: 1.25rem auto;
+  font-size: 1.125rem;
+  padding: 0 0.9375rem;
+}
+
+body.blog-post main h1, body.blog-post main h2, body.blog-post main h3, body.blog-post main h4,
+body.blog-index main h1, body.blog-index main h2, body.blog-index main h3, body.blog-index main h4 {
+  text-align: left;
+}
+
+body.blog-post main h1 {
+  font-size: 2.1875rem;
+  line-height: 2.813rem;
+  font-weight: 300;
+}
+
+body.blog-post main h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+}
+
+body.blog-post .default-content-wrapper p.author {
+  font-family: var(--heading-font-family);
+  font-size: 1.3125rem;
+  font-weight: 300;
+}
+
 main .section.highlight p em {
   display: block;
   font-size: 2.5rem;
@@ -394,6 +438,10 @@ main .section.heading-light h2 {
 }
 
 @media (min-width: 768px) {
+  body.blog-post main .section {
+    padding: 1.875rem;
+  }
+
   main .section.highlight p {
     font-size: 1.625rem;
     line-height: 2.25rem;
