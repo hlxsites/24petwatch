@@ -1,4 +1,4 @@
-function makeProxySrcs(main, document, host = 'https://www.24petwatch.com') => {
+function makeProxySrcs(main, document, host = 'https://www.24petwatch.com') {
   main.querySelectorAll('img').forEach((img) => {
     if (img.src.startsWith('//')) {
       img.src = `https:${img.src}`;
