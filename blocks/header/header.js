@@ -133,6 +133,12 @@ function decorateLanguageSelector(block) {
       <ul>
         <li><a href="${alternateCountry.url}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"></span>${alternateCountry.name}</a></li>
       </ul>`;
+
+  const secondaryMenu = block.querySelector(':scope > ul');
+  if (!secondaryMenu) {
+    const li = document.createElement('ul');
+    block.append(li);
+  }
   block.querySelector(':scope > ul').prepend(languageSelector);
 
   languageSelector.setAttribute('aria-expanded', 'false');
