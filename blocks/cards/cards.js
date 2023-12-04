@@ -1,11 +1,12 @@
 import { createOptimizedPicture, getMetadata } from '../../scripts/lib-franklin.js';
 
+const edsDomain = 'main--24petwatch--hlxsites.hlx.live';
 const isCanada = window.location.pathname.startsWith('/ca/');
 
 async function getTagFilters() {
   let index = new URL(`${isCanada ? '/ca' : ''}/blog/tag-filters.json`, window.location.origin);
   if (!window.location.hostname.includes('24petwatch.com')) {
-    index = new URL(`https://main--24petwatch--hlxsites.hlx.live${isCanada ? '/ca' : ''}/blog/tag-filters.json`);
+    index = new URL(`https://${edsDomain}${isCanada ? '/ca' : ''}/blog/tag-filters.json`);
   }
   const response = await fetch(index);
   const json = await response.json();
@@ -15,7 +16,7 @@ async function getTagFilters() {
 async function loadBlogPosts() {
   let index = new URL(`${isCanada ? '/ca' : ''}/blog/query-index.json`, window.location.origin);
   if (!window.location.hostname.includes('24petwatch.com')) {
-    index = new URL(`https://main--24petwatch--hlxsites.hlx.live${isCanada ? '/ca' : ''}/blog/query-index.json`);
+    index = new URL(`https://${edsDomain}${isCanada ? '/ca' : ''}/blog/query-index.json`);
   }
   const chunkSize = 100;
   const loadChunk = async (offset) => {
@@ -91,15 +92,24 @@ function wrapInAnchor(element, href) {
 }
 
 function createBlogCard(item = {}) {
-  let { title, image, path } = item;
+  let { title, image, path, imageDomain } = item;
   const { description } = item;
 
-  path = new URL(path, 'https://main--24petwatch--hlxsites.hlx.live').toString();
+  if (!window.location.hostname.includes('24petwatch.com')) {
+    path = new URL(path, `https://${edsDomain}`).toString();
+    try {
+      image = new URL(image, `https://${edsDomain}`);
+      image.hostname = edsDomain;
+    } catch (e) { /* ignore */ }
+  } else {
+    try {
+      image = new URL(image, window.location);
+      image.hostname = window.location.hostname;
+      image.port = window.location.port;
+      image.protocol = window.location.protocol;
+    } catch (e) { /* ignore */ }
+  }
 
-  try {
-    image = new URL(image, 'https://main--24petwatch--hlxsites.hlx.live');
-    image.hostname = 'main--24petwatch--hlxsites.hlx.live';
-  } catch (e) { /* ignore */ }
   if (title.startsWith('24Petwatch: ')) {
     title = title.replace('24Petwatch: ', '');
   }
