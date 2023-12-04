@@ -15,6 +15,6 @@ function makeProxySrcs(main, document, host = 'https://www.24petwatch.com') {
       console.warn(`Unable to make proxy src for ${img.src}: ${error.message}`);
     }
   });
-};
+}
 
 export default makeProxySrcs;
