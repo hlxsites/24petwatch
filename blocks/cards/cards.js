@@ -92,7 +92,7 @@ function wrapInAnchor(element, href) {
 }
 
 function createBlogCard(item = {}) {
-  let { title, image, path, imageDomain } = item;
+  let { title, image, path } = item;
   const { description } = item;
 
   if (!window.location.hostname.includes('24petwatch.com')) {
