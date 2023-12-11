@@ -55,7 +55,7 @@ const fetchBlogPosts = async (page = 1, tags = [], searchTerm = '', pagesize = 9
 
   // Filter by tags
   if (tags.length > 0) {
-    data = data.filter(({ tags: blogTag }) => tags.some((t) => blogTag.includes(t)));
+    data = data.filter(({ tags: blogTag }) => tags.every((t) => blogTag.includes(t)));
     total = data.length;
   }
 
