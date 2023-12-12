@@ -228,8 +228,18 @@ async function createFilterSelect(block, total, currentTag) {
 
 async function populateBlogTeaser(block) {
   const tags = getMetadata('article:tag').split(', ');
-  const response = await fetchBlogPosts(1, tags, '', 3);
-  response.items.forEach((item) => {
+  const related = getMetadata('related').split(', ').map((url) => new URL(url, window.location.origin).pathname);
+  let cards = [];
+  if (related.length === 0) {
+    const response = await fetchBlogPosts(1, tags, '', 3);
+    cards = cards.concat(response.items);
+  } else {
+    const response = await fetchBlogPosts(1, [], '', 200);
+    const relatedCards = response.items.filter(({ path }) => related.includes(path));
+    cards = cards.concat(relatedCards);
+    cards = cards.concat(response.items.slice(0, 3 - relatedCards.length));
+  }
+  cards.forEach((item) => {
     const card = document.createElement('div');
     card.appendChild(createBlogCard(item));
     block.appendChild(card);
