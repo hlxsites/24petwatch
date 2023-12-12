@@ -235,6 +235,10 @@ a:hover {
   color: var(--link-hover-color);
 }
 
+body.blog-post a:any-link {
+  font-family: var(--body-font-family);
+}
+
 a[href*="//"]
   :not([href^="https://www.24petwatch.com"])
   :not([href^="https://24petwatch.com"])
