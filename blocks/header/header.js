@@ -6,7 +6,6 @@ import {
   isMobile,
   isTablet,
   isDesktop,
-  baseDomain,
   isCanada,
   isLiveSite,
   isCrosswalkDomain,
@@ -127,7 +126,7 @@ function toggleMenu(nav, navSections, closeAll = null) {
 function decorateLanguageSelector(block) {
   let currentCountry = urls.usa;
   let alternateCountry = urls.canada;
-  if (window.location.pathname.startsWith('/ca')) {
+  if (isCanada) {
     currentCountry = urls.canada;
     alternateCountry = urls.usa;
   }
