@@ -201,6 +201,20 @@ function instrumentTrackingEvents(header) {
     });
 }
 
+function removeTargetBlank(header) {
+  header.querySelectorAll('a[target="_blank"]').forEach((anchor) => {
+    console.log(anchor.href);
+    try {
+      const url = new URL(anchor.href);
+      if (url.hostname === window.location.hostname) {
+        anchor.removeAttribute('target');
+      }
+    } catch (e) {
+      // do nothing
+    }
+  });
+}
+
 /**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -285,6 +299,7 @@ export default async function decorate(block) {
     decorateButtons(nav);
     decorateLinks(nav);
     instrumentTrackingEvents(nav);
+    removeTargetBlank(nav);
 
     const navWrapper = document.createElement('div');
     navWrapper.className = 'nav-wrapper';
