@@ -201,9 +201,12 @@ function instrumentTrackingEvents(header) {
     });
 }
 
+/**
+ * Removes target blank from local links
+ * @param {Element} header The header block element
+ */
 function removeTargetBlank(header) {
   header.querySelectorAll('a[target="_blank"]').forEach((anchor) => {
-    console.log(anchor.href);
     try {
       const url = new URL(anchor.href);
       if (url.hostname === window.location.hostname) {
@@ -213,6 +216,29 @@ function removeTargetBlank(header) {
       // do nothing
     }
   });
+}
+
+/**
+ * Rewrite links to add Canada to the path
+ * @param {Element} header The header block element
+ */
+function addCanadaToLinks(header) {
+  const linksToUpdate = [
+    '/blog',
+    '/lost-pet-protection/lps-quote',
+  ]
+
+  if (isCanada) {
+    header.querySelectorAll('a').forEach((anchor) => {
+      const url = new URL(anchor.href);
+      //if (url.hostname !== window.location.hostname) return;
+      if (linksToUpdate.includes(url.pathname)) {
+        const newUrl = new URL(anchor.href, window.location.origin);
+        newUrl.pathname = `/ca${url.pathname}`;
+        anchor.href = newUrl.toString();
+      }
+    });
+  }
 }
 
 /**
@@ -300,6 +326,7 @@ export default async function decorate(block) {
     decorateLinks(nav);
     instrumentTrackingEvents(nav);
     removeTargetBlank(nav);
+    addCanadaToLinks(nav);
 
     const navWrapper = document.createElement('div');
     navWrapper.className = 'nav-wrapper';
