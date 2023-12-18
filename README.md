@@ -24,3 +24,22 @@ npm run lint
 1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/helix-cli`
 1. Start Franklin Proxy: `hlx up` (opens your browser at `http://localhost:3000`)
 1. Open the `{repo}` directory in your favorite IDE and start coding :)
+
+## Setup
+
+### Publishing pipeline
+
+```mermaid
+graph LR
+    A[AEM Author] --> B[Publish Queue];
+    B --> C[AEM Publisher];
+    B --> D[Edge Delivery Service API];
+    D --> E[Converter];
+```
+
+### CDN Setup
+
+The CDN has the following configuration:
+* `main--24petwatch--hlxsites.hlx.live` will handle `/blocks/*`, `/blog*`, `/styles/*`, `/scripts/*`
+* `main--24petwatch-crosswalk-prod--hlxsites.hlx.live` will handle `/`, `/ca`, `/media`, `/fragments/*`
+* `author-pXXXXXX-eYYYYY.adobeaemcloud.com/` will handle the rest
