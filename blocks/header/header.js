@@ -226,12 +226,11 @@ function addCanadaToLinks(header) {
   const linksToUpdate = [
     '/blog',
     '/lost-pet-protection/lps-quote',
-  ]
+  ];
 
   if (isCanada) {
     header.querySelectorAll('a').forEach((anchor) => {
       const url = new URL(anchor.href);
-      //if (url.hostname !== window.location.hostname) return;
       if (linksToUpdate.includes(url.pathname)) {
         const newUrl = new URL(anchor.href, window.location.origin);
         newUrl.pathname = `/ca${url.pathname}`;
