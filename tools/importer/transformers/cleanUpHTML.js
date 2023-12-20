@@ -3,6 +3,7 @@ function cleanUpHTML(main, document) {
   main.querySelectorAll('a').forEach((anc) => {
     anc.href = anc.href.replace('/content/24petwatch/us/en', '');
     anc.href = anc.href.replace('/content/24petwatch/language-masters/en', '');
+    anc.href = anc.href.replace('/content/24petwatch/ca/en', '/ca');
   });
 
   main.querySelectorAll('span.cmp-text--largetext').forEach((e) => {
@@ -25,6 +26,11 @@ function cleanUpHTML(main, document) {
     button.append(cta);
     e.outerHTML = button.outerHTML;
   });
+
+  const img = main.querySelector('body > div:first-child > img');
+  if (img) {
+    img.remove();
+  }
 
   return main;
 }

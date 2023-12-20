@@ -639,7 +639,7 @@ header nav > .nav-secondary .language-selector > ul > li > a {
   transform: translateY(0);
 }
 
-.icon-external:after {
+.icon-external::after {
   display: inline-block;
   content: url('/blog/fragments/external-link-icon.svg');
   width: 10px;

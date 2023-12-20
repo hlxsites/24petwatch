@@ -17,10 +17,20 @@ const createHeader = async (main, document) => {
 
     const blog = document.createElement('li');
 
+    const navigationGroup = document.querySelector('ul.cmp-navigation__group');
+
+    // Remove Pet Care
+    navigationGroup.children[navigationGroup.children.length - 2].remove();
+
     // Force append blog to the end of the navigation group
     blog.innerHTML = '<a href="/blog" class="cmp-navigation__item-link">Blog</a>';
-    const navigationGroup = document.querySelector('ul.cmp-navigation__group');
     navigationGroup.children[navigationGroup.children.length - 1].before(blog);
+
+    navigationGroup.querySelectorAll('a').forEach((anc) => {
+      if (anc.href.includes('/newsletter/wheres-whisker')) {
+        anc.closest('li').remove();
+      }
+    });
 
     main.append(navigationGroup);
 

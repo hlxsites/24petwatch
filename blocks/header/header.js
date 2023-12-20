@@ -140,7 +140,6 @@ function decorateLanguageSelector(block) {
 
   const languageSelector = document.createElement('li');
   languageSelector.classList.add('language-selector');
-  //const alternateCountryUrl = new URL(alternateCountry.url, window.location.origin);
   languageSelector.innerHTML = `<span class="icon ${currentCountry.icon}"></span>
       <ul>
         <li><a href="${newCountryUrl.toString()}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"></span>${alternateCountry.name}</a></li>
@@ -232,7 +231,7 @@ function removeTargetBlank(header) {
 function addLinkToLogo(header) {
   const logo = header.querySelector('.icon-logo');
   if (logo) {
-    let homeURL = isCanada ? urls.canada.url : urls.usa.url;
+    const homeURL = isCanada ? urls.canada.url : urls.usa.url;
     logo.innerHTML = `<a href="${homeURL}" title="24PetWatch">${logo.innerHTML}</a>`;
   }
 }
@@ -255,7 +254,7 @@ function addCanadaToLinks(header) {
 
 /**
  * Adds external link icons to links
- * @param {Element} header 
+ * @param {Element} header
  */
 function addExternalLinkIcons(header) {
   header.querySelectorAll('a').forEach((anchor) => {
