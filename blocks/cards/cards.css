@@ -4,6 +4,10 @@
   --heading-font-size-m: 1.125rem;
 }
 
+.cards a {
+  color: red;
+}
+
 @media (min-width: 768px) {
   .cards {
     --heading-font-size-m: 1.3125rem;
