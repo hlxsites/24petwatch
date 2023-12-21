@@ -231,7 +231,7 @@ header nav .nav-sections ul > li[aria-expanded="true"] {
   background-color: var(--background-color-secondary);
 }
 
-header nav .nav-sections ul > li > a {
+header nav .nav-sections ul > li > p > a {
   display: inline-block;
   text-decoration: none;
   padding: 13px 22px;
@@ -251,6 +251,8 @@ header nav .nav-sections ul > li[aria-expanded="true"] > ul {
 header nav .nav-sections ul > li > ul > li {
   font-weight: 500;
   font-size: 1rem;
+  padding: 6px 36px;
+  width: auto;
 }
 
 header nav .nav-sections > ul > li:last-child {
@@ -258,7 +260,7 @@ header nav .nav-sections > ul > li:last-child {
 }
 
 header nav .nav-sections ul > li > ul > li > a {
-  padding: 6px 36px;
+  /* padding: 6px 36px; */
 }
 
 header nav .nav-sections .nav-drop {
