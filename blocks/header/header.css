@@ -234,8 +234,15 @@ header nav .nav-sections ul > li[aria-expanded="true"] {
 header nav .nav-sections ul > li > p > a {
   display: inline-block;
   text-decoration: none;
-  padding: 13px 22px;
-  white-space: nowrap;
+
+}
+@media only screen and (max-width: 600px) {
+  header nav .nav-sections ul > li > p > a {
+    display: inline-block;
+    text-decoration: none;
+    padding: 13px 22px;
+    white-space: nowrap;
+  }
 }
 
 header nav .nav-sections ul > li > ul {
