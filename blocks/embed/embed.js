@@ -54,6 +54,42 @@ const loadScript = (url, callback, type) => {
     loadScript('https://platform.twitter.com/widgets.js');
     return embedHTML;
   };
+
+  const embedSurveryMonky =(jsScript) =>{
+    
+    try{
+        const embedHTML = smScript(jsScript);
+        return embedHTML;
+    }catch (error) {
+        console.error('Error executing script:', error);
+      }
+   
+
+  }
+  function smScript(jsUrl){
+   
+(function(t,e,s,n){ 
+    var o,a,c; 
+    t.SMCX=t.SMCX||[],
+    e.getElementById(n)||
+    (o=e.getElementsByTagName(s),
+    a=o[o.length-1], 
+    
+    c=e.createElement(s), 
+    
+    c.type="text/javascript", 
+    
+    c.async = true,
+    
+    c.id=n, 
+    
+    c.src= jsUrl.replace(/\s/g, ''), 
+    
+   a.parentNode.insertBefore(c,a)
+  
+   )})(window,document,"script","smcx-sdk"); 
+  
+  }
   
   const loadEmbed = (block, link, autoplay) => {
     if (block.classList.contains('embed-is-loaded')) {
@@ -86,11 +122,35 @@ const loadScript = (url, callback, type) => {
     }
     block.classList.add('embed-is-loaded');
   };
+
+
+  const loadEmbedScript = (block, jsScript) =>{
+    if (block.classList.contains('embed-is-loaded')) {
+        return;
+      }else{
+      block.classList = `block embed embed-surveymonkey`;
+      block.classList.add('block','embed', `embed-surveymonkey`); 
+
+      block.innerHTML = embedSurveryMonky(jsScript );
+      
+      block.classList.add('embed-is-loaded');
+    }
+
+  };
   
   export default function decorate(block) {
-    const placeholder = block.querySelector('picture');
-    const link = block.querySelector('a').href;
-    block.textContent = '';
+
+    if (block.textContent.includes('surveymonkey')) {
+        var jsScript = block.outerHTML.replace(/<div[^>]*>|<\/?p>|&lt;script&gt;|&lt;\/script&gt;/g, '');
+        jsScript =  jsScript.replace(/<\/div>\s*/g, '');
+       // jsScript = jsScript.replace(/[\n\s"]+/g, '');
+            loadEmbedScript(block,jsScript);
+
+
+    }else{
+        const placeholder = block.querySelector('picture');
+        const link = block.querySelector('a').href;
+        block.textContent = '';
   
     if (placeholder) {
       const wrapper = document.createElement('div');
@@ -110,4 +170,23 @@ const loadScript = (url, callback, type) => {
       });
       observer.observe(block);
     }
+}
+       
+
+
   }
+  export async function loadLazy() {
+    setTimeout(function() {
+        // Survey Monkey block will be shifted up after 5 milliseconds
+        var className = 'embed-surveymonkey';
+        var element = document.getElementsByClassName(className)[0];
+        element.innerHTML ="";
+        var srcElement = document.getElementsByClassName("smcx-widget smcx-embed ")[0]; 
+        element.appendChild(srcElement) ;
+    }, 10);
+  }
+  
+
+  
+
+
