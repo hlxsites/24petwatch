@@ -61,7 +61,7 @@ const loadScript = (url, callback, type) => {
         const embedHTML = smScript(jsScript);
         return embedHTML;
     }catch (error) {
-        console.error('Error executing script:', error);
+       // console.error('Error executing script:', error);
       }
    
 
