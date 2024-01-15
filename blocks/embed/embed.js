@@ -1,3 +1,4 @@
+
 /*
  * Embed Block
  * Show videos and social posts directly on your page
@@ -55,21 +56,22 @@ const loadScript = (url, callback, type) => {
     return embedHTML;
   };
 
-  const embedSurveryMonky =(jsScript) =>{
+  const embedSurveryMonky =(jsScript,className) =>{
     
     try{
-        const embedHTML = smScript(jsScript);
+        const embedHTML = smScript(jsScript,className);
         return embedHTML;
     }catch (error) {
-       // console.error('Error executing script:', error);
+        console.error('Error executing script:', error);
       }
    
 
   }
-  function smScript(jsUrl){
+  function smScript(jsUrl,className){
    
 (function(t,e,s,n){ 
     var o,a,c; 
+   // var className = 'embed-surveymonkey';
     t.SMCX=t.SMCX||[],
     e.getElementById(n)||
     (o=e.getElementsByTagName(s),
@@ -83,13 +85,44 @@ const loadScript = (url, callback, type) => {
     
     c.id=n, 
     
-    c.src= jsUrl.replace(/\s/g, ''), 
-    
-   a.parentNode.insertBefore(c,a)
+    c.src= extractURL(jsUrl.replace(/\s/g, '')), 
   
+        c.onload = function() {
+        // Find the element with class name "myClass" and append the script to it
+        var myClassElement = e.getElementsByClassName(className)[0];
+        if (myClassElement) {
+            myClassElement.innerHTML="";
+            myClassElement.appendChild(c);
+        }else{
+           
+        }
+
+        },
+       a.parentNode.insertBefore(c,a)
+       // 
+
    )})(window,document,"script","smcx-sdk"); 
   
   }
+
+  function extractURL(htmlInput) {
+    if(htmlInput.startsWith("https://")){
+    return htmlInput;
+    }else{
+    // Use regular expressions to find URLs that start with "src=" or "href=" and end with ".js"
+    var jsUrls = htmlInput.match(/(?:src|href)\s*=\s*["']([^"']*\.js)["']/gi);
+
+    // Extract URLs from the matches
+    if (jsUrls) {
+        jsUrls = jsUrls.map(function (url) {
+            return url.match(/["']([^"']*)["']/)[1];
+        });
+    }
+    
+
+    return jsUrls || [];
+    }
+}
   
   const loadEmbed = (block, link, autoplay) => {
     if (block.classList.contains('embed-is-loaded')) {
@@ -128,12 +161,16 @@ const loadScript = (url, callback, type) => {
     if (block.classList.contains('embed-is-loaded')) {
         return;
       }else{
-      block.classList = `block embed embed-surveymonkey`;
-      block.classList.add('block','embed', `embed-surveymonkey`); 
+        var randomNumber =  Math.floor(Math.random() * 900) + 100;
+        var className =`embed-surveymonkey-`+randomNumber;
+      //block.classList = `embed-surveymonkey-`+randomNumber;
+      block.classList.add('block','embed',className); 
 
-      block.innerHTML = embedSurveryMonky(jsScript );
+      block.innerHTML = embedSurveryMonky(jsScript,className );
       
       block.classList.add('embed-is-loaded');
+
+
     }
 
   };
@@ -145,6 +182,7 @@ const loadScript = (url, callback, type) => {
         jsScript =  jsScript.replace(/<\/div>\s*/g, '');
        // jsScript = jsScript.replace(/[\n\s"]+/g, '');
             loadEmbedScript(block,jsScript);
+       //     window.setTimeout(() => loadedLazy, 3000);
 
 
     }else{
@@ -175,18 +213,3 @@ const loadScript = (url, callback, type) => {
 
 
   }
-  export async function loadLazy() {
-    setTimeout(function() {
-        // Survey Monkey block will be shifted up after 5 milliseconds
-        var className = 'embed-surveymonkey';
-        var element = document.getElementsByClassName(className)[0];
-        element.innerHTML ="";
-        var srcElement = document.getElementsByClassName("smcx-widget smcx-embed ")[0]; 
-        element.appendChild(srcElement) ;
-    }, 10);
-  }
-  
-
-  
-
-
