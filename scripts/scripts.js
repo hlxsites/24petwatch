@@ -197,7 +197,7 @@ function cleanLocalhostLinks(main) {
     .forEach((anchor) => {
       if (anchor.href.startsWith('http://localhost:3001')) {
         const url = new URL(anchor.href);
-        url.hostname = 'www.24petwach.com';
+        url.hostname = 'www.24petwatch.com';
         url.scheme = 'https';
         url.port = '';
         anchor.href = url.toString();
