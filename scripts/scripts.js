@@ -192,6 +192,19 @@ function instrumentTrackingEvents(main) {
     });
 }
 
+function cleanLocalhostLinks(main) {
+  main.querySelectorAll('a')
+    .forEach((anchor) => {
+      if (anchor.href.startsWith('http://localhost:3001')) {
+        const url = new URL(anchor.href);
+        url.hostname = 'www.24petwach.com';
+        url.scheme = 'https';
+        url.port = '';
+        anchor.href = url.toString();
+      }
+    });
+}
+
 /**
  * Loads everything that doesn't need to be delayed.
  * @param {Element} doc The container element
@@ -217,6 +230,7 @@ async function loadLazy(doc) {
   analyticsSetConsent(true);
   await initializeConversionTracking();
   instrumentTrackingEvents(main);
+  cleanLocalhostLinks(main);
 }
 
 /**
