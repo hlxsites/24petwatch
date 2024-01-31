@@ -15,6 +15,7 @@ import {
   loadCSS,
   getMetadata,
   toClassName,
+  isCanada,
 } from './lib-franklin.js';
 
 import {
@@ -64,7 +65,8 @@ function buildBlockPostPage(main) {
   if (lastContentSection) {
     lastContentSection.appendChild(socialMediaButtons.cloneNode(true));
 
-    const fragment = document.createRange().createContextualFragment('<div><div class="fragment">/blog/fragments/blog-footer</div></div>');
+    const fragmentPath = isCanada ? '/ca/blog/fragments/blog-footer' : '/blog/fragments/blog-footer';
+    const fragment = document.createRange().createContextualFragment(`<div><div class="fragment">${fragmentPath}</div></div>`);
     lastContentSection.parentElement.appendChild(fragment);
   }
 }
