@@ -10,7 +10,7 @@ main .overflowhero {
     margin-top: -150px;
 }
 
-main .discount .overflowhero p:last-child {
+main .discount.overflowhero p:last-child {
     display: block;
     width: 337px;
     border-radius: 7.54px;
@@ -25,7 +25,7 @@ main .discount .overflowhero p:last-child {
     line-height: 31.969px
 }
 
-main .discount .overflowhero strong  {
+main .discount.overflowhero strong  {
     color: var(--Primary-Red, #BF0D3E);
     text-align: center;
     font-family: var(--heading-font-family);
@@ -35,7 +35,7 @@ main .discount .overflowhero strong  {
     line-height: 74px;
 }
 
-main .discount .overflowhero em {
+main .discount.overflowhero em {
     color: var(--Medium-Grey, #666A6C);
     text-align: center;
     font-family: var(--body-font-family);
