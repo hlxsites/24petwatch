@@ -246,10 +246,8 @@ function addCanadaToLinks(header) {
       if (anchor.getAttribute('rel') === 'alternate') return;
       const url = new URL(anchor.href);
       const newUrl = new URL(anchor.href, window.location.origin);
-      if (url.hostname !== window.location.hostname) {
-      //do nothing for external links
-      } else{
-      //change only for internal links
+      if (url.hostname === window.location.hostname) {
+        // change only for internal links
         newUrl.pathname = `/ca${url.pathname}`;
         anchor.href = newUrl.toString();
       }
