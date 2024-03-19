@@ -38,7 +38,7 @@ main .hero h1 {
   font-weight: 400;
 }
 
-main .hero h1 em {
+main .hero em {
   color: var(--text-secondary-color);
   font-style: normal;
 }
