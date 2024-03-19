@@ -167,9 +167,19 @@ h1 {
   line-height: var(--heading-line-height-xxl);
 }
 
+h1 em {
+  color: var(--text-secondary-color);
+  font-style: normal;
+}
+
 h2 {
   font-size: var(--heading-font-size-xl);
   line-height: var(--heading-line-height-xl);
+}
+
+h2 em {
+  color: var(--text-secondary-color);
+  font-style: normal;
 }
 
 h3 {
@@ -362,6 +372,10 @@ main .section {
 main .section.teal-bg, main .section.teal {
   background-color: #007680;
   color: white;
+}
+
+ main .section.palegray {
+  background-color: #EDF5FB;
 }
 
 main .section.gray-bg, main .section.lightcool, main .section.lightgray {
