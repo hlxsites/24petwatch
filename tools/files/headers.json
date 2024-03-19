@@ -12,6 +12,16 @@
       "url": "/fragments/footer/master.plain.html",
       "key": "access-control-allow-origin",
       "value": "*"
+    },
+    {
+      "url": "/fragments/ca/header/master.plain.html",
+      "key": "access-control-allow-origin",
+      "value": "*"
+    },
+    {
+      "url": "/fragments/ca/footer/master.plain.html",
+      "key": "access-control-allow-origin",
+      "value": "*"
     }
   ],
   ":type": "sheet"

@@ -7,6 +7,7 @@ import {
   isLiveSite,
   isCrosswalkDomain,
   getXWalkDomain,
+  isCanada,
 } from '../../scripts/lib-franklin.js';
 
 const socialNetworks = ['Instagram', 'Twitter', 'Facebook'];
@@ -62,8 +63,16 @@ export default async function decorate(block) {
   block.textContent = '';
 
   let baseFooterUrl = '/fragments/footer/master';
+  if (isCanada) {
+    baseFooterUrl = '/fragments/ca/footer/master';
+  }
+
   if (!isLiveSite && !isCrosswalkDomain) {
-    baseFooterUrl = `https://${getXWalkDomain()}/fragments/footer/master`;
+    if (isCanada) {
+      baseFooterUrl = `https://${getXWalkDomain()}/fragments/ca/footer/master`;
+    } else {
+      baseFooterUrl = `https://${getXWalkDomain()}/fragments/footer/master`;
+    }
   }
 
   // fetch footer content

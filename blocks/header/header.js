@@ -277,8 +277,16 @@ export default async function decorate(block) {
   const navMeta = getMetadata('nav');
   block.textContent = '';
   let baseHeaderUrl = '/fragments/header/master';
+  if (isCanada) {
+    baseHeaderUrl = '/fragments/ca/header/master';
+  }
+
   if (!isLiveSite && !isCrosswalkDomain) {
-    baseHeaderUrl = `https://${getXWalkDomain()}/fragments/header/master`;
+    if (isCanada) {
+      baseHeaderUrl = `https://${getXWalkDomain()}/fragments/ca/header/master`;
+    } else {
+      baseHeaderUrl = `https://${getXWalkDomain()}/fragments/header/master`;
+    }
   }
 
   const navPath = navMeta ? new URL(navMeta).pathname : baseHeaderUrl;
@@ -353,7 +361,6 @@ export default async function decorate(block) {
     decorateLinks(nav);
     instrumentTrackingEvents(nav);
     removeTargetBlank(nav);
-    addCanadaToLinks(nav);
     addLinkToLogo(nav);
     addExternalLinkIcons(nav);
 
