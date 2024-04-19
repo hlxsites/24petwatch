@@ -420,7 +420,7 @@ main .section.container h2 {
   background-color: #007680;
   background-color: rgba(0, 118, 128, var(--bg-opacity));
   margin: 0;
-  padding: .5rem 0 .625rem 0;
+  padding: .5rem .5rem .625rem .5rem;
   border-radius: 10px 10px 0 0;
   color: #fff;
   color: rgba(255, 255, 255, var(--text-opacity));
