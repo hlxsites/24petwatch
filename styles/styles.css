@@ -404,42 +404,45 @@ main .section.highlight p {
   margin-bottom: 0;
 }
 
-main .section.container {
+main .section.container, main .columns.container {
   margin: 2.5rem auto;
   max-width: 71rem;
-  --border-opacity: 1;
-  border: .1875rem solid #e5e5e5;
-  border-color: rgba(229, 229, 229, var(--border-opacity));
-  border-radius: 10px;
   padding: 0;
 }
 
-main .section.container h2 {
-  --bg-opacity: 1;
-  --text-opacity: 1;
+main .section.gray-border,  main .columns.gray-border div div {
+  border: .1875rem solid #e5e5e5;
+  border-color: rgba(229, 229, 229, 1);
+  border-radius: 10px;
+}
+
+main .section.container h2, main .columns.gray-border div div h2 {
   background-color: #007680;
-  background-color: rgba(0, 118, 128, var(--bg-opacity));
+  background-color: rgba(0, 118, 128, 1);
   margin: 0;
   padding: .5rem .5rem .625rem .5rem;
   border-radius: 10px 10px 0 0;
   color: #fff;
-  color: rgba(255, 255, 255, var(--text-opacity));
+  color: rgba(255, 255, 255, 1);
   font-size: 26px;
   font-weight: 400;
   line-height: 3.125rem;
+  text-align: center;
 }
 
-main .section.container .default-content-wrapper p {
+main .section.container .default-content-wrapper p, main .columns.gray-border div div p {
   display: block;
   margin: 0;
 }
 
-main .section.container .default-content-wrapper img {
+main .section.container .default-content-wrapper :first-child img, main .columns.gray-border div div :first-child img {
   width: 100%;
   height: auto;
+  max-height: unset;
+  min-height: unset;
 }
 
-main .section.container .columns-wrapper p {
+main .section.container .columns-wrapper p, main .columns.gray-border div div p:not(:first-of-type) {
   display: block;
   margin: .625rem 0;
   text-align: center;
@@ -447,14 +450,14 @@ main .section.container .columns-wrapper p {
   line-height: 1.5625rem;
 }
 
-main .section.container .columns-wrapper strong {
+main .section.container .columns-wrapper strong, main .columns.gray-border div div strong{
   display: block;
   padding: 0 3.125rem;
   font-weight: normal;
   line-height: 1.5625rem;
 }
 
-main .section.container .columns-wrapper em {
+main .section.container .columns-wrapper em, main .columns.gray-border div div em {
   display: block;
   font-style: normal;
   text-align: left;
@@ -466,8 +469,13 @@ main .section.container .columns > div > div {
   padding: 1.5rem;
 }
 
+main .columns.gray-border div div em {
+  text-align: center;
+  padding: 0 1.5rem;
+}
+
 @media (max-width: 1200px) {
-  main .section.container {
+  main .section.container, main .columns.gray-border div {
     margin: 2.5rem 1rem;
   }
 }
@@ -485,6 +493,11 @@ main .section.container .columns > div > div {
     gap: 20px;
     padding-left: 0;
     padding-right: 0;
+  }
+
+  main .columns.gray-border div {
+    padding-right: unset;
+    padding-left: unset;
   }
 }
 
