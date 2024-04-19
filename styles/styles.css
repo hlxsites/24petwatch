@@ -474,6 +474,10 @@ main .columns.gray-border div div em {
   padding: 0 1.5rem;
 }
 
+.section.container .columns-wrapper .columns > div, .columns.container > div {
+  align-items: flex-start;
+}
+
 @media (max-width: 1200px) {
   main .section.container, main .columns.gray-border div {
     margin: 2.5rem 1rem;
