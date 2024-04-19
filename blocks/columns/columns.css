@@ -119,3 +119,61 @@
     order: unset;
   }
 }
+
+/* About US page */
+main .section.about-us-icons img  {
+  min-height: 80px;
+}
+
+/* About Us Page | Connect and Care section */
+@media screen and (width >= 768px) {
+  div.connect-and-care > div > div:nth-of-type(2) {
+    max-width: 35%;
+  }
+
+  .columns.connect-and-care div {
+  align-items: flex-start;
+  }
+}
+
+div.connect-and-care > div > :nth-child(2) {
+  background-color: #e7e9ea;
+  border-radius: 10px;
+  padding: 15px 25px 0 25px;
+  margin: 10px 0 10px 0;
+}
+
+div.connect-and-care > div > :nth-child(2) > :first-child {
+  margin-top: 0;
+}
+
+div.connect-and-care > div > :nth-child(2) > :first-child img {
+  object-fit: contain;
+  max-width: 55%;
+  height: auto;
+}
+
+div.connect-and-care h5  {
+  margin-bottom: -0.5em;
+}
+
+.connect-and-care a[target=_blank]::after {
+  display: inline-block;
+  content: url('/icons/external-link.svg');
+  width: 10px;
+  height: 10px;
+  padding-left: 5px;
+  fill: white;
+}
+
+.connect-and-care .button-container {
+  margin: 0 0;
+}
+
+.connect-and-care .button-container a {
+  margin-top: 0;
+}
+
+.connect-and-care  a {
+  width: 100%;
+}
