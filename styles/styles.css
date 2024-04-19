@@ -462,6 +462,10 @@ main .section.container .columns-wrapper em {
   line-height: 1.5625rem;
 }
 
+main .section.container .columns > div > div {
+  padding: 1.5rem;
+}
+
 @media (max-width: 1200px) {
   main .section.container {
     margin: 2.5rem 1rem;
@@ -471,6 +475,16 @@ main .section.container .columns-wrapper em {
 @media (max-width: 768px) {
   main .section.container h2 {
     line-height: 1.938rem;
+  }
+}
+
+@media (min-width: 768px) {
+  main .section.container .columns > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: 20px;
+    padding-left: 0;
+    padding-right: 0;
   }
 }
 
