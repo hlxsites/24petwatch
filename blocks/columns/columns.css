@@ -134,6 +134,11 @@ main .section.about-us-icons img  {
   .columns.connect-and-care div {
   align-items: flex-start;
   }
+
+  div.connect-and-care > div:last-of-type > :nth-child(2) {
+    position: relative;
+    margin-top: -5em;
+  }
 }
 
 div.connect-and-care > div > :nth-child(2) {
