@@ -141,6 +141,12 @@ main .section.about-us-icons img  {
   }
 }
 
+@media screen and (width >= 1070px) {
+  div.connect-and-care > div:last-of-type > :nth-child(2) {
+    margin-top: 0;
+  }
+}
+
 div.connect-and-care > div > :nth-child(2) {
   background-color: #e7e9ea;
   border-radius: 10px;
