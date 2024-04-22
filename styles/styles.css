@@ -466,12 +466,30 @@ main .section.container .columns-wrapper em, main .columns.gray-border div div e
 }
 
 main .section.container .columns > div > div {
-  padding: 1.5rem;
+  padding: 1rem;
+}
+
+main .section.container .footnotes-links > div > div {
+  padding: 0;
+  text-align: center;
+}
+
+main .section.container .footnotes-links a {
+  font-size: 0.7rem;
+}
+
+main .section.container .footnotes-links a[href*=".pdf"] {
+  background-image: url("/icons/pdficon.png");
+  background-repeat: no-repeat;
+  background-position: 0 1px;
+  padding-left: 1.25rem;
+  height: 17px;
+  display: inline-block;
 }
 
 main .columns.gray-border div div em {
   text-align: center;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
 }
 
 .section.container .columns-wrapper .columns > div, .columns.container > div {
@@ -487,6 +505,10 @@ main .columns.gray-border div div em {
 @media (max-width: 768px) {
   main .section.container h2 {
     line-height: 1.938rem;
+  }
+
+  main .section.container .footnotes-links > div > div {
+    width: 100%;
   }
 }
 
