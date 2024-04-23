@@ -483,3 +483,12 @@ main .section.heading-light h2 {
     line-height: 2.25rem;
   }
 }
+
+/* Underwriter page */
+main .underwriter h1 {
+  text-align: left;
+}
+
+main .underwriter h1 > span {
+  padding-left: 10px;  /* give icon some space */
+}
