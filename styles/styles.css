@@ -483,3 +483,8 @@ main .section.heading-light h2 {
     line-height: 2.25rem;
   }
 }
+
+/* Accessibility page */
+main .accessibility h1 {
+  text-align: left;
+}
