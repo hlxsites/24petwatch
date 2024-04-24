@@ -483,3 +483,9 @@ main .section.heading-light h2 {
     line-height: 2.25rem;
   }
 }
+
+/* Privacy Policy page */
+main .privacy-policy h1,
+main .privacy-policy h5 {
+  text-align: left;
+}
