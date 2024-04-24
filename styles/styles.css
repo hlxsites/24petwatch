@@ -416,7 +416,7 @@ main .section.gray-border,  main .columns.gray-border div div {
   border-radius: 10px;
 }
 
-main .section.container h2, main .columns.gray-border div div h2 {
+main .section.container h2, main .columns.container div div h2 {
   background-color: #007680;
   background-color: rgba(0, 118, 128, 1);
   margin: 0;
@@ -430,19 +430,19 @@ main .section.container h2, main .columns.gray-border div div h2 {
   text-align: center;
 }
 
-main .section.container .default-content-wrapper p, main .columns.gray-border div div p {
+main .section.container .default-content-wrapper p, main .columns.container div div p {
   display: block;
   margin: 0;
 }
 
-main .section.container .default-content-wrapper :first-child img, main .columns.gray-border div div :first-child img {
+main .section.container .default-content-wrapper :first-child img, main .columns.container div div :first-child img {
   width: 100%;
   height: auto;
   max-height: unset;
   min-height: unset;
 }
 
-main .section.container .columns-wrapper p, main .columns.gray-border div div p:not(:first-of-type) {
+main .section.container .columns-wrapper p, main .columns.container div div p:not(:first-of-type) {
   display: block;
   margin: .625rem 0;
   text-align: center;
@@ -450,14 +450,14 @@ main .section.container .columns-wrapper p, main .columns.gray-border div div p:
   line-height: 1.5625rem;
 }
 
-main .section.container .columns-wrapper strong, main .columns.gray-border div div strong{
+main .section.container .columns-wrapper strong, main .columns.container div div strong{
   display: block;
   padding: 0 3.125rem;
   font-weight: normal;
   line-height: 1.5625rem;
 }
 
-main .section.container .columns-wrapper em, main .columns.gray-border div div em {
+main .section.container .columns-wrapper em, main .columns.container div div em {
   display: block;
   font-style: normal;
   text-align: left;
