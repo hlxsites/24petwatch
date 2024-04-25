@@ -404,7 +404,7 @@ main .section.highlight p {
   margin-bottom: 0;
 }
 
-main .section.container, main .columns.container {
+main .section.block-with-header, main .columns.block-with-header {
   margin: 2.5rem auto;
   max-width: 71rem;
   padding: 0;
@@ -416,7 +416,7 @@ main .section.gray-border,  main .columns.gray-border div div {
   border-radius: 10px;
 }
 
-main .section.container h2, main .columns.container div div h2 {
+main .section.block-with-header h2, main .columns.block-with-header div div h2 {
   background-color: #007680;
   background-color: rgba(0, 118, 128, 1);
   margin: 0;
@@ -430,19 +430,19 @@ main .section.container h2, main .columns.container div div h2 {
   text-align: center;
 }
 
-main .section.container .default-content-wrapper p, main .columns.container div div p {
+main .section.block-with-header .default-content-wrapper p, main .columns.block-with-header div div p {
   display: block;
   margin: 0;
 }
 
-main .section.container .default-content-wrapper :first-child img, main .columns.container div div :first-child img {
+main .section.block-with-header .default-content-wrapper :first-child img, main .columns.block-with-header div div :first-child img {
   width: 100%;
   height: auto;
   max-height: unset;
   min-height: unset;
 }
 
-main .section.container .columns-wrapper p, main .columns.container div div p:not(:first-of-type) {
+main .section.block-with-header .columns-wrapper p, main .columns.block-with-header div div p:not(:first-of-type) {
   display: block;
   margin: .625rem 0;
   text-align: center;
@@ -450,14 +450,14 @@ main .section.container .columns-wrapper p, main .columns.container div div p:no
   line-height: 1.5625rem;
 }
 
-main .section.container .columns-wrapper strong, main .columns.container div div strong{
+main .section.block-with-header .columns-wrapper strong, main .columns.block-with-header div div strong{
   display: block;
   padding: 0 3.125rem;
   font-weight: normal;
   line-height: 1.5625rem;
 }
 
-main .section.container .columns-wrapper em, main .columns.container div div em {
+main .section.block-with-header .columns-wrapper em, main .columns.block-with-header div div em {
   display: block;
   font-style: normal;
   text-align: left;
@@ -465,20 +465,20 @@ main .section.container .columns-wrapper em, main .columns.container div div em 
   line-height: 1.5625rem;
 }
 
-main .section.container .columns > div > div {
+main .section.block-with-header .columns > div > div {
   padding: 1rem;
 }
 
-main .section.container .footnotes-links > div > div {
+main .section.block-with-header .footnotes-links > div > div {
   padding: 0;
   text-align: center;
 }
 
-main .section.container .footnotes-links a {
+main .section.block-with-header .footnotes-links a {
   font-size: 0.7rem;
 }
 
-main .section.container .footnotes-links a[href*=".pdf"] {
+main .section.block-with-header .footnotes-links a[href*=".pdf"] {
   background-image: url("/icons/pdficon.png");
   background-repeat: no-repeat;
   background-position: 0 1px;
@@ -487,33 +487,33 @@ main .section.container .footnotes-links a[href*=".pdf"] {
   display: inline-block;
 }
 
-main .columns.gray-border div div em {
+main .columns.block-with-header div div em {
   text-align: center;
   padding: 0 1rem;
 }
 
-.section.container .columns-wrapper .columns > div, .columns.container > div {
+.section.block-with-header .columns-wrapper .columns > div, .columns.block-with-header > div {
   align-items: flex-start;
 }
 
 @media (max-width: 1200px) {
-  main .section.container, main .columns.gray-border div {
+  main .section.block-with-header, main .columns.block-with-header div {
     margin: 2.5rem 1rem;
   }
 }
 
 @media (max-width: 768px) {
-  main .section.container h2 {
+  main .section.block-with-header h2 {
     line-height: 1.938rem;
   }
 
-  main .section.container .footnotes-links > div > div {
+  main .section.block-with-header .footnotes-links > div > div {
     width: 100%;
   }
 }
 
 @media (min-width: 768px) {
-  main .section.container .columns > div {
+  main .section.block-with-header .columns > div {
     align-items: center;
     flex-direction: unset;
     gap: 20px;
@@ -521,7 +521,7 @@ main .columns.gray-border div div em {
     padding-right: 0;
   }
 
-  main .columns.gray-border div {
+  main .columns.block-with-header div {
     padding-right: unset;
     padding-left: unset;
   }
