@@ -119,13 +119,3 @@
     order: unset;
   }
 }
-
-/* FAQ page */
-.pet-protection-faq h1 > strong {
-  color: #bf0d3e;
-  font-weight: normal;
-}
-
-.pet-protection-faq h1, h2, h5 {
-  text-align: left;
-}
