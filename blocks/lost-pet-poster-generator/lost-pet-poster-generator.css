@@ -1,0 +1,128 @@
+main .lost-pet-poster-generator {padding: 0 .9375rem;
+  margin: 1.25rem auto;
+  max-width: 71rem;
+}
+
+main .lost-pet-poster-generator  .lost-pet-poster-generator-form {
+  border: .1875rem solid #007680;
+  border-color: rgba(0, 118, 128, 1);
+  border-radius: .625rem;
+  padding: 2.5rem 1.875rem;
+}
+
+main .lost-pet-poster-generator-form h3 {
+  line-height: 2.25rem;
+  font-size: 1.625rem;
+  text-align: left;
+}
+
+main .lost-pet-poster-generator-form .wrapper {
+  margin-top: 1.25rem;
+  position: relative;
+}
+
+main .lost-pet-poster-generator-form label {
+  color: #007680;
+  padding: 1rem;
+  overflow: hidden;
+  text-align: start;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+}
+
+main .lost-pet-poster-generator-form label.float-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+main .lost-pet-poster-generator-form input[type="text"]:focus~label,
+main .lost-pet-poster-generator-form input[type="text"]:not(:placeholder-shown)~label,
+main .lost-pet-poster-generator-form input[type="number"]:focus~label,
+main .lost-pet-poster-generator-form input[type="number"]:not(:placeholder-shown)~label,
+main .lost-pet-poster-generator-form input[type="email"]:focus~label,
+main .lost-pet-poster-generator-form input[type="email"]:not(:placeholder-shown)~label {
+  transform: scale(.85);
+  transform-origin: 0 0;
+  padding-top: 10px;
+  padding-left: 18px;
+  line-height: .85rem;
+}
+
+main .lost-pet-poster-generator-form input[type="text"]::placeholder,
+main .lost-pet-poster-generator-form input[type="number"]::placeholder,
+main .lost-pet-poster-generator-form input[type="email"]::placeholder {
+  color: transparent;
+}
+
+main .lost-pet-poster-generator-form input[type="text"]:focus::placeholder,
+main .lost-pet-poster-generator-form input[type="number"]:focus::placeholder,
+main .lost-pet-poster-generator-form input[type="email"]:focus::placeholder{
+  color: #007680;
+}
+
+main .lost-pet-poster-generator-form #imageFileLabel {
+  font-size: 1rem;
+  line-height: 1.75rem;
+  color: #007680;
+}
+
+main .lost-pet-poster-generator-form div.file-info {
+  padding-left: .625rem;
+}
+
+main .lost-pet-poster-generator-form #imageFile {
+  display: none;
+}
+
+main .lost-pet-poster-generator-form #imageFileWrapper {
+  text-align: center;
+  cursor: pointer;
+  border: .125rem solid #007680;
+  border-color: rgba(0, 118, 128, 1);
+  border-radius: .375rem;
+  padding: .75rem 1.5rem;
+  margin: 1.25rem 0;
+}
+
+main .lost-pet-poster-generator-form input[type="text"],
+main .lost-pet-poster-generator-form input[type="text"]:focus,
+main .lost-pet-poster-generator-form input[type="number"],
+main .lost-pet-poster-generator-form input[type="number"]:focus,
+main .lost-pet-poster-generator-form input[type="email"],
+main .lost-pet-poster-generator-form input[type="email"]:focus {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 1.625rem 0.75rem .375rem 1rem;
+  border-radius: unset;
+  border: unset;
+  border-bottom: .125rem solid #007680;
+  outline: none;
+  line-height: 1.25rem;
+  font-size: 1.125rem;
+}
+
+main .lost-pet-poster-generator-form textarea,
+main .lost-pet-poster-generator-form textarea:focus {
+  width: 100%;
+  min-height: 3.125rem;
+  resize: vertical;
+  outline: none;
+  font-size: 1rem;
+  line-height: 1.125rem;
+  border: unset;
+  border-bottom: .125rem solid #007680;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  margin-top: 1.5rem;
+}
+
+main .lost-pet-poster-generator-form textarea::placeholder {
+  color: transparent;
+}
+
+main .lost-pet-poster-generator-form textarea:focus::placeholder {
+  color: #007680;
+}
