@@ -77,12 +77,10 @@ export default async function decorate(block) {
     }
   });
 
-  document.querySelector('.lost-pet-poster-generator-form').addEventListener('input', function (e) {
-    const el = e.target;
+  document.querySelector('.lost-pet-poster-generator-form').addEventListener('input', (event) => {
+    const el = event.target;
     if (el.type === 'number') {
-      if (el.value.length > el.maxLength) {
-        el.value = el.value.substring(0, el.maxLength);
-      }
+      el.value = el.value.replace(/[^0-9]/g, '').substring(0, el.maxLength);
     }
   });
 }
