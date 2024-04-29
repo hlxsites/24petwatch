@@ -483,3 +483,8 @@ main .section.heading-light h2 {
     line-height: 2.25rem;
   }
 }
+
+/* Theme for pages with headings aligned to the left */
+.headings-left h1, h2, h3, h4, h5 {
+  text-align: left;
+}
