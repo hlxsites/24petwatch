@@ -8,6 +8,7 @@
 }
 
 .accordion details summary {
+  color: var(--text-color);
   position: relative;
   padding: 0 16px;
   padding-right: 48px;
@@ -22,6 +23,7 @@
 }
 
 .accordion details summary::after {
+  color: var(--link-color);
   content: "";
   position: absolute;
   top: 50%;
@@ -43,9 +45,14 @@
 }
 
 .accordion details[open] .accordion-item-body {
-  border-top: 1px solid grey;
+  border-top: 1px solid var(--text-color);
 }
 
-.accordion-item summary > p {
-  font-size: var(--heading-font-size-m);
+.accordion-item p {
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+}
+
+.accordion sup {
+  font-size: 0.75rem;
 }
