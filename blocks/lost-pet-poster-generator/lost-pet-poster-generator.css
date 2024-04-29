@@ -68,6 +68,8 @@ main .lost-pet-poster-generator-form .flex-wrapper > .radio-wrapper > input[type
 main .lost-pet-poster-generator-form .radio-wrapper > input[type="radio"] {
   opacity: 0;
   position: absolute;
+  width: unset;
+  height: unset;
 }
 
 main .lost-pet-poster-generator-form label {
