@@ -17,6 +17,28 @@ export default async function decorate(block) {
         <input type="text" id="petName" name="petName" placeholder="Pet Name" maxlength="12" required>
         <label for="petName" class="float-label">Pet name*</label>
       </div>
+      <div class="wrapper flex-wrapper">
+        <label>Type*</label>
+        <div class="radio-wrapper">
+          <input type="radio" id="speciesIdDog" name="speciesId" value="Dog" checked>
+          <label for="speciesIdDog">Dog</label>
+        </div>
+        <div class="radio-wrapper">
+          <input type="radio" id="speciesIdCat" name="speciesId" value="Cat">
+          <label for="speciesIdCat">Cat</label>
+        </div>
+      </div>
+      <div class="wrapper flex-wrapper">
+        <label>Sex*</label>
+        <div class="radio-wrapper">
+          <input type="radio" id="speciesGenderMale" name="speciesGender" value="Male" checked>
+          <label for="speciesGenderMale">Male</label>
+        </div>
+        <div class="radio-wrapper">
+          <input type="radio" id="speciesGenderFemale" name="speciesGender" value="Female">
+          <label for="speciesGenderFemale">Female</label>
+        </div>
+      </div>
       <div class="wrapper">
         <input type="number" id="petWeight" name="petWeight" placeholder="Weight" maxlength="3">
         <label for="petWeight" class="float-label">Weight (lbs. or kgs., optional)</label>
