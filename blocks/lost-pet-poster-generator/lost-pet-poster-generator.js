@@ -81,6 +81,9 @@ export default async function decorate(block) {
         <label for="addInfo">Additional information - 200 characters max (optional):</label>
         <textarea id="addInfo" name="addInfo" placeholder="Share identifying details about your pet, or any other helpful info." maxlength="200" rows="2"></textarea>
       </div>
+      <div class="wrapper wrapper-text-center">
+        <button type="button">Generate Poster</button>
+      </div>
     </div>
     `;
 

@@ -18,7 +18,7 @@ main .lost-pet-poster-generator-form h3 {
 }
 
 main .lost-pet-poster-generator-form .wrapper {
-  margin-top: 1.25rem;
+  margin-top: 2.25rem;
   position: relative;
 }
 
@@ -44,6 +44,10 @@ main .lost-pet-poster-generator-form .flex-wrapper .radio-wrapper:last-of-type {
 
 main .lost-pet-poster-generator-form .flex-wrapper > label {
   width: 100%;
+}
+
+main .lost-pet-poster-generator-form .wrapper-text-center {
+  text-align: center;
 }
 
 main .lost-pet-poster-generator-form .flex-wrapper > .radio-wrapper > label {
