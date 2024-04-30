@@ -175,3 +175,83 @@
     font-size: 16px;
   }
 }
+
+/* About Us Page | Connect and Care section | Grid */
+.cards.connect-and-care-grid.block ul {
+  grid-template-areas: 
+    "main"
+    "firstcard"
+    "secondcard";
+    grid-gap: inherit;
+}
+
+.cards.connect-and-care-grid.block ul li:first-child > div:first-child {
+  display: none;
+}
+
+.cards.connect-and-care-grid.block ul li:first-child > div:last-child {
+  margin: 0;
+}
+
+.cards.connect-and-care-grid ul li:nth-child(2),
+.cards.connect-and-care-grid ul li:nth-child(3)  {
+  background-color: var(--cool-background-color);
+  border-radius: 10px;
+  margin: 1rem 0 1rem 0;
+  padding: 1rem;
+  img {
+    max-height: 100%;
+    object-fit: contain;
+    aspect-ratio: auto;
+    margin: 1em 1em;
+  }
+}
+
+@media screen and (width >= 768px) {
+  .cards.connect-and-care-grid.block ul {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 10px;
+    grid-template-areas: 
+    "main firstcard"
+    "main secondcard";
+  }
+
+  .cards.connect-and-care-grid.block ul li:first-child {
+    grid-area: main;
+    justify-self: start;
+    align-self: start;
+  }
+  
+  .cards.connect-and-care-grid.block ul li:nth-child(2) {
+    grid-area: firstcard;
+  }
+  
+  .cards.connect-and-care-grid.block ul li:nth-child(3) {
+    grid-area: secondcard;
+  }
+}
+
+.cards.connect-and-care-grid > ul > li {
+  background-color: 0;
+  box-shadow: none;
+}
+
+.cards.connect-and-care-grid > ul > li img {
+  max-width: 55%;
+}
+
+.connect-and-care-grid a + div.cards-card-body {
+  margin: 0 1em 1em 1em;
+}
+
+.connect-and-care-grid a + div.cards-card-body > p:last-of-type {
+  width: 100%;
+  margin: 0;
+}
+
+.connect-and-care-grid a + div.cards-card-body > p:last-of-type a {
+  width: 100%;
+  margin: 0;
+  font-size: inherit;
+}

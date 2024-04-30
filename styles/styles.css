@@ -53,6 +53,7 @@
   --background-color-secondary: #e7e9ea;
   --overlay-background-color: #eee;
   --highlight-background-color: #ccc;
+  --cool-background-color: #ecedee;
   --text-color: #333f48;
   --text-secondary-color: #bf0d3e;
   --heading-text-color: #333f48;
@@ -484,7 +485,35 @@ main .section.heading-light h2 {
   }
 }
 
-/* Accessibility page */
-main .accessibility h1 {
+/* Theme for pages with headings aligned to the left */
+.headings-left h1, h2, h3, h4, h5 {
   text-align: left;
+}
+
+.icon-paw {
+  padding-left: 10px;
+}
+
+main .section.about-us ~ div.teal-bg h3  {
+  text-align: center;
+  margin-bottom: 0em;
+  color: white;
+}
+
+main .section.about-us + div.section {
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: -9px;
+}
+
+main .section.about-us ~ div.teal-bg.highlight {
+  padding-bottom: 0;
+}
+
+.button-container a[target=_blank]::after {
+  display: inline-block;
+  content: url('/icons/external-link.svg');
+  width: 10px;
+  height: 10px;
+  padding-left: 5px;
 }
