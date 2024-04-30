@@ -177,14 +177,6 @@
 }
 
 /* About Us Page | Connect and Care section | Grid */
-.connect-and-care-grid a[target=_blank]::after {
-  display: inline-block;
-  content: url('/icons/external-link.svg');
-  width: 10px;
-  height: 10px;
-  padding-left: 5px;
-}
-
 .cards.connect-and-care-grid.block ul {
   grid-template-areas: 
     "main"
@@ -201,11 +193,18 @@
   margin: 0;
 }
 
-.cards.connect-and-care-grid.block ul li:nth-child(2),
-.cards.connect-and-care-grid.block ul li:nth-child(3)  {
-  background-color: #e7e9ea;
+.cards.connect-and-care-grid ul li:nth-child(2),
+.cards.connect-and-care-grid ul li:nth-child(3)  {
+  background-color: var(--cool-background-color);
   border-radius: 10px;
-  margin: 10px 0 10px 0;
+  margin: 1rem 0 1rem 0;
+  padding: 1rem;
+  img {
+    max-height: 100%;
+    object-fit: contain;
+    aspect-ratio: auto;
+    margin: 1em 1em;
+  }
 }
 
 @media screen and (width >= 768px) {
@@ -240,9 +239,6 @@
 
 .cards.connect-and-care-grid > ul > li img {
   max-width: 55%;
-  object-fit: contain;
-  aspect-ratio: auto;
-  margin: 1em 1em;
 }
 
 .connect-and-care-grid a + div.cards-card-body {
