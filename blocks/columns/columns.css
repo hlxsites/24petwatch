@@ -120,6 +120,23 @@
   }
 }
 
+/* informational pages */
+.columns.body-left > div {
+  padding-left: 0rem;
+}
+
+/* gray box on right side of a double column */
+div.columns.gray-box-right > div > :nth-child(2) {
+  background-color: var(--background-color-secondary);
+  border-radius: 10px;
+  padding: 2rem 2rem 2rem 2rem;
+  margin: 1px 0 1px 0;
+}
+
+div.columns.gray-box-right > div {
+  align-items: flex-start;
+}
+
 /* About Us page */
 main .section.about-us-icons img  {
   min-height: 80px;
