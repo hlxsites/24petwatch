@@ -215,7 +215,7 @@ export default async function decorate(block) {
         doc.setTextColor('#000000');
         doc.setFontSize(20);
         doc.setFont('helvetica', 'normal');
-        const splitPetDetails = doc.splitTextToSize(petAge.value.toString() + ' YEAR OLD ' + petColor.value.toString().toUpperCase() + ' ' + getCkeckedRadioValue(genderRadioGroup).toUpperCase() + ' ' + petBreed.toString().toUpperCase() + '.', 180);
+        const splitPetDetails = doc.splitTextToSize(petAge.value.toString() + ' YEAR OLD ' + petColor.value.toString().toUpperCase() + ' ' + getCkeckedRadioValue(genderRadioGroup).toUpperCase() + ' ' + petBreed.value.toString().toUpperCase() + '.', 180);
         doc.text(splitPetDetails, 105, 160, 'center');
         doc.setTextColor('#000000');
         doc.setFontSize(20);
