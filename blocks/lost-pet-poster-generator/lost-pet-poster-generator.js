@@ -117,9 +117,6 @@ export default async function decorate(block) {
     `;
   const script = document.createElement('script');
   script.src = '/blocks/lost-pet-poster-generator/jsPDF.min.js';
-  script.onload = () => {
-    const { jsPDF } = window.jspdf;
-  };
   document.head.appendChild(script);
 
   // REGEX for validators
@@ -132,11 +129,11 @@ export default async function decorate(block) {
   const petName = document.querySelector('#petName');
   const typeRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesId"]');
   const genderRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesGender"]');
-  const petWeight = document.querySelector('#petWeight');
+  // const petWeight = document.querySelector('#petWeight');
   const petBreed = document.querySelector('#petBreed');
   const petAge = document.querySelector('#petAge');
   const petColor = document.querySelector('#petColor');
-  const petOwnerName = document.querySelector('#petOwnerName');
+  // const petOwnerName = document.querySelector('#petOwnerName');
   const phone = document.querySelector('#phone');
   const email = document.querySelector('#email');
   const city = document.querySelector('#city');
@@ -178,6 +175,7 @@ export default async function decorate(block) {
 
   // PDF generation
   function generatePDF() {
+    // eslint-disable-next-line new-cap
     const doc = new window.jspdf.jsPDF();
     const file = fileInput.files[0];
     const imgReader = new FileReader();
@@ -189,11 +187,9 @@ export default async function decorate(block) {
       const base64String = imgReader.result
         .replace('data:', '')
         .replace(/^.+,/, '');
-      let splitAddress = '';
-      let splitPetDetails = '';
       const img = new Image();
       img.src = evt.target.result;
-      img.onload = function () {
+      img.onload = function handleImageLoad() {
         const imgWidth = this.naturalWidth;
         const imgHeight = this.naturalHeight;
         const widthRatio = maxImageWidth / imgWidth;
@@ -201,7 +197,7 @@ export default async function decorate(block) {
         const bestRatio = Math.min(widthRatio, heightRatio);
         const newWidth = imgWidth * bestRatio;
         const newHeight = imgHeight * bestRatio;
-        const imgOffset = Number.parseInt((newWidth - newHeight) * 0.5);
+        const imgOffset = Number.parseInt((newWidth - newHeight) * 0.5, 10);
 
         const lostPetText = getCkeckedRadioValue(typeRadioGroup) === 'Dog' ? lostDogText : getCkeckedRadioValue(typeRadioGroup) === 'Cat' && lostCatText;
         doc.setLineWidth(2);
@@ -215,12 +211,12 @@ export default async function decorate(block) {
         doc.setTextColor('#000000');
         doc.setFontSize(20);
         doc.setFont('helvetica', 'normal');
-        const splitPetDetails = doc.splitTextToSize(petAge.value.toString() + ' YEAR OLD ' + petColor.value.toString().toUpperCase() + ' ' + getCkeckedRadioValue(genderRadioGroup).toUpperCase() + ' ' + petBreed.value.toString().toUpperCase() + '.', 180);
+        const splitPetDetails = doc.splitTextToSize(`${petAge.value.toString()} YEAR OLD ${petColor.value.toString().toUpperCase()} ${getCkeckedRadioValue(genderRadioGroup).toUpperCase()} ${petBreed.value.toString().toUpperCase()}.`, 180);
         doc.text(splitPetDetails, 105, 160, 'center');
         doc.setTextColor('#000000');
         doc.setFontSize(20);
         doc.setFont('helvetica', 'normal');
-        const splitAddress = doc.splitTextToSize('LAST SEEN ' + address.value.toString().toUpperCase() + ', ' + city.value.toString().toUpperCase(), 180);
+        const splitAddress = doc.splitTextToSize(`LAST SEEN ${address.value.toString().toUpperCase()}, ${city.value.toString().toUpperCase()}`, 180);
         doc.text(splitAddress, 105, 185, 'center');
         doc.setTextColor('#000000');
         doc.setFontSize(16);
@@ -236,7 +232,7 @@ export default async function decorate(block) {
         doc.setTextColor('#FFFFFF');
         doc.setFontSize(40);
         doc.setFont('Helvetica', 'bold');
-        doc.text('CALL ' + phone.value.toString(), 105, 234 + textDim.h, 'center');
+        doc.text(`CALL ${phone.value.toString()}`, 105, 234 + textDim.h, 'center');
         doc.setFontSize(18);
         doc.text(email.value.toString(), 105, 240 + textDim.h, 'center');
         doc.addImage(petWatchLogo, 30, 249 + textDim.h, 160, 30);
@@ -257,20 +253,20 @@ export default async function decorate(block) {
 
     if (imgFileValue !== '') {
       if (parseFloat((fileInput.files[0].size / (1024 * 1024)).toFixed(2)) > 2) {
+        // eslint-disable-next-line no-alert
         window.alert('Photo image should be either JPEG(*.jpg, *.jpeg) or PNG(*.png) and less than 2 MB in size.');
-        return false;
       }
       if (!allowedExtensions.exec(imgFileValue)) {
+        // eslint-disable-next-line no-alert
         window.alert('Photo image should be either JPEG(*.jpg, *.jpeg) or PNG(*.png).');
         fileInput.value = '';
         fileInput.dispatchEvent(new Event('change'));
-        return false;
       } else {
         generatePDF();
       }
     } else {
+      // eslint-disable-next-line no-alert
       window.alert('Photo image should be either JPEG(*.jpg, *.jpeg) or PNG(*.png).');
-      return false;
     }
   });
 }
