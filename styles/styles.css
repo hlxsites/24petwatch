@@ -405,7 +405,130 @@ main .section.highlight p {
   margin-bottom: 0;
 }
 
-/* Blog post styles */
+main .section.block-with-header, main .columns.block-with-header {
+  margin: 2.5rem auto;
+  max-width: 71rem;
+  padding: 0;
+}
+
+main .section.gray-border,  main .columns.gray-border div div {
+  border: .1875rem solid #e5e5e5;
+  border-color: rgba(229, 229, 229, 1);
+  border-radius: 10px;
+}
+
+main .section.block-with-header h2, main .columns.block-with-header div div h2 {
+  background-color: #007680;
+  background-color: rgba(0, 118, 128, 1);
+  margin: 0;
+  padding: .5rem .5rem .625rem .5rem;
+  border-radius: 10px 10px 0 0;
+  color: #fff;
+  color: rgba(255, 255, 255, 1);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 3.125rem;
+  text-align: center;
+}
+
+main .section.block-with-header .default-content-wrapper p, main .columns.block-with-header div div p {
+  display: block;
+  margin: 0;
+}
+
+main .section.block-with-header .default-content-wrapper :first-child img, main .columns.block-with-header div div :first-child img {
+  width: 100%;
+  height: auto;
+  max-height: unset;
+  min-height: unset;
+}
+
+main .section.block-with-header .columns-wrapper p, main .columns.block-with-header div div p:not(:first-of-type) {
+  display: block;
+  margin: .625rem 0;
+  text-align: center;
+  padding-top: 1.875rem;
+  line-height: 1.5625rem;
+}
+
+main .section.block-with-header .columns-wrapper strong, main .columns.block-with-header div div strong{
+  display: block;
+  padding: 0 3.125rem;
+  font-weight: normal;
+  line-height: 1.5625rem;
+}
+
+main .section.block-with-header .columns-wrapper em, main .columns.block-with-header div div em {
+  display: block;
+  font-style: normal;
+  text-align: left;
+  font-size: .625rem;
+  line-height: 1.5625rem;
+}
+
+main .section.block-with-header .columns > div > div {
+  padding: 1rem;
+}
+
+main .section.block-with-header .footnotes-links > div > div {
+  padding: 0;
+  text-align: center;
+}
+
+main .section.block-with-header .footnotes-links a {
+  font-size: 0.7rem;
+}
+
+main .section.block-with-header .footnotes-links a[href*=".pdf"] {
+  background-image: url("/icons/pdficon.png");
+  background-repeat: no-repeat;
+  background-position: 0 1px;
+  padding-left: 1.25rem;
+  height: 17px;
+  display: inline-block;
+}
+
+main .columns.block-with-header div div em {
+  text-align: center;
+  padding: 0 1rem;
+}
+
+.section.block-with-header .columns-wrapper .columns > div, .columns.block-with-header > div {
+  align-items: flex-start;
+}
+
+@media (max-width: 1200px) {
+  main .section.block-with-header, main .columns.block-with-header div {
+    margin: 2.5rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  main .section.block-with-header h2 {
+    line-height: 1.938rem;
+  }
+
+  main .section.block-with-header .footnotes-links > div > div {
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  main .section.block-with-header .columns > div {
+    align-items: center;
+    flex-direction: unset;
+    gap: 20px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  main .columns.block-with-header div {
+    padding-right: unset;
+    padding-left: unset;
+  }
+}
+
+  /* Blog post styles */
 body.blog-post main .section {
   padding: 0.9375rem;
 }
