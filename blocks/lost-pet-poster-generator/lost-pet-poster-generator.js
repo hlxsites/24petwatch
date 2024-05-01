@@ -31,10 +31,10 @@ export default async function decorate(block) {
       <p><i>*All fields are required unless marked as 'Optional'.</i></p>
       <h3>Pet details</h3>
       <div class="wrapper">
-        <label for="imageFile" id="imageFileLabel"><div class="file-info">Upload a photo (max 2MB, supported formats: .jpg, .jpeg, .png)*</div>
-          <div id="imageFileWrapper">
+        <label for="image-file" id="#image-file-label"><div class="file-info">Upload a photo (max 2MB, supported formats: .jpg, .jpeg, .png)*</div>
+          <div id="image-file-wrapper">
             <span id="fileLabel"></span>
-            <input type="file" id="imageFile" name="imageFile" accept="image/png, image/jpeg" required>
+            <input type="file" id="image-file" name="imageFile" accept="image/png, image/jpeg" required>
           </div>
         </label>
       </div>
@@ -125,7 +125,7 @@ export default async function decorate(block) {
 
   // List of fields and buttons
   const generatePosterBtn = document.querySelector('#generatePoster');
-  const fileInput = document.querySelector('#imageFile');
+  const fileInput = document.querySelector('#image-file');
   const petName = document.querySelector('#petName');
   const typeRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesId"]');
   const genderRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesGender"]');
