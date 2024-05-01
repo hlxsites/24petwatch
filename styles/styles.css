@@ -609,7 +609,7 @@ main .section.heading-light h2 {
 }
 
 /* Theme for pages with headings aligned to the left */
-.headings-left h1, h2, h3, h4, h5 {
+.headings-left h1, .headings-left h2, .headings-left h3, .headings-left h4, .headings-left h5 {
   text-align: left;
 }
 
