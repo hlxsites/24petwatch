@@ -12,6 +12,7 @@ function makeProxySrcs(main, document, host = 'https://www.24petwatch.com') {
       u.searchParams.append('host', u.origin);
       img.src = `http://localhost:3001${u.pathname}${u.search}`;
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.warn(`Unable to make proxy src for ${img.src}: ${error.message}`);
     }
   });

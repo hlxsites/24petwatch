@@ -98,6 +98,7 @@ function enhanceAnalyticsEvent(options) {
   options.xdm.web.webPageDetails = options.xdm.web.webPageDetails || {};
   options.xdm.web.webPageDetails.server = 'Franklin';
 
+  // eslint-disable-next-line no-console
   console.debug(`enhanceAnalyticsEvent complete: ${JSON.stringify(options)}`);
 }
 
@@ -242,6 +243,7 @@ export async function analyticsTrackLinkClicks(element, linkType = 'other', addi
 async function sendAnalyticsEvent(xdmData) {
   // eslint-disable-next-line no-undef
   if (!alloy) {
+    // eslint-disable-next-line no-console
     console.warn('alloy not initialized, cannot send analytics event');
     return Promise.resolve();
   }

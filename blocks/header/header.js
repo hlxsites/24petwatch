@@ -237,25 +237,6 @@ function addLinkToLogo(header) {
 }
 
 /**
- * Rewrite links to add Canada to the path
- * @param {Element} header The header block element
- */
-function addCanadaToLinks(header) {
-  if (isCanada) {
-    header.querySelectorAll('a').forEach((anchor) => {
-      if (anchor.getAttribute('rel') === 'alternate') return;
-      const url = new URL(anchor.href);
-      const newUrl = new URL(anchor.href, window.location.origin);
-      if (url.hostname === window.location.hostname) {
-        // change only for internal links
-        newUrl.pathname = `/ca${url.pathname}`;
-        anchor.href = newUrl.toString();
-      }
-    });
-  }
-}
-
-/**
  * Adds external link icons to links
  * @param {Element} header
  */
