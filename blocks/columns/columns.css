@@ -32,6 +32,11 @@
   text-align: center;
 }
 
+/* informational pages */
+.columns.body-left > div {
+  padding-left: 0;
+}
+
 .columns.teaser {
   background-color: #fff1d6;
   border-radius: 0.625rem;
@@ -118,11 +123,6 @@
   .columns.teaser > div > .columns-img-col {
     order: unset;
   }
-}
-
-/* informational pages */
-.columns.body-left > div {
-  padding-left: 0rem;
 }
 
 /* About Us page */
