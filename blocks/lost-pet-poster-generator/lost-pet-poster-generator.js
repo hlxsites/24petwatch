@@ -252,15 +252,14 @@ export default async function decorate(block) {
     const imgFileValue = fileInput.value;
 
     if (imgFileValue !== '') {
-      if (parseFloat((fileInput.files[0].size / (1024 * 1024)).toFixed(2)) > 2) {
-        // eslint-disable-next-line no-alert
-        window.alert('Photo image should be either JPEG(*.jpg, *.jpeg) or PNG(*.png) and less than 2 MB in size.');
-      }
       if (!allowedExtensions.exec(imgFileValue)) {
         // eslint-disable-next-line no-alert
         window.alert('Photo image should be either JPEG(*.jpg, *.jpeg) or PNG(*.png).');
         fileInput.value = '';
         fileInput.dispatchEvent(new Event('change'));
+      } else if (parseFloat((fileInput.files[0].size / (1024 * 1024)).toFixed(2)) > 2) {
+        // eslint-disable-next-line no-alert
+        window.alert('Photo image should be either JPEG(*.jpg, *.jpeg) or PNG(*.png) and less than 2 MB in size.');
       } else {
         generatePDF();
       }
