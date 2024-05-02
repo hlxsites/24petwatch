@@ -30,6 +30,10 @@ import {
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
+export function jsx(html, ...args) {
+  return html.slice(1).reduce((str, elem, i) => str + args[i] + elem, html[0]);
+}
+
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element

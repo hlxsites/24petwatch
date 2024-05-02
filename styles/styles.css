@@ -246,6 +246,10 @@ a:hover {
   color: var(--link-hover-color);
 }
 
+main .section.block-with-header .footnotes-links a {
+  font-size: 0.7rem;
+}
+
 body.blog-post main .sharing-container a:any-link {
   font-family: var(--body-font-family);
 }
@@ -411,32 +415,78 @@ main .section.block-with-header, main .columns.block-with-header {
   padding: 0;
 }
 
-main .section.gray-border,  main .columns.gray-border div div {
+.columns.block-with-header > div {
+  align-items: flex-start;
+}
+
+main .columns.gray-border div div {
   border: .1875rem solid #e5e5e5;
-  border-color: rgba(229, 229, 229, 1);
   border-radius: 10px;
+}
+
+body.blog-post main .section > div {
+  margin: 1.25rem auto;
+  font-size: 1.125rem;
+  padding: 0 0.9375rem;
+}
+
+main .section.block-with-header .columns > div > div {
+  padding: 1rem;
+}
+
+main .section.block-with-header .footnotes-links > div > div {
+  padding: 0;
+  text-align: center;
+}
+
+.section.block-with-header .columns-wrapper .columns > div {
+  align-items: flex-start;
+}
+
+main .section.gray-border {
+  border: .1875rem solid #e5e5e5;
+  border-radius: 10px;
+}
+
+/* Theme for pages with headings aligned to the left */
+.headings-left h1, .headings-left h2, .headings-left h3, .headings-left h4, .headings-left h5 {
+  text-align: left;
+}
+
+body.blog-post main h1, body.blog-post main h2, body.blog-post main h3, body.blog-post main h4,
+body.blog-index main h1, body.blog-index main h2, body.blog-index main h3, body.blog-index main h4 {
+  text-align: left;
+}
+
+body.blog-post main h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+}
+
+main .section.heading-light h2 {
+  font-size: 18px;
+  font-weight: 100;
+  line-height: 1.938rem;
 }
 
 main .section.block-with-header h2, main .columns.block-with-header div div h2 {
   background-color: #007680;
-  background-color: rgba(0, 118, 128, 1);
   margin: 0;
-  padding: .5rem .5rem .625rem .5rem;
+  padding: .5rem .5rem .625rem;
   border-radius: 10px 10px 0 0;
   color: #fff;
-  color: rgba(255, 255, 255, 1);
   font-size: 26px;
   font-weight: 400;
   line-height: 3.125rem;
   text-align: center;
 }
 
-main .section.block-with-header .default-content-wrapper p, main .columns.block-with-header div div p {
+main .columns.block-with-header div div p, main .section.block-with-header .default-content-wrapper p {
   display: block;
   margin: 0;
 }
 
-main .section.block-with-header .default-content-wrapper :first-child img, main .columns.block-with-header div div :first-child img {
+main .columns.block-with-header div div :first-child img, main .section.block-with-header .default-content-wrapper :first-child img {
   width: 100%;
   height: auto;
   max-height: unset;
@@ -451,32 +501,31 @@ main .section.block-with-header .columns-wrapper p, main .columns.block-with-hea
   line-height: 1.5625rem;
 }
 
-main .section.block-with-header .columns-wrapper strong, main .columns.block-with-header div div strong{
+main .columns.block-with-header div div strong, main .section.block-with-header .columns-wrapper strong {
   display: block;
   padding: 0 3.125rem;
   font-weight: normal;
   line-height: 1.5625rem;
 }
 
-main .section.block-with-header .columns-wrapper em, main .columns.block-with-header div div em {
+main .section.highlight p em {
+  display: block;
+  font-size: 2.5rem;
+  font-style: normal;
+  line-height: 1.2;
+}
+
+main .columns.block-with-header div div em {
+  text-align: center;
+  padding: 0 1rem;
+}
+
+main .columns.block-with-header div div em, main .section.block-with-header .columns-wrapper em {
   display: block;
   font-style: normal;
   text-align: left;
   font-size: .625rem;
   line-height: 1.5625rem;
-}
-
-main .section.block-with-header .columns > div > div {
-  padding: 1rem;
-}
-
-main .section.block-with-header .footnotes-links > div > div {
-  padding: 0;
-  text-align: center;
-}
-
-main .section.block-with-header .footnotes-links a {
-  font-size: 0.7rem;
 }
 
 main .section.block-with-header .footnotes-links a[href*=".pdf"] {
@@ -486,15 +535,6 @@ main .section.block-with-header .footnotes-links a[href*=".pdf"] {
   padding-left: 1.25rem;
   height: 17px;
   display: inline-block;
-}
-
-main .columns.block-with-header div div em {
-  text-align: center;
-  padding: 0 1rem;
-}
-
-.section.block-with-header .columns-wrapper .columns > div, .columns.block-with-header > div {
-  align-items: flex-start;
 }
 
 @media (max-width: 1200px) {
@@ -514,17 +554,17 @@ main .columns.block-with-header div div em {
 }
 
 @media (min-width: 768px) {
+  main .columns.block-with-header div {
+    padding-right: unset;
+    padding-left: unset;
+  }
+
   main .section.block-with-header .columns > div {
     align-items: center;
     flex-direction: unset;
     gap: 20px;
     padding-left: 0;
     padding-right: 0;
-  }
-
-  main .columns.block-with-header div {
-    padding-right: unset;
-    padding-left: unset;
   }
 }
 
@@ -538,17 +578,6 @@ body.blog-post main picture {
   justify-content: center;
 }
 
-body.blog-post main .section > div {
-  margin: 1.25rem auto;
-  font-size: 1.125rem;
-  padding: 0 0.9375rem;
-}
-
-body.blog-post main h1, body.blog-post main h2, body.blog-post main h3, body.blog-post main h4,
-body.blog-index main h1, body.blog-index main h2, body.blog-index main h3, body.blog-index main h4 {
-  text-align: left;
-}
-
 main .section.teal-bg, main .section.teal h4 {
   color: white;
 }
@@ -559,28 +588,10 @@ body.blog-post main h1 {
   font-weight: 300;
 }
 
-body.blog-post main h2 {
-  font-size: 1.625rem;
-  line-height: 2.25rem;
-}
-
 body.blog-post .default-content-wrapper p.author {
   font-family: var(--heading-font-family);
   font-size: 1.3125rem;
   font-weight: 300;
-}
-
-main .section.highlight p em {
-  display: block;
-  font-size: 2.5rem;
-  font-style: normal;
-  line-height: 1.2;
-}
-
-main .section.heading-light h2 {
-  font-size: 18px;
-  font-weight: 100;
-  line-height: 1.938rem;
 }
 
 @media (min-width: 768px) {
@@ -608,18 +619,13 @@ main .section.heading-light h2 {
   }
 }
 
-/* Theme for pages with headings aligned to the left */
-.headings-left h1, h2, h3, h4, h5 {
-  text-align: left;
-}
-
 .icon-paw {
   padding-left: 10px;
 }
 
 main .section.about-us ~ div.teal-bg h3  {
   text-align: center;
-  margin-bottom: 0em;
+  margin-bottom: 0;
   color: white;
 }
 
@@ -633,7 +639,7 @@ main .section.about-us ~ div.teal-bg.highlight {
   padding-bottom: 0;
 }
 
-.button-container a[target=_blank]::after {
+.button-container a[target="_blank"]::after {
   display: inline-block;
   content: url('/icons/external-link.svg');
   width: 10px;
