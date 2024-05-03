@@ -327,6 +327,23 @@ main input {
   background-color: var(--background-color);
 }
 
+form input,
+form textarea,
+form select {
+  border: none;
+	border-bottom: 2px solid var(--text-color);
+  font-family: var(--body-font-family);
+	outline: none;
+  border-radius: unset;
+  display: block;
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+	padding: 1.625rem 0.75rem .375rem 1rem;
+  line-height: 1.25rem;
+	font-size: 1.125rem;
+}
+
 main input:hover {
   border: 1px solid var(--text-color);
 }
@@ -657,13 +674,6 @@ form {
 	max-width: 71rem;
 }
 
-form h3 {
-	line-height: 2.25rem;
-	font-size: 1.625rem;
-	text-align: left;
-	margin-top: 3.25rem;
-}
-
 form .error-message {
 	color: var(--error-color);
 	font-size: .75rem;
@@ -715,6 +725,8 @@ form label {
 	text-align: start;
 	text-overflow: ellipsis;
 	box-sizing: border-box;
+  transition: all 0.2s;
+	touch-action: manipulation;
 }
 
 form .flex-wrapper>label {
@@ -724,7 +736,17 @@ form .flex-wrapper>label {
 form .wrapper-text-center {
     display: flex;
     justify-content: center;
-	/* text-align: center; */
+}
+
+form input:focus~label,
+form input:not(:placeholder-shown)~label,
+form textarea:focus~label,
+form textarea:not(:placeholder-shown)~label {
+	transform: scale(.85);
+	transform-origin: 0 0;
+	padding-top: 10px;
+	padding-left: 18px;
+	line-height: .85rem;
 }
 
 form .flex-wrapper>.radio-wrapper>label {
@@ -735,21 +757,6 @@ form .flex-wrapper>.radio-wrapper>label {
 	border-radius: .375rem;
 	cursor: pointer;
 	text-align: center;
-}
-
-form input[type="text"]:focus~label,
-form input[type="text"]:not(:placeholder-shown)~label,
-form input[type="number"]:focus~label,
-form input[type="number"]:not(:placeholder-shown)~label,
-form input[type="email"]:focus~label,
-form input[type="email"]:not(:placeholder-shown)~label,
-form textarea:focus~label,
-form textarea:not(:placeholder-shown)~label {
-	transform: scale(.85);
-	transform-origin: 0 0;
-	padding-top: 10px;
-	padding-left: 18px;
-	line-height: .85rem;
 }
 
 form .flex-wrapper>.radio-wrapper>input[type="radio"]:checked+label {
@@ -770,16 +777,17 @@ form label.float-label {
 	left: 0;
 }
 
-form input[type="text"]::placeholder,
-form input[type="number"]::placeholder,
-form input[type="email"]::placeholder,
+form input::placeholder,
 form textarea::placeholder {
 	color: transparent;
 }
 
-form input[type="text"]:focus::placeholder,
-form input[type="number"]:focus::placeholder,
-form input[type="email"]:focus::placeholder,
+form textarea {
+	box-sizing: border-box;
+	min-height: 9rem;
+}
+
+form input:focus::placeholder,
 form textarea:focus::placeholder {
 	color: var(--button-secondary-color);
 }
@@ -807,54 +815,23 @@ form #image-file-wrapper {
 	margin: 1.25rem 0;
 }
 
-form input,
-textarea,
-select {
-  border: none;
-	border-bottom: 2px solid var(--text-color);
-  font-family: var(--body-font-family);
-	outline: none;
-  border-radius: unset;
-  display: block;
-	width: 100%;
-	max-width: 100%;
-	margin: 0;
-	padding: 1.625rem 0.75rem .375rem 1rem;
-  line-height: 1.25rem;
-	font-size: 1.125rem;
-}
-
-form input:hover,
-textarea:hover,
-select:hover {
-    border: unset;
-	border-bottom: 2px solid var(--text-color);
-}
-
-form input:focus,
-textarea:focus,
-select:focus {
-  border-bottom: .125rem solid var(--button-secondary-color);
-}
-
 form select {
 	width: 100%;
 	font-size: 1rem;
 	padding: 0.5rem 1rem 1rem 0.7rem;
 }
 
-form textarea {
-	box-sizing: border-box;
-	min-height: 9rem;
-
+form input:hover,
+form textarea:hover,
+form select:hover {
+    border: unset;
+	border-bottom: 2px solid var(--text-color);
 }
 
-form textarea::placeholder {
-	color: transparent;
-}
-
-form textarea:focus::placeholder {
-	color: var(--button-secondary-color);
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-bottom: .125rem solid var(--button-secondary-color);
 }
 
 form button.red {
@@ -871,17 +848,4 @@ form button.teal {
 
 form button.teal:hover {
 	background-color: var(--button-secondary-hover-color);
-}
-
-form label,
-input,
-textarea {
-	transition: all 0.2s;
-	touch-action: manipulation;
-}
-
-@media screen and (width >=768px) {
-	form#contact-us {
-		max-width: 768px;
-	}
 }
