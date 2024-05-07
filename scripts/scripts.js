@@ -251,4 +251,5 @@ async function loadPage() {
   loadDelayed();
 }
 
+export const contentBasePath = `${window.hlx.codeBasePath}`;
 loadPage();
