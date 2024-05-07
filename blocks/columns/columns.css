@@ -8,6 +8,11 @@
   margin-bottom: .625rem;
 }
 
+.columns hr {
+  height: 1px;
+  background-color: #05233f;
+}
+
 .columns img {
   max-height: min(calc(7vw - 1px), 100px);
   min-height: 40px;
@@ -30,6 +35,10 @@
 
 .columns.text-center > div {
   text-align: center;
+}
+
+.columns.content-left > div {
+  padding-left: 0;
 }
 
 .columns.teaser {
