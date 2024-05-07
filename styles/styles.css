@@ -719,7 +719,9 @@ form select:hover {
 
 form input:focus,
 form textarea:focus,
-form select:focus {
+form select:focus,
+form input:valid,
+form textarea:valid {
   border-bottom: .125rem solid var(--button-secondary-color);
 }
 
