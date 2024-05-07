@@ -21,7 +21,7 @@ main #lost-pet-poster-generator-form .flex-wrapper > .radio-wrapper > label {
 }
 
 @media (max-width: 414px) {
-  main #lost-pet-poster-generator-form #petWeight~label {
+  main #lost-pet-poster-generator-form #pet-weight~label {
     font-size: .875rem;
   }
 }

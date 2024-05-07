@@ -68,8 +68,8 @@ export default async function decorate(block) {
         </div>
       </div>
       <div class="wrapper">
-        <input type="number" id="petWeight" name="petWeight" placeholder="" maxlength="3">
-        <label for="petWeight" class="float-label">Weight (lbs. or kgs., optional)</label>
+        <input type="number" id="pet-weight" name="pet-weight" placeholder="" maxlength="3">
+        <label for="pet-weight" class="float-label">Weight (lbs. or kgs., optional)</label>
       </div>
       <div class="wrapper">
         <input type="text" id="petBreed" name="petBreed" placeholder="" maxlength="30" required>
@@ -132,7 +132,7 @@ export default async function decorate(block) {
   const petName = document.querySelector('#petName');
   const typeRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesId"]');
   const genderRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesGender"]');
-  // const petWeight = document.querySelector('#petWeight');
+  // const petWeight = document.querySelector('#pet-weight');
   const petBreed = document.querySelector('#petBreed');
   const petAge = document.querySelector('#petAge');
   const petColor = document.querySelector('#petColor');
