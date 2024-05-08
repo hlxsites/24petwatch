@@ -117,7 +117,7 @@ main .hero img {
 }
 
 main .hero.dog-peeking-background {
-  background-image: url(https://www.24petwatch.com/content/dam/24-petwatch/images/other/dog-peeking.png);
+  background-image: url('https://www.24petwatch.com/content/dam/24-petwatch/images/other/dog-peeking.png');
   background-repeat: no-repeat;
   background-size: contain;
   min-height: 600px;
