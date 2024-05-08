@@ -874,3 +874,12 @@ form button.teal {
 form button.teal:hover {
 	background-color: var(--button-secondary-hover-color);
 }
+
+/* Theme for pages with content aligned to the center */
+.content-center {
+	text-align: center;
+}
+
+.telephone-white a[href^="tel:"] {
+	color: white
+}
