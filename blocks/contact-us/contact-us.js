@@ -74,7 +74,7 @@ export default async function decorate(block) {
   // const captchaSiteKey = await getConfigValue('captcha-site-key');
   const captchaSiteKey = '6LeZb8cpAAAAAIvHMYMqpINijClS33ccPPqCEyqL';
   const script = `https://www.google.com/recaptcha/api.js?render=${captchaSiteKey}`;
-  loadScript(script, { loading: 'lazy' });
+  loadScript(script, { loading: 'lazy', defer: true });
 
   block.innerHTML = '';
   const formContent = `
