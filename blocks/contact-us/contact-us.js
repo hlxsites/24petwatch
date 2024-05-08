@@ -157,5 +157,5 @@ export default async function decorate(block) {
     }
   });
 
-  loadScript(script);
+  loadScript(script, { defer: true });
 }
