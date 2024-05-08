@@ -103,6 +103,14 @@
   background-color: #e7e9ea;
 }
 
+/* gray box on right side of a double column */
+.columns.gray-box-right > div > :nth-child(2) {
+  background-color: var(--background-color-secondary);
+  border-radius: 10px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
 @media (min-width: 768px) {
   .columns > div {
     align-items: center;
@@ -132,14 +140,10 @@
   .columns.teaser > div > .columns-img-col {
     order: unset;
   }
-}
 
-/* gray box on right side of a double column */
-.columns.gray-box-right > div > :nth-child(2) {
-  background-color: var(--background-color-secondary);
-  border-radius: 10px;
-  padding: 2rem;
-  margin: 1px 0;
+  .columns.gray-box-right > div > :nth-child(2) {
+    margin: 1px 0;
+  }
 }
 
 /* About Us page */
