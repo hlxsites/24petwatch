@@ -14,20 +14,23 @@ function assignValidator(element, regex, message) {
       if (!regex.test(element.value)) {
         errorMessage.textContent = message;
         checkmark.setAttribute('style', 'opacity: 0;');
+        container.classList.add('error');
       } else {
         errorMessage.textContent = '';
         checkmark.setAttribute('style', 'opacity: 1;');
+        container.classList.remove('error');
       }
     } else {
       errorMessage.textContent = '';
       checkmark.setAttribute('style', 'opacity: 0;');
+      container.classList.remove('error');
     }
   });
 }
 
 export default async function decorate(block) {
   block.innerHTML = jsx`
-    <div class="lost-pet-poster-generator-form">
+    <form id="lost-pet-poster-generator-form">
       <p><i>*All fields are required unless marked as 'Optional'.</i></p>
       <h3>Pet details</h3>
       <div class="wrapper">
@@ -39,7 +42,7 @@ export default async function decorate(block) {
         </label>
       </div>
       <div class="wrapper">
-        <input type="text" id="petName" name="petName" placeholder="Pet Name" maxlength="12" required>
+        <input type="text" id="petName" name="petName" placeholder="" maxlength="12" required>
         <label for="petName" class="float-label">Pet name*</label>
       </div>
       <div class="wrapper flex-wrapper">
@@ -65,55 +68,55 @@ export default async function decorate(block) {
         </div>
       </div>
       <div class="wrapper">
-        <input type="number" id="petWeight" name="petWeight" placeholder="Weight" maxlength="3">
-        <label for="petWeight" class="float-label">Weight (lbs. or kgs., optional)</label>
+        <input type="number" id="pet-weight" name="pet-weight" placeholder="" maxlength="3">
+        <label for="pet-weight" class="float-label">Weight (lbs. or kgs., optional)</label>
       </div>
       <div class="wrapper">
-        <input type="text" id="petBreed" name="petBreed" placeholder="Breed" maxlength="30" required>
+        <input type="text" id="petBreed" name="petBreed" placeholder="" maxlength="30" required>
         <label for="petBreed" class="float-label">Breed*</label>
       </div>
       <div class="wrapper">
-        <input type="number" id="petAge" name="petAge" placeholder="Age in Years" maxlength="2">
+        <input type="number" id="petAge" name="petAge" placeholder="" maxlength="2">
         <label for="petAge" class="float-label">Age (years, optional)</label>
       </div>
       <div class="wrapper">
-        <input type="text" id="petColor" name="petColor" placeholder="Color" maxlength="30" required>
+        <input type="text" id="petColor" name="petColor" placeholder="" maxlength="30" required>
         <label for="petColor" class="float-label">Color*</label>
       </div>
       <h3>Contact information</h3>
       <div class="wrapper">
-        <input type="text" id="petOwnerName" name="petOwnerName" placeholder="Owner&#39;s name" maxlength="40" required>
+        <input type="text" id="petOwnerName" name="petOwnerName" placeholder="" maxlength="40" required>
         <label for="petOwnerName" class="float-label">Owner&#39;s name*</label>
       </div>
       <div class="wrapper">
-        <input type="number" id="phone" name="phone" placeholder="Phone" maxlength="10">
+        <input type="number" id="phone" name="phone" placeholder="" maxlength="10">
         <label for="phone" class="float-label">Phone number*</label>
         <span class="checkmark"></span>
         <div class="error-message"></div>
       </div>
       <div class="wrapper">
-        <input type="email" id="email" name="email" placeholder="Email" maxlength="40" required>
+        <input type="email" id="email" name="email" placeholder="" maxlength="40" required>
         <label for="email" class="float-label">Email*</label>
         <span class="checkmark"></span>
         <div class="error-message"></div>
       </div>
       <h3>Last seen location</h3>
       <div class="wrapper">
-        <input type="text" id="city" name="city" placeholder="City" maxlength="35" required>
+        <input type="text" id="city" name="city" placeholder="" maxlength="35" required>
         <label for="city" class="float-label">City*</label>
       </div>
       <div class="wrapper">
-        <input type="text" id="address" name="address" placeholder="Intersection / Address" maxlength="28" required>
+        <input type="text" id="address" name="address" placeholder="" maxlength="28" required>
         <label for="address" class="float-label">Intersection / Address*</label>
       </div>
       <div class="wrapper">
         <label for="addInfo">Additional information - 200 characters max (optional):</label>
-        <textarea id="addInfo" name="addInfo" placeholder="Share identifying details about your pet, or any other helpful info." maxlength="200" rows="2"></textarea>
+        <textarea id="addInfo" name="addInfo" placeholder="" maxlength="200" rows="2"></textarea>
       </div>
       <div class="wrapper wrapper-text-center">
         <button type="button" id="generatePoster">Generate Poster</button>
       </div>
-    </div>
+    </form>
     `;
   const script = document.createElement('script');
   script.src = '/blocks/lost-pet-poster-generator/jsPDF.min.js';
@@ -129,7 +132,7 @@ export default async function decorate(block) {
   const petName = document.querySelector('#petName');
   const typeRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesId"]');
   const genderRadioGroup = document.querySelectorAll('input[type="radio"][name="speciesGender"]');
-  // const petWeight = document.querySelector('#petWeight');
+  // const petWeight = document.querySelector('#pet-weight');
   const petBreed = document.querySelector('#petBreed');
   const petAge = document.querySelector('#petAge');
   const petColor = document.querySelector('#petColor');
@@ -152,7 +155,7 @@ export default async function decorate(block) {
     }
   });
 
-  document.querySelector('.lost-pet-poster-generator-form').addEventListener('input', (event) => {
+  document.querySelector('#lost-pet-poster-generator-form').addEventListener('input', (event) => {
     const el = event.target;
     if (el.type === 'number') {
       el.value = el.value.replace(/[^0-9]/g, '').substring(0, el.maxLength);
