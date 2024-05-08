@@ -33,11 +33,6 @@
   width: 100%;
 }
 
-/* informational pages */
-.columns.body-left > div {
-  padding-left: 0;
-}
-
 /* gray box on right side of a double column */
 .columns.gray-box-right > div {
   align-items: flex-start;
