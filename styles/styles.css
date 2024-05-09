@@ -876,3 +876,7 @@ form button.teal {
 form button.teal:hover {
 	background-color: var(--button-secondary-hover-color);
 }
+
+main .section.p-center > div > p {
+  text-align: center;
+}

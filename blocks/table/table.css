@@ -56,3 +56,129 @@
 .table.bordered table td {
     border: 1px solid;
 }
+
+.table.care-plan table {
+    margin-top: 8rem;
+}
+
+.table.care-plan table tbody tr {
+    border-bottom: .125rem solid #333f48;
+}
+
+.table.care-plan th,
+.table.care-plan td {
+    text-align: center;
+    vertical-align: top;
+}
+
+.table.care-plan td {
+    font-weight: 700;
+    font-size: 1.125rem;
+    line-height: 1.75rem;
+    width: 100%;
+    max-width: 20%;
+}
+
+.table.care-plan td i {
+    color: transparent;
+    display: block;
+    height: 12px;
+    width: 24px;
+    border: 1px solid #bf0d3e;
+    border-width: 0 0 .1875rem .1875rem;
+    margin: auto;
+    --transform-translate-x: 0;
+    --transform-translate-y: 0;
+    --transform-rotate: 0;
+    --transform-skew-x: 0;
+    --transform-skew-y: 0;
+    --transform-scale-x: 1;
+    --transform-scale-y: 1;
+    -webkit-transform: translateX(var(--transform-translate-x)) translateY(var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y));
+    transform: translateX(var(--transform-translate-x)) translateY(var(--transform-translate-y)) rotate(var(--transform-rotate)) skewX(var(--transform-skew-x)) skewY(var(--transform-skew-y)) scaleX(var(--transform-scale-x)) scaleY(var(--transform-scale-y));
+    --transform-rotate: -45deg;
+}
+
+.table.care-plan td {
+    padding: 1.563rem 2.5rem;
+}
+
+.table.care-plan td .info-icon {
+    display: inline-block;
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-left: 0.25rem;
+    position: relative;
+    background-image: url('/icons/info-circle.svg');
+    background-size: cover;
+    background-repeat: no-repeat;
+    vertical-align: text-top;
+}
+
+.table.care-plan td .info-icon .info-content {
+    position: absolute;
+    top: 0;
+    left: .75rem;
+    max-width: 264px;
+    min-width: 200px;
+    background-color: #e0e1e2;
+    border-radius: .125rem;
+    box-shadow: 0 5px 5px 0 rgba(0, 0, 0, .16);
+    margin: 0;
+    padding: 1.0625rem 1.25rem;
+    line-height: 1.2rem;
+    font-size: 1rem;
+    visibility: hidden;
+    z-index: 100;
+}
+
+.table.care-plan td .info-icon:hover .info-content {
+    visibility: visible;
+}
+
+.table.care-plan th {
+    padding: 1.563rem 2.5rem 0 2.5rem;
+}
+
+.table.care-plan th.most-popular {
+    position: relative;
+}
+
+.table.care-plan th.most-popular::before {
+    position: absolute;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: bottom;
+    content: "";
+    z-index: 2;
+    width: 100%;
+    max-height: 95px;
+    height: 100%;
+    top: -65px;
+    left: 0;
+    right: 0;
+    background-image: url('/icons/most-popular.png');
+}
+
+.table.care-plan th .button-container a {
+    margin-bottom: 0;
+    text-decoration: underline;
+}
+
+.table.care-plan tr:first-of-type td {
+    padding-top: 0;
+}
+
+.table.care-plan td:first-child {
+    max-width: 40%;
+}
+
+.table.care-plan table thead tr {
+    border-top: unset;
+    border-bottom: unset;
+}
+
+.table.care-plan table tr th:nth-child(2n+2),
+.table.care-plan table tr td:nth-child(2n+2) {
+    background-color: #e7e9ea;
+}
