@@ -276,110 +276,142 @@ export default async function decorate(block) {
   // fetch nav content
   const navMeta = getMetadata('nav');
   block.textContent = '';
-  let baseHeaderUrl = '/fragments/header/master';
-  if (isCanada) {
-    baseHeaderUrl = '/fragments/ca/header/master';
-  }
+  // let baseHeaderUrl = '/fragments/header/master';
+  // if (isCanada) {
+  //   baseHeaderUrl = '/fragments/ca/header/master';
+  // }
 
-  if (!isLiveSite && !isCrosswalkDomain) {
-    if (isCanada) {
-      baseHeaderUrl = `https://${getXWalkDomain()}/fragments/ca/header/master`;
-    } else {
-      baseHeaderUrl = `https://${getXWalkDomain()}/fragments/header/master`;
+  // if (!isLiveSite && !isCrosswalkDomain) {
+  //   if (isCanada) {
+  //     baseHeaderUrl = `https://${getXWalkDomain()}/fragments/ca/header/master`;
+  //   } else {
+  //     baseHeaderUrl = `https://${getXWalkDomain()}/fragments/header/master`;
+  //   }
+  // }
+
+  let contentBasePath = '';
+  const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');
+  if (scriptEl) {
+    try {
+      contentBasePath = new URL(scriptEl.src).origin.split('/scripts/scripts.js');
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
     }
   }
+
+  const baseHeaderUrl = `${contentBasePath}/drafts/achabuku/new-mega-nav`;
 
   const navPath = navMeta ? new URL(navMeta).pathname : baseHeaderUrl;
   const resp = await fetch(`${navPath}.plain.html`);
 
-  if (resp.ok) {
-    const html = await resp.text();
-
-    // decorate nav DOM
-    const nav = document.createElement('nav');
-    nav.id = 'nav';
-    nav.innerHTML = html;
-
-    const classes = ['brand', 'get-quote', 'sections', 'secondary'];
-    classes.forEach((c, i) => {
-      const section = nav.children[i];
-      if (section) section.classList.add(`nav-${c}`);
-    });
-
-    const navSections = nav.querySelector('.nav-sections');
-    if (navSections) {
-      navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
-        if (navSection.querySelector('ul')) {
-          navSection.classList.add('nav-drop');
-          const dropdownAnchor = document.createElement('a');
-          dropdownAnchor.href = '#';
-          dropdownAnchor.ariaLabel = 'Open dropdown menu';
-          dropdownAnchor.classList.add('icon-arrow');
-          dropdownAnchor.addEventListener('click', (e) => {
-            e.preventDefault();
-          });
-          navSection.append(dropdownAnchor);
-        }
-        navSection.addEventListener('click', (e) => {
-          if (!isTablet.matches && !isDesktop.matches && e.target.tagName === 'A') return;
-
-          const expanded = navSection.getAttribute('aria-expanded') === 'true';
-          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-        });
-        navSection.addEventListener('mouseenter', () => {
-          if (isDesktop.matches) {
-            navSection.setAttribute('aria-expanded', 'true');
-          }
-        });
-        navSection.addEventListener('mouseleave', () => {
-          if (isDesktop.matches) {
-            navSection.setAttribute('aria-expanded', 'false');
-          }
-        });
-      });
-    }
-
-    // hamburger for mobile
-    const hamburger = document.createElement('div');
-    hamburger.classList.add('nav-hamburger');
-    hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-        <span></span><span></span><span></span>
-      </button>`;
-    hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
-    nav.prepend(hamburger);
-    nav.setAttribute('aria-expanded', 'false');
-    // prevent mobile nav behavior on window resize
-    toggleMenu(nav, navSections, isTablet.matches);
-    isTablet.addEventListener('change', () => closeAllMenus(nav, navSections));
-
-    // language selector
-    const secondaryMenu = nav.querySelector('.nav-secondary');
-    decorateLanguageSelector(secondaryMenu);
-
-    decorateIcons(nav);
-    decorateButtons(nav);
-    decorateLinks(nav);
-    instrumentTrackingEvents(nav);
-    removeTargetBlank(nav);
-    addLinkToLogo(nav);
-    addExternalLinkIcons(nav);
-
-    const navWrapper = document.createElement('div');
-    navWrapper.className = 'nav-wrapper';
-    navWrapper.append(nav);
-    block.append(navWrapper);
-
-    window.addEventListener('scroll', () => {
-      if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
-        navWrapper.classList.remove('slide-down');
-        navWrapper.classList.add('slide-up');
-      }
-      if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
-        navWrapper.classList.remove('slide-up');
-        navWrapper.classList.add('slide-down');
-      }
-
-      positionY = window.pageYOffset;
-    }, false);
+  if (!resp.ok) {
+    return;
   }
+
+  const html = await resp.text();
+
+  // decorate nav DOM
+  const nav = document.createElement('nav');
+  nav.id = 'nav';
+  nav.innerHTML = html;
+
+  const classes = ['brand', 'meganav', 'memberships', 'register', 'login'];
+  classes.forEach((c, i) => {
+    const section = nav.children[i];
+    if (section) section.classList.add(`nav-${c}`);
+  });
+
+  const navWrapper = document.createElement('div');
+  navWrapper.className = 'nav-wrapper';
+  navWrapper.append(nav);
+  block.append(navWrapper);
+
+  // logo
+  addLinkToLogo(nav);
+
+
+  const navMemberships = nav.querySelector('.nav-memberships');
+  if (navMemberships) {
+    // add style display none
+    navMemberships.style.display = 'none';
+  }
+
+  const navRegister = nav.querySelector('.nav-register');
+  if (navRegister) {
+    // add style display none
+    navRegister.style.display = 'none';
+  }
+
+  decorateIcons(nav);
+  decorateButtons(nav);
+  decorateLinks(nav);
+  instrumentTrackingEvents(nav);
+  removeTargetBlank(nav);
+  addLinkToLogo(nav);
+  addExternalLinkIcons(nav);
+
+  // const navSections = nav.querySelector('.nav-meganav');
+  // if (navSections) {
+  //   console.log('Inside Nav section', navSections);
+  //   navSections.querySelectorAll(':scope > ul > li').forEach((navSection) => {
+  //     if (navSection.querySelector('ul')) {
+  //       navSection.classList.add('nav-drop');
+  //       const dropdownAnchor = document.createElement('a');
+  //       dropdownAnchor.href = '#';
+  //       dropdownAnchor.ariaLabel = 'Open dropdown menu';
+  //       dropdownAnchor.classList.add('icon-arrow');
+  //       dropdownAnchor.addEventListener('click', (e) => {
+  //         e.preventDefault();
+  //       });
+  //       navSection.append(dropdownAnchor);
+  //     }
+  //     navSection.addEventListener('click', (e) => {
+  //       if (!isTablet.matches && !isDesktop.matches && e.target.tagName === 'A') return;
+
+  //       const expanded = navSection.getAttribute('aria-expanded') === 'true';
+  //       navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  //     });
+  //     navSection.addEventListener('mouseenter', () => {
+  //       if (isDesktop.matches) {
+  //         navSection.setAttribute('aria-expanded', 'true');
+  //       }
+  //     });
+  //     navSection.addEventListener('mouseleave', () => {
+  //       if (isDesktop.matches) {
+  //         navSection.setAttribute('aria-expanded', 'false');
+  //       }
+  //     });
+  //   });
+  // }
+
+  // hamburger for mobile
+  // const hamburger = document.createElement('div');
+  // hamburger.classList.add('nav-hamburger');
+  // hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
+  //     <span></span><span></span><span></span>
+  //   </button>`;
+  // hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
+  // nav.prepend(hamburger);
+  // nav.setAttribute('aria-expanded', 'false');
+  // // prevent mobile nav behavior on window resize
+  // toggleMenu(nav, navSections, isTablet.matches);
+  // isTablet.addEventListener('change', () => closeAllMenus(nav, navSections));
+
+  // // language selector
+  // const secondaryMenu = nav.querySelector('.nav-secondary');
+  // decorateLanguageSelector(secondaryMenu);
+
+  // window.addEventListener('scroll', () => {
+  //   if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
+  //     navWrapper.classList.remove('slide-down');
+  //     navWrapper.classList.add('slide-up');
+  //   }
+  //   if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
+  //     navWrapper.classList.remove('slide-up');
+  //     navWrapper.classList.add('slide-down');
+  //   }
+
+  //   positionY = window.pageYOffset;
+  // }, false);
 }
