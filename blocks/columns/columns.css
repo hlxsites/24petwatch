@@ -145,6 +145,10 @@ main .lost-pet-data > div div:first-child {
     text-align: left;
   }
 
+  .columns.h3-left h3 {
+    text-align: left;
+  }
+
   .columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
     padding: 3.125rem;
   }
@@ -173,9 +177,35 @@ main .lost-pet-data .icon {
   height: 80px;
 }
 
+main .section.cat-dog-background {
+  margin-top: 130px;
+}
+
+main .columns.cat-dog-background > div > div:last-child {
+  margin-top: -310px;
+  background-image: url('https://www.24petwatch.com//content/dam/24-petwatch/images/other/cat-dog-1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 600px;
+  background-position-x: right;
+  background-position-y: bottom;
+}
+
 @media (max-width: 765px) {
   main .lost-pet-data > div div:first-child {
     flex: 1;
     text-align: center;
+  }
+}
+
+@media (max-width: 768px) {
+  main .section.cat-dog-background {
+    margin-top: 20px;
+  }
+
+  main .columns.cat-dog-background > div > div:last-child {
+    margin-top: 0;
+    min-height: 300px;
+    background-position-x: center;
   }
 }
