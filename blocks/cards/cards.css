@@ -276,7 +276,7 @@
 }
 
 .cards.microchip-cards .cards-card-body p:first-of-type {
-  margin: 1.5rem 0 0 0;
+  margin: 1.5rem 0 0;
 }
 
 .cards.microchip-cards .cards-card-body p:last-of-type a {
@@ -297,5 +297,5 @@
 
 .cards-container.microchip-container .default-content-wrapper > p {
   text-align: center;
-  margin: 3rem 0 1.5rem 0;
+  margin: 3rem 0 1.5rem;
 }

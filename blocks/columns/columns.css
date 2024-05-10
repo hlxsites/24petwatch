@@ -33,6 +33,14 @@
   width: 100%;
 }
 
+main .lost-pet-data > div {
+  padding: 1rem 0;
+}
+
+main .lost-pet-data > div div {
+  font-size: 1.2rem;
+}
+
 /* gray box on right side of a double column */
 .columns.gray-box-right > div {
   align-items: flex-start;
@@ -67,6 +75,10 @@
 .columns.teaser > div > div {
   font-size: 1rem;
   line-height: 1.5625rem;
+}
+
+main .lost-pet-data > div div:first-child {
+  flex: 0 0 80px;
 }
 
 .columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
@@ -159,18 +171,6 @@ main .lost-pet-data {
 main .lost-pet-data .icon {
   width: 80px;
   height: 80px;
-}
-
-main .lost-pet-data > div {
-  padding: 1rem 0;
-}
-
-main .lost-pet-data > div div {
-  font-size: 1.2rem;
-}
-
-main .lost-pet-data > div div:first-child {
-  flex: 0 0 80px;
 }
 
 @media (max-width: 765px) {
