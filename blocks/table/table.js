@@ -66,6 +66,7 @@ export default async function decorate(block) {
     const row = document.createElement('tr');
     if (header && i === 0) thead.append(row);
     else tbody.append(row);
+    thead.classList.add(`cols-${child.children.length}`);
     [...child.children].forEach((col, j) => {
       const cell = buildCell(header ? i : i + 1);
       if (isHeaderCell(cell)) {

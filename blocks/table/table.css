@@ -189,10 +189,6 @@
         padding: .5rem .375rem;
     }
 
-    .table.care-plan table tr th {
-        width: 33.3333vw;
-    }
-
     .table.care-plan table thead tr th {
         border-left: .125rem solid #333f48;
         border-right: .125rem solid #333f48;
@@ -211,6 +207,14 @@
     .table.care-plan table tr th:nth-child(2n+2),
     .table.care-plan table tr td:nth-child(2n+2) {
         background-color: unset;
+    }
+
+    .table.care-plan table thead.cols-4 tr th {
+        width: 33.3333vw;
+    }
+
+    .table.care-plan table thead.cols-3 tr th {
+        width: 50vw;
     }
 
     .table.care-plan table thead tr th:nth-child(2) {
