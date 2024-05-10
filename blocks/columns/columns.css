@@ -25,6 +25,7 @@
 
 .columns.microchip-lifetime > div {
   padding-left: 0;
+  flex-direction: column-reverse;
 }
 
 .columns.microchip-lifetime img {
@@ -91,6 +92,10 @@
   margin: 0.3125rem auto;
 }
 
+.columns.microchip-lifetime p.button-container a.button {
+  display: inline-block;
+}
+
 .columns.gray p.button-container a.button {
   display: inline-block;
   border: 0.1875rem solid var(--text-color);
@@ -148,6 +153,10 @@
 
   .columns > div > .columns-img-col {
     order: unset;
+  }
+
+  .columns.microchip-lifetime > div {
+    flex-direction: unset;
   }
 
   .columns h2 {
