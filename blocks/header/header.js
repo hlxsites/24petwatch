@@ -316,7 +316,7 @@ export default async function decorate(block) {
   nav.id = 'nav';
   nav.innerHTML = html;
 
-  const classes = ['brand', 'meganav', 'memberships', 'register', 'login'];
+  const classes = ['brand', 'meganav', 'memberships', 'register', 'info', 'secondary'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
@@ -327,21 +327,13 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
-  // logo
-  addLinkToLogo(nav);
+  // Append membership hover content
+  const membershipsHoverContent = nav.querySelector('.nav-memberships');
+  navWrapper.append(membershipsHoverContent);
 
-
-  const navMemberships = nav.querySelector('.nav-memberships');
-  if (navMemberships) {
-    // add style display none
-    navMemberships.style.display = 'none';
-  }
-
-  const navRegister = nav.querySelector('.nav-register');
-  if (navRegister) {
-    // add style display none
-    navRegister.style.display = 'none';
-  }
+  // Append register hover content
+  const registerHoverContent = nav.querySelector('.nav-register');
+  navWrapper.append(registerHoverContent);
 
   decorateIcons(nav);
   decorateButtons(nav);
@@ -349,7 +341,31 @@ export default async function decorate(block) {
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);
   addLinkToLogo(nav);
-  addExternalLinkIcons(nav);
+
+  // get mega nav elements
+  const megaNav = nav.querySelector('.nav-meganav .mega-nav');
+  if (megaNav) {
+    // add id to each div of mega nav
+    megaNav.querySelectorAll('.mega-nav > div').forEach((div, index) => {
+      div.id = `meganav-link-${index + 1}`;
+    });
+  }
+
+  const navMembershipText = nav.querySelector('#meganav-link-1');
+  navMembershipText.addEventListener('mouseenter', () => {
+    membershipsHoverContent.style.display = 'flex';
+  });
+  navMembershipText.addEventListener('mouseleave', () => {
+    membershipsHoverContent.style.display = 'none';
+  });
+
+  const navRegisterText = nav.querySelector('#meganav-link-4');
+  navRegisterText.addEventListener('mouseenter', () => {
+    registerHoverContent.style.display = 'flex';
+  });
+  navRegisterText.addEventListener('mouseleave', () => {
+    registerHoverContent.style.display = 'none';
+  });
 
   // const navSections = nav.querySelector('.nav-meganav');
   // if (navSections) {
@@ -398,20 +414,20 @@ export default async function decorate(block) {
   // toggleMenu(nav, navSections, isTablet.matches);
   // isTablet.addEventListener('change', () => closeAllMenus(nav, navSections));
 
-  // // language selector
-  // const secondaryMenu = nav.querySelector('.nav-secondary');
-  // decorateLanguageSelector(secondaryMenu);
+  // language selector
+  const secondaryMenu = nav.querySelector('.nav-secondary');
+  decorateLanguageSelector(secondaryMenu);
 
-  // window.addEventListener('scroll', () => {
-  //   if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
-  //     navWrapper.classList.remove('slide-down');
-  //     navWrapper.classList.add('slide-up');
-  //   }
-  //   if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
-  //     navWrapper.classList.remove('slide-up');
-  //     navWrapper.classList.add('slide-down');
-  //   }
+  window.addEventListener('scroll', () => {
+    if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
+      navWrapper.classList.remove('slide-down');
+      navWrapper.classList.add('slide-up');
+    }
+    if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
+      navWrapper.classList.remove('slide-up');
+      navWrapper.classList.add('slide-down');
+    }
 
-  //   positionY = window.pageYOffset;
-  // }, false);
+    positionY = window.pageYOffset;
+  }, false);
 }
