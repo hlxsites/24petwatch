@@ -20,12 +20,14 @@ const urls = {
   usa: {
     url: '/',
     name: 'US',
+    imageName: 'flagusa',
     icon: 'icon-flagusa',
     lang: 'en-US',
   },
   canada: {
     url: '/ca',
     name: 'Canada',
+    imageName: 'flagcanada',
     icon: 'icon-flagcanada',
     lang: 'en-CA',
   },
@@ -140,9 +142,9 @@ function decorateLanguageSelector(block) {
 
   const languageSelector = document.createElement('li');
   languageSelector.classList.add('language-selector');
-  languageSelector.innerHTML = `<span class="icon ${currentCountry.icon}"></span>
+  languageSelector.innerHTML = `<span class="icon ${currentCountry.icon}"><img src='/icons/${currentCountry.imageName}.svg' /></span>
       <ul>
-        <li><a href="${newCountryUrl.toString()}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"></span>${alternateCountry.name}</a></li>
+        <li><a href="${newCountryUrl.toString()}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"><img src='/icons/${alternateCountry.imageName}.svg' /></span>${alternateCountry.name}</a></li>
       </ul>`;
 
   const secondaryMenu = block.querySelector(':scope > ul');
@@ -316,7 +318,7 @@ export default async function decorate(block) {
   nav.id = 'nav';
   nav.innerHTML = html;
 
-  const classes = ['brand', 'meganav', 'memberships', 'register', 'info', 'secondary'];
+  const classes = ['brand', 'meganav', 'memberships', 'register', 'secondary'];
   classes.forEach((c, i) => {
     const section = nav.children[i];
     if (section) section.classList.add(`nav-${c}`);
@@ -335,6 +337,10 @@ export default async function decorate(block) {
   const registerHoverContent = nav.querySelector('.nav-register');
   navWrapper.append(registerHoverContent);
 
+  // Add icon to login links
+  const loginLinks = nav.querySelector('.login');
+  addExternalLinkIcons(loginLinks);
+
   decorateIcons(nav);
   decorateButtons(nav);
   decorateLinks(nav);
@@ -352,19 +358,33 @@ export default async function decorate(block) {
   }
 
   const navMembershipText = nav.querySelector('#meganav-link-1');
-  navMembershipText.addEventListener('mouseenter', () => {
-    membershipsHoverContent.style.display = 'flex';
-  });
-  navMembershipText.addEventListener('mouseleave', () => {
-    membershipsHoverContent.style.display = 'none';
+  navMembershipText.className = 'beforeClick';
+  const navRegisterText = nav.querySelector('#meganav-link-4');
+  navRegisterText.className = 'beforeClick';
+
+  // Add click events.
+  navMembershipText.addEventListener('click', () => {
+    if (membershipsHoverContent.style.display === 'flex') {
+      membershipsHoverContent.style.display = 'none';
+      navMembershipText.className = 'beforeClick';
+    } else {
+      registerHoverContent.style.display = 'none';
+      navRegisterText.className = 'beforeClick';
+      membershipsHoverContent.style.display = 'flex';
+      navMembershipText.className = 'afterClick';
+    }
   });
 
-  const navRegisterText = nav.querySelector('#meganav-link-4');
-  navRegisterText.addEventListener('mouseenter', () => {
-    registerHoverContent.style.display = 'flex';
-  });
-  navRegisterText.addEventListener('mouseleave', () => {
-    registerHoverContent.style.display = 'none';
+  navRegisterText.addEventListener('click', () => {
+    if (registerHoverContent.style.display === 'flex') {
+      registerHoverContent.style.display = 'none';
+      navRegisterText.className = 'beforeClick';
+    } else {
+      membershipsHoverContent.style.display = 'none';
+      navMembershipText.className = 'beforeClick';
+      registerHoverContent.style.display = 'flex';
+      navRegisterText.className = 'afterClick';
+    }
   });
 
   // const navSections = nav.querySelector('.nav-meganav');
@@ -418,16 +438,16 @@ export default async function decorate(block) {
   const secondaryMenu = nav.querySelector('.nav-secondary');
   decorateLanguageSelector(secondaryMenu);
 
-  window.addEventListener('scroll', () => {
-    if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
-      navWrapper.classList.remove('slide-down');
-      navWrapper.classList.add('slide-up');
-    }
-    if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
-      navWrapper.classList.remove('slide-up');
-      navWrapper.classList.add('slide-down');
-    }
+  // window.addEventListener('scroll', () => {
+  //   if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
+  //     navWrapper.classList.remove('slide-down');
+  //     navWrapper.classList.add('slide-up');
+  //   }
+  //   if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
+  //     navWrapper.classList.remove('slide-up');
+  //     navWrapper.classList.add('slide-down');
+  //   }
 
-    positionY = window.pageYOffset;
-  }, false);
+  //   positionY = window.pageYOffset;
+  // }, false);
 }
