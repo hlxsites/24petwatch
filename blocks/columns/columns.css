@@ -23,6 +23,15 @@
   order: 1;
 }
 
+.columns.microchip-lifetime > div {
+  padding-left: 0;
+  flex-direction: column-reverse;
+}
+
+.columns.microchip-lifetime img {
+  border-radius: 10px;
+}
+
 .columns > div > .columns-img-col {
   order: 2;
 }
@@ -95,6 +104,10 @@ main .lost-pet-data > div div:first-child {
   margin: 0.3125rem auto;
 }
 
+.columns.microchip-lifetime p.button-container a.button {
+  display: inline-block;
+}
+
 .columns.gray p.button-container a.button {
   display: inline-block;
   border: 0.1875rem solid var(--text-color);
@@ -123,6 +136,19 @@ main .lost-pet-data > div div:first-child {
   margin: 2rem 0;
 }
 
+.columns.microchip-lifetime {
+  text-align: center;
+  background-color: var(--background-color-secondary);
+  border-radius: 10px;
+}
+
+.columns.go-to-faq {
+  text-align: center;
+  background-color: var(--background-color-secondary);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
 @media (min-width: 768px) {
   .columns > div {
     align-items: center;
@@ -139,6 +165,10 @@ main .lost-pet-data > div div:first-child {
 
   .columns > div > .columns-img-col {
     order: unset;
+  }
+
+  .columns.microchip-lifetime > div {
+    flex-direction: unset;
   }
 
   .columns h2 {
@@ -159,6 +189,14 @@ main .lost-pet-data > div div:first-child {
 
   .columns.gray-box-right > div > :nth-child(2) {
     margin: 1px 0;
+  }
+
+  .columns.one-third-right > div > :first-child {
+    flex: 2;
+  }
+
+  .columns.one-third-right > div > :nth-child(2) {
+    flex: 1;
   }
 }
 
