@@ -23,6 +23,14 @@
   order: 1;
 }
 
+main .lost-pet-data > div {
+  padding: 1rem 0;
+}
+
+main .lost-pet-data > div div {
+  font-size: 1.2rem;
+}
+
 .columns.microchip-lifetime > div {
   padding-left: 0;
   flex-direction: column-reverse;
@@ -40,14 +48,6 @@
   display: block;
   max-height: none;
   width: 100%;
-}
-
-main .lost-pet-data > div {
-  padding: 1rem 0;
-}
-
-main .lost-pet-data > div div {
-  font-size: 1.2rem;
 }
 
 /* gray box on right side of a double column */
