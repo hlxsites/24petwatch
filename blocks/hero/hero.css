@@ -117,7 +117,7 @@ main .hero img {
 }
 
 main .hero.dog-peeking-background {
-  background-image: url('/drafts/bkorablov/images/dog-peeking.png');
+  background-image: url('/drafts/develop/images/dog-peeking.png');
   background-repeat: no-repeat;
   background-size: contain;
   min-height: 600px;
@@ -127,7 +127,7 @@ main .hero.dog-peeking-background {
 
 @media (max-width: 768px) {
   main .hero.dog-peeking-background {
-    background-image: url('/drafts/bkorablov/images/dog-peeking-m.png');
+    background-image: url('/drafts/develop/images/dog-peeking-m.png');
     background-size: 120%;
     background-position-x: 75%;
   }
@@ -135,6 +135,6 @@ main .hero.dog-peeking-background {
 
 @media (max-width: 500px) {
   main .hero.dog-peeking-background {
-    background-image: url('/drafts/bkorablov/images/dog-peeking-s.png');
+    background-image: url('/drafts/develop/images/dog-peeking-s.png');
   }
 }
