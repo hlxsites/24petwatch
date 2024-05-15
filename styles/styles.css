@@ -881,5 +881,21 @@ form button.teal:hover {
 }
 
 .telephone-white a[href^="tel:"] {
-	color: white
+  color: white;
+}
+
+.bullet-checkmarks li {
+  margin-bottom: 1rem;
+}
+
+.bullet-checkmarks li::marker {
+  content: "\2713\0020";
+  padding: 1rem;
+}
+
+.section.text-concern {
+  text-align: center;
+  background-color: var(--background-color-secondary);
+  font-size: 1.3rem;
+  padding: 1rem;
 }
