@@ -33,7 +33,7 @@ async function executeSubmit(block, requestBody) {
   }
 }
 
-function validateField(element, regex, message) {
+function validateField(element, regex, message = 'A valid input is required') {
   const trimmedValue = element.value.trim();
   const container = element.parentElement;
   const errorMessage = container.querySelector('.error-message');
@@ -50,7 +50,7 @@ function validateField(element, regex, message) {
     container.classList.remove('error');
     checkmark.setAttribute('style', 'opacity: 1;');
   } else {
-    errorMessage.textContent = 'A valid input is required';
+    errorMessage.textContent = message;
     if (container.classList.contains('error')) {
       container.classList.remove('error');
     }
