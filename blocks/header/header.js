@@ -240,7 +240,7 @@ function addLinkToLogo(header) {
  * Rewrite links to add Canada to the path
  * @param {Element} header The header block element
  */
-/*function addCanadaToLinks(header) {
+/* function addCanadaToLinks(header) {
   if (isCanada) {
     header.querySelectorAll('a').forEach((anchor) => {
       if (anchor.getAttribute('rel') === 'alternate') return;
