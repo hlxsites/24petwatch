@@ -114,6 +114,7 @@ export default async function decorate(block) {
   const purpose = form.querySelector('#purpose');
   const email = form.querySelector('#email');
   const textarea = form.querySelector('#textarea');
+  const submit = form.querySelector('#submit');
   // REGEX for validators
   const AT_LEAST_ONE_SYMBOL_REGEX = /.+/;
   const EMAIL_OPTIONAL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -125,7 +126,21 @@ export default async function decorate(block) {
     validateField(event.target, AT_LEAST_ONE_SYMBOL_REGEX, 'A valid input is required');
   });
 
-  document.querySelector('#submit').addEventListener('click', async (e) => {
+  function loadReCaptcha() {
+    loadScript(script, { defer: true });
+
+    purpose.removeEventListener('focus', loadReCaptcha);
+    email.removeEventListener('focus', loadReCaptcha);
+    textarea.removeEventListener('focus', loadReCaptcha);
+    submit.removeEventListener('click', loadReCaptcha);
+  }
+
+  submit.addEventListener('click', loadReCaptcha, false);
+  purpose.addEventListener('focus', loadReCaptcha, false);
+  email.addEventListener('focus', loadReCaptcha, false);
+  textarea.addEventListener('focus', loadReCaptcha, false);
+
+  submit.addEventListener('click', async (e) => {
     e.preventDefault();
 
     const emailValue = validateField(email, EMAIL_OPTIONAL_REGEX, 'A valid email is required');
@@ -156,6 +171,4 @@ export default async function decorate(block) {
       showErrorMessage('Please correct the errors in the form');
     }
   });
-
-  loadScript(script, { defer: true });
 }
