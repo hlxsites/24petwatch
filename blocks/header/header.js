@@ -71,7 +71,7 @@ function focusNavSection() {
  * @param {Boolean} expanded Whether the element should be expanded or collapsed
  */
 function toggleAllNavSections(sections, expanded = false) {
-  sections.querySelectorAll('.nav-sections > ul > li').forEach((section) => {
+  sections.querySelectorAll('#nav > div').forEach((section) => {
     section.setAttribute('aria-expanded', expanded);
   });
 }
@@ -97,7 +97,7 @@ function toggleMenu(nav, navSections, closeAll = null) {
 
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   wrapper?.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(navSections, expanded);
+  toggleAllNavSections(nav, expanded);
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
@@ -142,7 +142,7 @@ function decorateLanguageSelector(block) {
 
   const languageSelector = document.createElement('li');
   languageSelector.classList.add('language-selector');
-  languageSelector.innerHTML = `<span class="icon ${currentCountry.icon}"><img src='/icons/${currentCountry.imageName}.svg' /></span>
+  languageSelector.innerHTML = `<span class="icon ${currentCountry.icon}"><img src='/icons/${currentCountry.imageName}.svg' /><span id='country-name'></span></span>
       <ul>
         <li><a href="${newCountryUrl.toString()}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"><img src='/icons/${alternateCountry.imageName}.svg' /></span>${alternateCountry.name}</a></li>
       </ul>`;
@@ -336,6 +336,7 @@ export default async function decorate(block) {
   // Append register hover content
   const registerHoverContent = nav.querySelector('.nav-register');
   navWrapper.append(registerHoverContent);
+  decorateLinks(registerHoverContent);
 
   // Add icon to login links
   const loginLinks = nav.querySelector('.login');
@@ -358,32 +359,97 @@ export default async function decorate(block) {
   }
 
   const navMembershipText = nav.querySelector('#meganav-link-1');
-  navMembershipText.className = 'beforeClick';
+  const membershipDiv = navMembershipText.querySelector('div');
+  membershipDiv.className = 'beforeClick';
   const navRegisterText = nav.querySelector('#meganav-link-4');
-  navRegisterText.className = 'beforeClick';
+  const registerDiv = navRegisterText.querySelector('div');
+  registerDiv.className = 'beforeClick';
+  const loginDiv = nav.querySelector('.login > div');
+  const loginText = nav.querySelector('.login > div > div:first-child');
+  const loginHoverContent = nav.querySelector('.login > div > div:last-child');
 
   // Add click events.
   navMembershipText.addEventListener('click', () => {
     if (membershipsHoverContent.style.display === 'flex') {
       membershipsHoverContent.style.display = 'none';
-      navMembershipText.className = 'beforeClick';
+      membershipDiv.className = 'beforeClick';
     } else {
       registerHoverContent.style.display = 'none';
-      navRegisterText.className = 'beforeClick';
+      registerDiv.className = 'beforeClick';
+      loginHoverContent.style.display = 'none';
       membershipsHoverContent.style.display = 'flex';
-      navMembershipText.className = 'afterClick';
+      membershipDiv.className = 'afterClick active';
     }
   });
 
   navRegisterText.addEventListener('click', () => {
     if (registerHoverContent.style.display === 'flex') {
       registerHoverContent.style.display = 'none';
-      navRegisterText.className = 'beforeClick';
+      registerDiv.className = 'beforeClick';
     } else {
       membershipsHoverContent.style.display = 'none';
-      navMembershipText.className = 'beforeClick';
+      membershipDiv.className = 'beforeClick';
+      loginHoverContent.style.display = 'none';
       registerHoverContent.style.display = 'flex';
-      navRegisterText.className = 'afterClick';
+      registerDiv.className = 'afterClick active';
+    }
+  });
+
+  loginDiv.addEventListener('click', () => {
+    if (loginHoverContent.style.display === 'flex') {
+      loginHoverContent.style.display = 'none';
+      loginText.className = '';
+      if (window.innerWidth <= 900) {
+        loginText.className = 'beforeClick';
+      }
+    } else {
+      loginHoverContent.style.display = 'flex';
+      loginText.className = 'active';
+      membershipsHoverContent.style.display = 'none';
+      membershipDiv.className = 'beforeClick';
+      registerHoverContent.style.display = 'none';
+      registerDiv.className = 'beforeClick';
+      if (window.innerWidth <= 900) {
+        loginText.className = 'afterClick active';
+      }
+    }
+  });
+
+  // language selector
+  const secondaryMenu = nav.querySelector('.nav-secondary');
+  decorateLanguageSelector(secondaryMenu);
+
+  const navBrand = nav.querySelector('.nav-brand');
+  const navMega = nav.querySelector('.nav-meganav');
+  const languageSelected = nav.querySelector('.language-selector #country-name');
+  let countryName = isCanada ? 'Canada' : 'United States';
+  if (window.innerWidth <= 900) {
+    navBrand.append(nav.querySelector('.button-container'));
+    navMembershipText.append(membershipsHoverContent);
+    navRegisterText.append(registerHoverContent);
+    loginText.className = 'beforeClick';
+    languageSelected.append(countryName);
+  }
+  // Do this on resize
+  window.addEventListener('resize', () => {
+    countryName = isCanada ? 'Canada' : 'United States';
+    if (window.innerWidth <= 900) {
+      navBrand.append(nav.querySelector('.button-container'));
+      navMembershipText.append(membershipsHoverContent);
+      navRegisterText.append(registerHoverContent);
+      loginText.className = 'beforeClick';
+      if (languageSelected.innerHTML === '') {
+        languageSelected.innerHTML = countryName;
+      }
+    } else {
+      navMega.append(nav.querySelector('.button-container'));
+      navWrapper.append(membershipsHoverContent);
+      navWrapper.append(registerHoverContent);
+      loginText.classList.remove('beforeClick');
+      loginText.classList.remove('afterClick');
+      if (languageSelected.innerHTML !== '') {
+        languageSelected.innerHTML = '';
+      }
     }
   });
 
@@ -422,32 +488,27 @@ export default async function decorate(block) {
   // }
 
   // hamburger for mobile
-  // const hamburger = document.createElement('div');
-  // hamburger.classList.add('nav-hamburger');
-  // hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
-  //     <span></span><span></span><span></span>
-  //   </button>`;
-  // hamburger.addEventListener('click', () => toggleMenu(nav, navSections));
-  // nav.prepend(hamburger);
-  // nav.setAttribute('aria-expanded', 'false');
-  // // prevent mobile nav behavior on window resize
-  // toggleMenu(nav, navSections, isTablet.matches);
-  // isTablet.addEventListener('change', () => closeAllMenus(nav, navSections));
+  const hamburger = document.createElement('div');
+  hamburger.classList.add('nav-hamburger');
+  hamburger.innerHTML = `<button type="button" aria-controls="nav" aria-label="Open navigation">
+      <span></span><span></span><span></span>
+    </button>`;
+  hamburger.addEventListener('click', () => toggleMenu(nav, nav));
+  navBrand.append(hamburger);
+  nav.setAttribute('aria-expanded', 'false');
+  // prevent mobile nav behavior on window resize
+  toggleMenu(nav, navMega, isTablet.matches);
+  isTablet.addEventListener('change', () => closeAllMenus(nav, nav));
 
-  // language selector
-  const secondaryMenu = nav.querySelector('.nav-secondary');
-  decorateLanguageSelector(secondaryMenu);
-
-  // window.addEventListener('scroll', () => {
-  //   if (window.pageYOffset - positionY > SCROLL_STEP && !navWrapper.classList.contains('slide-up')) {
-  //     navWrapper.classList.remove('slide-down');
-  //     navWrapper.classList.add('slide-up');
-  //   }
-  //   if (positionY - window.pageYOffset > SCROLL_STEP && !navWrapper.classList.contains('slide-down')) {
-  //     navWrapper.classList.remove('slide-up');
-  //     navWrapper.classList.add('slide-down');
-  //   }
-
-  //   positionY = window.pageYOffset;
-  // }, false);
+  window.addEventListener('scroll', () => {
+    registerHoverContent.style.display = 'none';
+    registerDiv.className = 'beforeClick';
+    membershipsHoverContent.style.display = 'none';
+    membershipDiv.className = 'beforeClick';
+    loginHoverContent.style.display = 'none';
+    loginText.className = '';
+    if (window.innerWidth <= 900) {
+      loginText.className = 'beforeClick';
+    }
+  }, false);
 }
