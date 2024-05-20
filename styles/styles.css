@@ -338,6 +338,7 @@ form select {
   display: block;
 	width: 100%;
 	max-width: 100%;
+  min-width: 100%;
 	margin: 0;
 	padding: 1.625rem 0.75rem .375rem 1rem;
   line-height: 1.25rem;
@@ -879,6 +880,15 @@ form button.teal {
 
 form button.teal:hover {
 	background-color: var(--button-secondary-hover-color);
+}
+
+/* Theme for pages with content aligned to the center */
+.content-center {
+	text-align: center;
+}
+
+.telephone-white a[href^="tel:"] {
+  color: white;
 }
 
 .bullet-checkmarks li {
