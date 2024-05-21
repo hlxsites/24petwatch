@@ -338,6 +338,7 @@ form select {
   display: block;
 	width: 100%;
 	max-width: 100%;
+  min-width: 100%;
 	margin: 0;
 	padding: 1.625rem 0.75rem .375rem 1rem;
   line-height: 1.25rem;
@@ -499,6 +500,10 @@ main .section.block-with-header h2, main .columns.block-with-header div div h2 {
   text-align: center;
 }
 
+main .section.p-center > div > p {
+  text-align: center;
+}
+
 main .columns.block-with-header div div p, main .section.block-with-header .default-content-wrapper p {
   display: block;
   margin: 0;
@@ -596,7 +601,9 @@ body.blog-post main picture {
   justify-content: center;
 }
 
-main .section.teal-bg, main .section.teal h4 {
+main .section.teal-bg,
+main .section.teal-bg h3,
+main .section.teal h4 {
   color: white;
 }
 
@@ -873,6 +880,15 @@ form button.teal {
 
 form button.teal:hover {
 	background-color: var(--button-secondary-hover-color);
+}
+
+/* Theme for pages with content aligned to the center */
+.content-center {
+	text-align: center;
+}
+
+.telephone-white a[href^="tel:"] {
+  color: white;
 }
 
 .bullet-checkmarks li {

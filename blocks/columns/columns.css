@@ -23,6 +23,14 @@
   order: 1;
 }
 
+main .lost-pet-data > div {
+  padding: 1rem 0;
+}
+
+main .lost-pet-data > div div {
+  font-size: 1.2rem;
+}
+
 .columns.microchip-lifetime > div {
   padding-left: 0;
   flex-direction: column-reverse;
@@ -76,6 +84,10 @@
 .columns.teaser > div > div {
   font-size: 1rem;
   line-height: 1.5625rem;
+}
+
+main .lost-pet-data > div div:first-child {
+  flex: 0 0 80px;
 }
 
 .columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
@@ -163,6 +175,10 @@
     text-align: left;
   }
 
+  .columns.h3-left h3 {
+    text-align: left;
+  }
+
   .columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
     padding: 3.125rem;
   }
@@ -187,4 +203,45 @@
 /* About Us page */
 main .section.about-us-icons img  {
   min-height: 80px;
+}
+
+main .lost-pet-data {
+  max-width: 44rem;
+  margin: 2rem auto;
+}
+
+main .lost-pet-data .icon {
+  width: 80px;
+  height: 80px;
+}
+
+main .section.cat-dog-background {
+  margin-top: 130px;
+}
+
+main .columns.cat-dog-background > div > div:last-child {
+  margin-top: -310px;
+  background-image: url('/drafts/develop/images/cat-dog-1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 600px;
+  background-position-x: right;
+  background-position-y: bottom;
+}
+
+@media (max-width: 768px) {
+  main .section.cat-dog-background {
+    margin-top: 20px;
+  }
+
+  main .lost-pet-data > div div:first-child {
+    flex: 1;
+    text-align: center;
+  }
+
+  main .columns.cat-dog-background > div > div:last-child {
+    margin-top: 0;
+    min-height: 300px;
+    background-position-x: center;
+  }
 }
