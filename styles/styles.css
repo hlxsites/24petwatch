@@ -467,6 +467,15 @@ main .section.gray-border {
   border-radius: 10px;
 }
 
+main .section.teal-border {
+  border: .1875rem solid #007680;
+  border-radius: 10px;
+}
+
+main .section.no-radius {
+  border-radius: unset;
+}
+
 /* Theme for pages with headings aligned to the left */
 .headings-left h1, .headings-left h2, .headings-left h3, .headings-left h4, .headings-left h5 {
   text-align: left;
@@ -488,16 +497,27 @@ main .section.heading-light h2 {
   line-height: 1.938rem;
 }
 
-main .section.block-with-header h2, main .columns.block-with-header div div h2 {
+main .section.block-with-header > div > h2:first-of-type, main .columns.block-with-header div div h2 {
   background-color: #007680;
   margin: 0;
   padding: .5rem .5rem .625rem;
-  border-radius: 10px 10px 0 0;
+  border-radius: 6px 6px 0 0;
   color: #fff;
   font-size: 26px;
   font-weight: 400;
   line-height: 3.125rem;
   text-align: center;
+}
+
+main .section.block-with-header.block-with-header-description h2 {
+  padding-top: 2rem;
+}
+
+main .section.block-with-header.block-with-header-description > div > p:first-of-type {
+  background-color: #007680;
+  color: #fff;
+  text-align: center;
+  padding-bottom: 2rem;
 }
 
 main .section.p-center > div > p {

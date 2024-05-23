@@ -1,0 +1,41 @@
+main .fragment-tabs .tabs-menu {
+  margin: 3rem 0;
+}
+
+main .fragment-tabs .tabs-menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
+}
+
+main .fragment-tabs .tabs-menu ul li {
+  display: block;
+  position: relative;
+  border: .1875rem solid #007680;
+  border-radius: 10px;
+  text-align: center;
+}
+
+main .fragment-tabs .tabs-menu ul li a {
+  padding: .5rem 1rem;
+  position: relative;
+  display: block;
+  color: #333f48;
+  text-decoration: none;
+}
+
+main .fragment-tabs .tabs-menu ul li a.current {
+  background-color: #007680;
+  color: #fff;
+}
+
+main #tab-content {
+  margin: 1.875rem;
+}
+
+main #tab-content .section:not(:first-of-type) {
+  margin-top: 1.875rem;
+}
