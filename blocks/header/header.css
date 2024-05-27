@@ -172,6 +172,7 @@ header nav .nav-meganav .mega-nav > div {
   gap: 12px;
   flex-wrap: wrap;
   padding: 48px;
+  width: 75%;
 }
 
 .header .nav-memberships .pet-protection-memberships > div,
@@ -187,9 +188,9 @@ header nav .nav-meganav .mega-nav > div {
 .header .nav-memberships .pet-protection-memberships > div:first-child,
 .header .nav-register .microchip-registration > div:first-child {
   margin-top: 0;
+  margin-bottom: 0;
   flex: 0 1 100%;
   justify-content: flex-start;
-  margin-bottom: 16px;
   color: #828688;
   font-family: var(--heading-font-family);
   font-size: 21px;
@@ -232,7 +233,8 @@ header nav .nav-meganav .mega-nav > div {
   .pet-protection-memberships
   > div
   > div:last-child
-  > p:first-child,
+  > p:first-child
+  > strong,
 .header
   .nav-register
   .microchip-registration
@@ -243,14 +245,24 @@ header nav .nav-meganav .mega-nav > div {
   font-family: var(--heading-font-family);
   font-size: var(--heading-font-size-s);
   font-style: normal;
+  font-weight: var(--heading-font-weight);
+}
+
+.header .nav-memberships .pet-protection-memberships > div > div:last-child > p,
+.header .nav-register .microchip-registration > div > div:last-child > p {
+  margin: 0;
 }
 
 .header
   .nav-memberships
   .pet-protection-memberships
-  > div
+  > div:not(:first-child)
   > div:last-child:hover,
-.header .nav-register .microchip-registration > div > div:last-child:hover {
+.header
+  .nav-register
+  .microchip-registration
+  > div:not(:first-child)
+  > div:last-child:hover {
   color: var(--button-primary-color);
 }
 
@@ -314,6 +326,7 @@ header nav .nav-meganav .mega-nav > div {
 .header .nav-register .featured-content {
   background-color: #fff1d6;
   padding: 48px;
+  width: 25%;
 }
 
 .header .nav-memberships .featured-content > div > div,
@@ -1185,6 +1198,7 @@ header nav > .nav-secondary .language-selector > ul > li > a {
     border-top: 1px solid var(--border-color);
     background: var(--nav-content-background-color);
     gap: 24px;
+    width: unset;
   }
 
   .header .nav-memberships,
