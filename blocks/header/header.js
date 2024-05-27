@@ -5,16 +5,16 @@ import {
   decorateLinks,
   isMobile,
   isTablet,
-  isDesktop,
+  // isDesktop,
   isCanada,
-  isLiveSite,
-  isCrosswalkDomain,
-  getXWalkDomain,
+  // isLiveSite,
+  // isCrosswalkDomain,
+  // getXWalkDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
-let positionY = 0;
-const SCROLL_STEP = 25;
+// let positionY = 0;
+// const SCROLL_STEP = 25;
 
 const urls = {
   usa: {
@@ -242,20 +242,20 @@ function addLinkToLogo(header) {
  * Rewrite links to add Canada to the path
  * @param {Element} header The header block element
  */
-function addCanadaToLinks(header) {
-  if (isCanada) {
-    header.querySelectorAll('a').forEach((anchor) => {
-      if (anchor.getAttribute('rel') === 'alternate') return;
-      const url = new URL(anchor.href);
-      const newUrl = new URL(anchor.href, window.location.origin);
-      if (url.hostname === window.location.hostname) {
-        // change only for internal links
-        newUrl.pathname = `/ca${url.pathname}`;
-        anchor.href = newUrl.toString();
-      }
-    });
-  }
-}
+// function addCanadaToLinks(header) {
+//   if (isCanada) {
+//     header.querySelectorAll('a').forEach((anchor) => {
+//       if (anchor.getAttribute('rel') === 'alternate') return;
+//       const url = new URL(anchor.href);
+//       const newUrl = new URL(anchor.href, window.location.origin);
+//       if (url.hostname === window.location.hostname) {
+//         // change only for internal links
+//         newUrl.pathname = `/ca${url.pathname}`;
+//         anchor.href = newUrl.toString();
+//       }
+//     });
+//   }
+// }
 
 /**
  * Adds external link icons to links
@@ -360,10 +360,10 @@ export default async function decorate(block) {
 
   const navMembershipText = nav.querySelector('#meganav-link-1');
   const membershipDiv = navMembershipText.querySelector('div');
-  membershipDiv.className = 'beforeClick';
+  membershipDiv.className = 'before-click';
   const navRegisterText = nav.querySelector('#meganav-link-4');
   const registerDiv = navRegisterText.querySelector('div');
-  registerDiv.className = 'beforeClick';
+  registerDiv.className = 'before-click';
   const loginDiv = nav.querySelector('.login > div');
   const loginText = nav.querySelector('.login > div > div:first-child');
   const loginHoverContent = nav.querySelector('.login > div > div:last-child');
@@ -372,26 +372,26 @@ export default async function decorate(block) {
   navMembershipText.addEventListener('click', () => {
     if (membershipsHoverContent.style.display === 'flex') {
       membershipsHoverContent.style.display = 'none';
-      membershipDiv.className = 'beforeClick';
+      membershipDiv.className = 'before-click';
     } else {
       registerHoverContent.style.display = 'none';
-      registerDiv.className = 'beforeClick';
+      registerDiv.className = 'before-click';
       loginHoverContent.style.display = 'none';
       membershipsHoverContent.style.display = 'flex';
-      membershipDiv.className = 'afterClick active';
+      membershipDiv.className = 'after-click active';
     }
   });
 
   navRegisterText.addEventListener('click', () => {
     if (registerHoverContent.style.display === 'flex') {
       registerHoverContent.style.display = 'none';
-      registerDiv.className = 'beforeClick';
+      registerDiv.className = 'before-click';
     } else {
       membershipsHoverContent.style.display = 'none';
-      membershipDiv.className = 'beforeClick';
+      membershipDiv.className = 'before-click';
       loginHoverContent.style.display = 'none';
       registerHoverContent.style.display = 'flex';
-      registerDiv.className = 'afterClick active';
+      registerDiv.className = 'after-click active';
     }
   });
 
@@ -400,17 +400,17 @@ export default async function decorate(block) {
       loginHoverContent.style.display = 'none';
       loginText.className = '';
       if (window.innerWidth <= 900) {
-        loginText.className = 'beforeClick';
+        loginText.className = 'before-click';
       }
     } else {
       loginHoverContent.style.display = 'flex';
       loginText.className = 'active';
       membershipsHoverContent.style.display = 'none';
-      membershipDiv.className = 'beforeClick';
+      membershipDiv.className = 'before-click';
       registerHoverContent.style.display = 'none';
-      registerDiv.className = 'beforeClick';
+      registerDiv.className = 'before-click';
       if (window.innerWidth <= 900) {
-        loginText.className = 'afterClick active';
+        loginText.className = 'after-click active';
       }
     }
   });
@@ -427,7 +427,7 @@ export default async function decorate(block) {
     navBrand.append(nav.querySelector('.button-container'));
     navMembershipText.append(membershipsHoverContent);
     navRegisterText.append(registerHoverContent);
-    loginText.className = 'beforeClick';
+    loginText.className = 'before-click';
     languageSelected.append(countryName);
   }
   // Do this on resize
@@ -437,7 +437,7 @@ export default async function decorate(block) {
       navBrand.append(nav.querySelector('.button-container'));
       navMembershipText.append(membershipsHoverContent);
       navRegisterText.append(registerHoverContent);
-      loginText.className = 'beforeClick';
+      loginText.className = 'before-click';
       if (languageSelected.innerHTML === '') {
         languageSelected.innerHTML = countryName;
       }
@@ -445,8 +445,8 @@ export default async function decorate(block) {
       navMega.append(nav.querySelector('.button-container'));
       navWrapper.append(membershipsHoverContent);
       navWrapper.append(registerHoverContent);
-      loginText.classList.remove('beforeClick');
-      loginText.classList.remove('afterClick');
+      loginText.classList.remove('before-click');
+      loginText.classList.remove('after-click');
       if (languageSelected.innerHTML !== '') {
         languageSelected.innerHTML = '';
       }
@@ -502,13 +502,13 @@ export default async function decorate(block) {
 
   window.addEventListener('scroll', () => {
     registerHoverContent.style.display = 'none';
-    registerDiv.className = 'beforeClick';
+    registerDiv.className = 'before-click';
     membershipsHoverContent.style.display = 'none';
-    membershipDiv.className = 'beforeClick';
+    membershipDiv.className = 'before-click';
     loginHoverContent.style.display = 'none';
     loginText.className = '';
     if (window.innerWidth <= 900) {
-      loginText.className = 'beforeClick';
+      loginText.className = 'before-click';
     }
   }, false);
 }
