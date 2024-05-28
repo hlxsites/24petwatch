@@ -90,12 +90,13 @@ header nav .nav-meganav .mega-nav {
 }
 
 .active {
-  font-weight: var(--heading-font-weight) !important;
+  font-weight: 700 !important;
 }
 
 header nav .nav-meganav .mega-nav > div {
   font-family: var(--heading-font-family);
-  font-weight: var(--nav-font-weight);
+
+  /* font-weight: var(--nav-font-weight); */
 }
 
 #meganav-link-1 > div:first-child,
@@ -119,7 +120,8 @@ header nav .nav-meganav .mega-nav > div {
   /* margin-left: 175px; */
   width: 60px;
   font-family: var(--heading-font-family);
-  font-weight: var(--nav-font-weight);
+
+  /* font-weight: var(--nav-font-weight); */
 }
 
 .nav-meganav .login > div > div:last-child {
@@ -234,8 +236,7 @@ header nav .nav-meganav .mega-nav > div {
   .pet-protection-memberships
   > div
   > div:last-child
-  > p:first-child
-  > strong,
+  > p:first-child,
 .header
   .nav-register
   .microchip-registration
@@ -252,6 +253,8 @@ header nav .nav-meganav .mega-nav > div {
 .header .nav-memberships .pet-protection-memberships > div > div:last-child > p,
 .header .nav-register .microchip-registration > div > div:last-child > p {
   margin: 0;
+  font-weight: var(--nav-font-weight);
+  font-family: var(--body-font-family);
 }
 
 .header
@@ -276,6 +279,13 @@ header nav .nav-meganav .mega-nav > div {
   text-decoration: underline;
 }
 
+.header
+  .nav-memberships
+  .pet-protection-memberships
+  > div
+  > div:last-child
+  > p:first-child
+  a,
 .header
   .nav-register
   .microchip-registration
@@ -302,6 +312,13 @@ header nav .nav-meganav .mega-nav > div {
   padding-left: 10px;
 }
 
+.header
+  .nav-memberships
+  .pet-protection-memberships
+  > div
+  > div:last-child:hover
+  > p:first-child
+  a,
 .header
   .nav-register
   .microchip-registration
@@ -335,6 +352,12 @@ header nav .nav-meganav .mega-nav > div {
   display: flex;
   flex-direction: column;
   gap: 12px;
+}
+
+.header .nav-memberships .featured-content > div > div img,
+.header .nav-register .featured-content > div > div img {
+  width: 300px;
+  height: 160px;
 }
 
 .header .featured-content > div > div > p {

@@ -302,7 +302,7 @@ export default async function decorate(block) {
     }
   }
 
-  const baseHeaderUrl = `${contentBasePath}/drafts/achabuku/new-mega-nav`;
+  const baseHeaderUrl = `${contentBasePath}/drafts/achabuku/mega-nav`;
 
   const navPath = navMeta ? new URL(navMeta).pathname : baseHeaderUrl;
   const resp = await fetch(`${navPath}.plain.html`);
