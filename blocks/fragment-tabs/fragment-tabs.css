@@ -39,3 +39,32 @@ main #tab-content {
 main #tab-content .section:not(:first-of-type) {
   margin-top: 1.875rem;
 }
+
+main #tab-content-lost-pet-report h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  padding-top: 0;
+}
+
+main #tab-content-lost-pet-report h3 {
+  font-size: 1.3125rem;
+  line-height: 2.25rem;
+  margin-top: 3rem;
+}
+
+main #tab-content-lost-pet-report h3 > strong {
+  padding: unset;
+}
+
+main #tab-content-lost-pet-report p {
+  margin: 1rem 0;
+}
+
+main #tab-content-lost-pet-report p > a {
+  color: #333f48;
+  font-weight: 300;
+}
+
+main #tab-content-lost-pet-report .columns-wrapper p {
+  padding-top: 0;
+}
