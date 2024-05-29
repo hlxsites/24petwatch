@@ -376,6 +376,7 @@ export default async function decorate(block) {
     } else {
       registerHoverContent.style.display = 'none';
       registerDiv.className = 'before-click';
+      loginText.className = '';
       loginHoverContent.style.display = 'none';
       membershipsHoverContent.style.display = 'flex';
       membershipDiv.className = 'after-click active';
@@ -389,6 +390,7 @@ export default async function decorate(block) {
     } else {
       membershipsHoverContent.style.display = 'none';
       membershipDiv.className = 'before-click';
+      loginText.className = '';
       loginHoverContent.style.display = 'none';
       registerHoverContent.style.display = 'flex';
       registerDiv.className = 'after-click active';
