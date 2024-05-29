@@ -137,14 +137,14 @@ function decorateLanguageSelector(block) {
   if (isCanada) {
     newCountryUrl = new URL(window.location.pathname.replace('/ca', ''), window.location.origin);
   } else {
-    newCountryUrl = new URL(`/ca${window.location.pathname}`, window.location.origin);
+    newCountryUrl = new URL(`/ca${(window.location.pathname === '/') ? '' : window.location.pathname}`, window.location.origin);
   }
 
   const languageSelector = document.createElement('li');
   languageSelector.classList.add('language-selector');
   languageSelector.innerHTML = `<span class="icon ${currentCountry.icon}"><img src='/icons/${currentCountry.imageName}.svg' /><span id='country-name'></span></span>
       <ul>
-        <li><a href="${newCountryUrl.toString()}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"><img src='/icons/${alternateCountry.imageName}.svg' /></span>${alternateCountry.name}</a></li>
+        <li><a href="${newCountryUrl.href}" hreflang="${alternateCountry.lang}" rel="alternate" title="${alternateCountry.name}"><span class="icon ${alternateCountry.icon}"><img src='/icons/${alternateCountry.imageName}.svg' /></span>${alternateCountry.name}</a></li>
       </ul>`;
 
   const secondaryMenu = block.querySelector(':scope > ul');
@@ -242,20 +242,20 @@ function addLinkToLogo(header) {
  * Rewrite links to add Canada to the path
  * @param {Element} header The header block element
  */
-// function addCanadaToLinks(header) {
-//   if (isCanada) {
-//     header.querySelectorAll('a').forEach((anchor) => {
-//       if (anchor.getAttribute('rel') === 'alternate') return;
-//       const url = new URL(anchor.href);
-//       const newUrl = new URL(anchor.href, window.location.origin);
-//       if (url.hostname === window.location.hostname) {
-//         // change only for internal links
-//         newUrl.pathname = `/ca${url.pathname}`;
-//         anchor.href = newUrl.toString();
-//       }
-//     });
-//   }
-// }
+function addCanadaToLinks(header) {
+  if (isCanada) {
+    header.querySelectorAll('a').forEach((anchor) => {
+      if (anchor.getAttribute('rel') === 'alternate') return;
+      const url = new URL(anchor.href);
+      const newUrl = new URL(anchor.href, window.location.origin);
+      if (url.hostname === window.location.hostname) {
+        // change only for internal links
+        newUrl.pathname = `/ca${url.pathname}`;
+        anchor.href = newUrl.toString();
+      }
+    });
+  }
+}
 
 /**
  * Adds external link icons to links
@@ -328,6 +328,7 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+  addCanadaToLinks(navWrapper);
 
   // Append membership hover content
   const membershipsHoverContent = nav.querySelector('.nav-memberships');
