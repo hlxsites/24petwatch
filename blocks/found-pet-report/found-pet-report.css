@@ -1,0 +1,51 @@
+main #tab-content-found-pet-report .found-pet-report {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report > div {
+  display: block;
+  position: relative;
+  flex: calc(50% - 15px);
+  box-sizing: border-box;
+}
+
+main #tab-content-found-pet-report .found-pet-report form {
+  border: unset;
+  padding: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  padding-top: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report form h2 {
+  text-align: left;
+}
+
+main #tab-content-found-pet-report .found-pet-report > div:nth-child(2) {
+  border: .1875rem solid #e5e5e5;
+  border-radius: .625rem;
+  padding: 0 2rem 1rem;
+}
+
+main #tab-content-found-pet-report .found-pet-report > div:nth-child(2) p {
+  line-height: .938rem;
+  font-size: .813rem;
+  text-align: center;
+  padding: 0 5rem;
+}
+
+main #tab-content-found-pet-report .section {
+  padding: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report-wrapper {
+  margin-top: 2rem;
+}

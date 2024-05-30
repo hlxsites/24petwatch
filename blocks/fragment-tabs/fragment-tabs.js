@@ -1,20 +1,8 @@
-import { loadFragment } from '../fragment/fragment.js';
-import { jsx } from '../../scripts/scripts.js';
+import { decorateMain, jsx } from '../../scripts/scripts.js';
+import { loadBlocks } from '../../scripts/lib-franklin.js';
 
 function createIdFromText(text) {
   return text.toLowerCase().replace(/\s/g, '-');
-}
-
-function prepareFragmentURL(path) {
-  if (path.startsWith('/')) {
-    return path;
-  }
-
-  return window.location.pathname + (window.location.pathname.endsWith('/') ? '' : '/') + path;
-}
-
-function getURLHash() {
-  return window.location.hash.substring(1);
 }
 
 class Tabs {
@@ -22,10 +10,22 @@ class Tabs {
     this.tabs = tabs;
   }
 
+  static getURLHash() {
+    return window.location.hash.substring(1);
+  }
+
+  static prepareFragmentURL(path) {
+    if (path.startsWith('/')) {
+      return path;
+    }
+
+    return window.location.pathname + (window.location.pathname.endsWith('/') ? '' : '/') + path;
+  }
+
   async loadTab() {
-    let tabContent = '';
-    let currentTab = getURLHash();
-    const tabContentDiv = document.getElementById('tab-content');
+    const tabsContainer = document.getElementById('tab-content');
+    let currentTab = Tabs.getURLHash();
+    const path = Tabs.prepareFragmentURL(this.tabs[currentTab].fragment);
 
     if (!this.tabs[currentTab]) {
       [currentTab] = Object.keys(this.tabs);
@@ -46,10 +46,24 @@ class Tabs {
     if (currentTabContent) {
       currentTabContent.style.display = 'block';
     } else {
-      const fragment = await loadFragment(prepareFragmentURL(this.tabs[currentTab].fragment));
-      tabContent = fragment.innerHTML;
+      const resp = await fetch(`${path}.plain.html`);
+      if (resp.ok) {
+        tabsContainer.innerHTML += jsx`<div id="tab-content-${currentTab}" class="tab-content"></div>`;
+        const tabDiv = document.getElementById(`tab-content-${currentTab}`);
+        tabDiv.innerHTML = await resp.text();
 
-      tabContentDiv.innerHTML += jsx`<div id="tab-content-${currentTab}" class="tab-content">${tabContent}</div>`;
+        // reset base path for media to fragment base
+        const resetAttributeBase = (tag, attr) => {
+          tabDiv.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
+            elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
+          });
+        };
+        resetAttributeBase('img', 'src');
+        resetAttributeBase('source', 'srcset');
+
+        decorateMain(tabDiv);
+        await loadBlocks(tabDiv);
+      }
     }
   }
 }
