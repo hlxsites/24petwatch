@@ -25,11 +25,12 @@ class Tabs {
   async loadTab() {
     const tabsContainer = document.getElementById('tab-content');
     let currentTab = Tabs.getURLHash();
-    const path = Tabs.prepareFragmentURL(this.tabs[currentTab].fragment);
 
     if (!this.tabs[currentTab]) {
       [currentTab] = Object.keys(this.tabs);
     }
+
+    const path = Tabs.prepareFragmentURL(this.tabs[currentTab].fragment);
 
     document.querySelectorAll('.tabs-menu a').forEach((a) => a.classList.remove('current'));
     const currentLink = document.querySelector(`.tabs-menu a[href="#${currentTab}"]`);
