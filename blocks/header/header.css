@@ -107,12 +107,12 @@ header nav .nav-meganav .mega-nav > div {
 }
 
 .before-click::after {
-  content: url("/icons/arrow-down.png");
+  content: url("/icons/arrow-down.svg");
+  transform: rotate(180deg);
 }
 
 .after-click::after {
-  content: url("/icons/arrow-down.png");
-  transform: rotate(180deg);
+  content: url("/icons/arrow-down.svg");
 }
 
 /* login section */
@@ -413,7 +413,7 @@ header nav .nav-hamburger {
   }
 
   .nav-meganav .login > div > div:first-child {
-    margin-left: 175px;
+    margin-left: 130px;
   }
 }
 
