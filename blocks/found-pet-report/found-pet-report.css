@@ -49,3 +49,56 @@ main #tab-content-found-pet-report .section {
 main #tab-content-found-pet-report .found-pet-report-wrapper {
   margin-top: 2rem;
 }
+
+main #tab-content-found-pet-report form .wrapper-info {
+  width: calc(100% - 1.1rem);
+}
+
+main #tab-content-found-pet-report form .wrapper-info .info-icon {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-left: 0.25rem;
+  position: absolute;
+  background-image: url('/icons/info-circle.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  top: 1.8rem;
+  right: -1.1rem;
+}
+
+main #tab-content-found-pet-report form .wrapper-info .info-icon .info-content {
+  position: absolute;
+  top: 0;
+  left: .75rem;
+  max-width: 264px;
+  min-width: 200px;
+  background-color: #e0e1e2;
+  border-radius: .125rem;
+  box-shadow: 0 5px 5px 0 rgb(0 0 0 / 16%);
+  margin: 0;
+  padding: 1.0625rem 1.25rem;
+  line-height: 1.2rem;
+  font-size: 1rem;
+  visibility: hidden;
+  z-index: 100;
+}
+
+main #tab-content-found-pet-report form .wrapper-info .info-icon:hover .info-content {
+  visibility: visible;
+}
+
+@media (max-width: 768px) {
+  main #tab-content-found-pet-report .found-pet-report > div {
+    flex: 100%;
+  }
+
+  main #tab-content-found-pet-report form .wrapper-info .info-icon .info-content {
+    left: unset;
+    right: .75rem;
+  }
+
+  main #tab-content-found-pet-report form label {
+    font-size: .8125rem;
+  }
+}

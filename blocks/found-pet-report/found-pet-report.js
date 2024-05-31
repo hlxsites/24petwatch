@@ -37,12 +37,12 @@ export default async function decorate(block) {
       <span class="checkmark"></span>
       <div class="error-message"></div>
     </div>
-    <div class="wrapper">
+    <div class="wrapper wrapper-info">
       <input type="number" id="microchipId" name="microchipId" required placeholder="">
       <label for="microchipId" class="float-label">Microchip number (up to 15 digits)*</label>
       <span class="checkmark"></span>
-      <span class="tooltip">i</span>
       <div class="error-message"></div>
+      <div class="info-icon"><div class="info-content">Not sure of your pet's microchip number? Please contact us immediately at 1-866-597-2424.</div></div>
     </div>
 
     <h2>Contact Information</h2>
