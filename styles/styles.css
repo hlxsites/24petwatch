@@ -497,7 +497,7 @@ main .section.heading-light h2 {
   line-height: 1.938rem;
 }
 
-main .section.block-with-header > div > h2:first-of-type, main .columns.block-with-header div div h2 {
+main .columns.block-with-header div div h2 {
   background-color: #007680;
   margin: 0;
   padding: .5rem .5rem .625rem;
@@ -513,11 +513,16 @@ main .section.block-with-header.block-with-header-description h2 {
   padding-top: 2rem;
 }
 
-main .section.block-with-header.block-with-header-description > div > p:first-of-type {
+main .section.block-with-header > div > h2:first-of-type {
   background-color: #007680;
+  margin: 0;
+  padding: .5rem .5rem .625rem;
+  border-radius: 6px 6px 0 0;
   color: #fff;
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 3.125rem;
   text-align: center;
-  padding-bottom: 2rem;
 }
 
 main .section.p-center > div > p {
@@ -529,19 +534,26 @@ main .columns.block-with-header div div p, main .section.block-with-header .defa
   margin: 0;
 }
 
-main .columns.block-with-header div div :first-child img, main .section.block-with-header .default-content-wrapper :first-child img {
-  width: 100%;
-  height: auto;
-  max-height: unset;
-  min-height: unset;
-}
-
 main .section.block-with-header .columns-wrapper p, main .columns.block-with-header div div p:not(:first-of-type) {
   display: block;
   margin: .625rem 0;
   text-align: center;
   padding-top: 1.875rem;
   line-height: 1.5625rem;
+}
+
+main .section.block-with-header.block-with-header-description > div > p:first-of-type {
+  background-color: #007680;
+  color: #fff;
+  text-align: center;
+  padding-bottom: 2rem;
+}
+
+main .columns.block-with-header div div :first-child img, main .section.block-with-header .default-content-wrapper :first-child img {
+  width: 100%;
+  height: auto;
+  max-height: unset;
+  min-height: unset;
 }
 
 main .columns.block-with-header div div strong, main .section.block-with-header .columns-wrapper strong {
