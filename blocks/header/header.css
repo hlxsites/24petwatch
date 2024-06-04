@@ -129,7 +129,8 @@ header nav .nav-meganav .mega-nav > div {
   flex-direction: column;
   position: absolute;
   width: 232px;
-  right: 20px;
+  top: 65px;
+  right: 90px;
   padding: 16px 8px;
   border-radius: 8px;
   border: 1px solid var(--nav-content-background-color);
@@ -162,9 +163,8 @@ header nav .nav-meganav .mega-nav > div {
   display: none;
   width: 100%;
   z-index: -100;
-  margin-top: 6px;
   /* stylelint-disable-next-line */
-  box-shadow: 0px 144px 40px 0px rgba(0, 0, 0, 0), 0px 92px 37px 0px rgba(0, 0, 0, 0.01), 0px 52px 31px 0px rgba(0, 0, 0, 0.05), 0px 23px 23px 0px rgba(0, 0, 0, 0.09), 0px 6px 13px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 144px 40px 0px rgba(0, 0, 0, 0), 0px 92px 37px 0px rgba(0, 0, 0, 0.01), inset 0px 20px 26px 0px rgba(0, 0, 0, 0.05), 0px 23px 23px 0px rgba(0, 0, 0, 0.09), 0px 6px 13px 0px rgba(0, 0, 0, 0.1);
 }
 
 .header .nav-memberships .pet-protection-memberships,
@@ -832,6 +832,7 @@ header nav > .nav-secondary > ul > li:last-child {
   gap: 5px;
   align-items: baseline;
   cursor: pointer;
+  text-decoration: underline;
 }
 
 header nav > .nav-secondary > ul > li:last-child:hover {
@@ -1120,6 +1121,7 @@ header nav > .nav-secondary .language-selector > ul > li > a {
     background: var(--nav-content-background-color);
     gap: 24px;
     padding: 16px;
+    box-shadow: none;
   }
 
   .nav-meganav .login > div > div:last-child > p {
@@ -1230,6 +1232,7 @@ header nav > .nav-secondary .language-selector > ul > li > a {
     position: unset;
     z-index: 1;
     padding: 0 !important;
+    box-shadow: none;
   }
 
   .header .featured-content {

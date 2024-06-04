@@ -378,6 +378,9 @@ export default async function decorate(block) {
       registerHoverContent.style.display = 'none';
       registerDiv.className = 'before-click';
       loginText.className = '';
+      if (window.innerWidth <= 900) {
+        loginText.className = 'before-click';
+      }
       loginHoverContent.style.display = 'none';
       membershipsHoverContent.style.display = 'flex';
       membershipDiv.className = 'after-click active';
@@ -392,6 +395,9 @@ export default async function decorate(block) {
       membershipsHoverContent.style.display = 'none';
       membershipDiv.className = 'before-click';
       loginText.className = '';
+      if (window.innerWidth <= 900) {
+        loginText.className = 'before-click';
+      }
       loginHoverContent.style.display = 'none';
       registerHoverContent.style.display = 'flex';
       registerDiv.className = 'after-click active';
