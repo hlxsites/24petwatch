@@ -212,6 +212,31 @@
   }
 }
 
+.cards.pet-recovery-cards h4 {
+  text-align: center;
+  background-color: var(--button-secondary-color);
+  color: var(--background-color);
+  padding: 0.75rem 1rem;
+  margin: 0 0 2rem;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.cards.pet-recovery-cards p {
+  text-align: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.cards.pet-recovery-cards .cards-card-body {
+  display: unset;
+  margin: 0;
+}
+
+.cards.pet-recovery-cards > ul > li {
+  border-radius: 10px;
+}
+
 @media screen and (width >= 768px) {
   .cards.connect-and-care-grid.block ul {
     display: grid;
@@ -220,6 +245,14 @@
     grid-template-areas:
     "main firstcard"
     "main secondcard";
+  }
+
+  .cards.pet-recovery-cards ul {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cards.pet-recovery-cards ul li:last-child:nth-child(odd) {
+    grid-column: span 2;
   }
 
   .cards.connect-and-care-grid.block ul li:first-child {
@@ -297,7 +330,6 @@
   color: #333f48;
   text-decoration: none;
 }
-
 
 .cards-container.microchip-container .default-content-wrapper > p {
   text-align: center;

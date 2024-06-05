@@ -414,6 +414,19 @@ main .section.warm-white-bg, main .section.cream {
   background-color: #fff1d6;
 }
 
+.section.text-center-block > div {
+  display: grid;
+  grid-template-columns: 1fr 3fr 1fr;
+}
+
+.text-center-block h4 {
+  grid-column: span 3;
+}
+
+.section.text-center-block p {
+  grid-column: 2;
+}
+
 main .section.highlight {
   font-family: var(--heading-font-family);
   text-align: center;
