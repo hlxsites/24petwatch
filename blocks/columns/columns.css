@@ -40,6 +40,10 @@ main .lost-pet-data > div div {
   border-radius: 10px;
 }
 
+.columns.image-as-is img {
+  object-fit: scale-down;
+}
+
 .columns > div > .columns-img-col {
   order: 2;
 }
@@ -119,11 +123,6 @@ main .lost-pet-data > div div:first-child {
   background: #d0dfe8;
 }
 
-.columns.teaser > div > div h3 {
-  font-size: 1.3125rem;
-  line-height: 1.938rem;
-}
-
 .columns.gray {
   background-color: #e7e9ea;
 }
@@ -147,6 +146,23 @@ main .lost-pet-data > div div:first-child {
   background-color: var(--background-color-secondary);
   border-radius: 10px;
   padding: 1.5rem;
+}
+
+.columns.headings-tight h3 {
+  margin-bottom: 0;
+}
+
+.columns.headings-tight h3 + h4 {
+  margin-top: 0;
+}
+
+.columns.text-x-large p {
+  font-size: x-large;
+}
+
+.columns.teaser > div > div h3 {
+  font-size: 1.3125rem;
+  line-height: 1.938rem;
 }
 
 @media (min-width: 768px) {
@@ -197,6 +213,19 @@ main .lost-pet-data > div div:first-child {
 
   .columns.one-third-right > div > :nth-child(2) {
     flex: 1;
+  }
+
+  .columns.one-third-left > div > :first-child {
+    flex: 1;
+  }
+
+  .columns.one-third-left > div > :nth-child(2) {
+    flex: 2;
+  }
+
+  .columns.image-overflow-peeking img {
+    background-position: bottom;
+    margin-top: -6.5rem;
   }
 }
 

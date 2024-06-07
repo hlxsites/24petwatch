@@ -251,10 +251,6 @@ main .section.block-with-header .footnotes-links a {
   font-size: 0.7rem;
 }
 
-body.blog-post main .sharing-container a:any-link {
-  font-family: var(--body-font-family);
-}
-
 a[href*="//"]
   :not([href^="https://www.24petwatch.com"])
   :not([href^="https://24petwatch.com"])
@@ -398,6 +394,16 @@ main .section.teal-bg, main .section.teal {
   color: white;
 }
 
+main .section.teal-bg a:any-link,
+main .section.teal a:any-link {
+  color: white;
+}
+
+main .section.teal-bg a:hover,
+main .section.teal a:hover {
+  color: aqua;
+}
+
  main .section.palegray {
   background-color: #EDF5FB;
 }
@@ -493,6 +499,10 @@ body.blog-index main h1, body.blog-index main h2, body.blog-index main h3, body.
 body.blog-post main h2 {
   font-size: 1.625rem;
   line-height: 2.25rem;
+}
+
+body.blog-post main .sharing-container a:any-link {
+  font-family: var(--body-font-family);
 }
 
 main .section.heading-light h2 {
