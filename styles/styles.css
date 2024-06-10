@@ -626,7 +626,8 @@ body.blog-post main picture {
 
 main .section.teal-bg,
 main .section.teal-bg h3,
-main .section.teal h4 {
+main .section.teal h4,
+main .section.teal-bg h6 {
   color: white;
 }
 

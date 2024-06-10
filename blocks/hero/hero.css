@@ -61,6 +61,14 @@ main .hero img {
   height: 100%;
 }
 
+main .hero.image-full img {
+  object-fit: cover;
+}
+
+main .hero.no-bottom-padding {
+  padding-bottom: 0;
+}
+
 @media (min-width: 768px) {
   :root {
     --heading-font-size-xxl: 3rem;
