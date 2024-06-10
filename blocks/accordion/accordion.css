@@ -44,6 +44,11 @@
   padding: 0 16px;
 }
 
+.accordion.transfer-microchip-registration-faq details .accordion-item-body {
+  background: white;
+  color: black;
+}
+
 .accordion details[open] .accordion-item-body {
   border-top: 1px solid var(--text-color);
 }
@@ -55,4 +60,26 @@
 
 .accordion sup {
   font-size: 0.75rem;
+}
+
+.accordion.transfer-microchip-registration-faq .accordion-item-label p {
+  font-size: 1.5rem
+}
+
+.accordion.transfer-microchip-registration-faq .accordion-item-label {
+  background: white;
+  color: black;
+  border-radius: 10px;
+}
+
+.accordion.transfer-microchip-registration-faq details[open] .accordion-item-label {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.accordion.transfer-microchip-registration-faq details[open] .accordion-item-body {
+  border-top: 1px solid black;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  padding-bottom: 0.5rem;
 }

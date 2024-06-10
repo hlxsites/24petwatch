@@ -44,6 +44,25 @@ main .lost-pet-data > div div {
   object-fit: scale-down;
 }
 
+.columns.transfer-microchip-registration-how-to > div {
+  align-items: self-start;
+  flex-direction: column-reverse;
+}
+
+.columns.transfer-microchip-registration-how-to img {
+  margin-top: 1rem;
+}
+
+.columns.transfer-microchip-registration-learn-more img {
+  max-height: 200px;
+  margin-top: -10rem;
+}
+
+.columns.transfer-microchip-registration-learn-more > div {
+  display: flex;
+  align-items: stretch;
+}
+
 .columns > div > .columns-img-col {
   order: 2;
 }
@@ -88,6 +107,13 @@ main .lost-pet-data > div div {
 .columns.teaser > div > div {
   font-size: 1rem;
   line-height: 1.5625rem;
+}
+
+.columns.transfer-microchip-registration-learn-more > div > div {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 8rem;
 }
 
 main .lost-pet-data > div div:first-child {
@@ -187,6 +213,14 @@ main .lost-pet-data > div div:first-child {
     flex-direction: unset;
   }
 
+  .columns.transfer-microchip-registration-how-to > div {
+    flex-direction: unset;
+  }
+
+  .columns.content-tight > div > div {
+    flex: unset;
+  }
+
   .columns h2 {
     text-align: left;
   }
@@ -273,4 +307,23 @@ main .columns.cat-dog-background > div > div:last-child {
     min-height: 300px;
     background-position-x: center;
   }
+}
+
+.columns.transfer-microchip-registration-learn-more p.button-container {
+  text-align: center;
+}
+
+.columns.transfer-microchip-registration-learn-more > div > div > p:first-child {
+  text-align: center;
+}
+
+.columns.transfer-microchip-registration-learn-more a.button.secondary {
+  background: var(--background-color);
+  color: var(--button-secondary-color);
+  border: 1px solid;
+}
+
+.columns.transfer-microchip-registration-learn-more a.button.secondary:hover {
+  background: var(--button-secondary-hover-color);
+  color: var(--background-color);
 }
