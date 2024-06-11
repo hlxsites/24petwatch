@@ -38,6 +38,11 @@ main .hero h1 {
   font-weight: 400;
 }
 
+main .hero h2,
+main .hero h5 {
+  text-align: left;
+}
+
 main .hero em {
   color: var(--text-secondary-color);
   font-style: normal;
