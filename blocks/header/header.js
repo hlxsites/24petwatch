@@ -509,6 +509,7 @@ export default async function decorate(block) {
   toggleMenu(nav, navMega, isTablet.matches);
   isTablet.addEventListener('change', () => closeAllMenus(nav, nav));
 
+  // Close dropdown content on scroll.
   window.addEventListener('scroll', () => {
     registerHoverContent.style.display = 'none';
     registerDiv.className = 'before-click';
@@ -518,6 +519,25 @@ export default async function decorate(block) {
     loginText.className = '';
     if (window.innerWidth <= 900) {
       loginText.className = 'before-click';
+    }
+  }, false);
+
+  // Close dropdown content on outside click.
+  document.addEventListener('click', (e) => {
+    if (!membershipsHoverContent.contains(e.target) && membershipDiv.classList.contains('active') && !navMembershipText.contains(e.target)) {
+      membershipsHoverContent.style.display = 'none';
+      membershipDiv.className = 'before-click';
+    }
+    if (!registerHoverContent.contains(e.target) && registerDiv.classList.contains('active') && !navRegisterText.contains(e.target)) {
+      registerHoverContent.style.display = 'none';
+      registerDiv.className = 'before-click';
+    }
+    if (!loginHoverContent.contains(e.target) && loginText.classList.contains('active') && !loginDiv.contains(e.target)) {
+      loginHoverContent.style.display = 'none';
+      loginText.className = '';
+      if (window.innerWidth <= 900) {
+        loginText.className = 'before-click';
+      }
     }
   }, false);
 }
