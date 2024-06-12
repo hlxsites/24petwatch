@@ -278,11 +278,12 @@ export default async function decorate(block) {
   // fetch nav content
   const navMeta = getMetadata('nav');
   block.textContent = '';
-  // let baseHeaderUrl = '/fragments/header/master';
-  // if (isCanada) {
-  //   baseHeaderUrl = '/fragments/ca/header/master';
-  // }
+  let baseHeaderUrl = '/blog/fragments/us/mega-nav';
+  if (isCanada) {
+    baseHeaderUrl = '/blog/fragments/ca/mega-nav';
+  }
 
+  // Note: This is commented out because the header is not being served from the crosswalk domain
   // if (!isLiveSite && !isCrosswalkDomain) {
   //   if (isCanada) {
   //     baseHeaderUrl = `https://${getXWalkDomain()}/fragments/ca/header/master`;
@@ -290,19 +291,6 @@ export default async function decorate(block) {
   //     baseHeaderUrl = `https://${getXWalkDomain()}/fragments/header/master`;
   //   }
   // }
-
-  let contentBasePath = '';
-  const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');
-  if (scriptEl) {
-    try {
-      contentBasePath = new URL(scriptEl.src).origin.split('/scripts/scripts.js');
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
-  }
-
-  const baseHeaderUrl = `${contentBasePath}/drafts/achabuku/mega-nav`;
 
   const navPath = navMeta ? new URL(navMeta).pathname : baseHeaderUrl;
   const resp = await fetch(`${navPath}.plain.html`);
