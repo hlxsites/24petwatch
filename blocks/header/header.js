@@ -10,6 +10,7 @@ import {
   // isLiveSite,
   // isCrosswalkDomain,
   // getXWalkDomain,
+  baseDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
@@ -271,6 +272,34 @@ function addExternalLinkIcons(header) {
 }
 
 /**
+ * Fetch images from the document based media folder.
+ * @param {Element} block The header block element
+ */
+function fetchImagesFromMediaFolder(block) {
+  block.querySelectorAll('source').forEach((source) => {
+    let src;
+    try {
+      src = new URL(source.srcset);
+    } catch (e) {
+      src = new URL(source.srcset, baseDomain);
+    }
+    src.pathname = `/blog${src.pathname}`;
+    source.srcset = `.${src.pathname}${src.search}`;
+  });
+
+  block.querySelectorAll('img').forEach((img) => {
+    let src;
+    try {
+      src = new URL(img.src);
+    } catch (e) {
+      src = new URL(img.src, baseDomain);
+    }
+    src.pathname = `/blog${src.pathname}`;
+    img.src = `.${src.pathname}${src.search}`;
+  });
+}
+
+/**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -300,7 +329,6 @@ export default async function decorate(block) {
   }
 
   const html = await resp.text();
-
   // decorate nav DOM
   const nav = document.createElement('nav');
   nav.id = 'nav';
@@ -337,6 +365,7 @@ export default async function decorate(block) {
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);
   addLinkToLogo(nav);
+  fetchImagesFromMediaFolder(block);
 
   // get mega nav elements
   const megaNav = nav.querySelector('.nav-meganav .mega-nav');
