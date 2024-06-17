@@ -580,13 +580,15 @@ main .columns.block-with-header div div em, main .section.block-with-header .col
   line-height: 1.5625rem;
 }
 
-main .section.block-with-header .footnotes-links a[href*=".pdf"] {
-  background-image: url("/icons/pdficon.png");
-  background-repeat: no-repeat;
-  background-position: 0 1px;
-  padding-left: 1.25rem;
-  height: 17px;
+a[href$=".pdf"]::before {
+  content: "";
   display: inline-block;
+  width: 16px;
+  height: 16px;
+  margin-right: 5px;
+  background-image: url('/icons/pdficon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 @media (max-width: 1200px) {
