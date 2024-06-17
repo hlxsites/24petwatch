@@ -82,8 +82,21 @@ main .lost-pet-data > div div {
   text-align: center;
 }
 
+.columns.content-left p {
+  text-align: left;
+}
+
 .columns.content-left > div {
   padding-left: 0;
+}
+
+.columns.lpm-multi > div {
+  align-items: center;
+}
+
+.columns.lpm-just1 > div {
+  margin-left: 20vw;
+  margin-right: 20vw;
 }
 
 .columns.teaser {
@@ -191,6 +204,42 @@ main .lost-pet-data > div div:first-child {
   line-height: 1.938rem;
 }
 
+main .columns.cat-dog-background > div > div:last-child {
+  margin-top: -310px;
+  background-image: url('/drafts/develop/images/cat-dog-1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 600px;
+  background-position-x: right;
+  background-position-y: bottom;
+}
+
+/* images */
+.columns.lpm-multi.content-tight > div > div:nth-child(odd),
+.columns.lpm-just1.content-tight > div > div:nth-child(odd) {
+  flex: 0 0 70px;
+  order: 1;
+}
+
+/* content */
+.columns.lpm-multi.content-tight > div > div:nth-child(even),
+.columns.lpm-just1.content-tight > div > div:nth-child(even) {
+  flex: 1;
+}
+
+/* last odd set of image+content */
+.columns.lpm-multi.content-tight > div > div:last-child:nth-child(odd) {
+  flex-basis: 35%;
+}
+
+main .section.about-us-icons img  {
+  min-height: 80px;
+}
+
+.columns.lpm-just1 > div > .columns-img-col img {
+  max-height: min(calc(7vw - 1px), 70px);
+}
+
 @media (min-width: 768px) {
   .columns > div {
     align-items: center;
@@ -261,11 +310,12 @@ main .lost-pet-data > div div:first-child {
     background-position: bottom;
     margin-top: -6.5rem;
   }
-}
 
-/* About Us page */
-main .section.about-us-icons img  {
-  min-height: 80px;
+  /* images */
+  .columns.lpm-multi.content-tight > div > div:nth-child(odd),
+  .columns.lpm-just1.content-tight > div > div:nth-child(odd) {
+    order: unset;
+  }
 }
 
 main .lost-pet-data {
@@ -280,16 +330,6 @@ main .lost-pet-data .icon {
 
 main .section.cat-dog-background {
   margin-top: 130px;
-}
-
-main .columns.cat-dog-background > div > div:last-child {
-  margin-top: -310px;
-  background-image: url('/drafts/develop/images/cat-dog-1.png');
-  background-repeat: no-repeat;
-  background-size: contain;
-  min-height: 600px;
-  background-position-x: right;
-  background-position-y: bottom;
 }
 
 @media (max-width: 768px) {
