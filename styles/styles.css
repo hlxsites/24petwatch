@@ -704,12 +704,14 @@ main .section.about-us ~ div.teal-bg.highlight {
   padding-bottom: 0;
 }
 
-.button-container a[target="_blank"]::after {
+a[target="_blank"]:not([href*="tel:"]):not([href$=".pdf"]):not([href^="https://www.24petwatch.com"]):not([href^="https://24petwatch.com"]):not([href^=localhost]):not([href^="/"])::after {
   display: inline-block;
-  content: url('/icons/external-link.svg');
+  font-family: 'Font Awesome 6 Pro', sans-serif;
+  content: "";
   width: 10px;
   height: 10px;
   padding-left: 5px;
+  padding-right: 0.5em;
 }
 
 /* Unified styles for forms */
