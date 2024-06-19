@@ -247,6 +247,27 @@ a:hover {
   color: var(--link-hover-color);
 }
 
+.bullet-checkmarks li {
+  margin-bottom: 1rem;
+}
+
+.bullet-checkmarks li::marker {
+  content: "\2713\0020";
+  padding: 1rem;
+}
+
+.section.sitemap li {
+  list-style-type: none;
+}
+
+.section.sitemap li a {
+  text-decoration: none;
+}
+
+.section.sitemap ul ul {
+  padding-left: 24px;
+}
+
 main .section.block-with-header .footnotes-links a {
   font-size: 0.7rem;
 }
@@ -682,6 +703,10 @@ body.blog-post .default-content-wrapper p.author {
     font-weight: 400;
     line-height: 2.25rem;
   }
+
+  .section.sitemap ul:first-child {
+    grid-auto-flow: column;
+  }
 }
 
 .icon-paw {
@@ -933,15 +958,6 @@ form button.teal:hover {
   color: white;
 }
 
-.bullet-checkmarks li {
-  margin-bottom: 1rem;
-}
-
-.bullet-checkmarks li::marker {
-  content: "\2713\0020";
-  padding: 1rem;
-}
-
 .section.text-concern {
   text-align: center;
   background-color: var(--background-color-secondary);
@@ -952,4 +968,23 @@ form button.teal:hover {
 .section.padding-tight {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.section.sitemap ul:first-child {
+  display: grid;
+  grid-auto-columns: 1fr;
+  gap: 1rem;
+  padding-right: 2rem;
+}
+
+.section.sitemap ul:first-child > li {
+  border: 1px solid #e3e3e3;
+  border-radius: 10px;
+  padding: 1rem;
+  background-color: #f5f5f5;
+  align-self: start;
+}
+
+.section.sitemap ul:first-child > li > a:first-child {
+  border-bottom: 2px solid #e3e3e3;
 }
