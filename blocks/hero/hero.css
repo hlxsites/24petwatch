@@ -36,6 +36,12 @@ main .hero h1 {
   text-align: left;
   display: inline-block;
   font-weight: 400;
+  width: 490px;
+}
+
+main .hero h2,
+main .hero h5 {
+  text-align: left;
 }
 
 main .hero em {
