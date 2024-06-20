@@ -1,7 +1,8 @@
 mappings:
   - /content/24petwatch/us/en:/
   - /content/24petwatch/ca/en:/ca
-  - /content/experience-fragments/24petwatch/us/en/site/:/fragments/
+  - /content/experience-fragments/24petwatch/:/fragments/us/en/site/
+  - /content/experience-fragments/24petwatch/:/fragments/ca/en/site/
   - /content/dam/24-petwatch/crosswalk/headers.json:/.helix/headers.json
 
 includes:
@@ -9,4 +10,6 @@ includes:
   - /content/24petwatch/ca/en
   - /content/experience-fragments/24petwatch/us/en/site/header
   - /content/experience-fragments/24petwatch/us/en/site/footer
+  - /content/experience-fragments/24petwatch/ca/en/site/header
+  - /content/experience-fragments/24petwatch/ca/en/site/footer
   - /content/dam/24-petwatch/crosswalk
