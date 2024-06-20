@@ -656,3 +656,49 @@ header nav > .nav-secondary .language-selector > ul > li > a {
   height: 10px;
   padding-left: 10px;
 }
+
+/* breadcrumbs */
+header .breadcrumbs {
+  display: none;
+  padding: 0 32px;
+  width: 100%;
+  height: auto;
+  max-width: 1200px;
+  overflow: hidden;
+  margin: 0 auto;
+  font-size: inherit;
+}
+
+header .breadcrumbs ol {
+  display: flex;
+  flex-flow: wrap;
+  list-style: none;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  gap: 1ch;
+}
+
+header .breadcrumbs ol li {
+  padding-inline-start: 0;
+  opacity: 0.7;
+}
+
+header .breadcrumbs ol li:not(:last-child)::after {
+  content: ">";
+  padding-left: 1ch;
+}
+
+header .breadcrumbs ol li a:any-link {
+  color: var(--text-color);
+}
+
+header .breadcrumbs ol li:last-of-type {
+  opacity: 1;
+}
+
+@media screen and (width >= 900px) {
+  header .breadcrumbs {
+    display: block;
+  }
+}
