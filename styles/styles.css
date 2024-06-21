@@ -12,36 +12,36 @@
 
 @font-face {
   font-family: GothamRounded;
-  src: url('/fonts/GothamRnd-Medium_Web.woff');
+  src: url("/fonts/GothamRnd-Medium_Web.woff");
   font-weight: 400;
-  font-display: swap
+  font-display: swap;
 }
 
 @font-face {
   font-family: FSMePro;
-  src: url('/fonts/FSMePro.woff');
-  font-display: swap
+  src: url("/fonts/FSMePro.woff");
+  font-display: swap;
 }
 
 @font-face {
-  font-family: 'fsmepro-normal-400-fallback';
+  font-family: "fsmepro-normal-400-fallback";
   font-style: normal;
   font-weight: 400;
-  src: local('Arial');
-  ascent-override: 89.90%;
+  src: local("Arial");
+  ascent-override: 89.9%;
   descent-override: 26.76%;
-  line-gap-override: 0.00%;
+  line-gap-override: 0%;
   size-adjust: 102.01%;
 }
 
 @font-face {
-  font-family: 'gothamrounded-normal-400-fallback';
+  font-family: "gothamrounded-normal-400-fallback";
   font-style: normal;
   font-weight: 400;
-  src: local('Arial');
+  src: local("Arial");
   ascent-override: 83.51%;
   descent-override: 20.88%;
-  line-gap-override: 0.00%;
+  line-gap-override: 0%;
   size-adjust: 112.991%;
 }
 
@@ -64,11 +64,15 @@
   --footer-list-background-color: #e7e9ea;
   --footer-font-color: #fff;
   --nav-secondary-color: #e5e5e5;
+  --nav-content-background-color: #ecedee;
 
   /* fonts */
-  --body-font-family: 'FSMePro', fsmepro-normal-400-fallback, arial, helvetica, sans-serif;
-  --heading-font-family: 'GothamRounded', gothamrounded-normal-400-fallback, arial, helvetica, sans-serif;
-  --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
+  --body-font-family: "FSMePro", fsmepro-normal-400-fallback, arial, helvetica,
+    sans-serif;
+  --heading-font-family: "GothamRounded", gothamrounded-normal-400-fallback,
+    arial, helvetica, sans-serif;
+  --fixed-font-family: "Roboto Mono", menlo, consolas, "Liberation Mono",
+    monospace;
 
   /* body sizes */
   --body-font-size-m: 1rem;
@@ -92,11 +96,15 @@
   --heading-line-height-xs: 1.625rem;
 
   /* heading font weight */
+  --nav-font-weight: 350;
   --heading-font-weight: 400;
 
   /* nav height */
   --nav-height: 95px;
   --header-height: var(--nav-height);
+
+  /* border */
+  --border-color: #c5c9cb;
 }
 
 @media (min-width: 768px) {
@@ -150,13 +158,17 @@ header {
   height: var(--header-height);
 }
 
-h1, h2, h3,
-h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   line-height: 1.25;
   margin-top: 1em;
-  margin-bottom: .5em;
+  margin-bottom: 0.5em;
   scroll-margin: calc(var(--nav-height) + 1em);
   color: var(--heading-text-color);
   text-align: center;
@@ -202,7 +214,12 @@ h6 {
   line-height: var(--heading-line-height-xs);
 }
 
-p, dl, ol, ul, pre, blockquote {
+p,
+dl,
+ol,
+ul,
+pre,
+blockquote {
   margin-top: 1em;
   margin-bottom: 1em;
 }
@@ -214,13 +231,16 @@ hr {
   border-bottom: 1px solid var(--overlay-background-color);
 }
 
-code, pre, samp {
+code,
+pre,
+samp {
   font-family: var(--fixed-font-family);
   font-size: var(--body-font-size-s);
 }
 
-code, samp {
-  padding: .125em;
+code,
+samp {
+  padding: 0.125em;
 }
 
 pre {
@@ -230,7 +250,7 @@ pre {
 main pre {
   background-color: var(--overlay-background-color);
   padding: 1em;
-  border-radius: .25em;
+  border-radius: 0.25em;
   overflow-x: auto;
   white-space: pre;
 }
@@ -256,20 +276,21 @@ a[href*="//"]
   :not([href^=localhost])
   :not(.cards a)
   :after {
-  font-family: 'Font Awesome 6 Pro', sans-serif;
+  font-family: "Font Awesome 6 Pro", sans-serif;
   content: "";
-  margin:.3rem;
+  margin: 0.3rem;
   font-size: 0.9rem;
 }
 
 /* buttons */
-a.button:any-link, button {
+a.button:any-link,
+button {
   font-family: var(--body-font-family);
   display: block;
   box-sizing: border-box;
   text-decoration: none;
   border: 2px solid transparent;
-  padding: .875rem 1.625rem;
+  padding: 0.875rem 1.625rem;
   text-align: center;
   font-style: normal;
   font-weight: 600;
@@ -280,30 +301,37 @@ a.button:any-link, button {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  border-radius: .625rem;
+  border-radius: 0.625rem;
 }
 
 @media (min-width: 768px) {
-  a.button:any-link, button {
+  a.button:any-link,
+  button {
     display: inline-block;
   }
 }
 
-a.button:hover, a.button:focus, button:hover, button:focus  {
+a.button:hover,
+a.button:focus,
+button:hover,
+button:focus {
   background-color: var(--button-primary-hover-color);
   cursor: pointer;
 }
 
-button:disabled, button:disabled:hover {
+button:disabled,
+button:disabled:hover {
   background-color: var(--overlay-background-color);
   cursor: unset;
 }
 
-a.button.secondary, button.secondary {
+a.button.secondary,
+button.secondary {
   background-color: var(--button-secondary-color);
 }
 
-a.button.secondary:hover, button.secondary:focus {
+a.button.secondary:hover,
+button.secondary:focus {
   background-color: var(--button-secondary-hover-color);
 }
 
@@ -369,24 +397,29 @@ main .section {
 }
 
 /* section metadata */
-main .section.teal-bg, main .section.teal {
+main .section.teal-bg,
+main .section.teal {
   background-color: #007680;
   color: white;
 }
 
- main .section.palegray {
-  background-color: #EDF5FB;
+main .section.palegray {
+  background-color: #edf5fb;
 }
 
-main .section.gray-bg, main .section.lightcool, main .section.lightgray {
+main .section.gray-bg,
+main .section.lightcool,
+main .section.lightgray {
   background-color: #e7e9ea;
 }
 
-main .section.light-gray-bg, main .section.lightergray {
-  background-color: #FBFBFB;
+main .section.light-gray-bg,
+main .section.lightergray {
+  background-color: #fbfbfb;
 }
 
-main .section.warm-white-bg, main .section.cream {
+main .section.warm-white-bg,
+main .section.cream {
   background-color: #fff1d6;
 }
 
@@ -420,12 +453,19 @@ body.blog-post main .section > div {
   padding: 0 0.9375rem;
 }
 
-body.blog-post main h1, body.blog-post main h2, body.blog-post main h3, body.blog-post main h4,
-body.blog-index main h1, body.blog-index main h2, body.blog-index main h3, body.blog-index main h4 {
+body.blog-post main h1,
+body.blog-post main h2,
+body.blog-post main h3,
+body.blog-post main h4,
+body.blog-index main h1,
+body.blog-index main h2,
+body.blog-index main h3,
+body.blog-index main h4 {
   text-align: left;
 }
 
-main .section.teal-bg, main .section.teal h4 {
+main .section.teal-bg,
+main .section.teal h4 {
   color: white;
 }
 
