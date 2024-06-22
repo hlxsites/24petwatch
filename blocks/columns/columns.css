@@ -367,3 +367,18 @@ main .section.cat-dog-background {
   background: var(--button-secondary-hover-color);
   color: var(--background-color);
 }
+
+/* .columns.image-to-buttom > div {
+  text-align: center;
+} */
+
+@media (width >= 768px) {
+  /* .section.content-buttom .columns > div:first-child {
+    align-items: flex-end;
+  } */
+
+  .columns.image-to-buttom > div:first-child {
+    align-items: flex-end;
+  }
+  
+}

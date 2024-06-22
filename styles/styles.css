@@ -546,6 +546,18 @@ main .section.gray-border {
   text-align: left;
 }
 
+.headings-left-revert-in-narrow h1, .headings-left-revert-in-narrow  h2, .headings-left-revert-in-narrow  h3,
+.headings-left-revert-in-narrow  h4, .headings-left-revert-in-narrow  h5, .headings-left-revert-in-narrow  h6 {
+  text-align: center;
+}
+
+@media (width >= 768px) {
+  .headings-left-revert-in-narrow h1, .headings-left-revert-in-narrow  h2, .headings-left-revert-in-narrow  h3,
+  .headings-left-revert-in-narrow  h4, .headings-left-revert-in-narrow  h5, .headings-left-revert-in-narrow  h6 {
+    text-align: left;
+  }
+}
+
 body.blog-post main h1,
 body.blog-post main h2,
 body.blog-post main h3,
@@ -566,6 +578,7 @@ body.blog-index main h4 {
 }
 
 main .section.teal-bg,
+main .section.teal-bg h2,
 main .section.teal-bg h3,
 main .section.teal h4,
 main .section.teal-bg h6 {
@@ -993,6 +1006,16 @@ form button.teal:hover {
 	text-align: center;
 }
 
+.content-center-revert-in-wide {
+  text-align: center;
+}
+
+@media (width >= 768px) {
+  .content-center-revert-in-wide {
+    text-align: left;
+  }
+}
+
 .telephone-white a[href^="tel:"] {
   color: white;
 }
@@ -1007,6 +1030,10 @@ form button.teal:hover {
 .section.padding-tight {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
+}
+
+.section.no-bottom-padding {
+  padding-bottom: 0;
 }
 
 .section.sitemap ul:first-child {
@@ -1026,4 +1053,12 @@ form button.teal:hover {
 
 .section.sitemap ul:first-child > li > a:first-child {
   border-bottom: 2px solid #e3e3e3;
+}
+
+.horizontal-line-after::after {
+  content: "";
+  display: block;
+  border-bottom: 1px solid #000; /* Change color as needed */
+  width: 100%;
+  margin-top: 10px; /* Adjust margin as needed */
 }

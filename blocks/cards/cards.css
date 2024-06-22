@@ -237,6 +237,25 @@
   border-radius: 10px;
 }
 
+.cards.collar-sizes ul li {
+  box-sizing: border-box;
+  border: .1875rem solid #e5e5e5;
+  border-radius: 10px;
+  box-shadow:none;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.cards.collar-sizes ul li div {
+  margin: 1rem;
+}
+
+.cards.collar-sizes > ul > li img {
+  width: 177px;
+  object-fit: contain;
+  aspect-ratio: auto;
+}
+
 @media screen and (width >= 768px) {
   .cards.connect-and-care-grid.block ul {
     display: grid;
@@ -272,6 +291,21 @@
   .cards.connect-and-care-grid > ul > li img {
     width: 55%;
   }
+
+  .cards.collar-sizes ul {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 10px;
+    grid-template-areas:
+    "item1 item1 item2 item2 item3 item3"
+    "item4 item4 item4 item5 item5 item5";
+  }
+
+  .cards.collar-sizes ul li:nth-child(1) { grid-area: item1; }
+  .cards.collar-sizes ul li:nth-child(2) { grid-area: item2; }
+  .cards.collar-sizes ul li:nth-child(3) { grid-area: item3; }
+  .cards.collar-sizes ul li:nth-child(4) { grid-area: item4; }
+  .cards.collar-sizes ul li:nth-child(5) { grid-area: item5; }
 }
 
 .cards.connect-and-care-grid > ul > li {
