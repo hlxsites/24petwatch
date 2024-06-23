@@ -41,8 +41,14 @@ export function jsx(html, ...args) {
 function buildHeroBlock(main) {
   const h1 = main.querySelector('h1');
   const picture = main.querySelector('picture');
-  // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
+  const isPictureInDiv = picture.closest('div');
+  if (
+    h1
+    && picture
+    && !isPictureInDiv
+    // eslint-disable-next-line no-bitwise
+    && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)
+  ) {
     const section = document.createElement('div');
     section.append(buildBlock('hero', { elems: [picture, h1] }));
     main.prepend(section);
