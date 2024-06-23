@@ -577,14 +577,6 @@ body.blog-index main h4 {
   margin-right: 5vw;
 }
 
-main .section.teal-bg,
-main .section.teal-bg h2,
-main .section.teal-bg h3,
-main .section.teal h4,
-main .section.teal-bg h6 {
-  color: white;
-}
-
 body.blog-post main h1 {
   font-size: 2.1875rem;
   line-height: 2.813rem;
@@ -594,6 +586,14 @@ body.blog-post main h1 {
 body.blog-post main h2 {
   font-size: 1.625rem;
   line-height: 2.25rem;
+}
+
+main .section.teal-bg,
+main .section.teal-bg h2,
+main .section.teal-bg h3,
+main .section.teal h4,
+main .section.teal-bg h6 {
+  color: white;
 }
 
 body.blog-post main .sharing-container a:any-link {
