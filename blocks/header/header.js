@@ -20,7 +20,7 @@ import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 const urls = {
   usa: {
     url: '/',
-    name: 'US',
+    name: 'United States',
     imageName: 'flagusa',
     icon: 'icon-flagusa',
     lang: 'en-US',
