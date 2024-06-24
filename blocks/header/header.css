@@ -255,6 +255,8 @@ header nav .nav-meganav .mega-nav > div {
   margin: 0;
   font-weight: var(--nav-font-weight);
   font-family: var(--body-font-family);
+  font-style: normal;
+  line-height: 24px;
 }
 
 .header
@@ -296,6 +298,7 @@ header nav .nav-meganav .mega-nav > div {
   color: var(--text-color);
   text-decoration: none;
   font-weight: var(--heading-font-weight);
+  line-height: normal;
 }
 
 .header
