@@ -63,18 +63,10 @@ form[id^="pet-tags-"] .circular img.outline {
     outline: solid white;
 }
 
-/* TODO: This is the real one?!
 form[id^="pet-tags-"] img.color-disc {
     border-radius: 50%;
     width: 1.75rem;
     height: 1.75rem;
-}
-*/
-
-form[id^="pet-tags-"] img.color-disc {
-    border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
 }
 
 form[id^="pet-tags-"] .grid-wrapper-x2 {
