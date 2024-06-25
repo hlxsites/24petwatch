@@ -1027,6 +1027,10 @@ form button.teal:hover {
   padding: 1rem;
 }
 
+.section.text-large {
+  font-size: 1.3rem;
+}
+
 .section.padding-tight {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
