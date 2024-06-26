@@ -4,9 +4,6 @@ import {
   decorateIcons,
   decorateLinks,
   isMobile,
-  isLiveSite,
-  isCrosswalkDomain,
-  getXWalkDomain,
   isCanada,
 } from '../../scripts/lib-franklin.js';
 
