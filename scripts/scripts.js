@@ -41,6 +41,9 @@ export function jsx(html, ...args) {
 function buildHeroBlock(main) {
   const h1 = main.querySelector('h1');
   const picture = main.querySelector('picture');
+  if (!h1 || !picture) {
+    return;
+  }
   const isPictureInDiv = picture.closest('div');
   if (
     h1
