@@ -11,37 +11,38 @@
  */
 
 @font-face {
-  font-family: GothamRounded;
-  src: url("/fonts/GothamRnd-Medium_Web.woff");
+  font-family: VarelaRounded;
+  src: url('/fonts/VarelaRound-Regular.ttf');
   font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: FSMePro;
-  src: url("/fonts/FSMePro.woff");
+  font-family: SourceSans;
+  src: url('/fonts/SourceSans-Regular.ttf');
+  font-weight: 400;
   font-display: swap;
 }
 
 @font-face {
-  font-family: "fsmepro-normal-400-fallback";
+  font-family: 'sourcesans-normal-400-fallback';
   font-style: normal;
   font-weight: 400;
-  src: local("Arial");
-  ascent-override: 89.9%;
+  src: local('Trebuchet MS');
+  ascent-override: 89.90%;
   descent-override: 26.76%;
-  line-gap-override: 0%;
+  line-gap-override: 0.00%;
   size-adjust: 102.01%;
 }
 
 @font-face {
-  font-family: "gothamrounded-normal-400-fallback";
+  font-family: 'varelarounded-normal-400-fallback';
   font-style: normal;
   font-weight: 400;
-  src: local("Arial");
+  src: local('Tahoma');
   ascent-override: 83.51%;
   descent-override: 20.88%;
-  line-gap-override: 0%;
+  line-gap-override: 0.00%;
   size-adjust: 112.991%;
 }
 
@@ -69,12 +70,9 @@
   --nav-content-background-color: #ecedee;
 
   /* fonts */
-  --body-font-family: "FSMePro", fsmepro-normal-400-fallback, arial, helvetica,
-    sans-serif;
-  --heading-font-family: "GothamRounded", gothamrounded-normal-400-fallback,
-    arial, helvetica, sans-serif;
-  --fixed-font-family: "Roboto Mono", menlo, consolas, "Liberation Mono",
-    monospace;
+  --body-font-family: 'SourceSans', sourcesans-normal-400-fallback, arial, helvetica, sans-serif;
+  --heading-font-family: 'VarelaRounded', varelarounded-normal-400-fallback, arial, helvetica, sans-serif;
+  --fixed-font-family: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
   /* body sizes */
   --body-font-size-m: 1rem;
