@@ -1,7 +1,7 @@
 /* below the fold CSS goes here */
 @font-face {
-    font-family: GothamRounded;
-    src: url('/fonts/GothamRnd-Book_Web.woff');
+    font-family: VarelaRounded;
+    src: url('/fonts/VarelaRound-Regular.ttf');
     font-weight: 300;
     font-display: swap
 }
