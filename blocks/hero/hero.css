@@ -33,10 +33,10 @@ main .hero > div > div:last-child {
 main .hero h1 {
   max-width: 1200px;
   margin: 1.125rem auto;
-  text-align: left;
+  text-align: center;
   display: inline-block;
   font-weight: 400;
-  width: 490px;
+  width: 100%;
 }
 
 main .hero h2,
@@ -87,6 +87,8 @@ main .hero img {
 
   main .hero h1 {
     display: block;
+    text-align: left;
+    width: 490px;
   }
 
   main .hero p:not([class*="button"]) {
