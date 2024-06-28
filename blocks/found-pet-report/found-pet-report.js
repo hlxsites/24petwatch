@@ -1,21 +1,61 @@
-import { jsx } from '../../scripts/scripts.js';
+import { jsx, loadScript } from '../../scripts/scripts.js';
 
-function validateField(element, regex, message) {
+async function executeSubmit(block, requestBody) {
+  // Alternatively configuration can be loaded from configs.xlsx in sharepoint | Example:
+  // import { getConfigValue } from '../../scripts/configs.js';
+  // const contactUsEndpoint = await getConfigValue('contactus-endpoint');
+  const form = block.querySelector('#report-lost-found-pet');
+  // TODO: Update the reportLostEndpoint to the final one, owned by a customer.
+  const reportLostEndpoint = 'https://348665-24petwatch-stage.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/report-lost';
+
+  try {
+    const response = await fetch(reportLostEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (response.ok) {
+      window.location.href = '/lost-pet-protection/report-lost-found-pet/thank-you';
+    } else {
+      form.classList.add('submission-message');
+      form.innerHTML = 'There was an error with your submission. Please try again.';
+    }
+  } catch (error) {
+    form.classList.add('submission-message');
+    form.innerHTML = 'There was an error with your submission. Please try again.';
+    // eslint-disable-next-line no-console
+    console.error('There was an error with the submission:', error);
+  }
+}
+
+function validateField(element, regex, message = 'A valid input is required') {
   const trimmedValue = element.value.trim();
   const container = element.parentElement;
   const errorMessage = container.querySelector('.error-message');
   const checkmark = container.querySelector('.checkmark');
 
-  if (!regex.test(trimmedValue)) {
+  if (trimmedValue !== '') {
+    if (!regex.test(trimmedValue)) {
+      errorMessage.textContent = message;
+      container.classList.add('error');
+      checkmark.setAttribute('style', 'opacity: 0;');
+      return null; // Return false if the value does not match the regex
+    }
+    errorMessage.textContent = '';
+    container.classList.remove('error');
+    checkmark.setAttribute('style', 'opacity: 1;');
+  } else {
     errorMessage.textContent = message;
-    container.classList.add('error');
+    if (container.classList.contains('error')) {
+      container.classList.remove('error');
+    }
     checkmark.setAttribute('style', 'opacity: 0;');
-    return false;
+    return null;
   }
-  errorMessage.textContent = '';
-  container.classList.remove('error');
-  checkmark.setAttribute('style', 'opacity: 1;');
-  return true;
+  return trimmedValue;
 }
 
 function showErrorMessage(errorMessage = 'There was a problem with reCAPTCHA validation') {
@@ -28,6 +68,12 @@ function showErrorMessage(errorMessage = 'There was a problem with reCAPTCHA val
 }
 
 export default async function decorate(block) {
+  // Alternatively configuration can be loaded from configs.xlsx in sharepoint | Example:
+  // const captchaSiteKey = await getConfigValue('captcha-site-key');
+  // TODO: Update the captchaSiteKey to the final one, owned by a customer.
+  const captchaSiteKey = '6LeZb8cpAAAAAIvHMYMqpINijClS33ccPPqCEyqL';
+  const script = `https://www.google.com/recaptcha/api.js?render=${captchaSiteKey}`;
+
   const formHTML = jsx`<div>
   <form id="report-lost-found-pet">
     <h2>Pet Information</h2>
@@ -134,292 +180,79 @@ export default async function decorate(block) {
   const states = {
     CA: [
       { name: 'Alberta', abbreviation: 'AB' },
-      {
-        name: 'British Columbia',
-        abbreviation: 'BC',
-      },
-      {
-        name: 'Manitoba',
-        abbreviation: 'MB',
-      },
-      {
-        name: 'New Brunswick',
-        abbreviation: 'NB',
-      },
-      {
-        name: 'Newfoundland and Labrador',
-        abbreviation: 'NL',
-      },
-      {
-        name: 'Nova Scotia',
-        abbreviation: 'NS',
-      },
-      {
-        name: 'Northwest Territories',
-        abbreviation: 'NT',
-      },
-      {
-        name: 'Nunavut',
-        abbreviation: 'NU',
-      },
-      {
-        name: 'Ontario',
-        abbreviation: 'ON',
-      },
-      {
-        name: 'Prince Edward Island',
-        abbreviation: 'PE',
-      },
-      {
-        name: 'Quebec',
-        abbreviation: 'QC',
-      },
-      {
-        name: 'Saskatchewan',
-        abbreviation: 'SK',
-      },
-      {
-        name: 'Yukon',
-        abbreviation: 'YT',
-      },
+      { name: 'British Columbia', abbreviation: 'BC' },
+      { name: 'Manitoba', abbreviation: 'MB' },
+      { name: 'New Brunswick', abbreviation: 'NB' },
+      { name: 'Newfoundland and Labrador', abbreviation: 'NL' },
+      { name: 'Nova Scotia', abbreviation: 'NS' },
+      { name: 'Northwest Territories', abbreviation: 'NT' },
+      { name: 'Nunavut', abbreviation: 'NU' },
+      { name: 'Ontario', abbreviation: 'ON' },
+      { name: 'Prince Edward Island', abbreviation: 'PE' },
+      { name: 'Quebec', abbreviation: 'QC' },
+      { name: 'Saskatchewan', abbreviation: 'SK' },
+      { name: 'Yukon', abbreviation: 'YT' },
     ],
     US: [
-      {
-        name: 'Alabama',
-        abbreviation: 'AL',
-      },
-      {
-        name: 'Alaska',
-        abbreviation: 'AK',
-      },
-      {
-        name: 'American Samoa',
-        abbreviation: 'AS',
-      },
-      {
-        name: 'Arizona',
-        abbreviation: 'AZ',
-      },
-      {
-        name: 'Arkansas',
-        abbreviation: 'AR',
-      },
-      {
-        name: 'California',
-        abbreviation: 'CA',
-      },
-      {
-        name: 'Colorado',
-        abbreviation: 'CO',
-      },
-      {
-        name: 'Connecticut',
-        abbreviation: 'CT',
-      },
-      {
-        name: 'Delaware',
-        abbreviation: 'DE',
-      },
-      {
-        name: 'District Of Columbia',
-        abbreviation: 'DC',
-      },
-      {
-        name: 'Federated States Of Micronesia',
-        abbreviation: 'FM',
-      },
-      {
-        name: 'Florida',
-        abbreviation: 'FL',
-      },
-      {
-        name: 'Georgia',
-        abbreviation: 'GA',
-      },
-      {
-        name: 'Guam',
-        abbreviation: 'GU',
-      },
-      {
-        name: 'Hawaii',
-        abbreviation: 'HI',
-      },
-      {
-        name: 'Idaho',
-        abbreviation: 'ID',
-      },
-      {
-        name: 'Illinois',
-        abbreviation: 'IL',
-      },
-      {
-        name: 'Indiana',
-        abbreviation: 'IN',
-      },
-      {
-        name: 'Iowa',
-        abbreviation: 'IA',
-      },
-      {
-        name: 'Kansas',
-        abbreviation: 'KS',
-      },
-      {
-        name: 'Kentucky',
-        abbreviation: 'KY',
-      },
-      {
-        name: 'Louisiana',
-        abbreviation: 'LA',
-      },
-      {
-        name: 'Maine',
-        abbreviation: 'ME',
-      },
-      {
-        name: 'Marshall Islands',
-        abbreviation: 'MH',
-      },
-      {
-        name: 'Maryland',
-        abbreviation: 'MD',
-      },
-      {
-        name: 'Massachusetts',
-        abbreviation: 'MA',
-      },
-      {
-        name: 'Michigan',
-        abbreviation: 'MI',
-      },
-      {
-        name: 'Minnesota',
-        abbreviation: 'MN',
-      },
-      {
-        name: 'Mississippi',
-        abbreviation: 'MS',
-      },
-      {
-        name: 'Missouri',
-        abbreviation: 'MO',
-      },
-      {
-        name: 'Montana',
-        abbreviation: 'MT',
-      },
-      {
-        name: 'Nebraska',
-        abbreviation: 'NE',
-      },
-      {
-        name: 'Nevada',
-        abbreviation: 'NV',
-      },
-      {
-        name: 'New Hampshire',
-        abbreviation: 'NH',
-      },
-      {
-        name: 'New Jersey',
-        abbreviation: 'NJ',
-      },
-      {
-        name: 'New Mexico',
-        abbreviation: 'NM',
-      },
-      {
-        name: 'New York',
-        abbreviation: 'NY',
-      },
-      {
-        name: 'North Carolina',
-        abbreviation: 'NC',
-      },
-      {
-        name: 'North Dakota',
-        abbreviation: 'ND',
-      },
-      {
-        name: 'Northern Mariana Islands',
-        abbreviation: 'MP',
-      },
-      {
-        name: 'Ohio',
-        abbreviation: 'OH',
-      },
-      {
-        name: 'Oklahoma',
-        abbreviation: 'OK',
-      },
-      {
-        name: 'Oregon',
-        abbreviation: 'OR',
-      },
-      {
-        name: 'Palau',
-        abbreviation: 'PW',
-      },
-      {
-        name: 'Pennsylvania',
-        abbreviation: 'PA',
-      },
-      {
-        name: 'Puerto Rico',
-        abbreviation: 'PR',
-      },
-      {
-        name: 'Rhode Island',
-        abbreviation: 'RI',
-      },
-      {
-        name: 'South Carolina',
-        abbreviation: 'SC',
-      },
-      {
-        name: 'South Dakota',
-        abbreviation: 'SD',
-      },
-      {
-        name: 'Tennessee',
-        abbreviation: 'TN',
-      },
-      {
-        name: 'Texas',
-        abbreviation: 'TX',
-      },
-      {
-        name: 'Utah',
-        abbreviation: 'UT',
-      },
-      {
-        name: 'Vermont',
-        abbreviation: 'VT',
-      },
-      {
-        name: 'Virgin Islands',
-        abbreviation: 'VI',
-      },
-      {
-        name: 'Virginia',
-        abbreviation: 'VA',
-      },
-      {
-        name: 'Washington',
-        abbreviation: 'WA',
-      },
-      {
-        name: 'West Virginia',
-        abbreviation: 'WV',
-      },
-      {
-        name: 'Wisconsin',
-        abbreviation: 'WI',
-      },
-      {
-        name: 'Wyoming',
-        abbreviation: 'WY',
-      },
+      { name: 'Alabama', abbreviation: 'AL' },
+      { name: 'Alaska', abbreviation: 'AK' },
+      { name: 'American Samoa', abbreviation: 'AS' },
+      { name: 'Arizona', abbreviation: 'AZ' },
+      { name: 'Arkansas', abbreviation: 'AR' },
+      { name: 'California', abbreviation: 'CA' },
+      { name: 'Colorado', abbreviation: 'CO' },
+      { name: 'Connecticut', abbreviation: 'CT' },
+      { name: 'Delaware', abbreviation: 'DE' },
+      { name: 'District Of Columbia', abbreviation: 'DC' },
+      { name: 'Federated States Of Micronesia', abbreviation: 'FM' },
+      { name: 'Florida', abbreviation: 'FL' },
+      { name: 'Georgia', abbreviation: 'GA' },
+      { name: 'Guam', abbreviation: 'GU' },
+      { name: 'Hawaii', abbreviation: 'HI' },
+      { name: 'Idaho', abbreviation: 'ID' },
+      { name: 'Illinois', abbreviation: 'IL' },
+      { name: 'Indiana', abbreviation: 'IN' },
+      { name: 'Iowa', abbreviation: 'IA' },
+      { name: 'Kansas', abbreviation: 'KS' },
+      { name: 'Kentucky', abbreviation: 'KY' },
+      { name: 'Louisiana', abbreviation: 'LA' },
+      { name: 'Maine', abbreviation: 'ME' },
+      { name: 'Marshall Islands', abbreviation: 'MH' },
+      { name: 'Maryland', abbreviation: 'MD' },
+      { name: 'Massachusetts', abbreviation: 'MA' },
+      { name: 'Michigan', abbreviation: 'MI' },
+      { name: 'Minnesota', abbreviation: 'MN' },
+      { name: 'Mississippi', abbreviation: 'MS' },
+      { name: 'Missouri', abbreviation: 'MO' },
+      { name: 'Montana', abbreviation: 'MT' },
+      { name: 'Nebraska', abbreviation: 'NE' },
+      { name: 'Nevada', abbreviation: 'NV' },
+      { name: 'New Hampshire', abbreviation: 'NH' },
+      { name: 'New Jersey', abbreviation: 'NJ' },
+      { name: 'New Mexico', abbreviation: 'NM' },
+      { name: 'New York', abbreviation: 'NY' },
+      { name: 'North Carolina', abbreviation: 'NC' },
+      { name: 'North Dakota', abbreviation: 'ND' },
+      { name: 'Northern Mariana Islands', abbreviation: 'MP' },
+      { name: 'Ohio', abbreviation: 'OH' },
+      { name: 'Oklahoma', abbreviation: 'OK' },
+      { name: 'Oregon', abbreviation: 'OR' },
+      { name: 'Palau', abbreviation: 'PW' },
+      { name: 'Pennsylvania', abbreviation: 'PA' },
+      { name: 'Puerto Rico', abbreviation: 'PR' },
+      { name: 'Rhode Island', abbreviation: 'RI' },
+      { name: 'South Carolina', abbreviation: 'SC' },
+      { name: 'South Dakota', abbreviation: 'SD' },
+      { name: 'Tennessee', abbreviation: 'TN' },
+      { name: 'Texas', abbreviation: 'TX' },
+      { name: 'Utah', abbreviation: 'UT' },
+      { name: 'Vermont', abbreviation: 'VT' },
+      { name: 'Virgin Islands', abbreviation: 'VI' },
+      { name: 'Virginia', abbreviation: 'VA' },
+      { name: 'Washington', abbreviation: 'WA' },
+      { name: 'West Virginia', abbreviation: 'WV' },
+      { name: 'Wisconsin', abbreviation: 'WI' },
+      { name: 'Wyoming', abbreviation: 'WY' },
     ],
   };
 
@@ -470,5 +303,94 @@ export default async function decorate(block) {
   });
   address.addEventListener('blur', (event) => {
     validateField(event.target, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
+  });
+  notes.addEventListener('blur', (event) => {
+    validateField(event.target, AT_LEAST_ONE_SYMBOL_REGEX, 'A valid input is required');
+  });
+
+  function loadReCaptcha(event) {
+    // Check if the event target is a descendant of the form
+    if (form.contains(event.target)) {
+      loadScript(script, { defer: true });
+
+      // Remove the event listener to ensure captcha is loaded only once
+      form.removeEventListener('focus', loadReCaptcha, true);
+    }
+  }
+
+  // Assuming 'form' is already defined as shown in your active selection
+  form.addEventListener('focus', loadReCaptcha, true);
+
+  submitButton.addEventListener('click', async (e) => {
+    e.preventDefault();
+
+    const petNameValue = validateField(petName, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
+    const microchipIdValue = validateField(microchipId, AT_LEAST_ONE_SYMBOL_OR_NUMBER_REGEX, 'This value is required.');
+    const ownerNameValue = validateField(ownerName, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
+    const phoneNumberValue = validateField(phoneNumber, PHONE_OPTIONAL_REGEX, 'This value seems to be invalid');
+    const emailValue = validateField(email, EMAIL_OPTIONAL_REGEX, 'This value should be a valid email');
+    const countryValue = validateField(country, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
+    const provinceStateValue = validateField(provinceState, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
+    const cityValue = validateField(city, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
+    const addressValue = validateField(address, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
+    const notesValue = validateField(notes, AT_LEAST_ONE_SYMBOL_REGEX, 'A valid input is required');
+
+    const fieldValues = [
+      petNameValue,
+      microchipIdValue,
+      ownerNameValue,
+      phoneNumberValue,
+      emailValue,
+      countryValue,
+      provinceStateValue,
+      cityValue,
+      addressValue,
+      notesValue,
+    ];
+
+    if (fieldValues.every((value) => value !== null)) {
+      const requestBody = {
+        chipNumber: microchipIdValue,
+        petName: petNameValue,
+        reportDate: new Date().toISOString(),
+        street: addressValue,
+        city: cityValue,
+        state: provinceStateValue,
+        country: countryValue,
+        reporterName: ownerNameValue,
+        reporterPhone: phoneNumberValue,
+        reporterEmail: emailValue,
+        notes: notesValue,
+        partnerID: 84,
+        isFound: true,
+        // Not required fields
+        reportSystemName: '24petwatch.com',
+        reporterPhoneAlt: '',
+        recoveryCaseId: '',
+        reportedBy: 1,
+        contactConsent: true,
+        reporterIp: '',
+        resolution: 0,
+        internalViewOnly: false,
+        enterbyOrgnizationId: '',
+        enterByUserName: 'None',
+      };
+
+      /* global grecaptcha */
+      grecaptcha.ready(() => {
+        grecaptcha.execute(captchaSiteKey, { action: 'submit' })
+          .then((token) => {
+            requestBody.token = token;
+            executeSubmit(block, requestBody);
+          })
+          .catch((error) => {
+            // eslint-disable-next-line no-console
+            console.error('There was a problem with reCAPTCHA validation:', error);
+            showErrorMessage('There was a problem with reCAPTCHA validation');
+          });
+      });
+    } else {
+      showErrorMessage('Please correct the errors in the form');
+    }
   });
 }

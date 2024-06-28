@@ -8,6 +8,7 @@ function createIdFromText(text) {
 class Tabs {
   constructor(tabs) {
     this.tabs = tabs;
+    this.preloadedContent = {}; // Object to store preloaded content
   }
 
   static getURLHash() {
@@ -18,8 +19,22 @@ class Tabs {
     if (path.startsWith('/')) {
       return path;
     }
-
     return window.location.pathname + (window.location.pathname.endsWith('/') ? '' : '/') + path;
+  }
+
+  preloadTabs() {
+    const currentTab = Tabs.getURLHash() || Object.keys(this.tabs)[0];
+    const fetchPromises = Object.entries(this.tabs)
+      .filter(([tab]) => tab !== currentTab) // Skip the current tab
+      .map(async ([tab, details]) => {
+        const path = Tabs.prepareFragmentURL(details.fragment);
+        const resp = await fetch(`${path}.plain.html`);
+        if (resp.ok) {
+          this.preloadedContent[tab] = await resp.text();
+        }
+      });
+
+    return Promise.all(fetchPromises);
   }
 
   async loadTab() {
@@ -47,11 +62,18 @@ class Tabs {
     if (currentTabContent) {
       currentTabContent.style.display = 'block';
     } else {
-      const resp = await fetch(`${path}.plain.html`);
-      if (resp.ok) {
-        tabsContainer.innerHTML += jsx`<div id="tab-content-${currentTab}" class="tab-content"></div>`;
+      let content;
+      if (this.preloadedContent[currentTab]) {
+        content = this.preloadedContent[currentTab];
+      } else {
+        const resp = await fetch(`${path}.plain.html`);
+        if (resp.ok) {
+          content = await resp.text();
+        }
+      }
+      if (content) {
+        tabsContainer.innerHTML += jsx`<div id="tab-content-${currentTab}" class="tab-content">${content}</div>`;
         const tabDiv = document.getElementById(`tab-content-${currentTab}`);
-        tabDiv.innerHTML = await resp.text();
 
         // reset base path for media to fragment base
         const resetAttributeBase = (tag, attr) => {
@@ -99,4 +121,13 @@ export default async function decorate(block) {
   window.addEventListener('hashchange', () => {
     tabs.loadTab();
   }, false);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      tabs.preloadTabs();
+    });
+  } else {
+    // DOMContentLoaded has already fired
+    tabs.preloadTabs();
+  }
 }

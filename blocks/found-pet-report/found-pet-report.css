@@ -88,6 +88,12 @@ main #tab-content-found-pet-report form .wrapper-info .info-icon:hover .info-con
   visibility: visible;
 }
 
+#tab-content-found-pet-report em {
+  color: var(--text-secondary-color);
+  display: inline-block;
+  margin-top: 1rem;
+}
+
 @media (max-width: 768px) {
   main #tab-content-found-pet-report .found-pet-report > div {
     flex: 100%;
