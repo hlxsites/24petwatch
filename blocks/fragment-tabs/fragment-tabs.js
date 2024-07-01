@@ -15,11 +15,14 @@ class Tabs {
     return window.location.hash.substring(1);
   }
 
+  // Prepare the URL for the fragment.
+  // Fragment pages are stored in the same directory as the main page.
   static prepareFragmentURL(path) {
-    if (path.startsWith('/')) {
-      return path;
-    }
-    return window.location.pathname + (window.location.pathname.endsWith('/') ? '' : '/') + path;
+    let currentPath = window.location.pathname;
+    currentPath = currentPath.substring(0, currentPath.lastIndexOf('/'));
+    const newPath = path.startsWith('/') ? path : `/${path}`;
+
+    return currentPath + newPath;
   }
 
   preloadTabs() {
