@@ -2,6 +2,8 @@ export default function decorate(block) {
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 
+  const hasIframe = block.classList.contains('with-iframe');
+
   // setup image columns
   [...block.children].forEach((row) => {
     [...row.children].forEach((col) => {
@@ -14,19 +16,19 @@ export default function decorate(block) {
         }
       }
 
-      const pElements = col.querySelectorAll('p');
-      pElements.forEach((p) => {
-        const match = p.textContent.match(/---iframe---(.*?)---iframe---/);
-        if (match) {
-          const iframeSrc = match[1];
-          const iframe = document.createElement('iframe');
-          iframe.setAttribute('src', iframeSrc);
-          iframe.style.width = '100%';
-          iframe.style.height = '500px';
-          iframe.style.border = 'none';
-          p.replaceWith(iframe);
-        }
-      });
+      if (hasIframe) {
+        const pElements = col.querySelectorAll('p');
+        pElements.forEach((p) => {
+          const match = p.textContent.match(/---iframe---(.*?)---iframe---/);
+          if (match) {
+            const iframeSrc = match[1];
+            const iframe = document.createElement('iframe');
+            iframe.setAttribute('src', iframeSrc);
+            iframe.setAttribute('loading', 'lazy');
+            p.replaceWith(iframe);
+          }
+        });
+      }
     });
   });
 }
