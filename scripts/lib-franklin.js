@@ -112,7 +112,7 @@ export async function loadScript(src, attrs) {
       const script = document.createElement('script');
       script.src = src;
       if (attrs) {
-      // eslint-disable-next-line no-restricted-syntax, guard-for-in
+        // eslint-disable-next-line no-restricted-syntax, guard-for-in
         for (const attr in attrs) {
           script.setAttribute(attr, attrs[attr]);
         }
@@ -600,6 +600,9 @@ export function decorateLinks(element) {
     if (!/^https:\/\/(www\.)?24petwatch.com/.test(a.href)) {
       a.target = '_blank';
     }
+    if (/^tel:/.test(a.href)) {
+      a.target = '_self';
+    }
   });
 }
 
@@ -680,7 +683,7 @@ export const isCrosswalkDomain = window.location.hostname === edsXWalkDomain
 export const isCanada = window.location.pathname.startsWith('/ca/') || window.location.pathname === '/ca';
 export const isBlogLocal = window.location.hostname === 'localhost'
   && (window.location.pathname.startsWith('/blog')
-  || window.location.pathname.startsWith('/ca/blog'));
+    || window.location.pathname.startsWith('/ca/blog'));
 export const isStage = window.location.hostname === 'stage.24petwatch.com';
 export const isLiveSite = window.location.hostname.includes('24petwatch.com');
 export const isProd = isLiveSite && !isStage;
