@@ -44,6 +44,12 @@ main .lost-pet-data > div div {
   object-fit: scale-down;
 }
 
+.columns.with-iframe iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+}
+
 .columns.transfer-microchip-registration-how-to > div {
   align-items: self-start;
   flex-direction: column-reverse;
@@ -380,5 +386,5 @@ main .section.cat-dog-background {
   .columns.image-to-buttom > div:first-child {
     align-items: flex-end;
   }
-  
+
 }
