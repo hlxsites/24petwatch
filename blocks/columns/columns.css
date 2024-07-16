@@ -206,7 +206,7 @@ main .lost-pet-data > div div:first-child {
 
 main .columns.cat-dog-background > div > div:last-child {
   margin-top: -310px;
-  background-image: url('/drafts/develop/images/cat-dog-1.png');
+  background-image: url('/images/cat-dog-1.png');
   background-repeat: no-repeat;
   background-size: contain;
   min-height: 600px;

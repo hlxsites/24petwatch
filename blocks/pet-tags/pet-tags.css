@@ -60,7 +60,7 @@ form[id^="pet-tags-"] .circular {
 }
 
 form[id^="pet-tags-"] .circular img.outline {
-    outline: solid white;
+    outline: 2px solid white;
 }
 
 form[id^="pet-tags-"] img.color-disc {
