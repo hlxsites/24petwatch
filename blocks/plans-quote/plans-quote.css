@@ -1,0 +1,78 @@
+main .plans-quote > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+  margin-top: 2.5rem;
+}
+
+main .plans-quote > div > div {
+  display: block;
+  position: relative;
+  flex: calc(65% - 15px);
+  box-sizing: border-box;
+}
+
+main .plans-quote > div > div:nth-child(1) {
+  border: .1875rem solid #007680;
+  border-radius: 10px;
+}
+
+main .plans-quote > div > div:nth-child(1) > h1:first-of-type {
+  background-color: #007680;
+  margin: 0;
+  padding: .5rem .5rem .625rem;
+  border-radius: 6px 6px 0 0;
+  color: #fff;
+  font-weight: 400;
+  font-size: 2.5rem;
+  line-height: 3.125rem;
+  text-align: center;
+}
+
+main .plans-quote > div > div:nth-child(1) > p:first-of-type {
+  background-color: #007680;
+  color: #fff;
+  text-align: center;
+  padding: .5rem .5rem .625rem;
+  margin: 0;
+}
+
+main .plans-quote > div > div:nth-child(2) {
+  flex: calc(35% - 15px);
+  background-color: #e7e9ea;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  color: #333f48;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+main .plans-quote > div > div:nth-child(2) > div {
+  width: calc(50% - 20px);
+  margin: 10px;
+}
+
+main .plans-quote > div > div:nth-child(2) > h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  width: 100%;
+  text-align: center;
+}
+
+main .plans-quote > div > div:nth-child(2) > div > p {
+  font-size: .813rem;
+  line-height: .938rem;
+  text-align: center;
+}
+
+main .plans-quote > div > div:nth-child(2) > div > p > span.icon
+{
+  height: 65px;
+  width: 65px;
+}
+
