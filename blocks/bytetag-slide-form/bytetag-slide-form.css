@@ -1,0 +1,41 @@
+.section.bytetag-slide-form-container {
+    border: .1875rem solid #e5e5e5;
+}
+
+.bytetag-columns {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.bytetag-columns > div {
+    flex: 1;
+    max-width: none;
+}
+
+.bytetag-columns .columns img {
+    max-height: 30px;
+}
+
+.bytetag-columns .columns h2 {
+    text-align: left;
+}
+
+.bytetag-columns .columns-wrapper {
+    text-align: left;
+}
+
+@media (width >= 768px) {
+    .bytetag-columns {
+        align-items: center;
+        flex-direction: row;
+        padding-left: 1.875rem;
+        padding-right: 1.875rem;
+    }
+
+    .shopify-product {
+        display: flex;
+        justify-content: center;
+    }
+}
