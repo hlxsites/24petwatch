@@ -3,7 +3,7 @@ import { loadFragment } from '../fragment/fragment.js';
 
 export default async function decorate(block) {
   const currentScriptFolderUrl = new URL('.', import.meta.url).href;
-  const bytetagRoundFeatures = await loadFragment('/drafts/iakobchu/lost-pet-protection/bytetag-round-features');
+  const bytetagRoundFeatures = await loadFragment('/lost-pet-protection/bytetag-round-features');
 
   block.innerHTML = jsx`
     <div class="bytetag-forms">
