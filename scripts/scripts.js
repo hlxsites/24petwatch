@@ -1,4 +1,3 @@
-/* global alloy */
 import {
   sampleRUM,
   buildBlock,
@@ -14,21 +13,22 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata,
-  toClassName,
   isCanada,
 } from './lib-franklin.js';
 
 import {
-  analyticsSetConsent,
-  createInlineScript,
-  getAlloyInitScript,
-  getGTMInitScript,
-  setupAnalyticsTrackingWithAlloy,
-  setupAnalyticsTrackingWithGTM,
-  analyticsTrackConversion, trackGTMEvent,
-} from './lib-analytics.js';
+  martechInit,
+  martechEager,
+  martechLazy,
+  martechDelayed,
+  updateUserConsent,
+} from './lib-martech-loader.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
+
+const martechLoadedPromise = martechInit(
+  { personalization: !!getMetadata('target') },
+);
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -143,55 +143,17 @@ async function loadEager(doc) {
   decorateTemplateAndTheme();
   const main = doc.querySelector('main');
   if (main) {
-    createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
-    createInlineScript(document, document.body, getGTMInitScript(), 'text/javascript');
     decorateMain(main);
-    document.body.classList.add('appear');
-    await waitForLCP(LCP_BLOCKS);
-  }
-}
-
-async function initializeConversionTracking() {
-  const context = {
-    getMetadata,
-    toClassName,
-  };
-  // eslint-disable-next-line import/no-relative-packages
-  const { initConversionTracking } = await import('../plugins/rum-conversion/src/index.js');
-  await initConversionTracking.call(context, document);
-
-  // call upon conversion events, sends them to alloy
-  sampleRUM.always.on('convert', async (data) => {
-    const { element } = data;
-    if (!element || !alloy) {
-      return;
-    }
-    // form tracking related logic should be added here if need be.
-    // see https://github.com/adobe/franklin-rum-conversion#integration-with-analytics-solutions
-    analyticsTrackConversion({ ...data });
-  });
-}
-
-/**
- * instruments the tracking in the main
- * @param {Element} main The main element
- */
-function instrumentTrackingEvents(main) {
-  main.querySelectorAll('a')
-    .forEach((anchor) => {
-      anchor.addEventListener('click', (e) => {
-        const linkText = (e.target.textContent || '').trim();
-        const linkUrl = e.target.href;
-
-        // track cta clicks on main
-        if (e.target.classList.contains('button')) {
-          trackGTMEvent('cta_click', {
-            link_text: linkText,
-            link_url: linkUrl,
-          });
-        }
-      });
+    updateUserConsent({
+      collect: true, // analytics
+      personalize: true, // target
     });
+    document.body.classList.add('appear');
+    await Promise.all([
+      martechLoadedPromise.then(martechEager),
+      waitForLCP(LCP_BLOCKS),
+    ]);
+  }
 }
 
 function cleanLocalhostLinks(main) {
@@ -223,15 +185,12 @@ async function loadLazy(doc) {
   loadFooter(doc.querySelector('footer'));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
 
-  await setupAnalyticsTrackingWithAlloy(document);
-  await setupAnalyticsTrackingWithGTM();
-  analyticsSetConsent(true);
-  await initializeConversionTracking();
-  instrumentTrackingEvents(main);
+  await martechLazy();
   cleanLocalhostLinks(main);
 }
 
@@ -241,7 +200,10 @@ async function loadLazy(doc) {
  */
 function loadDelayed() {
   // eslint-disable-next-line import/no-cycle
-  window.setTimeout(() => import('./delayed.js'), 3000);
+  window.setTimeout(() => {
+    martechDelayed();
+    import('./delayed.js');
+  }, 3000);
   // load anything that can be postponed to the latest here
 }
 
