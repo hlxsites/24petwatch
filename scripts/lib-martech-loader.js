@@ -116,7 +116,7 @@ function enhanceAnalyticsEvent(options) {
  * Returns alloy configuration
  * Documentation https://experienceleague.adobe.com/docs/experience-platform/edge/fundamentals/configuring-the-sdk.html
  */
-export function getAlloyConfiguration(document) {
+function getAlloyConfiguration(document) {
   return {
     // enable while debugging
     debugEnabled: document.location.hostname.startsWith('localhost'),
@@ -199,7 +199,7 @@ async function setupAnalyticsTrackingWithGTM() {
  * @param {String} event the event name to track
  * @param {Object} payload the payload for the event
  */
-export function trackGTMEvent(event, payload = {}) {
+function trackGTMEvent(event, payload = {}) {
   window.dataLayer.push({
     event,
     ...payload,
@@ -207,12 +207,12 @@ export function trackGTMEvent(event, payload = {}) {
 }
 
 /**
- * Track an AEP event in the datalayer
+ * Track an Analytics event in the datalayer
  * @param {String} event the event name to track
  * @param {Object} [xdm] the XDM data for the event
  * @param {Object} [dataMapping] the additional data mapping for the event
  */
-export function trackAepEvent(event, xdm = {}, dataMapping = {}) {
+function trackAnalyticsEvent(event, xdm = {}, dataMapping = {}) {
   pushEventToDataLayer(event, xdm, dataMapping);
 }
 
@@ -360,4 +360,6 @@ export {
   loadLazy as martechLazy,
   loadDelayed as martechDelayed,
   updateUserConsent,
+  trackGTMEvent,
+  trackAnalyticsEvent,
 };
