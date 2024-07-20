@@ -1,4 +1,4 @@
-import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { trackGTMEvent } from '../../scripts/lib-martech-loader.js';
 import {
   readBlockConfig,
   decorateIcons,

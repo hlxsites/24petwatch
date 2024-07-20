@@ -12,7 +12,7 @@ import {
   // getXWalkDomain,
   baseDomain,
 } from '../../scripts/lib-franklin.js';
-import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { trackGTMEvent } from '../../scripts/lib-martech-loader.js';
 
 // let positionY = 0;
 // const SCROLL_STEP = 25;
