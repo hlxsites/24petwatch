@@ -32,6 +32,16 @@ main .plans-quote > div > div:nth-child(1) > h1:first-of-type {
   text-align: center;
 }
 
+main .plans-quote > div > div:nth-child(1) > h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  padding: 0 2rem;
+}
+
+main .plans-quote > div > div:nth-child(1) > p {
+  padding: 0 2rem;
+}
+
 main .plans-quote > div > div:nth-child(1) > p:first-of-type {
   background-color: #007680;
   color: #fff;
@@ -76,3 +86,36 @@ main .plans-quote > div > div:nth-child(2) > div > p > span.icon
   width: 65px;
 }
 
+main .plans-quote form {
+  border: unset;
+  border-radius: unset;
+}
+
+main .plans-quote form input:not(:placeholder-shown)~label {
+  transform: unset;
+}
+
+#petBreedList {
+  background-color: #fff;
+  box-sizing: border-box;
+  width: 100%;
+  position: absolute;
+  z-index: 99;
+  border: 1px solid #ccc;
+  max-height: 20rem;
+  overflow-y: auto;
+  visibility: hidden;
+}
+
+#petBreedList ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#petBreedList ul li {
+  display: block;
+  padding: 0 1rem;
+  margin: .5rem 0;
+  cursor: pointer;
+}
