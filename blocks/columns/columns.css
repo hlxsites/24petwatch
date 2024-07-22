@@ -355,6 +355,16 @@ main .section.cat-dog-background {
   }
 }
 
+.columns.collar-package p:first-of-type {
+  color: var(--link-color);
+  font-size: var(--heading-font-size-l);
+  margin: 0;
+}
+
+.columns.collar-package hr {
+  margin: 0;
+}
+
 .columns.transfer-microchip-registration-learn-more p.button-container {
   text-align: center;
 }
@@ -386,5 +396,4 @@ main .section.cat-dog-background {
   .columns.image-to-buttom > div:first-child {
     align-items: flex-end;
   }
-
 }
