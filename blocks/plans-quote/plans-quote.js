@@ -103,7 +103,7 @@ function decorateLeftBlock(block) {
   function petBreedInputHandler(event) {
     const query = event.target.value.toLowerCase();
 
-    if (query.length >= 2) {
+    if (query.length >= 2 && breedLists[pet.speciesId + pet.purebreed]) {
       const results = breedLists[pet.speciesId + pet.purebreed]
         .filter((breed) => breed.breedname.toLowerCase().includes(query));
       if (results.length > 0) {
@@ -116,34 +116,36 @@ function decorateLeftBlock(block) {
     }
   }
 
-  // function petBreedBlurHandler(event) {
-  //   // const breedID = event.target.getAttribute('data-breed-id');
-  //   // const breedName = event.target.value;
-  //   //
-  //   // if (pet.breed.breedName !== breedName) {
-  //   //   petBreedInput.value = '';
-  //   // }
-  // }
+  function petBreedBlurHandler(event) {
+    if (!pet.breed || !pet.breed.breedName) {
+      event.target.value = '';
+    }
+    if (pet.breed && pet.breed.breedName && pet.breed.breedName !== event.target.value) {
+      pet.breed = {};
+      event.target.value = '';
+    }
+  }
 
-  petBreedInput.addEventListener('input', petBreedInputHandler);
-  // petBreedInput.addEventListener('blur', petBreedBlurHandler);
-
-  resultsList.addEventListener('click', function(event) {
+  resultsList.addEventListener('click', (event) => {
     const liElement = event.target.closest('li');
     if (liElement) { // Assuming you want to listen for clicks on <li> elements
-      console.log(event.target);
       const breedId = liElement.getAttribute('data-breed-id');
       const breedName = liElement.getAttribute('data-breed-name');
-      console.log(breedId); // Logs the breed ID
-      console.log(breedName); // Logs the breed name
-
+      pet.breed = { breedId, breedName };
       petBreedInput.value = breedName;
       clearResults();
     }
   });
 
+  petBreedInput.addEventListener('input', petBreedInputHandler);
+  petBreedInput.addEventListener('blur', petBreedBlurHandler);
+
   speciesAndPureBreedRadioGroups.forEach((radioInput) => {
     radioInput.addEventListener('change', onRadioChange);
+  });
+
+  document.addEventListener('click', () => {
+    clearResults();
   });
 }
 
