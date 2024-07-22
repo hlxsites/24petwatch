@@ -126,41 +126,79 @@ function toggleMenu(nav, navSections, closeAll = null) {
   }
 }
 
-function getDirectTextContent(menuItem) {
-  const menuLink = menuItem.querySelector(':scope > a');
-  if (menuLink) {
-    return menuLink.textContent.trim();
-  }
-  return Array.from(menuItem.childNodes)
-    .filter((n) => n.nodeType === Node.TEXT_NODE)
-    .map((n) => n.textContent)
-    .join(' ');
-}
+// function getDirectTextContent(menuItem) {
+//   const menuLink = menuItem.querySelector(':scope > a');
+//   if (menuLink) {
+//     return menuLink.textContent.trim();
+//   }
+//   return Array.from(menuItem.childNodes)
+//     .filter((n) => n.nodeType === Node.TEXT_NODE)
+//     .map((n) => n.textContent)
+//     .join(' ');
+// }
 
-async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
+// async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
+//   const crumbs = [];
+
+//   const homeUrl = document.querySelector('.nav-brand a').href;
+
+//   let menuItem = Array.from(nav.querySelectorAll('a')).find((a) => a.href === currentUrl);
+//   if (menuItem) {
+//     do {
+//       const link = menuItem.querySelector(':scope > a');
+//       crumbs.unshift({ title: getDirectTextContent(menuItem), url: link ? link.href : null });
+//       menuItem = menuItem.closest('ul')?.closest('li');
+//     } while (menuItem);
+//   } else if (currentUrl !== homeUrl) {
+//     crumbs.unshift({ title: getMetadata('og:title'), url: currentUrl });
+//   }
+
+//   const homePlaceholder = 'Home';
+//   crumbs.unshift({ title: homePlaceholder, url: homeUrl });
+
+//   // last link is current page and should not be linked
+//   if (crumbs.length > 1) {
+//     crumbs[crumbs.length - 1].url = null;
+//   }
+//   crumbs[crumbs.length - 1]['aria-current'] = 'page';
+//   return crumbs;
+// }
+
+async function buildBreadcrumbsFromUrl(currentUrl) {
   const crumbs = [];
-
   const homeUrl = document.querySelector('.nav-brand a').href;
+  const urlObj = new URL(currentUrl);
+  const pathSegments = urlObj.pathname.split('/').filter(Boolean); // Remove empty strings from the array
 
-  let menuItem = Array.from(nav.querySelectorAll('a')).find((a) => a.href === currentUrl);
-  if (menuItem) {
-    do {
-      const link = menuItem.querySelector(':scope > a');
-      crumbs.unshift({ title: getDirectTextContent(menuItem), url: link ? link.href : null });
-      menuItem = menuItem.closest('ul')?.closest('li');
-    } while (menuItem);
-  } else if (currentUrl !== homeUrl) {
-    crumbs.unshift({ title: getMetadata('og:title'), url: currentUrl });
+  // Always add the home breadcrumb
+  crumbs.push({ title: 'Home', url: homeUrl });
+
+  const hasLocale = pathSegments[0].length === 2;
+  const basePathIndex = hasLocale ? 1 : 0;
+
+  // Loop through each segment after the base path index (and locale if present)
+  for (let i = basePathIndex; i < pathSegments.length; i += 1) {
+    let title;
+    const segment = pathSegments[i];
+
+    // Check for specific segments like 'lost-pet-protection'
+    if (segment === 'lost-pet-protection') {
+      title = 'Pet Protection'; // Specific title for 'lost-pet-protection'
+    } else {
+      // Automatically generate title for other segments
+      title = segment.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+    }
+
+    const url = i === pathSegments.length - 1 ? null : `${urlObj.origin}/${pathSegments.slice(0, i + 1).join('/')}`;
+    crumbs.push({ title, url });
   }
 
-  const homePlaceholder = 'Home';
-  crumbs.unshift({ title: homePlaceholder, url: homeUrl });
-
-  // last link is current page and should not be linked
+  // Last link is current page and should not be linked
   if (crumbs.length > 1) {
     crumbs[crumbs.length - 1].url = null;
   }
   crumbs[crumbs.length - 1]['aria-current'] = 'page';
+
   return crumbs;
 }
 
@@ -169,7 +207,7 @@ async function buildBreadcrumbs() {
   breadcrumbs.className = 'breadcrumbs';
 
   // old: ',nav-sections'  ... new: '.nav-meganav'
-  const crumbs = await buildBreadcrumbsFromNavTree(document.querySelector('.nav-meganav'), document.location.href);
+  const crumbs = await buildBreadcrumbsFromUrl(document.location.href);
 
   const ol = document.createElement('ol');
   ol.append(...crumbs.map((item) => {
@@ -432,7 +470,9 @@ export default async function decorate(block) {
   fetchImagesFromMediaFolder(block);
 
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
-    navWrapper.append(await buildBreadcrumbs());
+    // navWrapper.append(await buildBreadcrumbs());
+    const main = document.querySelector('main');
+    main.prepend(await buildBreadcrumbs());
   }
 
   // get mega nav elements
