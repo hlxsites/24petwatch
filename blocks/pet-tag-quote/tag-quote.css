@@ -1,0 +1,31 @@
+form#tag-quote-form {
+    padding: 0;
+}
+
+form#tag-quote-form .wrapper {
+    padding: 1.625rem 2.25rem .375rem 1rem;
+    margin-top: 0.5rem;
+}
+
+form#tag-quote-form label.float-label {
+    left: unset;
+    padding: 1.5rem 1rem 1rem;
+}
+
+form#tag-quote-form hr {
+    height: 1px;
+    background-color: #05233f;
+}
+
+form#tag-quote-form h3 {
+    background-color: var(--button-secondary-color);
+    color: var(--background-color);
+    padding: 1rem;
+    margin: 0;
+}
+
+@media screen and (width >=768px) {
+    form#tag-quote-form {
+        max-width: 768px;
+    }
+}
