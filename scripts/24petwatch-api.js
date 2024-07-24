@@ -50,4 +50,25 @@ export default class APIClient {
     const path = 'Utility/GetBreeds';
     APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, { speciesId, purebreed }, done, fail, 'json');
   }
+
+  validateNonInsurancePromoCodeWithSpecies(promoCode, countryId, speciesId, done, fail) {
+    const path = 'Product/ValidateNonInsurancePromoCodeWithSpecies';
+
+    const data = {
+      promoCode,
+      country: countryId,
+    };
+
+    if (speciesId) {
+      data.species = speciesId;
+    }
+
+    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, data, done, fail, 'json');
+  }
+
+  getCountryStates(zipCode, done, fail) {
+    const path = 'Utility/GetCountryState';
+
+    APIClient.callAPI(`${this.basePath}/${path}/${zipCode}`, APIClient.METHOD_GET, null, done, fail, 'json');
+  }
 }
