@@ -5,8 +5,8 @@ const buyNowLink = 'https://www.24petwatch.com/ca/lost-pet-protection/pet-tags/t
 // path to the images for pet tags
 const imagePath = '/images/tags/';
 // prices for pet tags
-const pricePerTagMetal = 11.95;
-const pricePerTagLifetimeSmall = 17.95;
+const pricePerTagMetal = 19.95;
+const pricePerTagLifetimeSmall = 19.95;
 const pricePerTagLifetimeLarge = 19.95;
 
 function updateTagImage() {
