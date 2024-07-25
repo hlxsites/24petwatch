@@ -70,8 +70,8 @@ function showErrorMessage(errorMessage = 'There was a problem with reCAPTCHA val
 export default async function decorate(block) {
   // Alternatively configuration can be loaded from configs.xlsx in sharepoint | Example:
   // const captchaSiteKey = await getConfigValue('captcha-site-key');
-  // TODO: Update the captchaSiteKey to the final one, owned by a customer.
-  const captchaSiteKey = '6LeZb8cpAAAAAIvHMYMqpINijClS33ccPPqCEyqL';
+  // 24PW PRD credentials
+  const captchaSiteKey = '6LdpPxIqAAAAAGA50UA-czTakz4BrDmn20bY3s_X';
   const script = `https://www.google.com/recaptcha/api.js?render=${captchaSiteKey}`;
 
   const formHTML = jsx`<div>
