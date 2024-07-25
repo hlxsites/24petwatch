@@ -2,13 +2,13 @@ import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import {
   API_BASE_URL,
-  STEP_2_URL,
-  POSTAL_CODE_CANADA_REGEX,
-  EMAIL_REGEX,
   COOKIE_NAME,
-  setCombinedCookie,
-  getCombinedCookie,
+  EMAIL_REGEX,
+  POSTAL_CODE_CANADA_REGEX,
+  STEP_2_URL,
   deleteCookie,
+  getCombinedCookie,
+  setCombinedCookie,
 } from './tag-utils.js';
 
 let petIdValue = ''; // if a previous cookie is present, will be set
@@ -48,7 +48,7 @@ function showGeneralErrorMessage(errorMessage = 'Please correct the errors in th
   errorElement.style.display = 'block';
   setTimeout(() => {
     errorElement.style.display = '';
-  }, 5000);
+  }, 10000);
 }
 
 function buildOwnerPayload(emailValue, zipCodeValue) {
@@ -74,11 +74,14 @@ async function executeSubmit(breedIdValue) {
   const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
   const petNameValue = document.querySelector('#petName').value;
   try {
-    // Step 1: Create the Owner
+    // Step 1: Update or create the Owner
+    const ownerAlreadyExists = (ownerIdValue !== '');
+    let method = (ownerAlreadyExists) ? 'PUT' : 'POST';
+    let endPoint = (ownerAlreadyExists) ? `Owner/${ownerIdValue}` : 'Owner';
     const emailValue = document.querySelector('#email').value;
     const zipCodeValue = document.querySelector('#zipCode').value;
-    let response = await fetch(`${API_BASE_URL}/Owner`, {
-      method: 'POST',
+    let response = await fetch(`${API_BASE_URL}/${endPoint}`, {
+      method: `${method}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -90,7 +93,17 @@ async function executeSubmit(breedIdValue) {
     }
     let data = await response.json();
     ownerIdValue = data.id;
-    // Step 2: Create the Pet that belongs to the Owner
+    // Step 2: Update or create the Pet that belongs to the Owner
+    let petAlreadyExists = false;
+    if (ownerAlreadyExists && petIdValue) {
+      // eslint-disable-next-line no-use-before-define,max-len
+      const petInfo = await getInfoForExistingPet(petNameValue); // side effect: validates the pet belongs to the owner
+      if (petInfo) {
+        petAlreadyExists = true;
+      }
+    }
+    method = (petAlreadyExists) ? 'PUT' : 'POST';
+    endPoint = (petAlreadyExists) ? `Pet/${petIdValue}` : 'Pet';
     const microchipIdValue = document.querySelector('#microchipId').value;
     const selectedSpecies = document.querySelector('input[name="speciesId"]:checked');
     const speciesIdValue = (selectedSpecies.value === 'Dog') ? 1 : 2; // 1 = Dog, 2 = Cat
@@ -107,8 +120,8 @@ async function executeSubmit(breedIdValue) {
         conditions: [],
       },
     };
-    response = await fetch(`${API_BASE_URL}/Pet`, {
-      method: 'POST',
+    response = await fetch(`${API_BASE_URL}/${endPoint}`, {
+      method: `${method}`,
       headers: {
         'Content-Type': 'application/json',
       },
@@ -275,7 +288,7 @@ function checkFieldsValidity() {
   submitButton.disabled = !allFieldsValid;
 }
 
-async function getOwnerInfo() {
+async function getInfoForExistingOwner() {
   try {
     const response = await fetch(`${API_BASE_URL}/Owner/${ownerIdValue}`);
     if (!response.ok) {
@@ -292,7 +305,7 @@ async function getOwnerInfo() {
   }
 }
 
-async function getPetInfo(petNameValue) {
+async function getInfoForExistingPet(petNameValue) {
   try {
     const response = await fetch(`${API_BASE_URL}/Pet/${petIdValue}`);
     if (!response.ok) {
@@ -302,7 +315,7 @@ async function getPetInfo(petNameValue) {
     if (data.petName === petNameValue && data.ownerId === ownerIdValue) {
       return data;
     }
-    return null; // pet info does not match the cookie
+    return null; // pet info does not match the cookie's owner info
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Failed to fetch pet information:', error);
@@ -345,7 +358,7 @@ async function initializeFormFromCookieInfo(petNameValue) {
   petName.dispatchEvent(triggerEventInput);
 
   // owner's personal info
-  getOwnerInfo().then((ownerInfo) => {
+  getInfoForExistingOwner().then((ownerInfo) => {
     if (ownerInfo) {
       const zipCode = document.querySelector('#zipCode');
       const email = document.querySelector('#email');
@@ -357,7 +370,7 @@ async function initializeFormFromCookieInfo(petNameValue) {
   });
 
   // pet's info
-  getPetInfo(petNameValue).then((petInfo) => {
+  getInfoForExistingPet(petNameValue).then((petInfo) => {
     if (petInfo) {
       let isDog;
       let isPureBreed;
@@ -387,8 +400,7 @@ async function initializeFormFromCookieInfo(petNameValue) {
       refreshListOfBreeds(isDog, isPureBreed).then(() => {
         selectBreedId(petInfo.breedId);
         const breedIdName = document.querySelector('input[id="breedIdName"]');
-        const breedName = getBreedNameForId(petInfo.breedId);
-        breedIdName.value = breedName;
+        breedIdName.value = getBreedNameForId(petInfo.breedId);
         removeAnyErrorMessage(breedIdName, true);
       });
       // microchip
@@ -402,7 +414,7 @@ async function initializeFormFromCookieInfo(petNameValue) {
   const submitButton = document.querySelector('button[type="submit"]');
   setTimeout(() => {
     submitButton.disabled = false;
-  }, 1000);
+  }, 2500);
 }
 
 export default async function decorateStep1(block) {
@@ -545,7 +557,7 @@ export default async function decorateStep1(block) {
     showGeneralErrorMessage(); // show a general error message
   });
 
-  // check for a previous cookie
+  // if a previous cookie is present and is valid, initialize the form
   let petNameValue = '';
   [petNameValue = '', petIdValue = '', ownerIdValue = ''] = getCombinedCookie(COOKIE_NAME, []);
   if (petNameValue && petIdValue && ownerIdValue) {
