@@ -1,8 +1,8 @@
 // utility for the pet tag quotation process: tag-quote, tag-select, and summary-quote
 export const API_BASE_URL = 'https://348665-24petwatch-stage.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-pethealth-services'; // no trailing slash
 
-export const PRICE_PER_TAG_METAL = 11.95; // ex: 11.95
-export const PRICE_PER_TAG_LIFETIME_SMALL = 17.95; // ex: 17.95
+export const PRICE_PER_TAG_METAL = 19.95; // ex: 11.95
+export const PRICE_PER_TAG_LIFETIME_SMALL = 19.95; // ex: 17.95
 export const PRICE_PER_TAG_LIFETIME_LARGE = 19.95; // ex: 19.95
 
 export const ALLOW_ZERO_PAYMENT = false; // ex: if allowing free pricing for tags, then set to: true
