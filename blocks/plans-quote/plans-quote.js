@@ -10,6 +10,8 @@ function decorateLeftBlock(block) {
       <div class="wrapper">
         <input type="text" id="petName" name="petName" placeholder="" maxlength="12" required>
         <label for="petName" class="float-label">Firstly, what's their name?*</label>
+        <span class="checkmark"></span>
+        <div class="error-message"></div>
       </div>
       <div class="wrapper flex-wrapper">
         <label>Is your pet a*</label>
@@ -36,7 +38,9 @@ function decorateLeftBlock(block) {
       <div class="wrapper">
         <input type="text" id="petBreed" name="petBreed" placeholder="Start Typing..." autocomplete="off" required>
         <label for="petBreed" class="float-label">What's your pet's breed?*</label>
+        <span class="checkmark"></span>
         <div id="petBreedList"></div>
+        <div class="error-message"></div>
       </div>
       <div class="wrapper">
         <input type="text" id="microchipNumber" name="microchipNumber" placeholder="" required>
@@ -73,12 +77,16 @@ function decorateLeftBlock(block) {
   `;
   document.body.insertBefore(loaderWrapper, document.body.firstChild);
 
+  const EMAIL_OPTIONAL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
   const countryId = isCanada ? 1 : 2;
   const APIClientObj = new APIClient();
   const formData = {};
   const breedLists = {};
+  const petNameInput = document.getElementById('petName');
   const speciesAndPureBreedRadioGroups = document.querySelectorAll('input[type="radio"][name="speciesId"], input[type="radio"][name="purebreed"]');
   const petBreedInput = document.getElementById('petBreed');
+  const emailInput = document.getElementById('email');
   const resultsList = document.getElementById('petBreedList');
   const zipcodeInput = document.getElementById('zipcode');
   const promocodeInput = document.getElementById('promocode');
@@ -87,41 +95,74 @@ function decorateLeftBlock(block) {
   function showLoader() {
     loaderWrapper.classList.remove('hide');
   }
+
   function hideLoader() {
     loaderWrapper.classList.add('hide');
   }
 
-  zipcodeInput.addEventListener('blur', () => {
-    const zipCode = zipcodeInput.value.trim();
-    const container = zipcodeInput.parentElement;
+  function showErrorMessage(element, message) {
+    const container = element.parentElement;
     const errorMessage = container.querySelector('.error-message');
     const checkmark = container.querySelector('.checkmark');
+    errorMessage.textContent = message;
+    checkmark.setAttribute('style', 'opacity: 0;');
+    container.classList.add('error');
+  }
+
+  function hideErrorMessage(element) {
+    const container = element.parentElement;
+    const errorMessage = container.querySelector('.error-message');
+    const checkmark = container.querySelector('.checkmark');
+    errorMessage.textContent = '';
+    checkmark.setAttribute('style', 'opacity: 1;');
+    container.classList.remove('error');
+  }
+
+  petNameInput.addEventListener('blur', () => {
+    const petName = petNameInput.value.trim();
+
+    if (petName === '') {
+      showErrorMessage(petNameInput, 'Please fill out your pet\'s name before continuing.');
+    } else {
+      hideErrorMessage(petNameInput);
+      formData.petName = petName;
+    }
+  });
+
+  emailInput.addEventListener('blur', () => {
+    const email = emailInput.value.trim();
+
+    if (email !== '') {
+      if (!EMAIL_OPTIONAL_REGEX.test(email)) {
+        showErrorMessage(emailInput, 'Please enter a valid email address.');
+      } else {
+        hideErrorMessage(emailInput);
+      }
+    } else {
+      showErrorMessage(emailInput, 'Please enter your email address before continuing.');
+    }
+  });
+
+  zipcodeInput.addEventListener('blur', () => {
+    const zipCode = zipcodeInput.value.trim();
 
     if (zipCode === '') {
-      errorMessage.textContent = 'Please enter a valid zip code';
-      checkmark.setAttribute('style', 'opacity: 0;');
-      container.classList.add('error');
+      showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
     } else {
       showLoader();
       APIClientObj.getCountryStates(zipCode, (data) => {
         if (data.zipCode) {
-          errorMessage.textContent = '';
-          checkmark.setAttribute('style', 'opacity: 1;');
-          container.classList.remove('error');
+          hideErrorMessage(zipcodeInput);
           formData.zipCode = data.zipCode;
         } else {
-          errorMessage.textContent = 'Please enter a valid zip code';
-          checkmark.setAttribute('style', 'opacity: 0;');
-          container.classList.add('error');
+          showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
           zipcodeInput.value = '';
           formData.zipCode = '';
         }
         hideLoader();
       }, (status) => {
         if (status === 404) {
-          errorMessage.textContent = 'Please enter a valid zip code';
-          checkmark.setAttribute('style', 'opacity: 0;');
-          container.classList.add('error');
+          showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
           zipcodeInput.value = '';
           formData.zipCode = '';
         } else {
@@ -134,9 +175,6 @@ function decorateLeftBlock(block) {
 
   applyPromoCodeButton.addEventListener('click', () => {
     const promoCode = promocodeInput.value.trim();
-    const container = promocodeInput.parentElement;
-    const errorMessage = container.querySelector('.error-message');
-    const checkmark = container.querySelector('.checkmark');
 
     showLoader();
     APIClientObj.validateNonInsurancePromoCodeWithSpecies(
@@ -145,24 +183,17 @@ function decorateLeftBlock(block) {
       formData.speciesId ?? null,
       (data) => {
         if (data.isValid === true) {
-          errorMessage.textContent = '';
-          checkmark.setAttribute('style', 'opacity: 1;');
-          container.classList.remove('error');
+          hideErrorMessage(promocodeInput);
           formData.promoCode = promoCode;
         } else {
-          errorMessage.textContent = 'Oops, looks like the promo code is invalid.';
-          checkmark.setAttribute('style', 'opacity: 0;');
-          container.classList.add('error');
+          showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
           formData.promoCode = '';
         }
         hideLoader();
       },
       (status) => {
         console.log('Failed with status:', status);
-        errorMessage.textContent = '';
-        checkmark.setAttribute('style', 'opacity: 0;');
-        container.classList.remove('error');
-        formData.promoCode = '';
+        hideErrorMessage(promocodeInput);
         hideLoader();
       },
     );
@@ -170,12 +201,7 @@ function decorateLeftBlock(block) {
 
   promocodeInput.addEventListener('input', () => {
     if (promocodeInput.value.trim() === '') {
-      const container = promocodeInput.parentElement;
-      const errorMessage = container.querySelector('.error-message');
-      const checkmark = container.querySelector('.checkmark');
-      errorMessage.textContent = '';
-      checkmark.setAttribute('style', 'opacity: 0;');
-      container.classList.remove('error');
+      hideErrorMessage(promocodeInput);
       applyPromoCodeButton.disabled = true;
     } else {
       applyPromoCodeButton.disabled = false;
@@ -245,6 +271,12 @@ function decorateLeftBlock(block) {
       formData.breed = {};
       event.target.value = '';
     }
+
+    if (event.target.value === '') {
+      showErrorMessage(event.target, 'Please tell us more about your pet above before selecting a breed.');
+    } else {
+      hideErrorMessage(event.target);
+    }
   }
 
   resultsList.addEventListener('click', (event) => {
@@ -255,6 +287,7 @@ function decorateLeftBlock(block) {
       formData.breed = { breedId, breedName };
       petBreedInput.value = breedName;
       clearResults();
+      hideErrorMessage(petBreedInput);
     }
   });
 
@@ -266,6 +299,7 @@ function decorateLeftBlock(block) {
   });
 
   document.addEventListener('click', () => {
+
     clearResults();
   });
 }
