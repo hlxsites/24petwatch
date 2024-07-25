@@ -45,6 +45,8 @@ function decorateLeftBlock(block) {
       <div class="wrapper">
         <input type="text" id="microchipNumber" name="microchipNumber" placeholder="" required>
         <label for="microchipNumber" class="float-label">We'll need your pet's microchip number*</label>
+        <span class="checkmark"></span>
+        <div class="error-message"></div>
       </div>
       <div class="wrapper">
         <input type="email" id="email" name="email" placeholder="" maxlength="40" required>
@@ -65,6 +67,21 @@ function decorateLeftBlock(block) {
         <button type="button" id="applyPromoCode" class="secondary" disabled>Apply</button>
         <div class="error-message"></div>
       </div>
+      <div class="wrapper">By completing this purchase, you understand and consent to the collection, storage and use of your personal data for the purposes outlined in the 24Petwatch Privacy Policy. Your personal data privacy rights are outlined therein.</div>
+      <div class="wrapper checkbox-text-wrapper">
+        <div><input class="termsAndConditions" id="agreement" name="agreement" type="checkbox" autocomplete="off" /></div>
+        <div class="text">With your 24Pet® microchip, Pethealth Services Inc. (“PSI”) may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from24Pet regarding microchip services. Additionally, PSI’s affiliates, including PTZ Insurance Services Ltd., PetPartners, Inc. and Independence Pet Group, Inc., and their subsidiaries (collectively, “PTZ”) may offer you promotions and the latest information regarding pet insurance services and products. PSI may also have or benefit from contractual arrangements with third parties (“Partners”) who may offer you related services, products, offers and/or promotions. By giving consent, you agree that PSI, its Partners and/or PTZ may contact you for the purposes identified herein via commercial electronic messages at the e-mail address you provided, via mailer at the mailing address you provided and/or via automatic telephone dialing systems, pre-recorded/automated messages and/or text messages at the telephone number(s) you provided. Data and message rates may apply. This consent is not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.</div>
+      </div>
+      <div class="wrapper checkbox-text-wrapper">
+        <div><input class="termsAndConditions" id="dataConsent" name="dataConsent" type="checkbox" autocomplete="off" /></div>
+        <div class="text">I agree that 24Petwatch® may release my contact information to anyone who finds my pet in order to facilitate pet recovery.</div>
+      </div>
+      <div class="wrapper wrapper-text-center">
+        Please see <a href="https://www.24petwatch.com/privacy-policy" target="_blank">Privacy Policy</a> for more information.
+      </div>
+      <div class="wrapper wrapper-text-center">
+        <button type="button" id="submit">Continue \u003E</button>
+      </div>
     </form>
   `;
 
@@ -77,6 +94,7 @@ function decorateLeftBlock(block) {
   `;
   document.body.insertBefore(loaderWrapper, document.body.firstChild);
 
+  const MICROCHIP_15_REGEX = /^\d{15}$/;
   const EMAIL_OPTIONAL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const countryId = isCanada ? 1 : 2;
@@ -87,10 +105,13 @@ function decorateLeftBlock(block) {
   const speciesAndPureBreedRadioGroups = document.querySelectorAll('input[type="radio"][name="speciesId"], input[type="radio"][name="purebreed"]');
   const petBreedInput = document.getElementById('petBreed');
   const emailInput = document.getElementById('email');
+  const microchipInput = document.getElementById('microchipNumber');
   const resultsList = document.getElementById('petBreedList');
   const zipcodeInput = document.getElementById('zipcode');
   const promocodeInput = document.getElementById('promocode');
   const applyPromoCodeButton = document.getElementById('applyPromoCode');
+  const checkboxes = document.querySelectorAll('.termsAndConditions');
+  const submitButton = document.getElementById('submit');
 
   function showLoader() {
     loaderWrapper.classList.remove('hide');
@@ -140,6 +161,20 @@ function decorateLeftBlock(block) {
       }
     } else {
       showErrorMessage(emailInput, 'Please enter your email address before continuing.');
+    }
+  });
+
+  microchipInput.addEventListener('blur', () => {
+    const microchip = microchipInput.value.trim();
+
+    if (microchip !== '') {
+      if (!MICROCHIP_15_REGEX.test(microchip)) {
+        showErrorMessage(microchipInput, 'We\'re sorry, we don\'t recognize the format of the chip number you have entered. Please double check the value you entered and try again.');
+      } else {
+        hideErrorMessage(microchipInput);
+      }
+    } else {
+      showErrorMessage(microchipInput, 'Please enter your pet\'s microchip number before continuing.');
     }
   });
 
@@ -299,9 +334,19 @@ function decorateLeftBlock(block) {
   });
 
   document.addEventListener('click', () => {
-
     clearResults();
   });
+
+  function updateButtonState() {
+    const allChecked = Array.from(checkboxes).every((checkbox) => checkbox.checked);
+    submitButton.disabled = !allChecked;
+  }
+
+  checkboxes.forEach((checkbox) => {
+    checkbox.addEventListener('change', updateButtonState);
+  });
+
+  updateButtonState();
 }
 
 function decorateRightBlock(block) {

@@ -122,6 +122,38 @@ main .plans-quote form .promocode-wrapper span.checkmark {
   right: 8rem;
 }
 
+main .plans-quote form .checkbox-text-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+}
+
+main .plans-quote form .checkbox-text-wrapper > div {
+  display: block;
+  position: relative;
+  flex: 24px;
+  box-sizing: border-box;
+}
+
+main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
+  flex: calc(100% - 44px);
+}
+
+main .plans-quote form .checkbox-text-wrapper > div > input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+main .plans-quote form .wrapper-text-center {
+  display: block;
+  text-align: center;
+}
+
 #petBreedList {
   background-color: #fff;
   box-sizing: border-box;
