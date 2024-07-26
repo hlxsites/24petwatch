@@ -23,6 +23,7 @@ function decorateLeftBlock(block) {
           <input type="radio" id="speciesCat" name="speciesId" value="2">
           <label for="speciesCat">Cat</label>
         </div>
+        <div class="error-message"></div>
       </div>
       <div class="wrapper flex-wrapper">
         <label>And are they*</label>
@@ -34,6 +35,7 @@ function decorateLeftBlock(block) {
           <input type="radio" id="pureBreedMixed" name="purebreed" value="false">
           <label for="pureBreedMixed">Mixed</label>
         </div>
+        <div class="error-message"></div>
       </div>
       <div class="wrapper">
         <input type="text" id="petBreed" name="petBreed" placeholder="Start Typing..." autocomplete="off" required>
@@ -102,7 +104,8 @@ function decorateLeftBlock(block) {
   const formData = {};
   const breedLists = {};
   const petNameInput = document.getElementById('petName');
-  const speciesAndPureBreedRadioGroups = document.querySelectorAll('input[type="radio"][name="speciesId"], input[type="radio"][name="purebreed"]');
+  const speciesRadioGroups = document.querySelectorAll('input[type="radio"][name="speciesId"]');
+  const pureBreedRadioGroups = document.querySelectorAll('input[type="radio"][name="purebreed"]');
   const petBreedInput = document.getElementById('petBreed');
   const emailInput = document.getElementById('email');
   const microchipInput = document.getElementById('microchipNumber');
@@ -139,73 +142,198 @@ function decorateLeftBlock(block) {
     container.classList.remove('error');
   }
 
-  petNameInput.addEventListener('blur', () => {
+  function showErrorMessageRadioGroup(radioGroup, message) {
+    const container = radioGroup[0].parentElement.parentElement;
+    const errorMessage = container.querySelector('.error-message');
+    errorMessage.textContent = message;
+    container.classList.add('error');
+  }
+
+  function hideErrorMessageRadioGroup(radioGroup) {
+    const container = radioGroup[0].parentElement.parentElement;
+    const errorMessage = container.querySelector('.error-message');
+    errorMessage.textContent = '';
+    container.classList.remove('error');
+  }
+
+  function getCheckedRadioElement(radioGroup) {
+    let checkedElement;
+    radioGroup.forEach((radioButton) => {
+      if (radioButton.checked) {
+        checkedElement = radioButton;
+      }
+    });
+    return checkedElement;
+  }
+
+  function onRadioChange(element) {
+    petBreedInput.value = '';
+    formData[element.name] = element.value;
+
+    if (formData.speciesId && formData.purebreed
+      && !breedLists[formData.speciesId + formData.purebreed]) {
+      APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
+        breedLists[formData.speciesId + formData.purebreed] = data;
+      }, (status) => {
+        console.log('Failed with status:', status);
+      });
+    }
+  }
+
+  function petNameHandler() {
     const petName = petNameInput.value.trim();
 
     if (petName === '') {
       showErrorMessage(petNameInput, 'Please fill out your pet\'s name before continuing.');
-    } else {
-      hideErrorMessage(petNameInput);
-      formData.petName = petName;
+      return false;
     }
-  });
 
-  emailInput.addEventListener('blur', () => {
+    hideErrorMessage(petNameInput);
+    formData.petName = petName;
+    return true;
+  }
+
+  function emailHandler() {
     const email = emailInput.value.trim();
 
     if (email !== '') {
       if (!EMAIL_OPTIONAL_REGEX.test(email)) {
         showErrorMessage(emailInput, 'Please enter a valid email address.');
-      } else {
-        hideErrorMessage(emailInput);
+        return false;
       }
-    } else {
-      showErrorMessage(emailInput, 'Please enter your email address before continuing.');
-    }
-  });
 
-  microchipInput.addEventListener('blur', () => {
+      hideErrorMessage(emailInput);
+      return true;
+    }
+
+    showErrorMessage(emailInput, 'Please enter your email address before continuing.');
+    return false;
+  }
+
+  function microchipHandler() {
     const microchip = microchipInput.value.trim();
 
     if (microchip !== '') {
       if (!MICROCHIP_15_REGEX.test(microchip)) {
         showErrorMessage(microchipInput, 'We\'re sorry, we don\'t recognize the format of the chip number you have entered. Please double check the value you entered and try again.');
-      } else {
-        hideErrorMessage(microchipInput);
+        return false;
       }
-    } else {
-      showErrorMessage(microchipInput, 'Please enter your pet\'s microchip number before continuing.');
-    }
-  });
 
-  zipcodeInput.addEventListener('blur', () => {
+      hideErrorMessage(microchipInput);
+      return true;
+    }
+
+    showErrorMessage(microchipInput, 'Please enter your pet\'s microchip number before continuing.');
+    return false;
+  }
+
+  function zipcodeHandler() {
     const zipCode = zipcodeInput.value.trim();
+    let handlerStatus = true;
 
     if (zipCode === '') {
       showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
-    } else {
-      showLoader();
-      APIClientObj.getCountryStates(zipCode, (data) => {
-        if (data.zipCode) {
-          hideErrorMessage(zipcodeInput);
-          formData.zipCode = data.zipCode;
-        } else {
-          showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
-          zipcodeInput.value = '';
-          formData.zipCode = '';
-        }
-        hideLoader();
-      }, (status) => {
-        if (status === 404) {
-          showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
-          zipcodeInput.value = '';
-          formData.zipCode = '';
-        } else {
-          console.log('Failed with status:', status);
-        }
-        hideLoader();
-      });
+      return false;
     }
+
+    showLoader();
+    APIClientObj.getCountryStates(zipCode, (data) => {
+      if (data.zipCode) {
+        hideErrorMessage(zipcodeInput);
+        formData.zipCode = data.zipCode;
+        handlerStatus = true;
+      } else {
+        showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
+        zipcodeInput.value = '';
+        formData.zipCode = '';
+        handlerStatus = false;
+      }
+      hideLoader();
+    }, (status) => {
+      if (status === 404) {
+        showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
+        zipcodeInput.value = '';
+        formData.zipCode = '';
+      } else {
+        console.log('Failed with status:', status);
+      }
+      handlerStatus = false;
+      hideLoader();
+    });
+
+    return handlerStatus;
+  }
+
+  function petBreedHandler() {
+    if (!formData.breed || !formData.breed.breedName) {
+      petBreedInput.value = '';
+    }
+    if (formData.breed && formData.breed.breedName
+      && formData.breed.breedName !== petBreedInput.value) {
+      formData.breed = {};
+      petBreedInput.value = '';
+    }
+
+    if (petBreedInput.value === '') {
+      showErrorMessage(petBreedInput, 'Please tell us more about your pet above before selecting a breed.');
+      return false;
+    }
+
+    hideErrorMessage(petBreedInput);
+    return true;
+  }
+
+  function clearBreedInputAndHandle() {
+    if (formData.breed && formData.breed.breedName) {
+      formData.breed = {};
+      petBreedHandler();
+    }
+  }
+
+  function speciesHandler() {
+    const speciesElement = getCheckedRadioElement(speciesRadioGroups);
+
+    clearBreedInputAndHandle();
+
+    if (!speciesElement) {
+      showErrorMessageRadioGroup(speciesRadioGroups, 'Please tell us what kind of pet you have before continuing.');
+      return false;
+    }
+
+    onRadioChange(speciesElement);
+    hideErrorMessageRadioGroup(speciesRadioGroups);
+    return true;
+  }
+
+  function pureBreedHandler() {
+    const pureBreedElement = getCheckedRadioElement(pureBreedRadioGroups);
+
+    clearBreedInputAndHandle();
+
+    if (!pureBreedElement) {
+      showErrorMessageRadioGroup(pureBreedRadioGroups, 'Please tell us more about your pet above before selecting a breed.');
+      return false;
+    }
+
+    onRadioChange(pureBreedElement);
+    hideErrorMessageRadioGroup(pureBreedRadioGroups);
+    return true;
+  }
+
+  petNameInput.addEventListener('blur', () => {
+    petNameHandler();
+  });
+
+  emailInput.addEventListener('blur', () => {
+    emailHandler();
+  });
+
+  microchipInput.addEventListener('blur', () => {
+    microchipHandler();
+  });
+
+  zipcodeInput.addEventListener('blur', () => {
+    zipcodeHandler();
   });
 
   applyPromoCodeButton.addEventListener('click', () => {
@@ -242,19 +370,6 @@ function decorateLeftBlock(block) {
       applyPromoCodeButton.disabled = false;
     }
   });
-
-  function onRadioChange(event) {
-    formData[event.target.name] = event.target.value;
-
-    if (formData.speciesId && formData.purebreed
-      && !breedLists[formData.speciesId + formData.purebreed]) {
-      APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
-        breedLists[formData.speciesId + formData.purebreed] = data;
-      }, (status) => {
-        console.log('Failed with status:', status);
-      });
-    }
-  }
 
   function highlightMatch(text, query) {
     const regex = new RegExp(`(${query})`, 'gi');
@@ -297,23 +412,6 @@ function decorateLeftBlock(block) {
     }
   }
 
-  function petBreedBlurHandler(event) {
-    if (!formData.breed || !formData.breed.breedName) {
-      event.target.value = '';
-    }
-    if (formData.breed && formData.breed.breedName
-      && formData.breed.breedName !== event.target.value) {
-      formData.breed = {};
-      event.target.value = '';
-    }
-
-    if (event.target.value === '') {
-      showErrorMessage(event.target, 'Please tell us more about your pet above before selecting a breed.');
-    } else {
-      hideErrorMessage(event.target);
-    }
-  }
-
   resultsList.addEventListener('click', (event) => {
     const liElement = event.target.closest('li');
     if (liElement) {
@@ -327,10 +425,14 @@ function decorateLeftBlock(block) {
   });
 
   petBreedInput.addEventListener('input', petBreedInputHandler);
-  petBreedInput.addEventListener('blur', petBreedBlurHandler);
+  petBreedInput.addEventListener('blur', petBreedHandler);
 
-  speciesAndPureBreedRadioGroups.forEach((radioInput) => {
-    radioInput.addEventListener('change', onRadioChange);
+  speciesRadioGroups.forEach((radioInput) => {
+    radioInput.addEventListener('change', speciesHandler);
+  });
+
+  pureBreedRadioGroups.forEach((radioInput) => {
+    radioInput.addEventListener('change', pureBreedHandler);
   });
 
   document.addEventListener('click', () => {
@@ -347,6 +449,23 @@ function decorateLeftBlock(block) {
   });
 
   updateButtonState();
+
+  submitButton.addEventListener('click', () => {
+    const fieldHandlers = [petNameHandler, emailHandler, speciesHandler, pureBreedHandler, petBreedHandler, microchipHandler, zipcodeHandler];
+    let allPassed = true;
+
+    for (const fieldHandler of fieldHandlers) {
+      if (!fieldHandler()) {
+        allPassed = false;
+      }
+    }
+
+    if (allPassed) {
+      console.log('We can submit the form data');
+    } else {
+      console.log('We cannot submit the form data');
+    }
+  });
 }
 
 function decorateRightBlock(block) {
