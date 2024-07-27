@@ -1,5 +1,6 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
+import APIClient from './24petwatch-api.js';
 import {
   API_BASE_URL,
   COOKIE_NAME,
@@ -14,8 +15,17 @@ import {
 let petIdValue = ''; // if a previous cookie is present, will be set
 let ownerIdValue = ''; // (ditto)
 
-let haveSpecies = false; // {Dog, Cat}
-let haveType = false; // {PureBreed, Mixed}
+// formData - cache for form data. Example:
+// formData.speciesId = '1';     // '1' = Dog, '2' = Cat
+// formData.purebreed = 'true';  // 'true' = PureBreed, 'false' = Mixed
+// formData.breed = { breedId: '99999', breedName: 'Poodle' };
+const formData = {};
+
+// breedLists - cache for breeds. Indexed by the string: speciesId + purebreed (see formData above)
+// breedLists['1true'] = [{ breedID: '99999', breedname: 'Poodle' }, ...]
+const breedLists = {};
+
+const APIClientObj = new APIClient();
 
 function removeAnyErrorMessage(element, setCheckmark = true) {
   const container = element.parentElement;
@@ -105,18 +115,15 @@ async function executeSubmit(breedIdValue) {
     method = (petAlreadyExists) ? 'PUT' : 'POST';
     endPoint = (petAlreadyExists) ? `Pet/${petIdValue}` : 'Pet';
     const microchipIdValue = document.querySelector('#microchipId').value;
-    const selectedSpecies = document.querySelector('input[name="speciesId"]:checked');
-    const speciesIdValue = (selectedSpecies.value === 'Dog') ? 1 : 2; // 1 = Dog, 2 = Cat
-    const selectedType = document.querySelector('input[name="typeId"]:checked');
-    const typeIdValue = (selectedType.value === 'Purebreed'); // true = PureBreed, false = Mixed
+    const isPureBreed = (formData.purebreed === 'true');
     const petPayload = {
       payload: {
         ownerId: ownerIdValue,
         breedId: breedIdValue,
         microchipId: microchipIdValue,
         petName: petNameValue,
-        speciesId: speciesIdValue,
-        pureBreed: typeIdValue,
+        speciesId: parseInt(formData.speciesId, 10),
+        pureBreed: isPureBreed,
         conditions: [],
       },
     };
@@ -209,60 +216,31 @@ async function validatePostalCode(element, regex, message) {
   }
 }
 
-async function refreshListOfBreeds(isDog, isPureBreed) {
-  const countryId = (isCanada) ? 1 : 2; // 1 = Canada, 2 = USA
-  const speciesId = (isDog) ? 1 : 2; // 1 = Dog, 2 = Cat
-  const purebreed = (isPureBreed) ? 'true' : 'false';
-  const endPoint = `Utility/GetBreeds?countryId=${countryId}&speciesId=${speciesId}&purebreed=${purebreed}`;
-  const apiErrorMsg = 'Cannot retrieve the list of breeds from the server.  Please try again later.';
-
-  try {
-    const response = await fetch(`${API_BASE_URL}/${endPoint}`);
-    if (!response.ok) {
-      showGeneralErrorMessage(apiErrorMsg);
-      return;
+function ensureBreedListIsPopulated() {
+  return new Promise((resolve, reject) => {
+    if (formData.speciesId && formData.purebreed
+        && !breedLists[formData.speciesId + formData.purebreed]) {
+      APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
+        breedLists[formData.speciesId + formData.purebreed] = data;
+        resolve();
+      }, (status) => {
+        // eslint-disable-next-line no-console
+        console.log('Failed with status:', status);
+        reject(status);
+      });
+    } else {
+      resolve();
     }
-    const data = await response.json();
-    const breedIdNameList = document.querySelector('#breedIdNameList');
-    breedIdNameList.innerHTML = '';
-    data.forEach((breed) => {
-      // build like: <option value="Poodle" breed-id="99999"></option>
-      const option = document.createElement('option');
-      option.value = breed.breedname;
-      option.setAttribute('breed-id', breed.breedID);
-      breedIdNameList.appendChild(option);
-    });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('There was an error with refreshing the list of breeds:', error);
-    showGeneralErrorMessage(apiErrorMsg);
-    return;
-  }
-
-  // Since we changed the list of breeds, reset the breedIdName field
-  const breedIdName = document.querySelector('input[id="breedIdName"]');
-  breedIdName.value = '';
-  // Ensure any checkmark is hidden
-  const checkmark = breedIdName.parentElement.querySelector('.checkmark');
-  checkmark.setAttribute('style', 'opacity: 0;'); // hide checkmark
-
-  // disable the submit button
-  const submitButton = document.querySelector('button[type="submit"]');
-  submitButton.disabled = true;
+  });
 }
 
 // returns the breedId integer number associated with the selected breed, or 0 if not valid
 function getValidatedBreedId() {
-  const breedIdName = document.querySelector('input[id="breedIdName"]');
-  const inputVal = breedIdName.value.trim();
+  const breedIdName = document.querySelector('input[id="petBreed"]');
   const submitButton = document.querySelector('button[type="submit"]');
-  const options = document.querySelectorAll('#breedIdNameList option');
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < options.length; i++) {
-    if (options[i].value === inputVal) {
-      removeAnyErrorMessage(breedIdName, true);
-      return options[i].getAttribute('breed-id');
-    }
+
+  if (formData.breed && formData.breed.breedId) {
+    return parseInt(formData.breed.breedId, 10); // return as an integer
   }
   // if the form was valid, it no longer is
   if (!submitButton.disabled) {
@@ -325,25 +303,21 @@ async function getInfoForExistingPet(petNameValue) {
 
 function getBreedNameForId(breedId) {
   const breedIdAsString = breedId.toString();
-  const options = document.querySelectorAll('#breedIdNameList option');
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < options.length; i++) {
-    if (options[i].getAttribute('breed-id') === breedIdAsString) {
-      return options[i].value;
-    }
+  if (formData.breed && formData.breed.breedId === breedIdAsString) {
+    return formData.breed.breedName;
   }
   return '';
 }
 
-function selectBreedId(breedId) {
+function selectBreedId(isDog, isPureBreed, breedId) {
+  const index = ((isDog) ? '1' : '2') + isPureBreed.toString();
   const breedIdAsString = breedId.toString();
-  const options = document.querySelectorAll('#breedIdNameList option');
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0; i < options.length; i++) {
-    if (options[i].getAttribute('breed-id') === breedIdAsString) {
-      options[i].selected = true;
-      return;
-    }
+  if (breedLists[index]) {
+    breedLists[index].forEach((breed) => {
+      if (breed.breedID === breedIdAsString) {
+        formData.breed = { breedId: breedIdAsString, breedName: breed.breedname };
+      }
+    });
   }
 }
 
@@ -370,39 +344,47 @@ async function initializeFormFromCookieInfo(petNameValue) {
   });
 
   // pet's info
-  getInfoForExistingPet(petNameValue).then((petInfo) => {
+  getInfoForExistingPet(petNameValue).then(async (petInfo) => {
     if (petInfo) {
       let isDog;
       let isPureBreed;
       // species
-      haveSpecies = true; // global
       if (petInfo.speciesId === 1) { // Dog
-        const speciesIdDog = document.querySelector('#speciesIdDog');
-        speciesIdDog.checked = true;
+        const speciesDog = document.querySelector('#speciesDog');
+        speciesDog.checked = true;
         isDog = true;
       } else { // Cat
-        const speciesIdCat = document.querySelector('#speciesIdCat');
-        speciesIdCat.checked = true;
+        const speciesCat = document.querySelector('#speciesCat');
+        speciesCat.checked = true;
         isDog = false;
       }
+      formData.speciesId = petInfo.speciesId.toString(); // '1' = Dog, '2' = Cat
       // type {PureBreed, Mixed}
-      haveType = true; // global
       if (petInfo.pureBreed) {
-        const typeIdPurebreed = document.querySelector('#typeIdPurebreed');
-        typeIdPurebreed.checked = true;
+        const typePurebred = document.querySelector('#pureBreedPurebred');
+        typePurebred.checked = true;
         isPureBreed = true;
       } else {
-        const typeIdMixed = document.querySelector('#typeIdMixed');
-        typeIdMixed.checked = true;
+        const typeMixed = document.querySelector('#pureBreedMixed');
+        typeMixed.checked = true;
         isPureBreed = false;
       }
-      // breed
-      refreshListOfBreeds(isDog, isPureBreed).then(() => {
-        selectBreedId(petInfo.breedId);
-        const breedIdName = document.querySelector('input[id="breedIdName"]');
-        breedIdName.value = getBreedNameForId(petInfo.breedId);
-        removeAnyErrorMessage(breedIdName, true);
-      });
+      formData.purebreed = petInfo.pureBreed.toString(); // 'true' = PureBreed, 'false' = Mixed
+      // breed & associated breed list
+      try {
+        await ensureBreedListIsPopulated();
+        selectBreedId(isDog, isPureBreed, petInfo.breedId);
+        const petBreed = document.querySelector('input[id="petBreed"]');
+        petBreed.value = getBreedNameForId(petInfo.breedId);
+        if (petBreed.value) {
+          removeAnyErrorMessage(petBreed, true);
+        } else {
+          showErrorMessage(petBreed, 'Please select a breed from the list.');
+        }
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error('Error populating the breed list:', error);
+      }
       // microchip
       const microchipId = document.querySelector('#microchipId');
       microchipId.value = petInfo.microchipId;
@@ -433,29 +415,30 @@ export default async function decorateStep1(block) {
       <div class="wrapper flex-wrapper">
         <label>My Pet is a*</label>
         <div class="radio-wrapper">
-          <input type="radio" id="speciesIdDog" name="speciesId" value="Dog">
-          <label for="speciesIdDog">Dog</label>
+          <input type="radio" id="speciesDog" name="speciesId" value="1">
+          <label for="speciesDog">Dog</label>
         </div>
         <div class="radio-wrapper">
-          <input type="radio" id="speciesIdCat" name="speciesId" value="Cat">
-          <label for="speciesIdCat">Cat</label>
+          <input type="radio" id="speciesCat" name="speciesId" value="2">
+          <label for="speciesCat">Cat</label>
         </div>
       </div>
       <div class="wrapper flex-wrapper">
         <label>My Pet is a*</label>
         <div class="radio-wrapper">
-          <input type="radio" id="typeIdPurebreed" name="typeId" value="Purebreed">
-          <label for="typeIdPurebreed">Purebreed</label>
+          <input type="radio" id="pureBreedPurebred" name="purebreed" value="true">
+          <label for="pureBreedPurebred">Purebred</label>
         </div>
         <div class="radio-wrapper">
-          <input type="radio" id="typeIdMixed" name="typeId" value="Mixed">
-          <label for="typeIdMixed">Mixed</label>
+          <input type="radio" id="pureBreedMixed" name="purebreed" value="false">
+          <label for="pureBreedMixed">Mixed</label>
         </div>
       </div>
       <div class="wrapper">
-        <input type="text" id="breedIdName" name="breedIdName" list="breedIdNameList" placeholder="Start typing..." minlength="2" required>
-        <label for="breedIdName" class="float-label">My Pet's breed*</label>
+        <input type="text" id="petBreed" name="petBreed" placeholder="Start Typing..." autocomplete="off" minlength="2" required>
+        <label for="petBreed" class="float-label">My Pet's breed*</label>
         <span class="checkmark"></span>
+        <div id="pet-breed-list"></div>
         <div class="error-message"></div>
       </div>
       <div class="wrapper">
@@ -486,7 +469,6 @@ export default async function decorateStep1(block) {
         <button type="submit" id="continue">Continue ></button>
       </div>
       <div class="error-message general-error-message content-center"></div>
-      <datalist id="breedIdNameList"></datalist> <!-- dynamically populated -->
     </form>
     `;
 
@@ -513,30 +495,112 @@ export default async function decorateStep1(block) {
     validateField(event.target, MICROCHIP_REGEX, "We're sorry, we cannot offer tags for an animal without a microchip");
   });
 
-  // breedIdName listener ... used as a side effect to validate the selected breed
-  const breedIdName = form.querySelector('input[id="breedIdName"]');
-  breedIdName.addEventListener('blur', getValidatedBreedId);
+  // ----- start: breed information -----
+  const speciesAndPureBreedRadioGroups = document.querySelectorAll('input[type="radio"][name="speciesId"], input[type="radio"][name="purebreed"]');
+  const petBreedInput = document.getElementById('petBreed');
+  const resultsList = document.getElementById('pet-breed-list');
 
-  // radio button listeners
-  let isDog = false;
-  let isPureBreed = false;
-  const radioButtons = form.querySelectorAll('input[type="radio"]');
-  radioButtons.forEach((radioButton) => {
-    radioButton.addEventListener('change', (event) => {
-      if (event.target.checked) {
-        if (event.target.name === 'speciesId') {
-          haveSpecies = true; // global
-          isDog = (event.target.value === 'Dog');
-        } else if (event.target.name === 'typeId') {
-          haveType = true; // global
-          isPureBreed = (event.target.value === 'Purebreed');
-        }
-        if (haveSpecies && haveType) {
-          refreshListOfBreeds(isDog, isPureBreed);
-        }
-      }
+  // proxy so we can reuse code from other blocks
+  function hideErrorMessage(element) {
+    removeAnyErrorMessage(element);
+  }
+
+  function onRadioChange(event) {
+    // examples:
+    //   formData.speciesId = '1';     // '1' = Dog, '2' = Cat
+    //   formData.purebreed = 'true';  // 'true' = PureBreed, 'false' = Mixed
+    formData[event.target.name] = event.target.value;
+
+    ensureBreedListIsPopulated();
+
+    // since the {Dog,Cat} or {Purebred,Mixed} radio button changed, reset the breed field
+    if (petBreedInput.value) {
+      petBreedInput.value = '';
+      petBreedInput.dispatchEvent(new Event('blur'));
+    }
+  }
+
+  function highlightMatch(text, query) {
+    const regex = new RegExp(`(${query})`, 'gi');
+    return text.replace(regex, '<b>$1</b>');
+  }
+
+  function displayResults(results, query) {
+    resultsList.innerHTML = '';
+    resultsList.style.visibility = 'visible';
+    const ul = document.createElement('ul');
+    resultsList.appendChild(ul);
+
+    results.forEach((result) => {
+      const li = document.createElement('li');
+      li.setAttribute('data-breed-id', result.breedID);
+      li.setAttribute('data-breed-name', result.breedname);
+      li.innerHTML = highlightMatch(result.breedname, query);
+      ul.appendChild(li);
     });
+  }
+
+  function clearResults() {
+    resultsList.style.visibility = 'hidden';
+    resultsList.innerHTML = '';
+  }
+
+  function petBreedInputHandler(event) {
+    const query = event.target.value.toLowerCase();
+
+    if (query.length >= 2 && breedLists[formData.speciesId + formData.purebreed]) {
+      const results = breedLists[formData.speciesId + formData.purebreed]
+        .filter((breed) => breed.breedname.toLowerCase().includes(query));
+      if (results.length > 0) {
+        displayResults(results, query);
+      } else {
+        clearResults('No results found');
+      }
+    } else {
+      clearResults('Clear');
+    }
+  }
+
+  function petBreedBlurHandler(event) {
+    if (!formData.breed || !formData.breed.breedName) {
+      event.target.value = '';
+    }
+    if (formData.breed && formData.breed.breedName
+        && formData.breed.breedName !== event.target.value) {
+      formData.breed = {};
+      event.target.value = '';
+    }
+
+    if (event.target.value === '') {
+      showErrorMessage(event.target, 'Please select a breed from the list.');
+    } else {
+      hideErrorMessage(event.target);
+    }
+  }
+
+  resultsList.addEventListener('click', (event) => {
+    const liElement = event.target.closest('li');
+    if (liElement) {
+      const breedId = liElement.getAttribute('data-breed-id');
+      const breedName = liElement.getAttribute('data-breed-name');
+      formData.breed = { breedId, breedName };
+      petBreedInput.value = breedName;
+      clearResults();
+      hideErrorMessage(petBreedInput);
+    }
   });
+
+  petBreedInput.addEventListener('input', petBreedInputHandler);
+  petBreedInput.addEventListener('blur', petBreedBlurHandler);
+
+  speciesAndPureBreedRadioGroups.forEach((radioInput) => {
+    radioInput.addEventListener('change', onRadioChange);
+  });
+
+  document.addEventListener('click', () => {
+    clearResults();
+  });
+  // ----- end: breed information -----
 
   // listeners for the submit button
   const inputFields = document.querySelectorAll('input');

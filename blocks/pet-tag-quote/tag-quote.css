@@ -24,6 +24,31 @@ form#tag-quote-form h3 {
     margin: 0;
 }
 
+#pet-breed-list {
+    background-color: #fff;
+    box-sizing: border-box;
+    width: 93%;
+    position: absolute;
+    z-index: 99;
+    border: 1px solid #ccc;
+    max-height: 20rem;
+    overflow-y: auto;
+    visibility: hidden;
+}
+
+#pet-breed-list ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+#pet-breed-list ul li {
+    display: block;
+    padding: 0 1rem;
+    margin: .5rem 0;
+    cursor: pointer;
+}
+
 @media screen and (width >=768px) {
     form#tag-quote-form {
         max-width: 768px;
