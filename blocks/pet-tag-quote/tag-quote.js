@@ -19,7 +19,15 @@ let ownerIdValue = ''; // (ditto)
 // formData.speciesId = '1';     // '1' = Dog, '2' = Cat
 // formData.purebreed = 'true';  // 'true' = PureBreed, 'false' = Mixed
 // formData.breed = { breedId: '99999', breedName: 'Poodle' };
-const formData = {};
+// formData.fieldValid = { ... }; // see below
+const formData = {
+  fieldValid: {
+    petName: false,
+    zipCode: false,
+    email: false,
+    microchipId: false,
+  },
+};
 
 // breedLists - cache for breeds. Indexed by the string: speciesId + purebreed (see formData above)
 // breedLists['1true'] = [{ breedID: '99999', breedname: 'Poodle' }, ...]
@@ -152,6 +160,9 @@ async function executeSubmit(breedIdValue) {
 }
 
 function validateField(element, regex, message = 'A valid input is required') {
+  formData.fieldValid[element.name] = false; // assume the field is invalid
+
+  // validate using the RegEx
   let valid = true;
   const trimmedValue = element.value.trim();
   if (trimmedValue !== '') {
@@ -161,16 +172,20 @@ function validateField(element, regex, message = 'A valid input is required') {
   } else {
     valid = false; // default, since we have no value to test
   }
+
   // react to the validation
   if (!valid) {
     showErrorMessage(element, message);
     return null;
   }
+  formData.fieldValid[element.name] = true;
   removeAnyErrorMessage(element, true);
   return trimmedValue;
 }
 
 async function validatePostalCode(element, regex, message) {
+  formData.fieldValid[element.name] = false; // assume 'zipCode' validity is false
+
   // 1st: validate using the RegEx
   let valid = true;
   const trimmedValue = element.value.trim();
@@ -203,7 +218,10 @@ async function validatePostalCode(element, regex, message) {
     }
     const data = await response.json();
     if (data.countryId === countryId) {
+      formData.fieldValid[element.name] = true; // 'zipCode' is valid
       removeAnyErrorMessage(element, true);
+      // eslint-disable-next-line no-use-before-define
+      updateSubmitButtonState(); // possibly enable the submit button
       return trimmedValue;
     }
     showErrorMessage(element, message); // postal code is not in the correct country
@@ -236,34 +254,30 @@ function ensureBreedListIsPopulated() {
 
 // returns the breedId integer number associated with the selected breed, or 0 if not valid
 function getValidatedBreedId() {
-  const breedIdName = document.querySelector('input[id="petBreed"]');
-  const submitButton = document.querySelector('button[type="submit"]');
-
+  // return the breedId if it is present
   if (formData.breed && formData.breed.breedId) {
     return parseInt(formData.breed.breedId, 10); // return as an integer
   }
-  // if the form was valid, it no longer is
-  if (!submitButton.disabled) {
-    submitButton.disabled = true;
-    showGeneralErrorMessage();
-  }
+
   // reset the breed field
+  const breedIdName = document.querySelector('input[id="petBreed"]');
   breedIdName.value = ''; // reset
   showErrorMessage(breedIdName, 'Please select a breed from the list');
   return 0;
 }
 
-function checkFieldsValidity() {
+function updateSubmitButtonState() {
   const submitButton = document.querySelector('button[type="submit"]');
-  const inputFields = document.querySelectorAll('input');
 
-  let allFieldsValid = true; // assume
-  inputFields.forEach((inputField) => {
-    if (!inputField.checkValidity()) {
-      allFieldsValid = false;
-    }
-  });
+  let allFieldsValid = (formData.breed && formData.breed.breedId && formData.fieldValid);
+  if (allFieldsValid) {
+    // eslint-disable-next-line max-len
+    const anyFieldInvalid = Object.keys(formData.fieldValid).some((field) => formData.fieldValid[field] === false);
+    allFieldsValid = !anyFieldInvalid;
+  }
+
   submitButton.disabled = !allFieldsValid;
+  return allFieldsValid;
 }
 
 async function getInfoForExistingOwner() {
@@ -487,9 +501,19 @@ export default async function decorateStep1(block) {
   });
   zipCode.addEventListener('blur', (event) => {
     validatePostalCode(event.target, POSTAL_CODE_CANADA_REGEX, 'Please enter a valid postal code');
+    // after the first 'blur' event, also validate the field on input
+    zipCode.addEventListener('input', (inputEvent) => {
+      validatePostalCode(inputEvent.target, POSTAL_CODE_CANADA_REGEX, 'Please enter a valid postal code');
+      updateSubmitButtonState();
+    });
   });
   email.addEventListener('blur', (event) => {
     validateField(event.target, EMAIL_REGEX, 'A valid email is required');
+    // after the first 'blur' event, also validate the field on input
+    email.addEventListener('input', (inputEvent) => {
+      validateField(inputEvent.target, EMAIL_REGEX, 'A valid email is required');
+      updateSubmitButtonState();
+    });
   });
   microchipId.addEventListener('input', (event) => {
     validateField(event.target, MICROCHIP_REGEX, "We're sorry, we cannot offer tags for an animal without a microchip");
@@ -543,6 +567,7 @@ export default async function decorateStep1(block) {
   function clearResults() {
     resultsList.style.visibility = 'hidden';
     resultsList.innerHTML = '';
+    updateSubmitButtonState();
   }
 
   function petBreedInputHandler(event) {
@@ -605,16 +630,20 @@ export default async function decorateStep1(block) {
   // listeners for the submit button
   const inputFields = document.querySelectorAll('input');
   inputFields.forEach((inputField) => {
-    inputField.addEventListener('input', checkFieldsValidity);
+    inputField.addEventListener('input', updateSubmitButtonState);
+    inputField.addEventListener('blur', updateSubmitButtonState);
   });
-  checkFieldsValidity(); // set initial state
+  updateSubmitButtonState(); // set submit button state
+
   const submitButton = document.querySelector('button[type="submit"]');
   submitButton.addEventListener('click', async (event) => {
     event.preventDefault();
-    const breedId = getValidatedBreedId();
-    if (breedId > 0) {
-      await executeSubmit(breedId);
-      return;
+    if (updateSubmitButtonState()) {
+      const breedId = getValidatedBreedId();
+      if (breedId > 0) {
+        await executeSubmit(breedId);
+        return;
+      }
     }
     // if we get here, there was an error with the form.
     event.target.disabled = true; // disable the submit button
