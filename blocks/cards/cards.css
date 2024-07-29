@@ -369,3 +369,42 @@
   text-align: center;
   margin: 3rem 0 1.5rem;
 }
+
+.teal-bg-cards {
+  background-color: var(--button-secondary-color);
+}
+
+.teal-bg-cards ul li > div:not(.cards-card-image){
+  justify-content: center;
+  flex: 0;
+}
+
+.teal-bg-cards ul li {
+  align-items: center;
+  border-radius: 10px;
+}
+
+.teal-bg-cards.image-as-is img {
+  width: auto;
+  padding-top: 1rem;
+}
+
+.bytetag-reviews li div:nth-child(2) {
+  flex-direction: column;
+}
+
+.bytetag-reviews li p {
+  margin: 0;
+}
+
+.bytetag-reviews ul li {
+  border: .1875rem solid var(--nav-secondary-color);
+  border-radius: 10px;
+  box-shadow: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.bytetag-reviews svg {
+  height: 15px;
+}

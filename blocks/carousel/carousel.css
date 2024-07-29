@@ -1,5 +1,6 @@
 main .carousel-wrapper {
     position: relative;
+    max-width: 60rem;
 }
 
 main .carousel {
@@ -8,10 +9,6 @@ main .carousel {
 
 main .carousel > div {
     display: none;
-}
-
-main .carousel > .active {
-    display: block;
 }
 
 main .carousel img {
@@ -23,7 +20,25 @@ main .carousel img {
     margin: 0 auto;
 }
 
-@media (min-width: 768px) {
+.section.pet-tags > .carousel-wrapper > div {
+    margin: 3rem;
+}
+
+main .carousel > .active {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 6fr 4fr;
+}
+
+main .carousel > .active > div:first-child {
+    order: 2;
+}
+
+main .carousel > .active > div:last-child {
+    order: 1;
+}
+
+@media (width >= 768px) {
     main .carousel > .active {
         display: grid;
         grid-template-columns: 4fr 6fr;
@@ -49,17 +64,11 @@ main .carousel img {
 /* carousel actions */
 main .carousel-wrapper .carousel-actions {
     position: absolute;
-    top: 10%;
+    top: 40%;
     left: -25px;
     right: -25px;
     display: flex;
     justify-content: space-between;
-}
-
-@media (min-width: 768px) {
-    main .carousel-wrapper .carousel-actions {
-        top: 40%;
-    }
 }
 
 main .carousel-wrapper .carousel-actions button {
@@ -92,7 +101,7 @@ main .carousel-wrapper .indicators {
     flex-wrap: wrap;
     justify-content: center;
     margin: 0;
-    padding: 0;
+    padding: 1rem;
     list-style: none
 }
 
@@ -108,4 +117,22 @@ main .carousel-wrapper .indicators li {
 
 main .carousel-wrapper .indicators li.active {
     background-color: #007680;
+}
+
+.section.pet-tags {
+    background-color: #d6f7fa;
+}
+
+.section.pet-tags > div.carousel-wrapper {
+    background-color: white;
+    border: .1875rem solid #e5e5e5;
+    border-radius: 10px;
+}
+
+.section.pet-tags > div.carousel-wrapper h2 {
+    color: var(--button-secondary-color);
+}
+
+.pet-tags .carousel img {
+    height: 100%;
 }

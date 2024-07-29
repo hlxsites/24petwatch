@@ -1018,8 +1018,9 @@ header nav > .nav-secondary .language-selector > ul > li > a {
 }
 
 /* breadcrumbs */
-header .breadcrumbs {
-  display: none;
+main .breadcrumbs {
+  font-family: var(--heading-font-family);
+  display: block;
   padding: 0 32px;
   width: 100%;
   height: auto;
@@ -1027,9 +1028,10 @@ header .breadcrumbs {
   overflow: hidden;
   margin: 0 auto;
   font-size: inherit;
+  margin-top: 1rem;
 }
 
-header .breadcrumbs ol {
+main .breadcrumbs ol {
   display: flex;
   flex-flow: wrap;
   list-style: none;
@@ -1039,27 +1041,35 @@ header .breadcrumbs ol {
   gap: 1ch;
 }
 
-header .breadcrumbs ol li {
+main .breadcrumbs ol li {
   padding-inline-start: 0;
+  font-size: .75rem;
+}
+
+main .breadcrumbs ol li:not(:last-child)::after {
+  content: ">";
+  padding-left: 1ch;
   opacity: 0.7;
 }
 
-header .breadcrumbs ol li:not(:last-child)::after {
-  content: ">";
-  padding-left: 1ch;
-}
-
-header .breadcrumbs ol li a:any-link {
+main .breadcrumbs ol li a:any-link {
   color: var(--text-color);
+  text-decoration: none;
 }
 
-header .breadcrumbs ol li:last-of-type {
+main .breadcrumbs ol li:last-of-type {
   opacity: 1;
 }
 
 @media screen and (width >= 900px) {
-  header .breadcrumbs {
+  main .breadcrumbs {
     display: block;
+  }
+}
+
+@media (width >= 768px) {
+  main .breadcrumbs ol li {
+    font-size: 1rem;
   }
 }
 

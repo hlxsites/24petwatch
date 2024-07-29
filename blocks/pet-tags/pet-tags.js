@@ -3,10 +3,10 @@ import { jsx } from '../../scripts/scripts.js';
 // link to the 24PetWatch website to buy pet tags
 const buyNowLink = 'https://www.24petwatch.com/ca/lost-pet-protection/pet-tags/tag-quote';
 // path to the images for pet tags
-const imagePath = '/drafts/develop/images/tags/'; // TODO: update path to the actual image path
+const imagePath = '/images/tags/';
 // prices for pet tags
-const pricePerTagMetal = 11.95;
-const pricePerTagLifetimeSmall = 17.95;
+const pricePerTagMetal = 19.95;
+const pricePerTagLifetimeSmall = 19.95;
 const pricePerTagLifetimeLarge = 19.95;
 
 function updateTagImage() {
@@ -176,8 +176,6 @@ export default async function decorate(block) {
       </div>            
     </form>
   `;
-  const script = document.createElement('script');
-  block.appendChild(script);
 
   // update tag image based on user selection
   const allRadioButtons = block.querySelectorAll('input[type="radio"]');
