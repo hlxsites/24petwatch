@@ -1,12 +1,9 @@
 import { loadScript } from '../../scripts/scripts.js';
+import { getConfigValue } from '../../scripts/configs.js';
 
 async function executeSubmit(block, requestBody) {
-  // Alternatively configuration can be loaded from configs.xlsx in sharepoint | Example:
-  // import { getConfigValue } from '../../scripts/configs.js';
-  // const contactUsEndpoint = await getConfigValue('contactus-endpoint');
+  const contactUsEndpoint = await getConfigValue('contactus-endpoint');
   const form = block.querySelector('.contact-us form');
-  // TODO: Update the endpoint to the final one, owned by a customer.
-  const contactUsEndpoint = 'https://348665-24petwatch-stage.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/contact-form'; // Local server endpoint
 
   try {
     const response = await fetch(contactUsEndpoint, {
@@ -71,10 +68,7 @@ function showErrorMessage(errorMessage = 'There was a problem with reCAPTCHA val
 }
 
 export default async function decorate(block) {
-  // Alternatively configuration can be loaded from configs.xlsx in sharepoint | Example:
-  // const captchaSiteKey = await getConfigValue('captcha-site-key');
-  // 24PW PRD credentials
-  const captchaSiteKey = '6LdpPxIqAAAAAGA50UA-czTakz4BrDmn20bY3s_X';
+  const captchaSiteKey = await getConfigValue('captcha-site-key');
   const script = `https://www.google.com/recaptcha/api.js?render=${captchaSiteKey}`;
 
   block.innerHTML = '';
