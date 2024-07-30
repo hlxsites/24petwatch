@@ -1,6 +1,6 @@
 import { jsx } from '../../scripts/scripts.js';
-import APIClient from '../../scripts/24petwatch-api.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
+import APIClient from '../../scripts/24petwatch-api.js';
 
 function decorateLeftBlock(block) {
   block.children[0].children[0].innerHTML += jsx`
@@ -8,7 +8,7 @@ function decorateLeftBlock(block) {
     <p><i>*All fields are required.</i></p>
     <form id="pet-info">
       <div class="wrapper">
-        <input type="text" id="petName" name="petName" placeholder="" maxlength="12" required>
+        <input type="text" id="petName" name="petName" placeholder="Example: Bonita" maxlength="12" required>
         <label for="petName" class="float-label">Firstly, what's their name?*</label>
         <span class="checkmark"></span>
         <div class="error-message"></div>
@@ -41,17 +41,17 @@ function decorateLeftBlock(block) {
         <input type="text" id="petBreed" name="petBreed" placeholder="Start Typing..." autocomplete="off" required>
         <label for="petBreed" class="float-label">What's your pet's breed?*</label>
         <span class="checkmark"></span>
-        <div id="petBreedList"></div>
+        <div id="pet-breed-list"></div>
         <div class="error-message"></div>
       </div>
       <div class="wrapper">
-        <input type="text" id="microchipNumber" name="microchipNumber" placeholder="" required>
+        <input type="text" id="microchipNumber" name="microchipNumber" placeholder="Enter up to 15 digits (ABC123...)" required>
         <label for="microchipNumber" class="float-label">We'll need your pet's microchip number*</label>
         <span class="checkmark"></span>
         <div class="error-message"></div>
       </div>
       <div class="wrapper">
-        <input type="email" id="email" name="email" placeholder="" maxlength="40" required>
+        <input type="email" id="email" name="email" placeholder="Example: yourname@email.com" maxlength="40" required>
         <label for="email" class="float-label">Email*</label>
         <span class="checkmark"></span>
         <div class="error-message"></div>
@@ -63,10 +63,10 @@ function decorateLeftBlock(block) {
         <div class="error-message"></div>
       </div>
       <div class="wrapper promocode-wrapper">
-        <input type="text" id="promocode" name="promocode" placeholder="">
+        <input type="text" id="promocode" name="promocode" placeholder="Enter Promo Code">
         <label for="promocode" class="float-label">Your Promo Code (optional)</label>
         <span class="checkmark"></span>
-        <button type="button" id="applyPromoCode" class="secondary" disabled>Apply</button>
+        <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
         <div class="error-message"></div>
       </div>
       <div class="wrapper">By completing this purchase, you understand and consent to the collection, storage and use of your personal data for the purposes outlined in the 24Petwatch Privacy Policy. Your personal data privacy rights are outlined therein.</div>
@@ -96,7 +96,7 @@ function decorateLeftBlock(block) {
   `;
   document.body.insertBefore(loaderWrapper, document.body.firstChild);
 
-  const MICROCHIP_15_REGEX = /^\d{15}$/;
+  const MICROCHIP_REGEX = /^([A-Z0-9]{15}|[A-Z0-9]{10}|[A-Z0-9]{9})$/i;
   const EMAIL_OPTIONAL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const countryId = isCanada ? 1 : 2;
@@ -109,12 +109,19 @@ function decorateLeftBlock(block) {
   const petBreedInput = document.getElementById('petBreed');
   const emailInput = document.getElementById('email');
   const microchipInput = document.getElementById('microchipNumber');
-  const resultsList = document.getElementById('petBreedList');
+  const resultsList = document.getElementById('pet-breed-list');
   const zipcodeInput = document.getElementById('zipcode');
   const promocodeInput = document.getElementById('promocode');
-  const applyPromoCodeButton = document.getElementById('applyPromoCode');
+  const applyPromoCodeButton = document.getElementById('apply-promo-code');
   const checkboxes = document.querySelectorAll('.termsAndConditions');
   const submitButton = document.getElementById('submit');
+
+  // 'Zip code' for US, 'Postal code' for Canada
+  zipcodeInput.placeholder = isCanada ? 'A1A 1A1' : '00000';
+  const zipcodeLabel = document.querySelector('label[for="zipcode"]');
+  if (isCanada) {
+    zipcodeLabel.textContent = 'Postal code*';
+  }
 
   function showLoader() {
     loaderWrapper.classList.remove('hide');
@@ -175,7 +182,8 @@ function decorateLeftBlock(block) {
       APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
         breedLists[formData.speciesId + formData.purebreed] = data;
       }, (status) => {
-        console.log('Failed with status:', status);
+        // eslint-disable-next-line no-console
+        console.log('Failed updating the list of breeds:', status);
       });
     }
   }
@@ -214,7 +222,7 @@ function decorateLeftBlock(block) {
     const microchip = microchipInput.value.trim();
 
     if (microchip !== '') {
-      if (!MICROCHIP_15_REGEX.test(microchip)) {
+      if (!MICROCHIP_REGEX.test(microchip)) {
         showErrorMessage(microchipInput, 'We\'re sorry, we don\'t recognize the format of the chip number you have entered. Please double check the value you entered and try again.');
         return false;
       }
@@ -228,34 +236,43 @@ function decorateLeftBlock(block) {
   }
 
   function zipcodeHandler() {
-    const zipCode = zipcodeInput.value.trim();
+    const errorMsg = isCanada ? 'Please enter a valid postal code' : 'Please enter a valid zip code';
+    formData.zipCode = ''; // reset the zip code
+    let zipCode = zipcodeInput.value.trim();
     let handlerStatus = true;
 
     if (zipCode === '') {
-      showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
+      showErrorMessage(zipcodeInput, errorMsg);
       return false;
+    }
+    if (isCanada) {
+      const POSTAL_CODE_CANADA_REGEX = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
+      if (!POSTAL_CODE_CANADA_REGEX.test(zipCode)) {
+        showErrorMessage(zipcodeInput, errorMsg);
+        return false;
+      }
+      zipCode = zipCode.replace(/ /g, ''); // remove any spaces
     }
 
     showLoader();
     APIClientObj.getCountryStates(zipCode, (data) => {
-      if (data.zipCode) {
+      if (data.zipCode && data.countryId === countryId) {
         hideErrorMessage(zipcodeInput);
         formData.zipCode = data.zipCode;
         handlerStatus = true;
       } else {
-        showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
+        showErrorMessage(zipcodeInput, errorMsg);
         zipcodeInput.value = '';
-        formData.zipCode = '';
         handlerStatus = false;
       }
       hideLoader();
     }, (status) => {
       if (status === 404) {
-        showErrorMessage(zipcodeInput, 'Please enter a valid zip code');
+        showErrorMessage(zipcodeInput, errorMsg);
         zipcodeInput.value = '';
-        formData.zipCode = '';
       } else {
-        console.log('Failed with status:', status);
+        // eslint-disable-next-line no-console
+        console.log('Failed to validate the postal code:', status);
       }
       handlerStatus = false;
       hideLoader();
@@ -355,7 +372,8 @@ function decorateLeftBlock(block) {
         hideLoader();
       },
       (status) => {
-        console.log('Failed with status:', status);
+        // eslint-disable-next-line no-console
+        console.log('Failed validating the promo code:', status);
         hideErrorMessage(promocodeInput);
         hideLoader();
       },
@@ -451,19 +469,19 @@ function decorateLeftBlock(block) {
   updateButtonState();
 
   submitButton.addEventListener('click', () => {
+    // eslint-disable-next-line max-len
     const fieldHandlers = [petNameHandler, emailHandler, speciesHandler, pureBreedHandler, petBreedHandler, microchipHandler, zipcodeHandler];
     let allPassed = true;
-
-    for (const fieldHandler of fieldHandlers) {
-      if (!fieldHandler()) {
+    fieldHandlers.forEach((fieldHandler) => {
+      if (allPassed && !fieldHandler()) {
         allPassed = false;
       }
-    }
+    });
 
     if (allPassed) {
-      console.log('We can submit the form data');
+      console.log('We can submit the form data'); // TODO: flesh out: submit the form
     } else {
-      console.log('We cannot submit the form data');
+      console.log('We cannot submit the form data'); // TODO: display a general error message
     }
   });
 }

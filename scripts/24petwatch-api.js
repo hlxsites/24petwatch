@@ -13,7 +13,7 @@ export default class APIClient {
 
   static callAPI(url, method, data, done, fail, type) {
     const options = { method };
-
+    let urlWithParams = url; // might remain as the original URL if no data is provided
     if (data) {
       if (method !== 'GET') {
         options.headers = {
@@ -21,11 +21,13 @@ export default class APIClient {
         };
         options.body = JSON.stringify(data);
       } else {
-        url += '?' + new URLSearchParams(data).toString();
+        // urlWithParams += '?' + new URLSearchParams(data).toString();
+        const urlSearchParams = new URLSearchParams(data).toString();
+        urlWithParams += `?${urlSearchParams}`;
       }
     }
 
-    fetch(url, options)
+    fetch(urlWithParams, options)
       .then((response) => {
         if (!response.ok) {
           throw response;
