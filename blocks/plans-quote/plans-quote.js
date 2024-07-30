@@ -2,7 +2,36 @@ import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 
+const US_LEGAL_HEADER = '';
+const US_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services (USA) Inc. may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from 24Pet regarding microchip services. Additionally, PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may offer you promotions and the latest information from 24Petprotect™ regarding pet insurance services and products. By checking “Continue”, Pethealth Services (USA) Inc. and PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may contact you via commercial electronic messages, automatic telephone dialing systems, prerecorded/automated messages or text messages at the telephone number provided above, including your mobile number. These calls or emails are not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
+const US_LEGAL_CONSENT_FOR_LOST_PET_CONTACT = '';
+
+const CA_LEGAL_HEADER = 'By completing this purchase, you understand and consent to the collection, storage and use of your personal data for the purposes outlined in the 24Petwatch Privacy Policy. Your personal data privacy rights are outlined therein.';
+const CA_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services Inc. (“PSI”) may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from24Pet regarding microchip services. Additionally, PSI’s affiliates, including PTZ Insurance Services Ltd., PetPartners, Inc. and Independence Pet Group, Inc., and their subsidiaries (collectively, “PTZ”) may offer you promotions and the latest information regarding pet insurance services and products. PSI may also have or benefit from contractual arrangements with third parties (“Partners”) who may offer you related services, products, offers and/or promotions. By giving consent, you agree that PSI, its Partners and/or PTZ may contact you for the purposes identified herein via commercial electronic messages at the e-mail address you provided, via mailer at the mailing address you provided and/or via automatic telephone dialing systems, pre-recorded/automated messages and/or text messages at the telephone number(s) you provided. Data and message rates may apply. This consent is not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
+const CA_LEGAL_CONSENT_FOR_LOST_PET_CONTACT = 'I agree that 24Petwatch® may release my contact information to anyone who finds my pet in order to facilitate pet recovery.';
+
 function decorateLeftBlock(block) {
+  // prepare for Canada vs US
+  const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
+  const zipcodePlaceholder = isCanada ? 'A1A 1A1' : '00000';
+  const privacyPolicyURL = isCanada ? '/ca/privacy-policy' : '/privacy-policy';
+  const legalHeader = isCanada
+    ? CA_LEGAL_HEADER : US_LEGAL_HEADER;
+  const legalConsentForPromoContact = isCanada
+    ? CA_LEGAL_CONSENT_FOR_PROMO_CONTACT : US_LEGAL_CONSENT_FOR_PROMO_CONTACT;
+  const legalConsentForLostPetContact = isCanada
+    ? CA_LEGAL_CONSENT_FOR_LOST_PET_CONTACT : US_LEGAL_CONSENT_FOR_LOST_PET_CONTACT;
+  let termsAndConditionsDataConsent = '';
+  if (legalConsentForLostPetContact) {
+    termsAndConditionsDataConsent = jsx`
+      <div class="wrapper checkbox-text-wrapper">
+        <div><input class="termsAndConditions" id="dataConsent" name="dataConsent" type="checkbox" autocomplete="off" /></div>
+        <div class="text">${legalConsentForLostPetContact}</div>
+      </div>
+    `;
+  }
+
+  // create the HTML for the left block
   block.children[0].children[0].innerHTML += jsx`
     <h2>Let's start by getting to know your pet.</h2>
     <p><i>*All fields are required.</i></p>
@@ -52,13 +81,13 @@ function decorateLeftBlock(block) {
       </div>
       <div class="wrapper">
         <input type="email" id="email" name="email" placeholder="Example: yourname@email.com" maxlength="40" required>
-        <label for="email" class="float-label">Email*</label>
+        <label for="email" class="float-label">Email address*</label>
         <span class="checkmark"></span>
         <div class="error-message"></div>
       </div>
       <div class="wrapper">
-        <input type="text" id="zipcode" name="zipcode" placeholder="" required>
-        <label for="zipcode" class="float-label">Zip code*</label>
+        <input type="text" id="zipcode" name="zipcode" placeholder="${zipcodePlaceholder}" required>
+        <label for="zipcode" class="float-label">${zipcodeLabel}</label>
         <span class="checkmark"></span>
         <div class="error-message"></div>
       </div>
@@ -69,17 +98,14 @@ function decorateLeftBlock(block) {
         <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
         <div class="error-message"></div>
       </div>
-      <div class="wrapper">By completing this purchase, you understand and consent to the collection, storage and use of your personal data for the purposes outlined in the 24Petwatch Privacy Policy. Your personal data privacy rights are outlined therein.</div>
+      <div class="wrapper">${legalHeader}</div>
       <div class="wrapper checkbox-text-wrapper">
         <div><input class="termsAndConditions" id="agreement" name="agreement" type="checkbox" autocomplete="off" /></div>
-        <div class="text">With your 24Pet® microchip, Pethealth Services Inc. (“PSI”) may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from24Pet regarding microchip services. Additionally, PSI’s affiliates, including PTZ Insurance Services Ltd., PetPartners, Inc. and Independence Pet Group, Inc., and their subsidiaries (collectively, “PTZ”) may offer you promotions and the latest information regarding pet insurance services and products. PSI may also have or benefit from contractual arrangements with third parties (“Partners”) who may offer you related services, products, offers and/or promotions. By giving consent, you agree that PSI, its Partners and/or PTZ may contact you for the purposes identified herein via commercial electronic messages at the e-mail address you provided, via mailer at the mailing address you provided and/or via automatic telephone dialing systems, pre-recorded/automated messages and/or text messages at the telephone number(s) you provided. Data and message rates may apply. This consent is not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.</div>
+        <div class="text">${legalConsentForPromoContact}</div>
       </div>
-      <div class="wrapper checkbox-text-wrapper">
-        <div><input class="termsAndConditions" id="dataConsent" name="dataConsent" type="checkbox" autocomplete="off" /></div>
-        <div class="text">I agree that 24Petwatch® may release my contact information to anyone who finds my pet in order to facilitate pet recovery.</div>
-      </div>
+      ${termsAndConditionsDataConsent}
       <div class="wrapper wrapper-text-center">
-        Please see <a href="https://www.24petwatch.com/privacy-policy" target="_blank">Privacy Policy</a> for more information.
+        Please see <a href="${privacyPolicyURL}" target="_blank">Privacy Policy</a> for more information.
       </div>
       <div class="wrapper wrapper-text-center">
         <button type="button" id="submit">Continue \u003E</button>
@@ -115,13 +141,6 @@ function decorateLeftBlock(block) {
   const applyPromoCodeButton = document.getElementById('apply-promo-code');
   const checkboxes = document.querySelectorAll('.termsAndConditions');
   const submitButton = document.getElementById('submit');
-
-  // 'Zip code' for US, 'Postal code' for Canada
-  zipcodeInput.placeholder = isCanada ? 'A1A 1A1' : '00000';
-  const zipcodeLabel = document.querySelector('label[for="zipcode"]');
-  if (isCanada) {
-    zipcodeLabel.textContent = 'Postal code*';
-  }
 
   function showLoader() {
     loaderWrapper.classList.remove('hide');
