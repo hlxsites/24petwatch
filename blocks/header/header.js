@@ -470,9 +470,20 @@ export default async function decorate(block) {
   fetchImagesFromMediaFolder(block);
 
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
-    // navWrapper.append(await buildBreadcrumbs());
     const main = document.querySelector('main');
-    main.prepend(await buildBreadcrumbs());
+
+    // Create a section for breadcrumbs
+    const sectionDiv = document.createElement('div');
+    sectionDiv.classList.add('section', 'breadcrumbs-section');
+    const contentWrapperDiv = document.createElement('div');
+    contentWrapperDiv.classList.add('default-content-wrapper');
+
+    sectionDiv.appendChild(contentWrapperDiv);
+    document.body.appendChild(sectionDiv);
+
+    // navWrapper.append(await buildBreadcrumbs());
+    contentWrapperDiv.prepend(await buildBreadcrumbs());
+    main.prepend(sectionDiv);
   }
 
   // get mega nav elements

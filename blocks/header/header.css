@@ -1018,6 +1018,10 @@ header nav > .nav-secondary .language-selector > ul > li > a {
 }
 
 /* breadcrumbs */
+.section.breadcrumbs-section {
+  padding: 0;
+}
+
 main .breadcrumbs {
   font-family: var(--heading-font-family);
   display: block;
