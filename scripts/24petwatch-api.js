@@ -1,3 +1,20 @@
+function buildOwnerPayload(email, zipCode, cartFlow) {
+  return {
+    email,
+    zipCode,
+    cartFlow,
+    partnerID: 84, // hardcoded
+    referralURL: '',
+    firstName: '',
+    lastName: '',
+    address1: '',
+    address2: '',
+    city: '',
+    homePhone: '',
+    remoteHost: '',
+  };
+}
+
 export default class APIClient {
   static METHOD_GET = 'GET';
 
@@ -19,7 +36,8 @@ export default class APIClient {
         options.headers = {
           'Content-Type': 'application/json',
         };
-        options.body = JSON.stringify(data);
+        const payload = { payload: data };
+        options.body = JSON.stringify(payload);
       } else {
         // urlWithParams += '?' + new URLSearchParams(data).toString();
         const urlSearchParams = new URLSearchParams(data).toString();
@@ -55,22 +73,30 @@ export default class APIClient {
 
   validateNonInsurancePromoCodeWithSpecies(promoCode, countryId, speciesId, done, fail) {
     const path = 'Product/ValidateNonInsurancePromoCodeWithSpecies';
-
     const data = {
       promoCode,
       country: countryId,
     };
-
     if (speciesId) {
       data.species = speciesId;
     }
-
     APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, data, done, fail, 'json');
   }
 
   getCountryStates(zipCode, done, fail) {
     const path = 'Utility/GetCountryState';
-
     APIClient.callAPI(`${this.basePath}/${path}/${zipCode}`, APIClient.METHOD_GET, null, done, fail, 'json');
+  }
+
+  postOwner(email, zipCode, cartFlow, done, fail) {
+    const path = 'Owner';
+    const data = buildOwnerPayload(email, zipCode, cartFlow);
+    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, data, done, fail, 'json');
+  }
+
+  putOwner(ownerId, email, zipCode, cartFlow, done, fail) {
+    const path = `Owner/${ownerId}`;
+    const data = buildOwnerPayload(email, zipCode, cartFlow);
+    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_PUT, data, done, fail, 'json');
   }
 }

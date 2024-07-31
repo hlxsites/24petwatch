@@ -10,6 +10,8 @@ const CA_LEGAL_HEADER = 'By completing this purchase, you understand and consent
 const CA_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services Inc. (“PSI”) may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from24Pet regarding microchip services. Additionally, PSI’s affiliates, including PTZ Insurance Services Ltd., PetPartners, Inc. and Independence Pet Group, Inc., and their subsidiaries (collectively, “PTZ”) may offer you promotions and the latest information regarding pet insurance services and products. PSI may also have or benefit from contractual arrangements with third parties (“Partners”) who may offer you related services, products, offers and/or promotions. By giving consent, you agree that PSI, its Partners and/or PTZ may contact you for the purposes identified herein via commercial electronic messages at the e-mail address you provided, via mailer at the mailing address you provided and/or via automatic telephone dialing systems, pre-recorded/automated messages and/or text messages at the telephone number(s) you provided. Data and message rates may apply. This consent is not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
 const CA_LEGAL_CONSENT_FOR_LOST_PET_CONTACT = 'I agree that 24Petwatch® may release my contact information to anyone who finds my pet in order to facilitate pet recovery.';
 
+const CART_FLOW = 2; // membership
+
 function decorateLeftBlock(block) {
   // prepare for Canada vs US
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
@@ -110,6 +112,7 @@ function decorateLeftBlock(block) {
       <div class="wrapper wrapper-text-center">
         <button type="button" id="submit">Continue \u003E</button>
       </div>
+      <div class="error-message general-error-message content-center"></div>
     </form>
   `;
 
@@ -141,6 +144,15 @@ function decorateLeftBlock(block) {
   const applyPromoCodeButton = document.getElementById('apply-promo-code');
   const checkboxes = document.querySelectorAll('.termsAndConditions');
   const submitButton = document.getElementById('submit');
+
+  function showGeneralErrorMessage(errorMessage) {
+    const errorElement = document.querySelector('.error-message.general-error-message');
+    errorElement.textContent = errorMessage;
+    errorElement.style.display = 'block';
+    setTimeout(() => {
+      errorElement.style.display = '';
+    }, 10000);
+  }
 
   function showLoader() {
     loaderWrapper.classList.remove('hide');
@@ -193,9 +205,16 @@ function decorateLeftBlock(block) {
   }
 
   function onRadioChange(element) {
-    petBreedInput.value = '';
+    // remember the selected value. Ex: formData.speciesId = '1' or formData.purebreed = 'true'
     formData[element.name] = element.value;
 
+    // clear the breed input if we had a previous value
+    if (petBreedInput.value) {
+      petBreedInput.value = '';
+      showErrorMessage(petBreedInput, 'Please tell us more about your pet above before selecting a breed.');
+    }
+
+    // if needed, get the next set of breeds
     if (formData.speciesId && formData.purebreed
       && !breedLists[formData.speciesId + formData.purebreed]) {
       APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
@@ -209,54 +228,50 @@ function decorateLeftBlock(block) {
 
   function petNameHandler() {
     const petName = petNameInput.value.trim();
-
     if (petName === '') {
       showErrorMessage(petNameInput, 'Please fill out your pet\'s name before continuing.');
       return false;
     }
-
     hideErrorMessage(petNameInput);
     formData.petName = petName;
     return true;
   }
 
   function emailHandler() {
+    formData.email = ''; // reset our validated email
     const email = emailInput.value.trim();
-
     if (email !== '') {
       if (!EMAIL_OPTIONAL_REGEX.test(email)) {
         showErrorMessage(emailInput, 'Please enter a valid email address.');
         return false;
       }
-
       hideErrorMessage(emailInput);
+      formData.email = email;
       return true;
     }
-
     showErrorMessage(emailInput, 'Please enter your email address before continuing.');
     return false;
   }
 
   function microchipHandler() {
     const microchip = microchipInput.value.trim();
-
+    formData.microchip = ''; // reset our validated microchip
     if (microchip !== '') {
       if (!MICROCHIP_REGEX.test(microchip)) {
         showErrorMessage(microchipInput, 'We\'re sorry, we don\'t recognize the format of the chip number you have entered. Please double check the value you entered and try again.');
         return false;
       }
-
       hideErrorMessage(microchipInput);
+      formData.microchip = microchip;
       return true;
     }
-
     showErrorMessage(microchipInput, 'Please enter your pet\'s microchip number before continuing.');
     return false;
   }
 
   function zipcodeHandler() {
     const errorMsg = isCanada ? 'Please enter a valid postal code' : 'Please enter a valid zip code';
-    formData.zipCode = ''; // reset the zip code
+    formData.zipCode = ''; // reset our validated zip code
     let zipCode = zipcodeInput.value.trim();
     let handlerStatus = true;
 
@@ -270,7 +285,7 @@ function decorateLeftBlock(block) {
         showErrorMessage(zipcodeInput, errorMsg);
         return false;
       }
-      zipCode = zipCode.replace(/ /g, ''); // remove any spaces
+      zipCode = zipCode.replace(/ /g, ''); // remove any interior spaces
     }
 
     showLoader();
@@ -281,10 +296,9 @@ function decorateLeftBlock(block) {
         handlerStatus = true;
       } else {
         showErrorMessage(zipcodeInput, errorMsg);
-        zipcodeInput.value = '';
+        zipcodeInput.value = ''; // valid zip code, but for the wrong country
         handlerStatus = false;
       }
-      hideLoader();
     }, (status) => {
       if (status === 404) {
         showErrorMessage(zipcodeInput, errorMsg);
@@ -294,8 +308,8 @@ function decorateLeftBlock(block) {
         console.log('Failed to validate the postal code:', status);
       }
       handlerStatus = false;
-      hideLoader();
     });
+    hideLoader();
 
     return handlerStatus;
   }
@@ -309,33 +323,20 @@ function decorateLeftBlock(block) {
       formData.breed = {};
       petBreedInput.value = '';
     }
-
     if (petBreedInput.value === '') {
       showErrorMessage(petBreedInput, 'Please tell us more about your pet above before selecting a breed.');
       return false;
     }
-
     hideErrorMessage(petBreedInput);
     return true;
   }
 
-  function clearBreedInputAndHandle() {
-    if (formData.breed && formData.breed.breedName) {
-      formData.breed = {};
-      petBreedHandler();
-    }
-  }
-
   function speciesHandler() {
     const speciesElement = getCheckedRadioElement(speciesRadioGroups);
-
-    clearBreedInputAndHandle();
-
     if (!speciesElement) {
       showErrorMessageRadioGroup(speciesRadioGroups, 'Please tell us what kind of pet you have before continuing.');
       return false;
     }
-
     onRadioChange(speciesElement);
     hideErrorMessageRadioGroup(speciesRadioGroups);
     return true;
@@ -343,14 +344,10 @@ function decorateLeftBlock(block) {
 
   function pureBreedHandler() {
     const pureBreedElement = getCheckedRadioElement(pureBreedRadioGroups);
-
-    clearBreedInputAndHandle();
-
     if (!pureBreedElement) {
       showErrorMessageRadioGroup(pureBreedRadioGroups, 'Please tell us more about your pet above before selecting a breed.');
       return false;
     }
-
     onRadioChange(pureBreedElement);
     hideErrorMessageRadioGroup(pureBreedRadioGroups);
     return true;
@@ -480,27 +477,54 @@ function decorateLeftBlock(block) {
     const allChecked = Array.from(checkboxes).every((checkbox) => checkbox.checked);
     submitButton.disabled = !allChecked;
   }
-
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', updateButtonState);
   });
-
   updateButtonState();
 
-  submitButton.addEventListener('click', () => {
-    // eslint-disable-next-line max-len
-    const fieldHandlers = [petNameHandler, emailHandler, speciesHandler, pureBreedHandler, petBreedHandler, microchipHandler, zipcodeHandler];
-    let allPassed = true;
-    fieldHandlers.forEach((fieldHandler) => {
-      if (allPassed && !fieldHandler()) {
-        allPassed = false;
-      }
-    });
+  function executeSubmit() {
+    const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
 
-    if (allPassed) {
-      console.log('We can submit the form data'); // TODO: flesh out: submit the form
+    // Create or Update the owner
+    if (!formData.ownerId) {
+      APIClientObj.postOwner(formData.email, formData.zipCode, CART_FLOW, (data) => {
+        formData.ownerId = data.id;
+      }, (status) => {
+        // eslint-disable-next-line no-console
+        console.log('Failed to create the owner:', status);
+        formData.ownerId = '';
+      });
     } else {
-      console.log('We cannot submit the form data'); // TODO: display a general error message
+      // eslint-disable-next-line max-len
+      APIClientObj.putOwner(formData.ownerId, formData.email, formData.zipCode, CART_FLOW, (data) => {
+        formData.ownerId = data.id; // nop
+      }, (status) => {
+        // eslint-disable-next-line no-console
+        console.log('Failed to update the owner:', status);
+        formData.ownerId = ''; // reset the owner id
+      });
+    }
+    if (!formData.ownerId) {
+      showGeneralErrorMessage(apiErrorMsg);
+      return;
+    }
+
+    // Create or Update the pet
+    // TODO: implement the API calls
+    console.log('ownerId:', formData.ownerId);
+  }
+
+  submitButton.addEventListener('click', () => {
+    // verify we have all the required fields
+    const allPresent = (formData.email && formData.zipCode && formData.petName && formData.microchip
+        && formData.speciesId && formData.purebreed
+        && formData.breed && formData.breed.breedId && formData.breed.breedName
+    );
+
+    if (allPresent) {
+      executeSubmit();
+    } else {
+      showGeneralErrorMessage('Please ensure all required fields are filled out.');
     }
   });
 }
