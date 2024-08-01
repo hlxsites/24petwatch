@@ -8,6 +8,21 @@ export async function getAPIBaseUrl() {
   return API_BASE_URL;
 }
 
+// ----- misc helpers -----
+
+// ensure the value is a boolean
+function asBoolean(value) {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+  return (value === 'true');
+}
+
+// ensure the value is an integer
+function asInt(value) {
+  return parseInt(value, 10);
+}
+
 export default class APIClient {
   static METHOD_GET = 'GET';
 
@@ -18,7 +33,8 @@ export default class APIClient {
   static METHOD_DELETE = 'DELETE';
 
   constructor(basePath) {
-    this.basePath = basePath || 'https://348665-24petwatch-stage.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-pethealth-services';
+    // note: you can use the getAPIBaseUrl() function to get this value
+    this.basePath = basePath;
   }
 
   static callAPI(url, method, params, data, done, fail, type) {
@@ -123,11 +139,7 @@ export default class APIClient {
    * @returns {Promise<unknown>} - resolves with the pet data
    */
   savePet(petId, ownerId, petName, breedId, speciesId, isPureBreed, microchipId) {
-    // tolerate a string value for isPureBreed
-    let pureBreed = isPureBreed;
-    if (typeof pureBreed !== 'boolean') {
-      pureBreed = (pureBreed === 'true');
-    }
+    const pureBreed = asBoolean();
 
     const petAlreadyExists = (petId !== '');
     const method = (petAlreadyExists) ? 'PUT' : 'POST';
@@ -143,6 +155,53 @@ export default class APIClient {
     };
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, `${method}`, null, data, resolve, reject, 'json');
+    });
+  }
+
+  /** Returns the available products for a pet.
+   *    Note that the "recId" values are used as the product IDs, and are always changing.
+   * @param petId - string
+   * @returns {Promise<unknown>}
+   */
+  getAvailableProducts(petId) {
+    const path = `Product/NonInsurance/GetAvailable/${petId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
+  /** Save the selected product for a pet.
+   *    If the {petId, productId} combination already exists, it will be updated.
+   *    To "delete" the product from the pet, set the quantity to 0.
+   * @param petId - string
+   * @param productId - int
+   * @param quantity - int
+   * @param isAutoRenew - boolean
+   * @returns {Promise<unknown>}
+   */
+  saveSelectedProduct(petId, productId, quantity = 1, isAutoRenew = false) {
+    // warning: although this is a POST request, the data is sent as query parameters
+
+    const quoteRecId = asInt(productId);
+    const qty = asInt(quantity);
+    const autoRenew = asBoolean(isAutoRenew);
+
+    const path = 'Product/NonInsurance/SaveSelected';
+    const params = {
+      petId,
+      quoteRecId,
+      quantity: qty,
+      autoRenew,
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
+    });
+  }
+
+  getSelectedProductsForPet(petId) {
+    const path = `Product/NonInsurance/GetSelectedForPet/${petId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
     });
   }
 }

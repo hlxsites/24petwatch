@@ -1,4 +1,7 @@
 // ---- the following constants are not expected to change ----
+export const PET_PLANS_LPM_URL = '/lps-quote'; // aka 'PET_PLANS_LPS_URL'
+export const PET_PLANS_LPM_PLUS_URL = '/lpm-plus';
+export const PET_PLANS_ANNUAL_URL = '/annual-quote';
 export const PET_PLANS_SUMMARY_QUOTE_URL = '/summary-quote';
 
 export const MICROCHIP_REGEX = /^([A-Z0-9]{15}|[A-Z0-9]{10}|[A-Z0-9]{9})$/i;

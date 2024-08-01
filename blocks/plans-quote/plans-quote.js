@@ -1,11 +1,14 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
-import APIClient from '../../scripts/24petwatch-api.js';
+import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_FOR_PET_PLANS,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
   POSTAL_CODE_CANADA_REGEX,
+  PET_PLANS_LPM_URL,
+  PET_PLANS_LPM_PLUS_URL,
+  PET_PLANS_ANNUAL_URL,
   PET_PLANS_SUMMARY_QUOTE_URL,
   setCombinedCookie,
 } from '../../scripts/24petwatch-utils.js';
@@ -21,7 +24,7 @@ const CA_LEGAL_CONSENT_FOR_LOST_PET_CONTACT = 'I agree that 24Petwatch® may rel
 
 const CART_FLOW = 2; // membership
 
-function decorateLeftBlock(block) {
+function decorateLeftBlock(block, apiBaseUrl) {
   // prepare for Canada vs US
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
   const zipcodePlaceholder = isCanada ? 'A1A 1A1' : '00000';
@@ -134,8 +137,8 @@ function decorateLeftBlock(block) {
   `;
   document.body.insertBefore(loaderWrapper, document.body.firstChild);
 
+  const APIClientObj = new APIClient(apiBaseUrl);
   const countryId = isCanada ? 1 : 2;
-  const APIClientObj = new APIClient();
   const formData = {};
   const breedLists = {};
   const petNameInput = document.getElementById('petName');
@@ -511,13 +514,63 @@ function decorateLeftBlock(block) {
     }
   }
 
+  function getUniqueProductNameForThisFlow() {
+    const currentPath = window.location.pathname;
+    let token = ' (LPM)'; // default
+    if (currentPath.includes(PET_PLANS_LPM_URL)) {
+      token = ' (LPM)';
+    } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
+      token = ' PLUS';
+    } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
+      token = 'Annual';
+    }
+    return token;
+  }
+
+  async function getSelectedProduct(petId) {
+    try {
+      formData.productId = ''; // reset
+      // eslint-disable-next-line max-len
+      const data = await APIClientObj.getAvailableProducts(petId); // returns all products for the pet
+      const isPetPlan = (item) => item.itemGroupId.includes('Pet Recovery Services');
+      const petPlans = data.reduce((acc, item) => {
+        if (isPetPlan(item)) {
+          acc.push({ name: item.itemName, recId: item.recId });
+        }
+        return acc;
+      }, []);
+      const nameThatIncludes = getUniqueProductNameForThisFlow();
+      const matchingPlan = petPlans.find((plan) => plan.name.includes(nameThatIncludes));
+      if (matchingPlan) {
+        formData.productId = matchingPlan.recId; // remember the selected product
+      }
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the selected product:', status);
+      formData.productId = '';
+    }
+  }
+
+  async function saveSelectedProduct(petId, productId) {
+    try {
+      await APIClientObj.saveSelectedProduct(petId, productId, 1, true);
+      return true;
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to create/update the pet:', status);
+      return false;
+    }
+  }
+
   async function executeSubmit() {
     const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
+    showLoader();
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
     if (!formData.ownerId) {
       showGeneralErrorMessage(apiErrorMsg);
+      hideLoader();
       return;
     }
 
@@ -525,10 +578,23 @@ function decorateLeftBlock(block) {
     await savePet(petId); // Create or Update the pet
     if (!formData.petId) {
       showGeneralErrorMessage(apiErrorMsg);
+      hideLoader();
       return;
     }
 
-    // TODO: implement all the API calls: {GetProduct, AddProduct}
+    await getSelectedProduct(formData.petId);
+    if (!formData.productId) {
+      showGeneralErrorMessage(apiErrorMsg);
+      hideLoader();
+      return;
+    }
+    if (!await saveSelectedProduct(formData.petId, formData.productId)) {
+      showGeneralErrorMessage(apiErrorMsg);
+      hideLoader();
+      return;
+    }
+
+    hideLoader();
 
     // remember the critical information for future steps
     setCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, [formData.ownerId, formData.petId]);
@@ -572,11 +638,12 @@ function decorateRightBlock(block) {
 }
 
 export default async function decorate(block) {
+  const apiBaseUrl = await getAPIBaseUrl();
   const currentPath = window.location.pathname;
   if (currentPath.includes(PET_PLANS_SUMMARY_QUOTE_URL)) {
-    decorateSummaryQuote(block); // Step 2 of 3
+    decorateSummaryQuote(block, apiBaseUrl); // Step 2 of 3
   } else { // Step 1 of 3
-    decorateLeftBlock(block);
+    decorateLeftBlock(block, apiBaseUrl);
     decorateRightBlock(block);
   }
 }
