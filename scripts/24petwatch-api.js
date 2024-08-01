@@ -1,18 +1,11 @@
-function buildOwnerPayload(email, zipCode, cartFlow) {
-  return {
-    email,
-    zipCode,
-    cartFlow,
-    partnerID: 84, // hardcoded
-    referralURL: '',
-    firstName: '',
-    lastName: '',
-    address1: '',
-    address2: '',
-    city: '',
-    homePhone: '',
-    remoteHost: '',
-  };
+import { getConfigValue } from './configs.js';
+
+let API_BASE_URL = null;
+export async function getAPIBaseUrl() {
+  if (!API_BASE_URL) {
+    API_BASE_URL = await getConfigValue('pethealth-proxy', '');
+  }
+  return API_BASE_URL;
 }
 
 export default class APIClient {
@@ -28,21 +21,22 @@ export default class APIClient {
     this.basePath = basePath || 'https://348665-24petwatch-stage.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-pethealth-services';
   }
 
-  static callAPI(url, method, data, done, fail, type) {
+  static callAPI(url, method, params, data, done, fail, type) {
     const options = { method };
-    let urlWithParams = url; // might remain as the original URL if no data is provided
+    let urlWithParams = url; // might remain as the original URL if no params are provided
+    if (params) {
+      // note: the 24PetWatch sometimes uses params for a POST or PUT request, instead of data
+      const urlSearchParams = new URLSearchParams(params).toString();
+      urlWithParams += `?${urlSearchParams}`;
+    }
+    if (data || method === APIClient.METHOD_POST || method === APIClient.METHOD_PUT) {
+      options.headers = {
+        'Content-Type': 'application/json',
+      };
+    }
     if (data) {
-      if (method !== 'GET') {
-        options.headers = {
-          'Content-Type': 'application/json',
-        };
-        const payload = { payload: data };
-        options.body = JSON.stringify(payload);
-      } else {
-        // urlWithParams += '?' + new URLSearchParams(data).toString();
-        const urlSearchParams = new URLSearchParams(data).toString();
-        urlWithParams += `?${urlSearchParams}`;
-      }
+      const payload = { payload: data };
+      options.body = JSON.stringify(payload);
     }
 
     fetch(urlWithParams, options)
@@ -68,35 +62,87 @@ export default class APIClient {
 
   getBreeds(speciesId, purebreed, done, fail) {
     const path = 'Utility/GetBreeds';
-    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, { speciesId, purebreed }, done, fail, 'json');
+    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, { speciesId, purebreed }, null, done, fail, 'json');
   }
 
   validateNonInsurancePromoCodeWithSpecies(promoCode, countryId, speciesId, done, fail) {
     const path = 'Product/ValidateNonInsurancePromoCodeWithSpecies';
-    const data = {
+    const params = {
       promoCode,
       country: countryId,
     };
     if (speciesId) {
-      data.species = speciesId;
+      params.species = speciesId;
     }
-    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, data, done, fail, 'json');
+    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, params, null, done, fail, 'json');
   }
 
   getCountryStates(zipCode, done, fail) {
     const path = 'Utility/GetCountryState';
-    APIClient.callAPI(`${this.basePath}/${path}/${zipCode}`, APIClient.METHOD_GET, null, done, fail, 'json');
+    APIClient.callAPI(`${this.basePath}/${path}/${zipCode}`, APIClient.METHOD_GET, null, null, done, fail, 'json');
   }
 
-  postOwner(email, zipCode, cartFlow, done, fail) {
-    const path = 'Owner';
-    const data = buildOwnerPayload(email, zipCode, cartFlow);
-    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, data, done, fail, 'json');
+  /** Creates or Updates an owner, depending on whether the ownerId is provided.
+   * @param ownerId - if provided, the owner will be updated, otherwise a new owner will be created
+   * @param email
+   * @param zipCode
+   * @param cartFlow
+   * @returns {Promise<unknown>} - resolves with the owner data
+   */
+  saveOwner(ownerId, email, zipCode, cartFlow) {
+    const ownerAlreadyExists = (ownerId !== '');
+    const method = (ownerAlreadyExists) ? 'PUT' : 'POST';
+    const path = (ownerAlreadyExists) ? `Owner/${ownerId}` : 'Owner';
+    const data = {
+      email,
+      zipCode,
+      cartFlow,
+      partnerID: 84, // hardcoded
+      referralURL: '',
+      firstName: '',
+      lastName: '',
+      address1: '',
+      address2: '',
+      city: '',
+      homePhone: '',
+      remoteHost: '',
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, `${method}`, null, data, resolve, reject, 'json');
+    });
   }
 
-  putOwner(ownerId, email, zipCode, cartFlow, done, fail) {
-    const path = `Owner/${ownerId}`;
-    const data = buildOwnerPayload(email, zipCode, cartFlow);
-    APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_PUT, data, done, fail, 'json');
+  /** Creates or Updates a pet, depending on whether the petId is provided.
+   * @param petId - if provided, the pet will be updated, otherwise a new pet will be created
+   * @param ownerId - string
+   * @param petName - string
+   * @param breedId - string (like '1234567890')
+   * @param speciesId - integer (1 = Dog, 2 = Cat)
+   * @param isPureBreed - boolean (true = Pure Breed, false = Mixed Breed)
+   * @param microchipId - string
+   * @returns {Promise<unknown>} - resolves with the pet data
+   */
+  savePet(petId, ownerId, petName, breedId, speciesId, isPureBreed, microchipId) {
+    // tolerate a string value for isPureBreed
+    let pureBreed = isPureBreed;
+    if (typeof pureBreed !== 'boolean') {
+      pureBreed = (pureBreed === 'true');
+    }
+
+    const petAlreadyExists = (petId !== '');
+    const method = (petAlreadyExists) ? 'PUT' : 'POST';
+    const path = (petAlreadyExists) ? `Pet/${petId}` : 'Pet';
+    const data = {
+      ownerId,
+      petName,
+      breedId,
+      speciesId: parseInt(speciesId, 10),
+      pureBreed,
+      microchipId,
+      conditions: [], // hardcoded
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, `${method}`, null, data, resolve, reject, 'json');
+    });
   }
 }

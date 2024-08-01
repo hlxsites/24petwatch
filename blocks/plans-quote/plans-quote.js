@@ -1,6 +1,15 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
+import {
+  COOKIE_NAME_FOR_PET_PLANS,
+  EMAIL_REGEX,
+  MICROCHIP_REGEX,
+  POSTAL_CODE_CANADA_REGEX,
+  PET_PLANS_SUMMARY_QUOTE_URL,
+  setCombinedCookie,
+} from '../../scripts/24petwatch-utils.js';
+import decorateSummaryQuote from './summary-quote.js';
 
 const US_LEGAL_HEADER = '';
 const US_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services (USA) Inc. may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from 24Pet regarding microchip services. Additionally, PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may offer you promotions and the latest information from 24Petprotect™ regarding pet insurance services and products. By checking “Continue”, Pethealth Services (USA) Inc. and PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may contact you via commercial electronic messages, automatic telephone dialing systems, prerecorded/automated messages or text messages at the telephone number provided above, including your mobile number. These calls or emails are not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
@@ -125,9 +134,6 @@ function decorateLeftBlock(block) {
   `;
   document.body.insertBefore(loaderWrapper, document.body.firstChild);
 
-  const MICROCHIP_REGEX = /^([A-Z0-9]{15}|[A-Z0-9]{10}|[A-Z0-9]{9})$/i;
-  const EMAIL_OPTIONAL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
   const countryId = isCanada ? 1 : 2;
   const APIClientObj = new APIClient();
   const formData = {};
@@ -241,7 +247,7 @@ function decorateLeftBlock(block) {
     formData.email = ''; // reset our validated email
     const email = emailInput.value.trim();
     if (email !== '') {
-      if (!EMAIL_OPTIONAL_REGEX.test(email)) {
+      if (!EMAIL_REGEX.test(email)) {
         showErrorMessage(emailInput, 'Please enter a valid email address.');
         return false;
       }
@@ -280,7 +286,6 @@ function decorateLeftBlock(block) {
       return false;
     }
     if (isCanada) {
-      const POSTAL_CODE_CANADA_REGEX = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
       if (!POSTAL_CODE_CANADA_REGEX.test(zipCode)) {
         showErrorMessage(zipcodeInput, errorMsg);
         return false;
@@ -482,36 +487,52 @@ function decorateLeftBlock(block) {
   });
   updateButtonState();
 
-  function executeSubmit() {
+  async function saveOwner(ownerId) {
+    try {
+      // eslint-disable-next-line max-len
+      const data = await APIClientObj.saveOwner(ownerId, formData.email, formData.zipCode, CART_FLOW);
+      formData.ownerId = data.id;
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to create/update the owner:', status);
+      formData.ownerId = '';
+    }
+  }
+
+  async function savePet(petId) {
+    try {
+      // eslint-disable-next-line max-len
+      const data = await APIClientObj.savePet(petId, formData.ownerId, formData.petName, formData.breed.breedId, formData.speciesId, formData.purebreed, formData.microchip);
+      formData.petId = data.id;
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to create/update the pet:', status);
+      formData.petId = '';
+    }
+  }
+
+  async function executeSubmit() {
     const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
 
-    // Create or Update the owner
-    if (!formData.ownerId) {
-      APIClientObj.postOwner(formData.email, formData.zipCode, CART_FLOW, (data) => {
-        formData.ownerId = data.id;
-      }, (status) => {
-        // eslint-disable-next-line no-console
-        console.log('Failed to create the owner:', status);
-        formData.ownerId = '';
-      });
-    } else {
-      // eslint-disable-next-line max-len
-      APIClientObj.putOwner(formData.ownerId, formData.email, formData.zipCode, CART_FLOW, (data) => {
-        formData.ownerId = data.id; // nop
-      }, (status) => {
-        // eslint-disable-next-line no-console
-        console.log('Failed to update the owner:', status);
-        formData.ownerId = ''; // reset the owner id
-      });
-    }
+    const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
+    await saveOwner(ownerId); // Create or Update the owner
     if (!formData.ownerId) {
       showGeneralErrorMessage(apiErrorMsg);
       return;
     }
 
-    // Create or Update the pet
-    // TODO: implement the API calls
-    console.log('ownerId:', formData.ownerId);
+    const petId = (!formData.petId) ? '' : formData.petId;
+    await savePet(petId); // Create or Update the pet
+    if (!formData.petId) {
+      showGeneralErrorMessage(apiErrorMsg);
+      return;
+    }
+
+    // TODO: implement all the API calls: {GetProduct, AddProduct}
+
+    // remember the critical information for future steps
+    setCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, [formData.ownerId, formData.petId]);
+    window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 
   submitButton.addEventListener('click', () => {
@@ -551,6 +572,11 @@ function decorateRightBlock(block) {
 }
 
 export default async function decorate(block) {
-  decorateLeftBlock(block);
-  decorateRightBlock(block);
+  const currentPath = window.location.pathname;
+  if (currentPath.includes(PET_PLANS_SUMMARY_QUOTE_URL)) {
+    decorateSummaryQuote(block); // Step 2 of 3
+  } else { // Step 1 of 3
+    decorateLeftBlock(block);
+    decorateRightBlock(block);
+  }
 }
