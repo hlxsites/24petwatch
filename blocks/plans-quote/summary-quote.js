@@ -1,6 +1,6 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
-import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
+import APIClient from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_FOR_PET_PLANS,
   PET_PLANS_LPM_URL,
