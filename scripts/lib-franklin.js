@@ -595,11 +595,15 @@ export function decorateButtons(element) {
  * @param {Element} element container element
  */
 export function decorateLinks(element) {
+  const currentDomain = window.location.hostname;
+  const domainRegex = new RegExp(`^https?://(www\\.)?${currentDomain.replace(/\./g, '\\.')}`);
+
   element.querySelectorAll('a').forEach((a) => {
-    // open non (www)?.24petwatch.com pages in new tab
-    if (!/^https:\/\/(www\.)?24petwatch.com/.test(a.href)) {
+    // open non-current domain pages in new tab
+    if (!domainRegex.test(a.href)) {
       a.target = '_blank';
     }
+    // open tel: links in the same tab
     if (/^tel:/.test(a.href)) {
       a.target = '_self';
     }
