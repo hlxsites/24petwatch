@@ -1,19 +1,23 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
+import { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
-  API_BASE_URL,
-  STEP_1_URL,
-  ALLOW_ZERO_PAYMENT,
-  POSTAL_CODE_CANADA_REGEX,
   EMAIL_REGEX,
-  COOKIE_NAME,
+  POSTAL_CODE_CANADA_REGEX,
+  COOKIE_NAME_FOR_PET_TAGS as COOKIE_NAME,
   getCombinedCookie,
   deleteCookie,
+} from '../../scripts/24petwatch-utils.js';
+import {
+  STEP_1_URL,
+  ALLOW_ZERO_PAYMENT,
   asDecimal,
 } from './tag-utils.js';
 
 let petIdValue = ''; // value from the cookie set in Step 1 and used in Step 2
 let ownerIdValue = ''; // (ditto)
+
+let API_BASE_URL = '';
 
 function showPersonalErrorMessage(errorMessage) {
   const errorElement = document.querySelector('.error-message.personal-error-message');
@@ -509,6 +513,9 @@ export default async function decorateStep3(block) {
   link.rel = 'stylesheet';
   link.href = '/blocks/pet-tag-quote/summary-quote.css';
   document.head.appendChild(link);
+
+  // prep for API calls
+  API_BASE_URL = await getAPIBaseUrl();
 
   // create the HTML
   // get values from the previous steps
