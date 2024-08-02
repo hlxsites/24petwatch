@@ -1,0 +1,115 @@
+
+header.header-paid-wrapper {
+  height: initial;
+  position: fixed;
+  right: 0;
+  left: 0;
+  top: 0;
+  z-index: 50;
+  background-color: #fff;
+  transition: transform 0.2s linear;
+  opacity: 1;
+}
+
+header.header-paid-wrapper .section {
+  border-bottom: 1px solid #ccc;
+  box-shadow: 0 2px 6px 0 rgba(0 0 0 / 22%);
+}
+
+/* Reset some of the .columns styles in the header */
+header.header-paid-wrapper .columns > div {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center; 
+  justify-content: space-between; 
+}
+
+header.header-paid-wrapper .columns > div > div {
+  flex: 0 1 auto; /* Allows the items to grow and shrink */
+}
+
+header.header-paid-wrapper .columns > div > .columns-img-col {
+  order: 0; /* Explicitly unset the order property */
+}
+
+header.header-paid-wrapper .columns img {
+  max-width: 228px;
+  max-height: 26px;
+  width: 100%; /* Allows the image to shrink proportionally */
+  height: auto;
+  min-height: initial;
+}
+
+header.header-paid-wrapper .columns > div > .columns-img-col img {
+  max-width: 228px; /* Maximum width */
+  max-height: 26px; /* Maximum height */
+  width: 100%; /* Allows the image to shrink proportionally */
+  height: auto; 
+  min-height: initial;
+}
+
+/* buttons */
+header.header-paid-wrapper strong {
+  display: flex;
+}
+
+header.header-paid-wrapper a:any-link {
+  font-family: var(--body-font-family);
+  display: inline-block;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: 2px solid transparent;
+  padding: 0.875rem 1.625rem;
+  text-align: center;
+  font-style: normal;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--background-color);
+  background-color: var(--button-primary-color);
+  margin: 6px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 0.625rem;
+}
+
+@keyframes slide-down {
+  0% {
+      transform: translateY(-100%)
+  }
+
+  100% {
+      transform: translateY(0)
+  }
+}
+
+.animated.slide-down {
+  animation-name: slide-down
+}
+
+@keyframes slide-up {
+  0% {
+      transform: translateY(0)
+  }
+
+  100% {
+      transform: translateY(-100%)
+  }
+}
+
+.animated.slide-up {
+  animation-name: slide-up
+}
+
+.animated {
+  animation-duration: 500ms;
+  animation-fill-mode: both;
+  animation-delay: 300ms;
+  will-change: transform,opacity
+}
+
+@media (width >= 768px) {
+  header.header-paid-wrapper .section {
+    padding: 0;
+  }
+}
