@@ -1,14 +1,16 @@
 import { jsx } from '../../scripts/scripts.js';
+import { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
-  API_BASE_URL,
+  COOKIE_NAME_FOR_PET_TAGS as COOKIE_NAME,
+  getCombinedCookie,
+} from '../../scripts/24petwatch-utils.js';
+import {
   STEP_1_URL,
   STEP_3_URL,
-  COOKIE_NAME,
   ALLOW_ZERO_PAYMENT,
   PRICE_PER_TAG_METAL,
   PRICE_PER_TAG_LIFETIME_SMALL,
   PRICE_PER_TAG_LIFETIME_LARGE,
-  getCombinedCookie,
   asDecimal,
 } from './tag-utils.js';
 
@@ -22,6 +24,7 @@ let petIdValue = ''; // value from the cookie set in Step 1
 let ownerIdValue = ''; // (ditto)
 // eslint-disable-next-line max-len
 let productIds = []; // array of products like: [ { name: 'Red Bone Metal Tag', recId: 9164476 }, ...]
+let API_BASE_URL = '';
 
 // ----- START: shopping cart -----
 const helper = {
@@ -276,6 +279,9 @@ export default async function decorateStep2(block) {
   link.rel = 'stylesheet';
   link.href = '/blocks/pet-tag-quote/tag-select.css';
   document.head.appendChild(link);
+
+  // prep for API calls
+  API_BASE_URL = await getAPIBaseUrl();
 
   // create the HTML
   // initialize form based on results from Step 1

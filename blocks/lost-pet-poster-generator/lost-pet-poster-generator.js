@@ -114,7 +114,7 @@ export default async function decorate(block) {
         <textarea id="addInfo" name="addInfo" placeholder="" maxlength="200" rows="2"></textarea>
       </div>
       <div class="wrapper wrapper-text-center">
-        <button type="button" id="generatePoster">Generate Poster</button>
+        <button type="button" id="generatePoster">Create poster</button>
       </div>
     </form>
     `;

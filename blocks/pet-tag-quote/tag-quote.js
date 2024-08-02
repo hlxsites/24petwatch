@@ -1,15 +1,16 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
-import APIClient from './24petwatch-api.js';
+import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
-  API_BASE_URL,
-  COOKIE_NAME,
   EMAIL_REGEX,
   POSTAL_CODE_CANADA_REGEX,
-  STEP_2_URL,
+  COOKIE_NAME_FOR_PET_TAGS as COOKIE_NAME,
   deleteCookie,
   getCombinedCookie,
   setCombinedCookie,
+} from '../../scripts/24petwatch-utils.js';
+import {
+  STEP_2_URL,
 } from './tag-utils.js';
 
 let petIdValue = ''; // if a previous cookie is present, will be set
@@ -33,7 +34,8 @@ const formData = {
 // breedLists['1true'] = [{ breedID: '99999', breedname: 'Poodle' }, ...]
 const breedLists = {};
 
-const APIClientObj = new APIClient();
+let API_BASE_URL = '';
+let APIClientObj = null;
 
 function removeAnyErrorMessage(element, setCheckmark = true) {
   const container = element.parentElement;
@@ -419,6 +421,10 @@ export default async function decorateStep1(block) {
   link.rel = 'stylesheet';
   link.href = '/blocks/pet-tag-quote/tag-quote.css';
   document.head.appendChild(link);
+
+  // prep for API calls
+  API_BASE_URL = await getAPIBaseUrl();
+  APIClientObj = new APIClient(API_BASE_URL);
 
   // create the HTML
   block.innerHTML = jsx`
