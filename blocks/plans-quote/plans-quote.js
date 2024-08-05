@@ -603,12 +603,25 @@ function decorateLeftBlock(block, apiBaseUrl) {
 
   submitButton.addEventListener('click', () => {
     // verify we have all the required fields
-    const allPresent = (formData.email && formData.zipCode && formData.petName && formData.microchip
-        && formData.speciesId && formData.purebreed
-        && formData.breed && formData.breed.breedId && formData.breed.breedName
-    );
+    const fieldHandlers = [
+      petNameHandler,
+      emailHandler,
+      speciesHandler,
+      pureBreedHandler,
+      petBreedHandler,
+      microchipHandler,
+      zipcodeHandler,
+    ];
+    let allPassed = true;
 
-    if (allPresent) {
+    for (let i = 0; i < fieldHandlers.length; i += 1) {
+      const fieldHandler = fieldHandlers[i];
+      if (!fieldHandler()) {
+        allPassed = false;
+      }
+    }
+
+    if (allPassed) {
       executeSubmit();
     } else {
       showGeneralErrorMessage('Please ensure all required fields are filled out.');

@@ -155,6 +155,11 @@ main .plans-quote form .wrapper-text-center {
   text-align: center;
 }
 
+main .plans-quote form .flex-wrapper .error-message {
+  flex-grow: 1;
+  width: 100%;
+}
+
 #pet-breed-list {
   background-color: #fff;
   box-sizing: border-box;
