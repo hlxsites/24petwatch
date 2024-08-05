@@ -140,6 +140,7 @@ function decorateLeftBlock(block, apiBaseUrl) {
   const APIClientObj = new APIClient(apiBaseUrl);
   const countryId = isCanada ? 1 : 2;
   const formData = {};
+  window.formData = formData;
   const breedLists = {};
   const petNameInput = document.getElementById('petName');
   const speciesRadioGroups = document.querySelectorAll('input[type="radio"][name="speciesId"]');
@@ -214,14 +215,14 @@ function decorateLeftBlock(block, apiBaseUrl) {
   }
 
   function onRadioChange(element) {
-    // remember the selected value. Ex: formData.speciesId = '1' or formData.purebreed = 'true'
-    formData[element.name] = element.value;
-
     // clear the breed input if we had a previous value
-    if (petBreedInput.value) {
+    if (petBreedInput.value && formData[element.name] !== element.value) {
       petBreedInput.value = '';
       showErrorMessage(petBreedInput, 'Please tell us more about your pet above before selecting a breed.');
     }
+
+    // remember the selected value. Ex: formData.speciesId = '1' or formData.purebreed = 'true'
+    formData[element.name] = element.value;
 
     // if needed, get the next set of breeds
     if (formData.speciesId && formData.purebreed
@@ -514,15 +515,15 @@ function decorateLeftBlock(block, apiBaseUrl) {
     }
   }
 
-  function getUniqueProductNameForThisFlow() {
+  function getUniqueProductIdForThisFlow() {
     const currentPath = window.location.pathname;
-    let token = ' (LPM)'; // default
+    let token = 'PLH_000007'; // default
     if (currentPath.includes(PET_PLANS_LPM_URL)) {
-      token = ' (LPM)';
+      token = 'PLH_000007';
     } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
-      token = ' PLUS';
+      token = 'LPM-PLUS';
     } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
-      token = 'Annual';
+      token = (formData.speciesId === 1) ? 'Annual Plan-DOGS' : 'Annual Plan-CATS';
     }
     return token;
   }
@@ -535,12 +536,12 @@ function decorateLeftBlock(block, apiBaseUrl) {
       const isPetPlan = (item) => item.itemGroupId.includes('Pet Recovery Services');
       const petPlans = data.reduce((acc, item) => {
         if (isPetPlan(item)) {
-          acc.push({ name: item.itemName, recId: item.recId });
+          acc.push({ itemId: item.itemId, recId: item.recId });
         }
         return acc;
       }, []);
-      const nameThatIncludes = getUniqueProductNameForThisFlow();
-      const matchingPlan = petPlans.find((plan) => plan.name.includes(nameThatIncludes));
+      const productId = getUniqueProductIdForThisFlow();
+      const matchingPlan = petPlans.find((plan) => plan.itemId === productId);
       if (matchingPlan) {
         formData.productId = matchingPlan.recId; // remember the selected product
       }
