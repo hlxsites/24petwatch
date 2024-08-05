@@ -12,6 +12,7 @@ import {
   PET_PLANS_SUMMARY_QUOTE_URL,
   getCombinedCookie,
   setCombinedCookie,
+  getQueryParam,
 } from '../../scripts/24petwatch-utils.js';
 import decorateSummaryQuote from './summary-quote.js';
 
@@ -685,7 +686,7 @@ function decorateLeftBlock(block, apiBaseUrl) {
 
   async function prefillFormIfPossible() {
     // the owner info must come from the cookie
-    const [ownerId = '', petId = ''] = getCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, []);
+    const [ownerId = '', petIdFromCookie = ''] = getCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, []);
 
     // owner {email, zipCode}
     if (!ownerId) {
@@ -708,7 +709,8 @@ function decorateLeftBlock(block, apiBaseUrl) {
       await zipcodeHandler();
     }
 
-    // pet {petName, microchip, speciesId, purebreed, breedId}
+    // pet {petName, microchip, speciesId, purebreed, breed {breedId, breedName}}
+    const petId = getQueryParam('petId', petIdFromCookie);
     if (!petId) {
       return;
     }
