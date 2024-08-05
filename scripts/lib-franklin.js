@@ -637,7 +637,13 @@ export async function waitForLCP(lcpBlocks) {
  * @returns {Promise}
  */
 export function loadHeader(header) {
-  const headerBlock = buildBlock('header', '');
+  let headerBlock = '';
+  if (!document.body.classList.contains('paid')) {
+    headerBlock = buildBlock('header', '');
+  } else if (document.body.classList.contains('paid')) {
+    // Load special header for paid section of the website
+    headerBlock = buildBlock('header-paid', '');
+  }
   header.append(headerBlock);
   decorateBlock(headerBlock);
   return loadBlock(headerBlock);
@@ -649,7 +655,13 @@ export function loadHeader(header) {
  * @returns {Promise}
  */
 export function loadFooter(footer) {
-  const footerBlock = buildBlock('footer', '');
+  let footerBlock = '';
+  if (!document.body.classList.contains('paid')) {
+    footerBlock = buildBlock('footer', '');
+  } else if (document.body.classList.contains('paid')) {
+    // Load special footer for paid section of the website
+    footerBlock = buildBlock('footer-paid', '');
+  }
   footer.append(footerBlock);
   decorateBlock(footerBlock);
   return loadBlock(footerBlock);
