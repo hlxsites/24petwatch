@@ -10,6 +10,7 @@ import {
   PET_PLANS_LPM_PLUS_URL,
   PET_PLANS_ANNUAL_URL,
   PET_PLANS_SUMMARY_QUOTE_URL,
+  getCombinedCookie,
   setCombinedCookie,
 } from '../../scripts/24petwatch-utils.js';
 import decorateSummaryQuote from './summary-quote.js';
@@ -628,6 +629,136 @@ function decorateLeftBlock(block, apiBaseUrl) {
       showGeneralErrorMessage('Please ensure all required fields are filled out.');
     }
   });
+
+  async function getOwner(ownerId) {
+    try {
+      const data = await APIClientObj.getOwner(ownerId);
+      return data;
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the owner:', ownerId, ' status:', status);
+      return [];
+    }
+  }
+
+  async function getPet(petId, ownerId) {
+    try {
+      const data = await APIClientObj.getPet(petId);
+      if (data.ownerId !== ownerId) {
+        // eslint-disable-next-line no-console
+        console.log('The pet:', petId, 'does not belong to the owner:', ownerId);
+        return [];
+      }
+      return data;
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the pet:', petId, 'for its owner', ownerId, ' status:', status);
+      return [];
+    }
+  }
+
+  function ensureBreedListIsPopulated() {
+    return new Promise((resolve, reject) => {
+      if (formData.speciesId && formData.purebreed
+        && !breedLists[formData.speciesId + formData.purebreed]) {
+        APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
+          breedLists[formData.speciesId + formData.purebreed] = data;
+          resolve();
+        }, (status) => {
+          // eslint-disable-next-line no-console
+          console.log('Failed with status:', status);
+          reject(status);
+        });
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  function getBreedNameForId(breedId) {
+    let breedName = '(unknown)'; // default
+    if (breedLists[formData.speciesId + formData.purebreed]) {
+      // eslint-disable-next-line max-len
+      const breed = breedLists[formData.speciesId + formData.purebreed].find((b) => b.breedID === breedId.toString());
+      if (breed) {
+        breedName = breed.breedname;
+      }
+    }
+    return breedName;
+  }
+
+  async function prefillFormIfPossible() {
+    // the owner info must come from the cookie
+    const [ownerId = '', petId = ''] = getCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, []);
+
+    // owner {email, zipCode}
+    if (!ownerId) {
+      return;
+    }
+    let data = await getOwner(ownerId);
+    if (!data) {
+      return;
+    }
+    if (isCanada && data.countryID !== 1) {
+      return;
+    }
+    formData.ownerId = ownerId;
+    if (data.email) {
+      emailInput.value = data.email;
+      emailHandler();
+    }
+    if (data.zipCode) {
+      zipcodeInput.value = data.zipCode;
+      zipcodeHandler();
+    }
+
+    // pet {petName, microchip, speciesId, purebreed, breedId}
+    if (!petId) {
+      return;
+    }
+    data = await getPet(petId, ownerId);
+    if (!data) {
+      return;
+    }
+    if (data.petName) {
+      petNameInput.value = data.petName;
+      petNameHandler();
+    }
+    if (data.microchipId) {
+      microchipInput.value = data.microchipId;
+      microchipHandler();
+    }
+    if (data.speciesId) {
+      if (data.speciesId === 1) { // Dog
+        const speciesDog = document.getElementById('speciesDog');
+        speciesDog.checked = true;
+        formData.speciesId = '1'; // string for ID 'Dog'
+      } else { // Cat
+        const speciesCat = document.getElementById('speciesCat');
+        speciesCat.checked = true;
+        formData.speciesId = '2'; // string for ID 'Cat'
+      }
+    }
+    if (data.pureBreed === true) { // Purebred (true)
+      const pureBreedPurebred = document.getElementById('pureBreedPurebred');
+      pureBreedPurebred.checked = true;
+      formData.purebreed = 'true'; // string
+    } else { // Mixed (false)
+      const pureBreedMixed = document.getElementById('pureBreedMixed');
+      pureBreedMixed.checked = true;
+      formData.purebreed = 'false'; // string
+    }
+    showLoader();
+    await ensureBreedListIsPopulated();
+    hideLoader();
+    if (data.breedId) {
+      const breedName = getBreedNameForId(data.breedId);
+      formData.breed = { breedName, breedId: data.breedId.toString() };
+      petBreedInput.value = breedName;
+      petBreedHandler();
+    }
+  }
+  prefillFormIfPossible();
 }
 
 function decorateRightBlock(block) {
