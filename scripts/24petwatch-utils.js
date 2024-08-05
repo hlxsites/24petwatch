@@ -8,6 +8,12 @@ export const MICROCHIP_REGEX = /^([A-Z0-9]{15}|[A-Z0-9]{10}|[A-Z0-9]{9})$/i;
 export const POSTAL_CODE_CANADA_REGEX = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+// ----- general helpers -----
+export function getQueryParam(param, defaultValue = null) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.has(param) ? urlParams.get(param) : defaultValue;
+}
+
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';
 export const COOKIE_NAME_FOR_PET_PLANS = 'ph.PetPlanQuote';
