@@ -141,7 +141,6 @@ function decorateLeftBlock(block, apiBaseUrl) {
   const APIClientObj = new APIClient(apiBaseUrl);
   const countryId = isCanada ? 1 : 2;
   const formData = {};
-  window.formData = formData;
   const breedLists = {};
   const petNameInput = document.getElementById('petName');
   const speciesRadioGroups = document.querySelectorAll('input[type="radio"][name="speciesId"]');
@@ -215,7 +214,25 @@ function decorateLeftBlock(block, apiBaseUrl) {
     return checkedElement;
   }
 
-  function onRadioChange(element) {
+  function ensureBreedListIsPopulated() {
+    return new Promise((resolve, reject) => {
+      if (formData.speciesId && formData.purebreed
+        && !breedLists[formData.speciesId + formData.purebreed]) {
+        APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
+          breedLists[formData.speciesId + formData.purebreed] = data;
+          resolve();
+        }, (status) => {
+          // eslint-disable-next-line no-console
+          console.log('Failed with status:', status);
+          reject(status);
+        });
+      } else {
+        resolve();
+      }
+    });
+  }
+
+  async function onRadioChange(element) {
     // clear the breed input if we had a previous value
     if (petBreedInput.value && formData[element.name] !== element.value) {
       petBreedInput.value = '';
@@ -226,15 +243,7 @@ function decorateLeftBlock(block, apiBaseUrl) {
     formData[element.name] = element.value;
 
     // if needed, get the next set of breeds
-    if (formData.speciesId && formData.purebreed
-      && !breedLists[formData.speciesId + formData.purebreed]) {
-      APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
-        breedLists[formData.speciesId + formData.purebreed] = data;
-      }, (status) => {
-        // eslint-disable-next-line no-console
-        console.log('Failed updating the list of breeds:', status);
-      });
-    }
+    await ensureBreedListIsPopulated();
   }
 
   function petNameHandler() {
@@ -280,7 +289,7 @@ function decorateLeftBlock(block, apiBaseUrl) {
     return false;
   }
 
-  function zipcodeHandler() {
+  async function zipcodeHandler() {
     const errorMsg = isCanada ? 'Please enter a valid postal code' : 'Please enter a valid zip code';
     formData.zipCode = ''; // reset our validated zip code
     let zipCode = zipcodeInput.value.trim();
@@ -299,25 +308,29 @@ function decorateLeftBlock(block, apiBaseUrl) {
     }
 
     showLoader();
-    APIClientObj.getCountryStates(zipCode, (data) => {
-      if (data.zipCode && data.countryId === countryId) {
-        hideErrorMessage(zipcodeInput);
-        formData.zipCode = data.zipCode;
-        handlerStatus = true;
-      } else {
-        showErrorMessage(zipcodeInput, errorMsg);
-        zipcodeInput.value = ''; // valid zip code, but for the wrong country
+    await new Promise((resole, reject) => {
+      APIClientObj.getCountryStates(zipCode, (data) => {
+        if (data.zipCode && data.countryId === countryId) {
+          hideErrorMessage(zipcodeInput);
+          formData.zipCode = data.zipCode;
+          handlerStatus = true;
+        } else {
+          showErrorMessage(zipcodeInput, errorMsg);
+          zipcodeInput.value = ''; // valid zip code, but for the wrong country
+          handlerStatus = false;
+        }
+        resole();
+      }, (status) => {
+        if (status === 404) {
+          showErrorMessage(zipcodeInput, errorMsg);
+          zipcodeInput.value = '';
+        } else {
+          // eslint-disable-next-line no-console
+          console.log('Failed to validate the postal code:', status);
+        }
         handlerStatus = false;
-      }
-    }, (status) => {
-      if (status === 404) {
-        showErrorMessage(zipcodeInput, errorMsg);
-        zipcodeInput.value = '';
-      } else {
-        // eslint-disable-next-line no-console
-        console.log('Failed to validate the postal code:', status);
-      }
-      handlerStatus = false;
+        reject();
+      });
     });
     hideLoader();
 
@@ -603,7 +616,7 @@ function decorateLeftBlock(block, apiBaseUrl) {
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 
-  submitButton.addEventListener('click', () => {
+  submitButton.addEventListener('click', async () => {
     // verify we have all the required fields
     const fieldHandlers = [
       petNameHandler,
@@ -618,13 +631,14 @@ function decorateLeftBlock(block, apiBaseUrl) {
 
     for (let i = 0; i < fieldHandlers.length; i += 1) {
       const fieldHandler = fieldHandlers[i];
-      if (!fieldHandler()) {
+      // eslint-disable-next-line no-await-in-loop
+      if (!await fieldHandler()) {
         allPassed = false;
       }
     }
 
     if (allPassed) {
-      executeSubmit();
+      await executeSubmit();
     } else {
       showGeneralErrorMessage('Please ensure all required fields are filled out.');
     }
@@ -655,24 +669,6 @@ function decorateLeftBlock(block, apiBaseUrl) {
       console.log('Failed to get the pet:', petId, 'for its owner', ownerId, ' status:', status);
       return [];
     }
-  }
-
-  function ensureBreedListIsPopulated() {
-    return new Promise((resolve, reject) => {
-      if (formData.speciesId && formData.purebreed
-        && !breedLists[formData.speciesId + formData.purebreed]) {
-        APIClientObj.getBreeds(formData.speciesId, formData.purebreed, (data) => {
-          breedLists[formData.speciesId + formData.purebreed] = data;
-          resolve();
-        }, (status) => {
-          // eslint-disable-next-line no-console
-          console.log('Failed with status:', status);
-          reject(status);
-        });
-      } else {
-        resolve();
-      }
-    });
   }
 
   function getBreedNameForId(breedId) {
@@ -709,7 +705,7 @@ function decorateLeftBlock(block, apiBaseUrl) {
     }
     if (data.zipCode) {
       zipcodeInput.value = data.zipCode;
-      zipcodeHandler();
+      await zipcodeHandler();
     }
 
     // pet {petName, microchip, speciesId, purebreed, breedId}
