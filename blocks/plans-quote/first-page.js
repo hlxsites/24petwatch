@@ -291,7 +291,6 @@ export function decorateLeftBlock(block, apiBaseUrl) {
 
   async function zipcodeHandler() {
     const errorMsg = isCanada ? 'Please enter a valid postal code' : 'Please enter a valid zip code';
-    formData.zipCode = ''; // reset our validated zip code
     let zipCode = zipcodeInput.value.trim();
     let handlerStatus = true;
 
@@ -299,6 +298,12 @@ export function decorateLeftBlock(block, apiBaseUrl) {
       showErrorMessage(zipcodeInput, errorMsg);
       return false;
     }
+    if (zipCode === formData.zipCode) {
+      return true; // already validated
+    }
+
+    formData.zipCode = ''; // reset our validated zip code
+
     if (isCanada) {
       if (!POSTAL_CODE_CANADA_REGEX.test(zipCode)) {
         showErrorMessage(zipcodeInput, errorMsg);
@@ -308,30 +313,36 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     }
 
     showLoader();
-    await new Promise((resole, reject) => {
-      APIClientObj.getCountryStates(zipCode, (data) => {
-        if (data.zipCode && data.countryId === countryId) {
-          hideErrorMessage(zipcodeInput);
-          formData.zipCode = data.zipCode;
-          handlerStatus = true;
-        } else {
-          showErrorMessage(zipcodeInput, errorMsg);
-          zipcodeInput.value = ''; // valid zip code, but for the wrong country
+    try {
+      await new Promise((resole, reject) => {
+        APIClientObj.getCountryStates(zipCode, (data) => {
+          if (data.zipCode && data.countryId === countryId) {
+            hideErrorMessage(zipcodeInput);
+            formData.zipCode = data.zipCode;
+            handlerStatus = true;
+          } else {
+            showErrorMessage(zipcodeInput, errorMsg);
+            zipcodeInput.value = ''; // valid zip code, but for the wrong country
+            handlerStatus = false;
+          }
+          resole();
+        }, (status) => {
           handlerStatus = false;
-        }
-        resole();
-      }, (status) => {
-        if (status === 404) {
-          showErrorMessage(zipcodeInput, errorMsg);
-          zipcodeInput.value = '';
-        } else {
-          // eslint-disable-next-line no-console
-          console.log('Failed to validate the postal code:', status);
-        }
-        handlerStatus = false;
-        reject();
+          if (status === 404) {
+            showErrorMessage(zipcodeInput, errorMsg);
+            zipcodeInput.value = '';
+            resole();
+          } else {
+            // eslint-disable-next-line no-console
+            console.log('Failed to validate the postal code:', status);
+            reject();
+          }
+        });
       });
-    });
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.log('Something went wrong during zip code validation', e);
+    }
     hideLoader();
 
     return handlerStatus;
@@ -388,8 +399,8 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     microchipHandler();
   });
 
-  zipcodeInput.addEventListener('blur', () => {
-    zipcodeHandler();
+  zipcodeInput.addEventListener('blur', async () => {
+    await zipcodeHandler();
   });
 
   applyPromoCodeButton.addEventListener('click', () => {
