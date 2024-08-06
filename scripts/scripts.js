@@ -210,6 +210,7 @@ function instrumentTrackingEvents(main) {
       anchor.addEventListener('click', (e) => {
         const linkText = (e.target.textContent || '').trim();
         const linkUrl = e.target.href;
+        const pageUrl = window.location.href;
 
         // track cta clicks on main
         if (e.target.classList.contains('button')) {
@@ -217,6 +218,18 @@ function instrumentTrackingEvents(main) {
             link_text: linkText,
             link_url: linkUrl,
           });
+        }
+
+        // track clicks to call for telephone numbers
+        if (linkUrl.startsWith('tel')) {
+          trackGTMEvent('click_to_call', {
+            page_url: pageUrl,
+          });
+        }
+
+        // track clicks for Login to MyPetHealth
+        if (linkUrl === 'https://mypethealth.com/auth/login') {
+          trackGTMEvent('pet_lost_report_mypethealth_link');
         }
       });
     });
