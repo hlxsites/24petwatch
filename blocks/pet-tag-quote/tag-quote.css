@@ -3,7 +3,7 @@ form#tag-quote-form {
 }
 
 form#tag-quote-form .wrapper {
-    padding: 1.625rem 2.25rem .375rem 1rem;
+    padding: 1.625rem 1rem .375rem;
     margin-top: 0.5rem;
 }
 
@@ -47,6 +47,11 @@ form#tag-quote-form h3 {
     padding: 0 1rem;
     margin: .5rem 0;
     cursor: pointer;
+}
+
+form#tag-quote-form input:focus~label, 
+form#tag-quote-form input:not(:placeholder-shown)~label {
+    transform: initial;
 }
 
 @media screen and (width >=768px) {
