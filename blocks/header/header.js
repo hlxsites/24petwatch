@@ -463,7 +463,7 @@ export default async function decorate(block) {
 
   decorateIcons(nav);
   decorateButtons(nav);
-  decorateLinks(nav);
+  decorateLinks(block);
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);
   addLinkToLogo(nav);

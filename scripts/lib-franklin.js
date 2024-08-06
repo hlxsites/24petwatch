@@ -590,11 +590,49 @@ export function decorateButtons(element) {
   });
 }
 
+function substituteUrlDomains(element) {
+  const internalDomains = [
+    '24petwatch.com',
+    'aem-dev.24petwatch.com',
+    'aem-stage.24petwatch.com',
+    'localhost',
+    'hlx.page',
+  ];
+
+  const currentHostname = window.location.hostname;
+  const currentPort = window.location.port;
+
+  element.querySelectorAll('a').forEach((a) => {
+    const originalUrl = new URL(a.href);
+
+    let matched = false;
+    internalDomains.some((pattern) => {
+      const regex = new RegExp(`^https?://(www\\.)?${pattern.replace(/\./g, '\\.')}`);
+      if (regex.test(originalUrl.href)) {
+        matched = true;
+        return true;
+      }
+      return false;
+    });
+
+    if (matched) {
+      originalUrl.hostname = currentHostname;
+      if (currentPort) {
+        originalUrl.port = currentPort;
+      } else {
+        originalUrl.port = ''; // Clear the port if current domain doesn't have one
+      }
+      a.href = originalUrl.toString();
+    }
+  });
+}
+
 /**
  * Decorates anchor elements.
  * @param {Element} element container element
  */
 export function decorateLinks(element) {
+  substituteUrlDomains(element);
   const currentDomain = window.location.hostname;
   const domainRegex = new RegExp(`^https?://(www\\.)?${currentDomain.replace(/\./g, '\\.')}`);
 
