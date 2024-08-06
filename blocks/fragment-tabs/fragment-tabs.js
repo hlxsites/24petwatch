@@ -128,7 +128,6 @@ export default async function decorate(block) {
     <div id="tab-content" class="tabs-content"></div>
   `;
 
-  // await tabs.preloadTabs();
   await tabs.loadTab();
 
   window.addEventListener('hashchange', () => {
