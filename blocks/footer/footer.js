@@ -51,6 +51,18 @@ function instrumentTrackingEvents(footer) {
     });
 }
 
+function changeDomain(block) {
+  block.querySelectorAll('a').forEach((anchor) => {
+    const url = new URL(anchor.href);
+    if (url.hostname === 'www.24petwatch.com' || url.hostname === '24petwatch.com') {
+      url.protocol = window.location.protocol;
+      url.hostname = window.location.hostname;
+      url.port = window.location.port;
+      anchor.href = url.toString();
+    }
+  });
+}
+
 /**
  * loads and decorates the footer
  * @param {Element} block The footer block element
@@ -154,6 +166,7 @@ export default async function decorate(block) {
     decorateIcons(footer);
     decorateLinks(footer);
     instrumentTrackingEvents(footer);
+    changeDomain(footer);
     block.append(footer);
   }
 }
