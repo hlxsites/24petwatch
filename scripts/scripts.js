@@ -132,6 +132,18 @@ function buildAutoBlocks(main) {
   }
 }
 
+export function changeDomain(block) {
+  block.querySelectorAll('a').forEach((anchor) => {
+    const url = new URL(anchor.href);
+    if (url.hostname === 'www.24petwatch.com' || url.hostname === '24petwatch.com') {
+      url.protocol = window.location.protocol;
+      url.hostname = window.location.hostname;
+      url.port = window.location.port;
+      anchor.href = url.toString();
+    }
+  });
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -141,6 +153,7 @@ export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
+  changeDomain(main);
   decorateLinks(main);
   buildAutoBlocks(main);
   decorateSections(main);

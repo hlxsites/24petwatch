@@ -13,6 +13,7 @@ import {
   baseDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { changeDomain } from '../../scripts/scripts.js';
 
 // let positionY = 0;
 // const SCROLL_STEP = 25;
@@ -401,18 +402,6 @@ function fetchImagesFromMediaFolder(block) {
   });
 }
 
-function changeDomain(block) {
-  block.querySelectorAll('a').forEach((anchor) => {
-    const url = new URL(anchor.href);
-    if (url.hostname === 'www.24petwatch.com' || url.hostname === '24petwatch.com') {
-      url.protocol = window.location.protocol;
-      url.hostname = window.location.hostname;
-      url.port = window.location.port;
-      anchor.href = url.toString();
-    }
-  });
-}
-
 /**
  * decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -475,12 +464,12 @@ export default async function decorate(block) {
 
   decorateIcons(nav);
   decorateButtons(nav);
+  changeDomain(block);
   decorateLinks(nav);
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);
   addLinkToLogo(nav);
   fetchImagesFromMediaFolder(block);
-  changeDomain(block);
 
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     const main = document.querySelector('main');
