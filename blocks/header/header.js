@@ -13,6 +13,7 @@ import {
   baseDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { changeDomain } from '../../scripts/scripts.js';
 
 // let positionY = 0;
 // const SCROLL_STEP = 25;
@@ -463,6 +464,7 @@ export default async function decorate(block) {
 
   decorateIcons(nav);
   decorateButtons(nav);
+  changeDomain(block);
   decorateLinks(nav);
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);

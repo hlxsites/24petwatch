@@ -6,6 +6,7 @@ import {
   isMobile,
   isCanada,
 } from '../../scripts/lib-franklin.js';
+import { changeDomain } from '../../scripts/scripts.js';
 
 const socialNetworks = ['Instagram', 'Twitter', 'Facebook'];
 
@@ -152,6 +153,7 @@ export default async function decorate(block) {
     });
 
     decorateIcons(footer);
+    changeDomain(footer);
     decorateLinks(footer);
     instrumentTrackingEvents(footer);
     block.append(footer);
