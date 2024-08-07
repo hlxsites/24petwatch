@@ -6,6 +6,7 @@ import {
   isMobile,
   isCanada,
 } from '../../scripts/lib-franklin.js';
+import { changeDomain } from '../../scripts/scripts.js';
 
 const socialNetworks = ['Instagram', 'Twitter', 'Facebook'];
 
@@ -49,18 +50,6 @@ function instrumentTrackingEvents(footer) {
         }
       });
     });
-}
-
-function changeDomain(block) {
-  block.querySelectorAll('a').forEach((anchor) => {
-    const url = new URL(anchor.href);
-    if (url.hostname === 'www.24petwatch.com' || url.hostname === '24petwatch.com') {
-      url.protocol = window.location.protocol;
-      url.hostname = window.location.hostname;
-      url.port = window.location.port;
-      anchor.href = url.toString();
-    }
-  });
 }
 
 /**
@@ -164,9 +153,9 @@ export default async function decorate(block) {
     });
 
     decorateIcons(footer);
+    changeDomain(footer);
     decorateLinks(footer);
     instrumentTrackingEvents(footer);
-    changeDomain(footer);
     block.append(footer);
   }
 }
