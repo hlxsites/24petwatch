@@ -1,4 +1,4 @@
-.trustedsite-trustmark-wrapper {
+#trustedsite-trustmark-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -9,7 +9,6 @@
     min-height: 50px;
     width: 120px;
     height: 50px;
-    background-image: url('https://cdn.ywxi.net/meter/24petwatch.com/202.svg?ts=1701619192926&l=en');
     background-size: contain;
     background-position: center top;
     background-repeat: no-repeat;

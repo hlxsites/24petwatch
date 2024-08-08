@@ -1,10 +1,11 @@
+// "Certified Secure" certification by TrustedSite.com
+// Display the TrustedSite trustmark in iframe modal
 export default async function decorate(block) {
   const config = {};
   block.querySelectorAll(':scope > div').forEach((row) => {
-    if (row.children) {
-      if (row.children[0].textContent && row.children[1].textContent) {
-        config[row.children[0].textContent.toLowerCase()] = row.children[1].textContent;
-      }
+    const [keyElement, valueElement] = row.children;
+    if (keyElement?.textContent && valueElement?.textContent) {
+      config[keyElement.textContent.toLowerCase()] = valueElement.textContent;
     }
   });
 
@@ -13,16 +14,20 @@ export default async function decorate(block) {
   const src = `https://www.trustedsite.com/verify-modal?js=1&host=${host}&lang=${lang}`;
 
   block.innerHTML = '';
-  const formContent = `
-    <div class="trustedsite-trustmark-wrapper">
+  const blockContent = `
+    <div id="trustedsite-trustmark-wrapper">
       <div id="trustedsite-trustmark"></div>
     </div>
   `;
 
-  const fragment = document.createRange().createContextualFragment(formContent);
+  const fragment = document.createRange().createContextualFragment(blockContent);
   block.appendChild(fragment);
 
   const trustedsiteTrustmark = document.querySelector('#trustedsite-trustmark');
+
+  // Set the background image dynamically based on the lang value
+  trustedsiteTrustmark.style.backgroundImage = `url('https://cdn.ywxi.net/meter/24petwatch.com/202.svg?l=${lang}')`;
+
   trustedsiteTrustmark.addEventListener('click', () => {
     // Create the modal container
     const modalDiv = document.createElement('div');
