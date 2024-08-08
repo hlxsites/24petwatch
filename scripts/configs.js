@@ -6,6 +6,7 @@ export const calcEnvironment = () => {
     const environmentMap = {
       '24petwatch.com': 'prod',
       'aem-dev.24petwatch.com': 'stage',
+      'aem-stage.24petwatch.com': 'stage',
       '.hlx.page': 'stage',
       localhost: 'dev',
     };
