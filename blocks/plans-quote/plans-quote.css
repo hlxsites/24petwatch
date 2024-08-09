@@ -189,6 +189,23 @@ main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-inf
   display: block;
 }
 
+main .plans-quote.summary-quote > div.payment-summary > div.payments {
+  border-top: 2px solid #edf2f7;
+  padding: 0 2rem;
+}
+
+main .plans-quote.summary-quote > div.payment-summary > div.payments > div {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: .5rem 0;
+}
+
+main .plans-quote.summary-quote > div.payment-summary > div.payments > div.due-today {
+  border-top: 2px solid #a0aec0;
+  font-weight: 700;
+}
+
 dialog {
   border: none;
   border-radius: 10px;

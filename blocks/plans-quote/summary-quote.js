@@ -20,6 +20,21 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   let ownerData = [];
   let petsList = [];
   let selectedProducts = [];
+  let purchaseSummary = {};
+
+  // eslint-disable-next-line no-shadow
+  async function getPurchaseSummary(ownerId) {
+    // eslint-disable-next-line no-shadow
+    let purchaseSummary = {};
+    try {
+      purchaseSummary = await APIClientObj.getPurchaseSummary(ownerId);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the purchase summary for owner:', ownerId, ' status:', status);
+    }
+
+    return purchaseSummary;
+  }
 
   try {
     ownerData = await APIClientObj.getOwner(ownerId);
@@ -44,10 +59,18 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.log('Failed to get the selected products for owner:', ownerData.id, ' status:', status);
     }
+
+    try {
+      purchaseSummary = await getPurchaseSummary(ownerData.id);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the purchase summary for owner:', ownerData.id, ' status:', status);
+    }
   }
 
   console.dir(petsList);
   console.dir(selectedProducts);
+  console.dir(purchaseSummary);
 
   function getSelectedProduct(petId) {
     return selectedProducts.find((item) => item.petID === petId);
@@ -78,19 +101,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     };
 
     return additionalInfo[itemId] || '';
-  }
-
-  // eslint-disable-next-line no-shadow
-  async function getPurchaseSummary(ownerId) {
-    let purchaseSummary = {};
-    try {
-      purchaseSummary = await APIClientObj.getPurchaseSummary(ownerId);
-    } catch (status) {
-      // eslint-disable-next-line no-console
-      console.log('Failed to get the purchase summary for owner:', ownerId, ' status:', status);
-    }
-
-    return purchaseSummary;
   }
 
   function editPet(petId) {
@@ -168,9 +178,29 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     </div>
   </dialog>
   ${petListHTML}
+  <div class="payment-summary">
+    <h5>Payment Summary</h5>
+    <div class="payments">
+        <div>
+            <div>Monthly Fee</div>
+            <div>$0.00</div>
+        </div>
+        <div>
+            <div>Subtotal</div>
+            <div>$${purchaseSummary.summary.subTotal}</div>
+        </div>
+        <div>
+            <div>Sales Tax</div>
+            <div>$${purchaseSummary.summary.salesTaxes}</div>
+        </div>
+        <div class="due-today">
+            <div>Due Today</div>
+            <div>$${purchaseSummary.summary.totalDueToday}</div>
+        </div>
+    </div>
+  </div>
+  <div style="text-align: center"><button id="proceedToPayment">Proceed to Payment</button></div>
   `;
-
-  console.log(await getPurchaseSummary(ownerData.id));
 
   const confirmationDialog = document.getElementById('confirmation-dialog');
   const confirmationDialogHeader = document.getElementById('confirmation-dialog-header');
@@ -204,6 +234,18 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     };
   }
 
+  async function updateAutoRenewHandler(target) {
+    const petID = target.getAttribute('data-pet-id');
+    const recID = target.getAttribute('data-rec-id');
+    const isChecked = target.checked;
+    try {
+      await APIClientObj.saveSelectedProduct(petID, recID, 1, isChecked);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to update the auto-renew for pet:', petID, ' status:', status);
+    }
+  }
+
   const itemsContainer = document.querySelector('.summary-quote');
   itemsContainer.addEventListener('click', (event) => {
     if (event.target && event.target.classList.contains('edit-pet')) {
@@ -212,6 +254,33 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     } else if (event.target && event.target.classList.contains('remove-pet')) {
       const petID = event.target.getAttribute('data-pet-id');
       removePetHandler(petID);
+    } else if (event.target && event.target.classList.contains('auto-renew-checkbox')) {
+      updateAutoRenewHandler(event.target);
     }
   });
+
+  const proceedToPaymentButton = document.getElementById('proceedToPayment');
+
+  function replaceUrlPlaceholders(urlTemplate, ...values) {
+    return urlTemplate.replace(/{(\d+)}/g, (match, index) => {
+      return typeof values[index] !== 'undefined' ? values[index] : match;
+    });
+  }
+
+  proceedToPaymentButton.onclick = async () => {
+    try {
+      const data = await APIClientObj.postSalesForPayment(ownerData.id, ownerData.cartFlow);
+      if (data.isSuccess) {
+        window.location.href = replaceUrlPlaceholders(
+          data.paymentProcessorRedirectBackURL,
+          ownerData.id,
+          ownerData.cartFlow,
+          data.paymentProcessingUserId,
+        );
+      }
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to post sales for payment for owner:', ownerData.id, ' status:', status);
+    }
+  };
 }

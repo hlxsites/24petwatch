@@ -238,4 +238,15 @@ export default class APIClient {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, params, null, resolve, reject, 'json');
     });
   }
+
+  postSalesForPayment(ownerId, flowId) {
+    const path = 'Transaction/PostSalesForPayment';
+    const params = {
+      ownerId,
+      flow: flowId,
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
+    });
+  }
 }
