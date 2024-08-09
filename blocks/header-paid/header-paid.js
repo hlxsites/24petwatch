@@ -1,6 +1,6 @@
-import { jsx } from '../../scripts/scripts.js';
+import { jsx, changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { isCanada } from '../../scripts/lib-franklin.js';
+import { isCanada, decorateLinks } from '../../scripts/lib-franklin.js';
 
 // Adding animation for header
 function onDomContentLoaded() {
@@ -46,4 +46,8 @@ export default async function decorate(block) {
     // DOM is already loaded
     onDomContentLoaded();
   }
+
+  changeDomain(block);
+  addCanadaToLinks(block);
+  decorateLinks(block);
 }
