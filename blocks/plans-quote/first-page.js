@@ -2,6 +2,7 @@ import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import {
+  COOKIE_NAME_SAVED_OWNER_ID,
   COOKIE_NAME_FOR_PET_PLANS,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
@@ -12,6 +13,7 @@ import {
   PET_PLANS_SUMMARY_QUOTE_URL,
   getCombinedCookie,
   setCombinedCookie,
+  setCookie,
   getQueryParam,
 } from '../../scripts/24petwatch-utils.js';
 
@@ -529,6 +531,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
   }
 
   async function savePet(petId) {
+    console.log(petId);
     try {
       // eslint-disable-next-line max-len
       const data = await APIClientObj.savePet(petId, formData.ownerId, formData.petName, formData.breed.breedId, formData.speciesId, formData.purebreed, formData.microchip);
@@ -624,6 +627,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
 
     // remember the critical information for future steps
     setCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, [formData.ownerId, formData.petId]);
+    setCookie(COOKIE_NAME_SAVED_OWNER_ID, formData.ownerId);
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 
@@ -728,6 +732,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     if (!data) {
       return;
     }
+    formData.petId = petId;
     if (data.petName) {
       petNameInput.value = data.petName;
       petNameHandler();

@@ -1,5 +1,5 @@
 /* stylelint-disable property-no-vendor-prefix */
-main .plans-quote > div {
+main .plans-quote.first-step > div {
   display: flex;
   flex-wrap: wrap;
   gap: 30px;
@@ -9,19 +9,19 @@ main .plans-quote > div {
   margin-top: 2.5rem;
 }
 
-main .plans-quote > div > div {
+main .plans-quote.first-step > div > div {
   display: block;
   position: relative;
   flex: calc(65% - 15px);
   box-sizing: border-box;
 }
 
-main .plans-quote > div > div:nth-child(1) {
+main .plans-quote.first-step > div > div:nth-child(1) {
   border: .1875rem solid #007680;
   border-radius: 10px;
 }
 
-main .plans-quote > div > div:nth-child(1) > h1:first-of-type {
+main .plans-quote.first-step > div > div:nth-child(1) > h1:first-of-type {
   background-color: #007680;
   margin: 0;
   padding: .5rem .5rem .625rem;
@@ -33,17 +33,17 @@ main .plans-quote > div > div:nth-child(1) > h1:first-of-type {
   text-align: center;
 }
 
-main .plans-quote > div > div:nth-child(1) > h2 {
+main .plans-quote.first-step > div > div:nth-child(1) > h2 {
   font-size: 1.625rem;
   line-height: 2.25rem;
   padding: 0 2rem;
 }
 
-main .plans-quote > div > div:nth-child(1) > p {
+main .plans-quote.first-step > div > div:nth-child(1) > p {
   padding: 0 2rem;
 }
 
-main .plans-quote > div > div:nth-child(1) > p:first-of-type {
+main .plans-quote.first-step > div > div:nth-child(1) > p:first-of-type {
   background-color: #007680;
   color: #fff;
   text-align: center;
@@ -51,7 +51,7 @@ main .plans-quote > div > div:nth-child(1) > p:first-of-type {
   margin: 0;
 }
 
-main .plans-quote > div > div:nth-child(2) {
+main .plans-quote.first-step > div > div:nth-child(2) {
   flex: calc(35% - 15px);
   background-color: #e7e9ea;
   border-radius: 10px;
@@ -63,28 +63,163 @@ main .plans-quote > div > div:nth-child(2) {
   flex-wrap: wrap;
 }
 
-main .plans-quote > div > div:nth-child(2) > div {
+main .plans-quote.first-step > div > div:nth-child(2) > div {
   width: calc(50% - 20px);
   margin: 10px;
 }
 
-main .plans-quote > div > div:nth-child(2) > h2 {
+main .plans-quote.first-step > div > div:nth-child(2) > h2 {
   font-size: 1.625rem;
   line-height: 2.25rem;
   width: 100%;
   text-align: center;
 }
 
-main .plans-quote > div > div:nth-child(2) > div > p {
+main .plans-quote.first-step > div > div:nth-child(2) > div > p {
   font-size: .813rem;
   line-height: .938rem;
   text-align: center;
 }
 
-main .plans-quote > div > div:nth-child(2) > div > p > span.icon
+main .plans-quote.first-step > div > div:nth-child(2) > div > p > span.icon
 {
   height: 65px;
   width: 65px;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-header {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+  background-color: #007680;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 20px;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-header > p {
+  margin: 1.5rem 0 1.5rem 1.5rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-header > div.item-menu > a {
+  display: inline-block;
+  margin: 1.5rem 1.5rem 1.5rem 0;
+  color: #fff;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info {
+  box-sizing: border-box;
+  margin: 0 1rem;
+  padding: 0 1.5rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0 0 20px 20px;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.pet-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.pet-name > span {
+  display: inline-block;
+  margin-bottom: .25rem;
+  margin-left: .25rem;
+  width: .5rem;
+  height: .5rem;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.price-info {
+  font-size: 1.125rem;
+  text-align: right;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.price-info > div.price {
+  font-weight: 700;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew {
+  display: inline-flex;
+  margin: 1rem 1.5rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-checkbox-container {
+  margin: .25rem 1rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
+  margin: 0 4rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info {
+  margin: .25rem 4rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  background-image: url('/icons/info-circle.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info > div.auto-renew-info-text {
+  display: none;
+  position: absolute;
+  width: 300px;
+  font-size: .825rem;
+  border: 1px solid #cbd5e0;
+  background-color: #fff;
+  z-index: 999;
+  top: 0;
+  right: .6rem;
+  padding: 1rem;
+  border-radius: .5rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info:hover > div.auto-renew-info-text {
+  display: block;
+}
+
+dialog {
+  border: none;
+  border-radius: 10px;
+}
+
+dialog h3 {
+  margin-top: 0.5rem;
+}
+
+dialog p {
+  padding: 1rem;
+  border-top: 1px solid var(--summary-quote-outline-color);
+  border-bottom: 1px solid var(--summary-quote-outline-color);
+}
+
+dialog .dialog-buttons-container {
+  display: flex;
+  justify-content: right;
+}
+
+dialog button {
+  margin: 0.5rem 0.5rem 0.5rem 1.5rem;
+}
+
+dialog button.yes {
+  background-color: var(--dialog-yes-color);
+}
+
+dialog button.yes:hover,
+dialog button.yes:focus {
+  background-color: var(--dialog-yes-hover-color);
 }
 
 main .plans-quote form {

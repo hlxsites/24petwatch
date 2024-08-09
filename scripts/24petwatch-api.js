@@ -142,6 +142,13 @@ export default class APIClient {
     });
   }
 
+  getPets(ownerId) {
+    const path = `Pet/GetByOwner/${ownerId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
   /** Creates or Updates a pet, depending on whether the petId is provided.
    * @param petId - if provided, the pet will be updated, otherwise a new pet will be created
    * @param ownerId - string
@@ -210,10 +217,25 @@ export default class APIClient {
     });
   }
 
+  getSelectedProductsForOwner(ownerId) {
+    const path = `Product/NonInsurance/GetSelectedForOwner/${ownerId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
   getSelectedProductsForPet(petId) {
     const path = `Product/NonInsurance/GetSelectedForPet/${petId}`;
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
+  getPurchaseSummary(ownerId) {
+    const path = 'Utility/GetPurchaseSummary';
+    const params = { ownerId };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, params, null, resolve, reject, 'json');
     });
   }
 }

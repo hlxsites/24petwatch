@@ -17,10 +17,11 @@ export function getQueryParam(param, defaultValue = null) {
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';
 export const COOKIE_NAME_FOR_PET_PLANS = 'ph.PetPlanQuote';
+export const COOKIE_NAME_SAVED_OWNER_ID = 'ph.savedOwnerId';
 
 const COOKIE_DELIM = '~#|#~';
 
-function getCookie(name, defaultVal = null) {
+export function getCookie(name, defaultVal = null) {
   const cookieArr = document.cookie.split(';');
   // eslint-disable-next-line no-plusplus
   for (let i = 0; i < cookieArr.length; i++) {
@@ -30,6 +31,13 @@ function getCookie(name, defaultVal = null) {
     }
   }
   return defaultVal; // might be null
+}
+
+export function setCookie(name, value, days = 1) {
+  const date = new Date();
+  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+  const expires = `expires=${date.toUTCString()}`;
+  document.cookie = `${name}=${value};${expires};path=/;Secure;SameSite=Strict`;
 }
 
 export function getCombinedCookie(name, defaultVal = []) {
@@ -42,10 +50,7 @@ export function getCombinedCookie(name, defaultVal = []) {
 
 export function setCombinedCookie(name, values, days = 1) {
   const value = values.join(COOKIE_DELIM);
-  const date = new Date();
-  date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
-  const expires = `expires=${date.toUTCString()}`;
-  document.cookie = `${name}=${value};${expires};path=/;Secure;SameSite=Strict`;
+  setCookie(name, value, days);
 }
 
 export function deleteCookie(name) {
