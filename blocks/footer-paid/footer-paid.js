@@ -2,6 +2,7 @@ import {
   decorateLinks,
   isCanada,
 } from '../../scripts/lib-franklin.js';
+import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 
 /**
  * loads and decorates the footer
@@ -108,6 +109,8 @@ export default async function decorate(block) {
       }
     });
 
+    changeDomain(footer);
+    addCanadaToLinks(footer);
     decorateLinks(footer);
     block.append(footer);
   }

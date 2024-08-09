@@ -145,6 +145,27 @@ export function changeDomain(block) {
 }
 
 /**
+ * Rewrite links to add Canada to the path
+ * @param {Element} block The block element
+ */
+export function addCanadaToLinks(block) {
+  if (isCanada) {
+    block.querySelectorAll('a').forEach((anchor) => {
+      if (anchor.getAttribute('rel') === 'alternate') return;
+      const url = new URL(anchor.href);
+      const newUrl = new URL(anchor.href, window.location.origin);
+      if (url.hostname === window.location.hostname) {
+        // change only for internal links
+        if (!url.pathname.startsWith('/ca/')) {
+          newUrl.pathname = `/ca${url.pathname}`;
+          anchor.href = newUrl.toString();
+        }
+      }
+    });
+  }
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -154,6 +175,7 @@ export function decorateMain(main) {
   decorateButtons(main);
   decorateIcons(main);
   changeDomain(main);
+  addCanadaToLinks(main);
   decorateLinks(main);
   buildAutoBlocks(main);
   decorateSections(main);
