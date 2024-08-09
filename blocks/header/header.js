@@ -352,6 +352,10 @@ function addCanadaToLinks(header) {
       if (anchor.getAttribute('rel') === 'alternate') return;
       const url = new URL(anchor.href);
       const newUrl = new URL(anchor.href, window.location.origin);
+      console.log(anchor.href);
+      console.log(window.location.origin);
+      console.log(url.hostname);
+      console.log(window.location.hostname);
       if (url.hostname === window.location.hostname) {
         // change only for internal links
         newUrl.pathname = `/ca${url.pathname}`;
@@ -447,7 +451,6 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
-  addCanadaToLinks(navWrapper);
 
   // Append membership hover content
   const membershipsHoverContent = nav.querySelector('.nav-memberships');
@@ -466,6 +469,7 @@ export default async function decorate(block) {
   decorateButtons(nav);
   changeDomain(block);
   decorateLinks(nav);
+  addCanadaToLinks(navWrapper);
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);
   addLinkToLogo(nav);
