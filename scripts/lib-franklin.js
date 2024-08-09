@@ -596,13 +596,14 @@ export function decorateButtons(element) {
  */
 export function decorateLinks(element) {
   const currentDomain = window.location.hostname;
-  const domainRegex = new RegExp(`^https?://(www\\.)?${currentDomain.replace(/\./g, '\\.')}`);
 
   element.querySelectorAll('a').forEach((a) => {
+    const url = new URL(a.href);
     // open non-current domain pages in new tab
-    if (!domainRegex.test(a.href)) {
+    if (url.hostname !== currentDomain) {
       a.target = '_blank';
     }
+
     // open tel: links in the same tab
     if (/^tel:/.test(a.href)) {
       a.target = '_self';
