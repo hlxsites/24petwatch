@@ -295,7 +295,9 @@ export default async function decorate(block) {
       const href = li.querySelector('a')?.href;
       if (div.children.length === 1 && div.querySelector('picture')) {
         div.className = 'cards-card-image';
-        wrapInAnchor(div, href);
+        if (href) {
+          wrapInAnchor(div, href);
+        }
       } else {
         div.className = 'cards-card-body';
         const h4 = li.querySelector('h4');

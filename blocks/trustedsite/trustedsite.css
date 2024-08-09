@@ -1,0 +1,76 @@
+#trustedsite-trustmark-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  #trustedsite-trustmark {
+    min-height: 50px;
+    width: 120px;
+    height: 50px;
+    background-size: contain;
+    background-position: center top;
+    background-repeat: no-repeat;
+    cursor: pointer;
+  }
+  
+  #trustedsite-tm-verify {
+    max-width: none;
+    max-height: none;
+    position: fixed;
+    background: #e6e7e8;
+    margin: 0;
+    padding: 0;
+    z-index: 1000004;
+    width: 500px;
+    height: 480px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  #trustedsite-iframe {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: none;
+    max-width: none;
+    max-height: none;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  
+  #trustedsite-tm-overlay {
+    max-width: none;
+    max-height: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(20 20 20 / 95%);
+    z-index: 1000003;
+    cursor: zoom-out;
+  }
+  
+  #trustedsite-tm-close {
+    max-width: none;
+    max-height: none;
+    background-image: url('https://cdn.ywxi.net/static/img/modal-close.png');
+    background-size: 11px 11px;
+    background-repeat: no-repeat;
+    background-position: center center;
+    z-index: 1000005;
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    right: 10px;
+    top: -20px;
+    cursor: pointer;
+  }

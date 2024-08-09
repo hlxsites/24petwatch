@@ -123,7 +123,7 @@ function smScript(jsUrl, className) {
       c.id = n;
       c.src = extractURL(jsUrl.replace(/\s/g, ''));
 
-      c.onload = function () {
+      c.onload = function onloadHandler() {
         // Find the element with class name "myClass" and append the script to it
         const myClassElement = e.getElementsByClassName(className)[0];
         if (myClassElement) {

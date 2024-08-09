@@ -1,0 +1,110 @@
+main #tab-content-found-pet-report .found-pet-report {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report > div {
+  display: block;
+  position: relative;
+  flex: calc(50% - 15px);
+  box-sizing: border-box;
+}
+
+main #tab-content-found-pet-report .found-pet-report form {
+  border: unset;
+  padding: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  padding-top: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report form h2 {
+  text-align: left;
+}
+
+main #tab-content-found-pet-report .found-pet-report > div:nth-child(2) {
+  border: .1875rem solid #e5e5e5;
+  border-radius: .625rem;
+  padding: 0 2rem 1rem;
+}
+
+main #tab-content-found-pet-report .found-pet-report > div:nth-child(2) p {
+  line-height: .938rem;
+  font-size: .813rem;
+  text-align: center;
+  padding: 0 5rem;
+}
+
+main #tab-content-found-pet-report .section {
+  padding: 0;
+}
+
+main #tab-content-found-pet-report .found-pet-report-wrapper {
+  margin-top: 2rem;
+}
+
+main #tab-content-found-pet-report form .wrapper-info {
+  width: calc(100% - 1.1rem);
+}
+
+main #tab-content-found-pet-report form .wrapper-info .info-icon {
+  display: inline-block;
+  width: 1.1rem;
+  height: 1.1rem;
+  margin-left: 0.25rem;
+  position: absolute;
+  background-image: url('/icons/info-circle.svg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  top: 1.8rem;
+  right: -1.1rem;
+}
+
+main #tab-content-found-pet-report form .wrapper-info .info-icon .info-content {
+  position: absolute;
+  top: 0;
+  left: .75rem;
+  max-width: 264px;
+  min-width: 200px;
+  background-color: #e0e1e2;
+  border-radius: .125rem;
+  box-shadow: 0 5px 5px 0 rgb(0 0 0 / 16%);
+  margin: 0;
+  padding: 1.0625rem 1.25rem;
+  line-height: 1.2rem;
+  font-size: 1rem;
+  visibility: hidden;
+  z-index: 100;
+}
+
+main #tab-content-found-pet-report form .wrapper-info .info-icon:hover .info-content {
+  visibility: visible;
+}
+
+#tab-content-found-pet-report em {
+  color: var(--text-secondary-color);
+  display: inline-block;
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  main #tab-content-found-pet-report .found-pet-report > div {
+    flex: 100%;
+  }
+
+  main #tab-content-found-pet-report form .wrapper-info .info-icon .info-content {
+    left: unset;
+    right: .75rem;
+  }
+
+  main #tab-content-found-pet-report form label {
+    font-size: .8125rem;
+  }
+}

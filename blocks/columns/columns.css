@@ -8,6 +8,11 @@
   margin-bottom: .625rem;
 }
 
+.columns hr {
+  height: 1px;
+  background-color: #05233f;
+}
+
 .columns img {
   max-height: min(calc(7vw - 1px), 100px);
   min-height: 40px;
@@ -16,6 +21,52 @@
 
 .columns > div > div {
   order: 1;
+}
+
+main .lost-pet-data > div {
+  padding: 1rem 0;
+}
+
+main .lost-pet-data > div div {
+  font-size: 1.2rem;
+}
+
+.columns.microchip-lifetime > div {
+  padding-left: 0;
+  flex-direction: column-reverse;
+}
+
+.columns.microchip-lifetime img {
+  border-radius: 10px;
+}
+
+.columns.image-as-is img {
+  object-fit: scale-down;
+}
+
+.columns.with-iframe iframe {
+  width: 100%;
+  height: 500px;
+  border: none;
+}
+
+.columns.transfer-microchip-registration-how-to > div {
+  align-items: self-start;
+  flex-direction: column-reverse;
+}
+
+.columns.transfer-microchip-registration-how-to img {
+  margin-top: 1rem;
+}
+
+.columns.transfer-microchip-registration-learn-more img {
+  max-height: 200px;
+  margin-top: -10rem;
+}
+
+.columns.transfer-microchip-registration-learn-more > div {
+  display: flex;
+  align-items: stretch;
 }
 
 .columns > div > .columns-img-col {
@@ -28,8 +79,30 @@
   width: 100%;
 }
 
+/* gray box on right side of a double column */
+.columns.gray-box-right > div {
+  align-items: flex-start;
+}
+
 .columns.text-center > div {
   text-align: center;
+}
+
+.columns.content-left p {
+  text-align: left;
+}
+
+.columns.content-left > div {
+  padding-left: 0;
+}
+
+.columns.lpm-multi > div {
+  align-items: center;
+}
+
+.columns.lpm-just1 > div {
+  margin-left: 20vw;
+  margin-right: 20vw;
 }
 
 .columns.teaser {
@@ -55,6 +128,17 @@
   line-height: 1.5625rem;
 }
 
+.columns.transfer-microchip-registration-learn-more > div > div {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 1rem;
+  margin-top: 8rem;
+}
+
+main .lost-pet-data > div div:first-child {
+  flex: 0 0 80px;
+}
+
 .columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
   margin-bottom: 1.25rem;
   padding-left: 0.9375rem;
@@ -69,6 +153,10 @@
   margin: 0.3125rem auto;
 }
 
+.columns.microchip-lifetime p.button-container a.button {
+  display: inline-block;
+}
+
 .columns.gray p.button-container a.button {
   display: inline-block;
   border: 0.1875rem solid var(--text-color);
@@ -80,13 +168,82 @@
   background: #d0dfe8;
 }
 
+.columns.gray {
+  background-color: #e7e9ea;
+}
+
+/* gray box on right side of a double column */
+.columns.gray-box-right > div > :nth-child(2) {
+  background-color: var(--background-color-secondary);
+  border-radius: 10px;
+  padding: 2rem;
+  margin: 2rem 0;
+}
+
+.columns.microchip-lifetime {
+  text-align: center;
+  background-color: var(--background-color-secondary);
+  border-radius: 10px;
+}
+
+.columns.go-to-faq {
+  text-align: center;
+  background-color: var(--background-color-secondary);
+  border-radius: 10px;
+  padding: 1.5rem;
+}
+
+.columns.headings-tight h3 {
+  margin-bottom: 0;
+}
+
+.columns.headings-tight h3 + h4 {
+  margin-top: 0;
+}
+
+.columns.text-x-large p {
+  font-size: x-large;
+}
+
 .columns.teaser > div > div h3 {
   font-size: 1.3125rem;
   line-height: 1.938rem;
 }
 
-.columns.gray {
-  background-color: #e7e9ea;
+main .columns.cat-dog-background > div > div:last-child {
+  margin-top: -310px;
+  background-image: url('/images/cat-dog-1.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+  min-height: 600px;
+  background-position-x: right;
+  background-position-y: bottom;
+}
+
+/* images */
+.columns.lpm-multi.content-tight > div > div:nth-child(odd),
+.columns.lpm-just1.content-tight > div > div:nth-child(odd) {
+  flex: 0 0 70px;
+  order: 1;
+}
+
+/* content */
+.columns.lpm-multi.content-tight > div > div:nth-child(even),
+.columns.lpm-just1.content-tight > div > div:nth-child(even) {
+  flex: 1;
+}
+
+/* last odd set of image+content */
+.columns.lpm-multi.content-tight > div > div:last-child:nth-child(odd) {
+  flex-basis: 35%;
+}
+
+main .section.about-us-icons img  {
+  min-height: 80px;
+}
+
+.columns.lpm-just1 > div > .columns-img-col img {
+  max-height: min(calc(7vw - 1px), 70px);
 }
 
 @media (min-width: 768px) {
@@ -107,7 +264,23 @@
     order: unset;
   }
 
+  .columns.microchip-lifetime > div {
+    flex-direction: unset;
+  }
+
+  .columns.transfer-microchip-registration-how-to > div {
+    flex-direction: unset;
+  }
+
+  .columns.content-tight > div > div {
+    flex: unset;
+  }
+
   .columns h2 {
+    text-align: left;
+  }
+
+  .columns.h3-left h3 {
     text-align: left;
   }
 
@@ -117,5 +290,110 @@
 
   .columns.teaser > div > .columns-img-col {
     order: unset;
+  }
+
+  .columns.gray-box-right > div > :nth-child(2) {
+    margin: 1px 0;
+  }
+
+  .columns.one-third-right > div > :first-child {
+    flex: 2;
+  }
+
+  .columns.one-third-right > div > :nth-child(2) {
+    flex: 1;
+  }
+
+  .columns.one-third-left > div > :first-child {
+    flex: 1;
+  }
+
+  .columns.one-third-left > div > :nth-child(2) {
+    flex: 2;
+  }
+
+  .columns.image-overflow-peeking img {
+    background-position: bottom;
+    margin-top: -6.5rem;
+  }
+
+  /* images */
+  .columns.lpm-multi.content-tight > div > div:nth-child(odd),
+  .columns.lpm-just1.content-tight > div > div:nth-child(odd) {
+    order: unset;
+  }
+}
+
+main .lost-pet-data {
+  max-width: 44rem;
+  margin: 2rem auto;
+}
+
+main .lost-pet-data .icon {
+  width: 80px;
+  height: 80px;
+}
+
+main .section.cat-dog-background {
+  margin-top: 130px;
+}
+
+@media (max-width: 768px) {
+  main .section.cat-dog-background {
+    margin-top: 20px;
+  }
+
+  main .lost-pet-data > div div:first-child {
+    flex: 1;
+    text-align: center;
+  }
+
+  main .columns.cat-dog-background > div > div:last-child {
+    margin-top: 0;
+    min-height: 300px;
+    background-position-x: center;
+  }
+}
+
+.columns.collar-package p:first-of-type {
+  color: var(--link-color);
+  font-size: var(--heading-font-size-l);
+  margin: 0;
+}
+
+.columns.collar-package hr {
+  margin: 0;
+}
+
+.columns.transfer-microchip-registration-learn-more p.button-container {
+  text-align: center;
+}
+
+.columns.transfer-microchip-registration-learn-more > div > div > p:first-child {
+  text-align: center;
+}
+
+.columns.transfer-microchip-registration-learn-more a.button.secondary {
+  background: var(--background-color);
+  color: var(--button-secondary-color);
+  border: 1px solid;
+}
+
+.columns.transfer-microchip-registration-learn-more a.button.secondary:hover {
+  background: var(--button-secondary-hover-color);
+  color: var(--background-color);
+}
+
+/* .columns.image-to-buttom > div {
+  text-align: center;
+} */
+
+@media (width >= 768px) {
+  /* .section.content-buttom .columns > div:first-child {
+    align-items: flex-end;
+  } */
+
+  .columns.image-to-buttom > div:first-child {
+    align-items: flex-end;
   }
 }

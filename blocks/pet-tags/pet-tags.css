@@ -1,0 +1,131 @@
+form[id^="pet-tags-"] {
+    padding: 0;
+}
+
+form[id^="pet-tags-"] .title-wrapper {
+    background-color: var(--button-secondary-color);
+    color: var(--background-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+form[id^="pet-tags-"] .title-column:first-child {
+    width: 63%;
+}
+
+form[id^="pet-tags-"] .title-column:last-child {
+    width: 25%;
+}
+
+form[id^="pet-tags-"] .title-column p {
+    font-size: 1rem;
+    margin: 0;
+    padding-bottom: 0.66rem;
+}
+
+form[id^="pet-tags-"] .title-column p.price {
+    font-size: 1.3125rem;
+    margin: 0;
+    padding-top: 0.66rem;
+    padding-bottom: 0;
+}
+
+form[id^="pet-tags-"] h4 {
+    color: var(--background-color);
+    padding: 1rem;
+    margin: 0;
+    text-align: left;
+}
+
+form[id^="pet-tags-"] ul li {
+    font-size: 1rem;
+    text-align: left;
+}
+
+form[id^="pet-tags-"] span.label {
+    font-size: 0.75rem;
+    text-align: center;
+}
+
+form[id^="pet-tags-"] .image-above-text a {
+    display: ruby-text;
+}
+
+form[id^="pet-tags-"] .image-above-text a button {
+    width: 66%;
+}
+
+form[id^="pet-tags-"] .circular {
+    padding: 0.5rem 0.5rem 0;
+}
+
+form[id^="pet-tags-"] .circular img.outline {
+    outline: 2px solid white;
+}
+
+form[id^="pet-tags-"] img.color-disc {
+    border-radius: 50%;
+    width: 1.75rem;
+    height: 1.75rem;
+}
+
+form[id^="pet-tags-"] .grid-wrapper-x2 {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, auto);
+    padding-right: 1.25rem;
+}
+
+form[id^="pet-tags-"] .grid-wrapper-x3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
+    justify-content: center;
+    align-items: center;
+}
+
+/* declarations are for a narrow screen */
+form[id^="pet-tags-"] .grid-wrapper-x4 {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    margin: 1.5rem 0.5rem 0.5rem;
+}
+
+form[id^="pet-tags-"] .radio-wrapper.circular > label img {
+    padding: 0.2rem;
+}
+
+form[id^="pet-tags-"] .radio-wrapper.shape-item > label img {
+    padding: 0.1rem;
+}
+
+form[id^="pet-tags-"] .radio-wrapper>input[type="radio"]:checked+label img {
+    border-radius: 50%;
+    border: 0.25rem solid var(--button-secondary-color);
+}
+
+@media screen and (width >=768px) {
+    form[id^="pet-tags-"] .grid-wrapper-x4 {
+        grid-template-columns: repeat(4, 1fr);
+        grid-template-areas: "col1 col4 col2 col3";
+    }
+
+    form[id^="pet-tags-"] .grid-wrapper-x4 .col1 {
+        grid-area: col1;
+    }
+
+    form[id^="pet-tags-"] .grid-wrapper-x4 .col2 {
+        grid-area: col2;
+        border-left: 1px solid var(--button-secondary-color);
+        border-right: 1px solid var(--button-secondary-color);
+    }
+
+    form[id^="pet-tags-"] .grid-wrapper-x4 .col3 {
+        grid-area: col3;
+    }
+
+    form[id^="pet-tags-"] .grid-wrapper-x4 .col4 {
+        grid-area: col4;
+    }
+}

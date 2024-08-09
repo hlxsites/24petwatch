@@ -13,6 +13,7 @@ import {
   baseDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 
 // let positionY = 0;
 // const SCROLL_STEP = 25;
@@ -37,7 +38,7 @@ const urls = {
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
     const nav = document.getElementById('nav');
-    const navSections = nav.querySelector('.nav-sections');
+    const navSections = nav.querySelector('.nav-meganav');
     const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
     if (navSectionExpanded && isTablet.matches) {
       // eslint-disable-next-line no-use-before-define
@@ -57,7 +58,7 @@ function openOnKeydown(e) {
   if (isNavDrop && (e.code === 'Enter' || e.code === 'Space')) {
     const dropExpanded = focused.getAttribute('aria-expanded') === 'true';
     // eslint-disable-next-line no-use-before-define
-    toggleAllNavSections(focused.closest('.nav-sections'));
+    toggleAllNavSections(focused.closest('.nav-meganav'));
     focused.setAttribute('aria-expanded', dropExpanded ? 'false' : 'true');
   }
 }
@@ -124,6 +125,108 @@ function toggleMenu(nav, navSections, closeAll = null) {
   } else {
     window.removeEventListener('keydown', closeOnEscape);
   }
+}
+
+// function getDirectTextContent(menuItem) {
+//   const menuLink = menuItem.querySelector(':scope > a');
+//   if (menuLink) {
+//     return menuLink.textContent.trim();
+//   }
+//   return Array.from(menuItem.childNodes)
+//     .filter((n) => n.nodeType === Node.TEXT_NODE)
+//     .map((n) => n.textContent)
+//     .join(' ');
+// }
+
+// async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
+//   const crumbs = [];
+
+//   const homeUrl = document.querySelector('.nav-brand a').href;
+
+//   let menuItem = Array.from(nav.querySelectorAll('a')).find((a) => a.href === currentUrl);
+//   if (menuItem) {
+//     do {
+//       const link = menuItem.querySelector(':scope > a');
+//       crumbs.unshift({ title: getDirectTextContent(menuItem), url: link ? link.href : null });
+//       menuItem = menuItem.closest('ul')?.closest('li');
+//     } while (menuItem);
+//   } else if (currentUrl !== homeUrl) {
+//     crumbs.unshift({ title: getMetadata('og:title'), url: currentUrl });
+//   }
+
+//   const homePlaceholder = 'Home';
+//   crumbs.unshift({ title: homePlaceholder, url: homeUrl });
+
+//   // last link is current page and should not be linked
+//   if (crumbs.length > 1) {
+//     crumbs[crumbs.length - 1].url = null;
+//   }
+//   crumbs[crumbs.length - 1]['aria-current'] = 'page';
+//   return crumbs;
+// }
+
+async function buildBreadcrumbsFromUrl(currentUrl) {
+  const crumbs = [];
+  const homeUrl = document.querySelector('.nav-brand a').href;
+  const urlObj = new URL(currentUrl);
+  const pathSegments = urlObj.pathname.split('/').filter(Boolean); // Remove empty strings from the array
+
+  // Always add the home breadcrumb
+  crumbs.push({ title: 'Home', url: homeUrl });
+
+  const hasLocale = pathSegments[0].length === 2;
+  const basePathIndex = hasLocale ? 1 : 0;
+
+  // Loop through each segment after the base path index (and locale if present)
+  for (let i = basePathIndex; i < pathSegments.length; i += 1) {
+    let title;
+    const segment = pathSegments[i];
+
+    // Check for specific segments like 'lost-pet-protection'
+    if (segment === 'lost-pet-protection') {
+      title = 'Pet Protection'; // Specific title for 'lost-pet-protection'
+    } else {
+      // Automatically generate title for other segments
+      title = segment.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+    }
+
+    const url = i === pathSegments.length - 1 ? null : `${urlObj.origin}/${pathSegments.slice(0, i + 1).join('/')}`;
+    crumbs.push({ title, url });
+  }
+
+  // Last link is current page and should not be linked
+  if (crumbs.length > 1) {
+    crumbs[crumbs.length - 1].url = null;
+  }
+  crumbs[crumbs.length - 1]['aria-current'] = 'page';
+
+  return crumbs;
+}
+
+async function buildBreadcrumbs() {
+  const breadcrumbs = document.createElement('nav');
+  breadcrumbs.className = 'breadcrumbs';
+
+  // old: ',nav-sections'  ... new: '.nav-meganav'
+  const crumbs = await buildBreadcrumbsFromUrl(document.location.href);
+
+  const ol = document.createElement('ol');
+  ol.append(...crumbs.map((item) => {
+    const li = document.createElement('li');
+    if (item['aria-current']) li.setAttribute('aria-current', item['aria-current']);
+    if (item.url) {
+      const a = document.createElement('a');
+      a.href = item.url;
+      a.textContent = item.title;
+      li.append(a);
+    } else {
+      li.textContent = item.title;
+    }
+    return li;
+  }));
+
+  breadcrumbs.append(ol);
+  return breadcrumbs;
 }
 
 function decorateLanguageSelector(block) {
@@ -240,38 +343,6 @@ function addLinkToLogo(header) {
 }
 
 /**
- * Rewrite links to add Canada to the path
- * @param {Element} header The header block element
- */
-function addCanadaToLinks(header) {
-  if (isCanada) {
-    header.querySelectorAll('a').forEach((anchor) => {
-      if (anchor.getAttribute('rel') === 'alternate') return;
-      const url = new URL(anchor.href);
-      const newUrl = new URL(anchor.href, window.location.origin);
-      if (url.hostname === window.location.hostname) {
-        // change only for internal links
-        newUrl.pathname = `/ca${url.pathname}`;
-        anchor.href = newUrl.toString();
-      }
-    });
-  }
-}
-
-/**
- * Adds external link icons to links
- * @param {Element} header
- */
-function addExternalLinkIcons(header) {
-  header.querySelectorAll('a').forEach((anchor) => {
-    const url = new URL(anchor.href);
-    if (url.hostname !== window.location.hostname) {
-      anchor.classList.add('icon-external');
-    }
-  });
-}
-
-/**
  * Fetch images from the document based media folder.
  * @param {Element} block The header block element
  */
@@ -344,7 +415,6 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
-  addCanadaToLinks(navWrapper);
 
   // Append membership hover content
   const membershipsHoverContent = nav.querySelector('.nav-memberships');
@@ -353,19 +423,33 @@ export default async function decorate(block) {
   // Append register hover content
   const registerHoverContent = nav.querySelector('.nav-register');
   navWrapper.append(registerHoverContent);
-  decorateLinks(registerHoverContent);
-
-  // Add icon to login links
-  const loginLinks = nav.querySelector('.login');
-  addExternalLinkIcons(loginLinks);
 
   decorateIcons(nav);
   decorateButtons(nav);
-  decorateLinks(nav);
+  changeDomain(block);
+  addCanadaToLinks(block);
+  decorateLinks(block);
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);
   addLinkToLogo(nav);
   fetchImagesFromMediaFolder(block);
+
+  if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
+    const main = document.querySelector('main');
+
+    // Create a section for breadcrumbs
+    const sectionDiv = document.createElement('div');
+    sectionDiv.classList.add('section', 'breadcrumbs-section');
+    const contentWrapperDiv = document.createElement('div');
+    contentWrapperDiv.classList.add('default-content-wrapper');
+
+    sectionDiv.appendChild(contentWrapperDiv);
+    document.body.appendChild(sectionDiv);
+
+    // navWrapper.append(await buildBreadcrumbs());
+    contentWrapperDiv.prepend(await buildBreadcrumbs());
+    main.prepend(sectionDiv);
+  }
 
   // get mega nav elements
   const megaNav = nav.querySelector('.nav-meganav .mega-nav');

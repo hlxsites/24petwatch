@@ -1017,6 +1017,66 @@ header nav > .nav-secondary .language-selector > ul > li > a {
   padding-left: 10px;
 }
 
+/* breadcrumbs */
+.section.breadcrumbs-section {
+  padding: 0;
+}
+
+main .breadcrumbs {
+  font-family: var(--heading-font-family);
+  display: block;
+  padding: 0 32px;
+  width: 100%;
+  height: auto;
+  max-width: 1200px;
+  overflow: hidden;
+  margin: 0 auto;
+  font-size: inherit;
+  margin-top: 1rem;
+}
+
+main .breadcrumbs ol {
+  display: flex;
+  flex-flow: wrap;
+  list-style: none;
+  padding: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  gap: 1ch;
+}
+
+main .breadcrumbs ol li {
+  padding-inline-start: 0;
+  font-size: .75rem;
+}
+
+main .breadcrumbs ol li:not(:last-child)::after {
+  content: ">";
+  padding-left: 1ch;
+  opacity: 0.7;
+}
+
+main .breadcrumbs ol li a:any-link {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+main .breadcrumbs ol li:last-of-type {
+  opacity: 1;
+}
+
+@media screen and (width >= 900px) {
+  main .breadcrumbs {
+    display: block;
+  }
+}
+
+@media (width >= 768px) {
+  main .breadcrumbs ol li {
+    font-size: 1rem;
+  }
+}
+
 /* mobile view */
 
 @media (max-width: 900px) {

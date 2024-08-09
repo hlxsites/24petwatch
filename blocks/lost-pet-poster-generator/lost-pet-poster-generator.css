@@ -1,0 +1,27 @@
+main .lost-pet-poster-generator {
+  padding: 0 .9375rem;
+  margin: 1.25rem auto;
+  max-width: 71rem;
+}
+
+main #lost-pet-poster-generator-form {
+  padding: 2.5rem 1.875rem;
+}
+
+main #lost-pet-poster-generator-form h3 {
+  line-height: 2.25rem;
+  font-size: 1.625rem;
+  text-align: left;
+  margin-top: 3.25rem;
+}
+
+main #lost-pet-poster-generator-form .flex-wrapper > .radio-wrapper > label {
+  line-height: unset;
+  transform: unset;
+}
+
+@media (max-width: 414px) {
+  main #lost-pet-poster-generator-form #pet-weight~label {
+    font-size: .875rem;
+  }
+}

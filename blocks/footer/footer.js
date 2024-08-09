@@ -4,11 +4,9 @@ import {
   decorateIcons,
   decorateLinks,
   isMobile,
-  isLiveSite,
-  isCrosswalkDomain,
-  getXWalkDomain,
   isCanada,
 } from '../../scripts/lib-franklin.js';
+import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 
 const socialNetworks = ['Instagram', 'Twitter', 'Facebook'];
 
@@ -62,17 +60,9 @@ export default async function decorate(block) {
   const cfg = readBlockConfig(block);
   block.textContent = '';
 
-  let baseFooterUrl = '/fragments/footer/master';
+  let baseFooterUrl = '/fragments/us/footer';
   if (isCanada) {
-    baseFooterUrl = '/fragments/ca/footer/master';
-  }
-
-  if (!isLiveSite && !isCrosswalkDomain) {
-    if (isCanada) {
-      baseFooterUrl = `https://${getXWalkDomain()}/fragments/ca/footer/master`;
-    } else {
-      baseFooterUrl = `https://${getXWalkDomain()}/fragments/footer/master`;
-    }
+    baseFooterUrl = '/fragments/ca/footer';
   }
 
   // fetch footer content
@@ -163,6 +153,8 @@ export default async function decorate(block) {
     });
 
     decorateIcons(footer);
+    changeDomain(footer);
+    addCanadaToLinks(footer);
     decorateLinks(footer);
     instrumentTrackingEvents(footer);
     block.append(footer);

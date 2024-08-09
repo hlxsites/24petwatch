@@ -174,4 +174,237 @@
   .cards .cards-card-body p:last-of-type a {
     font-size: 16px;
   }
+
+  .cards.microchip-cards > ul {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+  }
+}
+
+/* About Us Page | Connect and Care section | Grid */
+.cards.connect-and-care-grid.block ul {
+  grid-template-areas:
+    "main"
+    "firstcard"
+    "secondcard";
+    grid-gap: inherit;
+}
+
+.cards.connect-and-care-grid.block ul li:first-child > div:first-child {
+  display: none;
+}
+
+.cards.connect-and-care-grid.block ul li:first-child > div:last-child {
+  margin: 0;
+}
+
+.cards.connect-and-care-grid ul li:nth-child(2),
+.cards.connect-and-care-grid ul li:nth-child(3)  {
+  background-color: var(--cool-background-color);
+  border-radius: 10px;
+  margin: 1rem 0;
+  padding: 1rem;
+
+  img {
+    max-height: 100%;
+    object-fit: contain;
+    aspect-ratio: auto;
+    margin: 1em;
+  }
+}
+
+.cards.pet-recovery-cards h4 {
+  text-align: center;
+  background-color: var(--button-secondary-color);
+  color: var(--background-color);
+  padding: 0.75rem 1rem;
+  margin: 0 0 2rem;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+
+.cards.pet-recovery-cards p {
+  text-align: center;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.cards.pet-recovery-cards .cards-card-body {
+  display: unset;
+  margin: 0;
+}
+
+.cards.pet-recovery-cards > ul > li {
+  border-radius: 10px;
+}
+
+.cards.collar-sizes ul li {
+  box-sizing: border-box;
+  border: .1875rem solid #e5e5e5;
+  border-radius: 10px;
+  box-shadow:none;
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.cards.collar-sizes ul li div {
+  margin: 1rem;
+}
+
+.cards.collar-sizes > ul > li img {
+  width: 177px;
+  object-fit: contain;
+  aspect-ratio: auto;
+}
+
+@media screen and (width >= 768px) {
+  .cards.connect-and-care-grid.block ul {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    grid-gap: 10px;
+    grid-template-areas:
+    "main firstcard"
+    "main secondcard";
+  }
+
+  .cards.pet-recovery-cards ul {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .cards.pet-recovery-cards ul li:last-child:nth-child(odd) {
+    grid-column: span 2;
+  }
+
+  .cards.connect-and-care-grid.block ul li:first-child {
+    grid-area: main;
+    justify-self: start;
+    align-self: start;
+  }
+
+  .cards.connect-and-care-grid.block ul li:nth-child(2) {
+    grid-area: firstcard;
+  }
+
+  .cards.connect-and-care-grid.block ul li:nth-child(3) {
+    grid-area: secondcard;
+  }
+
+  .cards.connect-and-care-grid > ul > li img {
+    width: 55%;
+  }
+
+  .cards.collar-sizes ul {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    grid-gap: 10px;
+    grid-template-areas:
+    "item1 item1 item2 item2 item3 item3"
+    "item4 item4 item4 item5 item5 item5";
+  }
+
+  .cards.collar-sizes ul li:nth-child(1) { grid-area: item1; }
+  .cards.collar-sizes ul li:nth-child(2) { grid-area: item2; }
+  .cards.collar-sizes ul li:nth-child(3) { grid-area: item3; }
+  .cards.collar-sizes ul li:nth-child(4) { grid-area: item4; }
+  .cards.collar-sizes ul li:nth-child(5) { grid-area: item5; }
+}
+
+.cards.connect-and-care-grid > ul > li {
+  background-color: 0;
+  box-shadow: none;
+}
+
+.cards.connect-and-care-grid > ul > li img {
+  width: 55%;
+}
+
+.connect-and-care-grid a + div.cards-card-body {
+  margin: 0 1em 1em;
+}
+
+.connect-and-care-grid a + div.cards-card-body > p:last-of-type {
+  width: 100%;
+  margin: 0;
+}
+
+.connect-and-care-grid a + div.cards-card-body > p:last-of-type a {
+  width: 100%;
+  margin: 0;
+  font-size: inherit;
+}
+
+.cards.microchip-cards {
+  margin: 1.5rem 0;
+}
+
+.cards.microchip-cards > ul > li img {
+  aspect-ratio: unset;
+  width: unset;
+}
+
+.cards.microchip-cards .cards-card-body p {
+  text-align: center;
+  flex: 1 1 100%;
+}
+
+.cards.microchip-cards .cards-card-body p:first-of-type {
+  margin: 1.5rem 0 0;
+}
+
+.cards.microchip-cards .cards-card-body p:last-of-type a {
+  font-weight: 200;
+}
+
+.cards.microchip-cards > ul > li h3 {
+  font-size: 1.3125rem;
+  line-height: 1.938rem;
+  color: #333f48;
+}
+
+.cards.microchip-cards > ul > li h3 a {
+  color: #333f48;
+  text-decoration: none;
+}
+
+.cards-container.microchip-container .default-content-wrapper > p {
+  text-align: center;
+  margin: 3rem 0 1.5rem;
+}
+
+.teal-bg-cards {
+  background-color: var(--button-secondary-color);
+}
+
+.teal-bg-cards ul li > div:not(.cards-card-image){
+  justify-content: center;
+  flex: 0;
+}
+
+.teal-bg-cards ul li {
+  align-items: center;
+  border-radius: 10px;
+}
+
+.teal-bg-cards.image-as-is img {
+  width: auto;
+  padding-top: 1rem;
+}
+
+.bytetag-reviews li div:nth-child(2) {
+  flex-direction: column;
+}
+
+.bytetag-reviews li p {
+  margin: 0;
+}
+
+.bytetag-reviews ul li {
+  border: .1875rem solid var(--nav-secondary-color);
+  border-radius: 10px;
+  box-shadow: none;
+  overflow: hidden;
+  position: relative;
+}
+
+.bytetag-reviews svg {
+  height: 15px;
 }
