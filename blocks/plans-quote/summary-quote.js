@@ -83,6 +83,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         priceComment: '(A one-time fee)',
         pageLink: PET_PLANS_LPM_URL,
       },
+      'LPM-PLUS-US-CATS': {
+        name: 'Lifetime Protection Membership™ Plus',
+        priceComment: '(A one-time fee)',
+        pageLink: PET_PLANS_LPM_PLUS_URL,
+      },
       'LPM-PLUS': {
         name: 'Lifetime Protection Membership™ Plus',
         priceComment: '(A one-time fee)',

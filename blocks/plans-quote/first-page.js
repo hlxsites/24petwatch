@@ -531,7 +531,6 @@ export function decorateLeftBlock(block, apiBaseUrl) {
   }
 
   async function savePet(petId) {
-    console.log(petId);
     try {
       // eslint-disable-next-line max-len
       const data = await APIClientObj.savePet(petId, formData.ownerId, formData.petName, formData.breed.breedId, formData.speciesId, formData.purebreed, formData.microchip);
@@ -549,9 +548,9 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     if (currentPath.includes(PET_PLANS_LPM_URL)) {
       token = 'PLH_000007';
     } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
-      token = 'LPM-PLUS';
+      token = (parseInt(formData.speciesId, 10) === 1) ? 'LPM-PLUS' : 'LPM-PLUS-US-CATS';
     } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
-      token = (formData.speciesId === 1) ? 'Annual Plan-DOGS' : 'Annual Plan-CATS';
+      token = (parseInt(formData.speciesId, 10) === 1) ? 'Annual Plan-DOGS' : 'Annual Plan-CATS';
     }
     return token;
   }
@@ -598,6 +597,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
     if (!formData.ownerId) {
+      console.log('Failed to save the owner.');
       showGeneralErrorMessage(apiErrorMsg);
       hideLoader();
       return;
@@ -606,6 +606,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     const petId = (!formData.petId) ? '' : formData.petId;
     await savePet(petId); // Create or Update the pet
     if (!formData.petId) {
+      console.log('Failed to save the pet.');
       showGeneralErrorMessage(apiErrorMsg);
       hideLoader();
       return;
@@ -613,11 +614,13 @@ export function decorateLeftBlock(block, apiBaseUrl) {
 
     await getSelectedProduct(formData.petId);
     if (!formData.productId) {
+      console.log('Failed to get the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
       hideLoader();
       return;
     }
     if (!await saveSelectedProduct(formData.petId, formData.productId)) {
+      console.log('Failed to save the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
       hideLoader();
       return;
