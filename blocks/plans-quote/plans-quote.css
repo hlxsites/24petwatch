@@ -312,6 +312,14 @@ main .plans-quote form .flex-wrapper .error-message {
   width: 100%;
 }
 
+main .plans-quote .bottom-section {
+  text-align: center;
+}
+
+main .plans-quote .bottom-section .amount-info {
+  font-weight: 700;
+}
+
 #pet-breed-list {
   background-color: #fff;
   box-sizing: border-box;

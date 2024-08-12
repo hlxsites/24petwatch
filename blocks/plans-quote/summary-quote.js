@@ -199,7 +199,10 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         </div>
     </div>
   </div>
-  <div style="text-align: center"><button id="proceedToPayment">Proceed to Payment</button></div>
+  <div class="bottom-section">
+    <div class="amount-info">This amount will appear as PTZ*24PTWTCH* on your credit card or bank statement.</div>
+    <button id="proceedToPayment">Proceed to Payment</button>
+  </div>
   `;
 
   const confirmationDialog = document.getElementById('confirmation-dialog');
