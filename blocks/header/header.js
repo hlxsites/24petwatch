@@ -5,7 +5,7 @@ import {
   decorateLinks,
   isMobile,
   isTablet,
-  // isDesktop,
+  isDesktopLG,
   isCanada,
   // isLiveSite,
   // isCrosswalkDomain,
@@ -40,11 +40,11 @@ function closeOnEscape(e) {
     const nav = document.getElementById('nav');
     const navSections = nav.querySelector('.nav-meganav');
     const navSectionExpanded = navSections.querySelector('[aria-expanded="true"]');
-    if (navSectionExpanded && isTablet.matches) {
+    if (navSectionExpanded && isDesktopLG.matches) {
       // eslint-disable-next-line no-use-before-define
       toggleAllNavSections(navSections);
       navSectionExpanded.focus();
-    } else if (!isTablet.matches) {
+    } else if (!isDesktopLG.matches) {
       // eslint-disable-next-line no-use-before-define
       toggleMenu(nav, navSections);
       nav.querySelector('button').focus();
@@ -103,7 +103,7 @@ function toggleMenu(nav, navSections, closeAll = null) {
   button.setAttribute('aria-label', expanded ? 'Open navigation' : 'Close navigation');
   // enable nav dropdown keyboard accessibility
   const navDrops = navSections.querySelectorAll('.nav-drop');
-  if (isTablet.matches) {
+  if (isDesktopLG.matches) {
     navDrops.forEach((drop) => {
       if (!drop.hasAttribute('tabindex')) {
         drop.setAttribute('role', 'button');
@@ -119,7 +119,7 @@ function toggleMenu(nav, navSections, closeAll = null) {
     });
   }
   // enable menu collapse on escape keypress
-  if (!expanded || isTablet.matches) {
+  if (!expanded || isDesktopLG.matches) {
     // collapse menu on escape press
     window.addEventListener('keydown', closeOnEscape);
   } else {
@@ -260,18 +260,18 @@ function decorateLanguageSelector(block) {
 
   languageSelector.setAttribute('aria-expanded', 'false');
   languageSelector.addEventListener('click', () => {
-    if (!isTablet.matches) {
+    if (!isDesktopLG.matches) {
       const expanded = languageSelector.getAttribute('aria-expanded') === 'true';
       languageSelector.setAttribute('aria-expanded', expanded ? 'false' : 'true');
     }
   });
   languageSelector.addEventListener('mouseenter', () => {
-    if (isTablet.matches) {
+    if (isDesktopLG.matches) {
       languageSelector.setAttribute('aria-expanded', 'true');
     }
   });
   languageSelector.addEventListener('mouseleave', () => {
-    if (isTablet.matches) {
+    if (isDesktopLG.matches) {
       languageSelector.setAttribute('aria-expanded', 'false');
     }
   });
@@ -466,6 +466,7 @@ export default async function decorate(block) {
   const navRegisterText = nav.querySelector('#meganav-link-4');
   const registerDiv = navRegisterText.querySelector('div');
   registerDiv.className = 'before-click';
+  const login = nav.querySelector('.login');
   const loginDiv = nav.querySelector('.login > div');
   const loginText = nav.querySelector('.login > div > div:first-child');
   const loginHoverContent = nav.querySelector('.login > div > div:last-child');
@@ -479,7 +480,7 @@ export default async function decorate(block) {
       registerHoverContent.style.display = 'none';
       registerDiv.className = 'before-click';
       loginText.className = '';
-      if (window.innerWidth <= 900) {
+      if (window.innerWidth <= 1200) {
         loginText.className = 'before-click';
       }
       loginHoverContent.style.display = 'none';
@@ -533,7 +534,10 @@ export default async function decorate(block) {
   const navMega = nav.querySelector('.nav-meganav');
   const languageSelected = nav.querySelector('.language-selector #country-name');
   let countryName = isCanada ? 'Canada' : 'United States';
-  if (window.innerWidth <= 900) {
+  if (window.innerWidth <= 1200) {
+    if (window.innerWidth >= 720) {
+      navBrand.append(login);
+    }
     navBrand.append(nav.querySelector('.button-container'));
     navMembershipText.append(membershipsHoverContent);
     navRegisterText.append(registerHoverContent);
@@ -543,7 +547,13 @@ export default async function decorate(block) {
   // Do this on resize
   window.addEventListener('resize', () => {
     countryName = isCanada ? 'Canada' : 'United States';
-    if (window.innerWidth <= 900) {
+    if (window.innerWidth <= 1200) {
+      if (window.innerWidth >= 720) {
+        navBrand.append(login);
+      }
+      if (window.innerWidth <= 720 && login !== null) {
+        login.remove();
+      }
       navBrand.append(nav.querySelector('.button-container'));
       navMembershipText.append(membershipsHoverContent);
       navRegisterText.append(registerHoverContent);
@@ -552,6 +562,7 @@ export default async function decorate(block) {
         languageSelected.innerHTML = countryName;
       }
     } else {
+      navMega.append(login);
       navMega.append(nav.querySelector('.button-container'));
       navWrapper.append(membershipsHoverContent);
       navWrapper.append(registerHoverContent);
@@ -579,18 +590,18 @@ export default async function decorate(block) {
   //       navSection.append(dropdownAnchor);
   //     }
   //     navSection.addEventListener('click', (e) => {
-  //       if (!isTablet.matches && !isDesktop.matches && e.target.tagName === 'A') return;
+  //       if (!isTablet.matches && !isDesktopLG.matches && e.target.tagName === 'A') return;
 
   //       const expanded = navSection.getAttribute('aria-expanded') === 'true';
   //       navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
   //     });
   //     navSection.addEventListener('mouseenter', () => {
-  //       if (isDesktop.matches) {
+  //       if (isDesktopLG.matches) {
   //         navSection.setAttribute('aria-expanded', 'true');
   //       }
   //     });
   //     navSection.addEventListener('mouseleave', () => {
-  //       if (isDesktop.matches) {
+  //       if (isDesktopLG.matches) {
   //         navSection.setAttribute('aria-expanded', 'false');
   //       }
   //     });
@@ -607,8 +618,8 @@ export default async function decorate(block) {
   navBrand.append(hamburger);
   nav.setAttribute('aria-expanded', 'false');
   // prevent mobile nav behavior on window resize
-  toggleMenu(nav, navMega, isTablet.matches);
-  isTablet.addEventListener('change', () => closeAllMenus(nav, nav));
+  toggleMenu(nav, navMega, isDesktopLG.matches);
+  isDesktopLG.addEventListener('change', () => closeAllMenus(nav, nav));
 
   // Close dropdown content on scroll.
   window.addEventListener('scroll', () => {
@@ -618,7 +629,7 @@ export default async function decorate(block) {
     membershipDiv.className = 'before-click';
     loginHoverContent.style.display = 'none';
     loginText.className = '';
-    if (window.innerWidth <= 900) {
+    if (window.innerWidth <= 1200) {
       loginText.className = 'before-click';
     }
   }, false);
@@ -636,7 +647,7 @@ export default async function decorate(block) {
     if (!loginHoverContent.contains(e.target) && loginText.classList.contains('active') && !loginDiv.contains(e.target)) {
       loginHoverContent.style.display = 'none';
       loginText.className = '';
-      if (window.innerWidth <= 900) {
+      if (window.innerWidth <= 1200) {
         loginText.className = 'before-click';
       }
     }

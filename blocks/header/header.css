@@ -398,6 +398,160 @@ header nav .nav-meganav .mega-nav > div {
   text-decoration: underline;
 }
 
+@media (max-width: 1199px) {
+  header nav {
+    padding: 0;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  header nav .nav-brand {
+    flex-basis: 1px;
+    font-size: var(--heading-font-size-s);
+    font-weight: 700;
+    line-height: 1;
+    flex-grow: 1;
+    height: var(--nav-height);
+    align-items: center;
+    display: flex;
+    padding: 0 16px;
+  }
+
+  header nav .nav-brand p:first-child {
+    flex-basis: 80%;
+  }
+
+  header .nav-wrapper {
+    overflow-x: hidden;
+  }
+
+  header .nav-wrapper[aria-expanded='true'] {
+    /* overflow-y: ; */
+    min-height: 100vh;
+  }
+
+  header nav[aria-expanded='true'] .nav-meganav {
+    display: flex;
+    visibility: visible;
+  }
+
+  header nav .nav-meganav {
+    order: 4;
+    grid-area: sections;
+    display: none;
+    visibility: hidden;
+    min-width: 100%;
+    flex-direction: column;
+    background-color: var(--background-color);
+    flex: 1 0 100%;
+    gap: 0;
+    margin-top: -10px;
+  }
+
+  header nav .nav-meganav .mega-nav {
+    flex-direction: column;
+    width: 100%;
+    align-items: start;
+    gap: 0;
+  }
+  header nav .nav-meganav .mega-nav > div > div:first-child {
+    padding: 12px 24px;
+  }
+
+  #meganav-link-1,
+  #meganav-link-4 {
+    gap: 0;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+  }
+
+  #meganav-link-1 > div:first-child,
+  #meganav-link-4 > div:first-child {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  #meganav-link-1 > div:last-child,
+  #meganav-link-4 > div:last-child {
+    position: unset;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  header nav .nav-meganav .mega-nav > div {
+    width: 100%;
+    min-height: 50px;
+    background-color: var(--background-color);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .header
+    .nav-memberships
+    .pet-protection-memberships
+    > div
+    > div:last-child
+    > p:first-child,
+  .header
+    .nav-register
+    .microchip-registration
+    > div
+    > div:last-child
+    > p:first-child {
+    margin-bottom: 5px;
+    font-size: var(--body-font-size-s);
+  }
+
+  .header
+    .nav-memberships
+    .pet-protection-memberships
+    > div
+    > div
+    > picture
+    > img,
+  .header .nav-register .microchip-registration > div > div > picture > img {
+    width: 40px !important;
+    height: 40px !important;
+  }
+
+  .nav-memberships .pet-protection-memberships > div:first-child,
+  .nav-register .microchip-registration > div:first-child {
+    display: none;
+  }
+
+  .header .nav-memberships .pet-protection-memberships > div,
+  .header .nav-register .microchip-registration > div {
+    width: 100%;
+  }
+
+  .header .nav-memberships .pet-protection-memberships,
+  .header .nav-register .microchip-registration {
+    flex-direction: column;
+    padding: 16px;
+    max-height: fit-content;
+    border-top: 1px solid var(--border-color);
+    background: var(--nav-content-background-color);
+    gap: 24px;
+    width: unset;
+  }
+
+  .header .nav-memberships,
+  .header .nav-register {
+    display: none;
+    position: unset;
+    z-index: 1;
+    padding: 0 !important;
+    box-shadow: none;
+  }
+
+  .header .featured-content {
+    display: none;
+  }
+}
+
 /* Get-Started btn */
 
 /* header nav .nav-login p {
@@ -417,13 +571,13 @@ header nav .nav-hamburger {
   display: flex;
   justify-content: center;
   margin-left: 14px;
-}
 
-@media (min-width: 900px) {
-  header nav .nav-hamburger {
+  @media (min-width: 1200px) {
     display: none;
   }
+}
 
+@media (min-width: 720px) {
   .nav-meganav .login > div > div:first-child {
     margin-left: 130px;
   }
@@ -442,6 +596,11 @@ header nav .nav-hamburger button {
   overflow: initial;
   text-overflow: initial;
   white-space: initial;
+
+  @media (min-width: 720px) and (max-width: 1199px) {
+    width: 44px;
+    height: 24px;
+  }
 }
 
 header nav .nav-hamburger button > span {
@@ -453,6 +612,10 @@ header nav .nav-hamburger button > span {
   background-color: black;
   height: 4px;
   border-radius: 9px;
+
+  @media (min-width: 720px) and (max-width: 1199px) {
+    height: 3px;
+  }
 }
 
 header nav .nav-hamburger button > span:first-child {
@@ -462,11 +625,19 @@ header nav .nav-hamburger button > span:first-child {
 header nav .nav-hamburger button > span:nth-child(2) {
   top: 0.875rem;
   transition: 0.25s ease-in-out;
+
+  @media (min-width: 720px) and (max-width: 1199px) {
+    top: 8px;
+  }
 }
 
 header nav .nav-hamburger button > span:nth-child(3) {
   top: 1.75rem;
   transition: 0.25s ease-in-out;
+
+  @media (min-width: 720px) and (max-width: 1199px) {
+    top: 16px;
+  }
 }
 
 header nav[aria-expanded='true'] .nav-hamburger button > span:first-child {
@@ -534,6 +705,14 @@ header nav .nav-brand .icon {
   width: 100%;
   height: auto;
   max-width: 228px;
+
+  a {
+    display: block;
+  }
+
+  svg {
+    height: 90px;
+  }
 }
 
 @media (min-width: 900px) and (max-width: 1150px) {
@@ -888,6 +1067,18 @@ header nav > .nav-secondary > ul > li:last-child::after {
     padding: 0 0.75rem;
     line-height: 1.5625rem;
   }
+
+  #country-name {
+    /*  margin-left: 5px;
+    white-space: nowrap; */
+    position: absolute;
+    top: auto;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    width: 1px;
+    height: 1px;
+    white-space: nowrap;
+  }
 }
 
 header nav > .nav-secondary .language-selector {
@@ -905,7 +1096,7 @@ header nav > .nav-secondary .language-selector > span {
   position: relative;
   cursor: pointer;
   display: flex;
-  justify-content: end;
+  justify-content: start;
   text-decoration: underline;
 }
 
@@ -933,7 +1124,7 @@ header
 }
 
 header nav > .nav-secondary .language-selector span.icon {
-  width: 30px;
+  width: 50px;
 }
 
 header nav > .nav-secondary .language-selector > ul {
@@ -966,7 +1157,7 @@ header nav > .nav-secondary .language-selector > ul > li > a {
   gap: 4px;
 }
 
-@media (min-width: 900px) {
+@media (min-width: 720px) {
   header nav > .nav-secondary .language-selector[aria-expanded='true'] {
     background-color: var(--background-color-secondary);
     position: relative;
@@ -976,13 +1167,20 @@ header nav > .nav-secondary .language-selector > ul > li > a {
     list-style-type: none;
     padding-left: 0;
     position: absolute;
-    left: 8px;
+    right: 13px;
     top: 16px;
     background: white;
     /* stylelint-disable-next-line */
     box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.22);
     width: 100pt;
     justify-content: center;
+  }
+}
+
+@media (min-width: 1330px) {
+  header nav > .nav-secondary .language-selector[aria-expanded='true'] > ul {
+    right: auto;
+    left: 0;
   }
 }
 
@@ -1089,41 +1287,6 @@ main .breadcrumbs ol li:last-of-type {
 /* mobile view */
 
 @media (max-width: 900px) {
-  header nav {
-    padding: 0;
-    border-bottom: 1px solid var(--border-color);
-  }
-
-  header nav .nav-brand {
-    flex-basis: 1px;
-    font-size: var(--heading-font-size-s);
-    font-weight: 700;
-    line-height: 1;
-    flex-grow: 1;
-    height: var(--nav-height);
-    align-items: center;
-    display: flex;
-    padding: 0 16px;
-  }
-
-  header nav .nav-brand p:first-child {
-    flex-basis: 80%;
-  }
-
-  header .nav-wrapper {
-    overflow-x: hidden;
-  }
-
-  header .nav-wrapper[aria-expanded='true'] {
-    /* overflow-y: ; */
-    min-height: 100vh;
-  }
-
-  header nav[aria-expanded='true'] .nav-meganav {
-    display: flex;
-    visibility: visible;
-  }
-
   /* header nav .nav-secondary {
     position: absolute;
     bottom: 40px;
@@ -1144,26 +1307,6 @@ main .breadcrumbs ol li:last-of-type {
 
   header .button-container a {
     font-size: 12px;
-  }
-
-  header nav .nav-meganav {
-    order: 4;
-    grid-area: sections;
-    display: none;
-    visibility: hidden;
-    min-width: 100%;
-    flex-direction: column;
-    background-color: var(--background-color);
-    flex: 1 0 100%;
-    gap: 0;
-    margin-top: -10px;
-  }
-
-  header nav .nav-meganav .mega-nav {
-    flex-direction: column;
-    width: 100%;
-    align-items: start;
-    gap: 0;
   }
 
   .login {
@@ -1208,114 +1351,4 @@ main .breadcrumbs ol li:last-of-type {
     width: 60%;
     margin: 0 auto;
   } */
-
-  #country-name {
-    /*  margin-left: 5px;
-    white-space: nowrap; */
-    position: absolute;
-    top: auto;
-    overflow: hidden;
-    clip: rect(1px, 1px, 1px, 1px);
-    width: 1px;
-    height: 1px;
-    white-space: nowrap;
-  }
-
-  header nav .nav-meganav .mega-nav > div {
-    width: 100%;
-    min-height: 50px;
-    background-color: var(--background-color);
-    border-bottom: 1px solid var(--border-color);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .header
-    .nav-memberships
-    .pet-protection-memberships
-    > div
-    > div:last-child
-    > p:first-child,
-  .header
-    .nav-register
-    .microchip-registration
-    > div
-    > div:last-child
-    > p:first-child {
-    margin-bottom: 5px;
-    font-size: var(--body-font-size-s);
-  }
-
-  .header
-    .nav-memberships
-    .pet-protection-memberships
-    > div
-    > div
-    > picture
-    > img,
-  .header .nav-register .microchip-registration > div > div > picture > img {
-    width: 40px !important;
-    height: 40px !important;
-  }
-
-  header nav .nav-meganav .mega-nav > div > div:first-child {
-    padding: 12px 24px;
-  }
-
-  #meganav-link-1,
-  #meganav-link-4 {
-    gap: 0;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-  }
-
-  #meganav-link-1 > div:first-child,
-  #meganav-link-4 > div:first-child {
-    width: 90%;
-    display: flex;
-    justify-content: space-between;
-  }
-
-  #meganav-link-1 > div:last-child,
-  #meganav-link-4 > div:last-child {
-    position: unset;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .nav-memberships .pet-protection-memberships > div:first-child,
-  .nav-register .microchip-registration > div:first-child {
-    display: none;
-  }
-
-  .header .nav-memberships .pet-protection-memberships > div,
-  .header .nav-register .microchip-registration > div {
-    width: 100%;
-  }
-
-  .header .nav-memberships .pet-protection-memberships,
-  .header .nav-register .microchip-registration {
-    flex-direction: column;
-    padding: 16px;
-    max-height: fit-content;
-    border-top: 1px solid var(--border-color);
-    background: var(--nav-content-background-color);
-    gap: 24px;
-    width: unset;
-  }
-
-  .header .nav-memberships,
-  .header .nav-register {
-    display: none;
-    position: unset;
-    z-index: 1;
-    padding: 0 !important;
-    box-shadow: none;
-  }
-
-  .header .featured-content {
-    display: none;
-  }
 }
