@@ -38,7 +38,21 @@ class Tabs {
         }
       });
 
-    return Promise.all(fetchPromises);
+    await Promise.all(fetchPromises);
+
+    // Create an array of tabs with currentTab first
+    const tabsInOrder = [currentTab, ...Object.keys(this.tabs).filter((tab) => tab !== currentTab)];
+
+    // Create an array of promises for decorateMain and loadBlocks
+    const decorateAndLoadPromises = tabsInOrder.map(async (tab) => {
+      const tabDiv = document.getElementById(`tab-content-${tab}`);
+      if (tabDiv) {
+        decorateMain(tabDiv);
+        await loadBlocks(tabDiv);
+      }
+    });
+
+    await Promise.all(decorateAndLoadPromises);
   }
 
   static async createTabContent(tab, content, path) {
@@ -54,9 +68,6 @@ class Tabs {
     };
     resetAttributeBase('img', 'src');
     resetAttributeBase('source', 'srcset');
-
-    decorateMain(tabDiv);
-    await loadBlocks(tabDiv);
   }
 
   async loadTab() {
@@ -90,8 +101,6 @@ class Tabs {
         if (resp.ok) {
           content = await resp.text();
         }
-        // We need to preload other tabs so LazyLoad can assign event listeners correctly
-        await this.preloadTabs();
       }
       if (content) {
         this.preloadedContent[currentTab] = content;
@@ -99,6 +108,8 @@ class Tabs {
         const tabDiv = document.getElementById(`tab-content-${currentTab}`);
         tabDiv.style.display = 'block';
       }
+      // We need to preload other tabs so LazyLoad can assign event listeners correctly
+      await this.preloadTabs();
     }
   }
 }
