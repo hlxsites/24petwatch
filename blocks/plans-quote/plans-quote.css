@@ -115,6 +115,18 @@ main .plans-quote.summary-quote > div.item > div.item-info {
   border-radius: 0 0 20px 20px;
 }
 
+main .plans-quote.summary-quote > div.item > div.item-info > .item-info-fragment {
+  display: none;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > .item-info-fragment.show {
+  display: block;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > .item-info-fragment .section {
+  padding: unset;
+}
+
 main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header {
   width: 100%;
   display: inline-flex;
@@ -137,6 +149,11 @@ main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-heade
   border-right: 2px solid #000;
   transform: rotate(45deg);
   cursor: pointer;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.pet-name > span.up {
+  transform: rotate(-135deg);
+  margin-bottom: 0;
 }
 
 main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.price-info {

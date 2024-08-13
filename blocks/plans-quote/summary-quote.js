@@ -1,6 +1,7 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
+import { loadFragment } from '../fragment/fragment.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   COOKIE_NAME_FOR_PET_PLANS,
@@ -82,26 +83,31 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         name: 'Lifetime Protection Membership™',
         priceComment: '(A one-time fee)',
         pageLink: PET_PLANS_LPM_URL,
+        fragmentLink: '/lost-pet-protection/fragments/lpm-info',
       },
       'LPM-PLUS-US-CATS': {
         name: 'Lifetime Protection Membership™ Plus',
         priceComment: '(A one-time fee)',
         pageLink: PET_PLANS_LPM_PLUS_URL,
+        fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
       },
       'LPM-PLUS': {
         name: 'Lifetime Protection Membership™ Plus',
         priceComment: '(A one-time fee)',
         pageLink: PET_PLANS_LPM_PLUS_URL,
+        fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
       },
       'Annual Plan-DOGS': {
         name: 'Annual Protection Membership',
-        priceComment: 'FOR THE FIRST YEAR $19.95/YEAR THEREAFTER',
+        priceComment: 'for the first year $19.95/year thereafter',
         pageLink: PET_PLANS_ANNUAL_URL,
+        fragmentLink: '/lost-pet-protection/fragments/annual-info',
       },
       'Annual Plan-CATS': {
         name: 'Annual Protection Membership',
-        priceComment: 'FOR THE FIRST YEAR $19.95/YEAR THEREAFTER',
+        priceComment: 'for the first year $19.95/year thereafter',
         pageLink: PET_PLANS_ANNUAL_URL,
+        fragmentLink: '/lost-pet-protection/fragments/annual-info',
       },
     };
 
@@ -144,8 +150,24 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     `;
   }
 
+  async function getItemInfoFragment(itemId) {
+    let fragment = '';
+    try {
+      fragment = await loadFragment(getSelectedProductAdditionalInfo(itemId).fragmentLink, false);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to load the fragment for item:', itemId, ' status:', status);
+    }
+
+    return fragment;
+  }
+
+  const uniqSelectedProduct = new Set();
   const petListHTML = petsList.map((pet) => {
     const selectedProduct = getSelectedProduct(pet.id);
+    if (selectedProduct) {
+      uniqSelectedProduct.add(selectedProduct.itemId);
+    }
     return jsx`
     <div class="item">
         <div class="item-header">
@@ -157,12 +179,14 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         </div>
         <div class="item-info">
             <div class="item-info-header">
-              <div class="pet-name">${pet.petName}<span></span></div>
+              <div class="pet-name">${pet.petName}<span class="item-info-fragment-button" data-pet-id="${pet.id}"></span></div>
               <div class="price-info">
                 <div class="price">$${selectedProduct.salesPrice}</div>
                 <div class="price-comment">${getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment}</div>
               </div>
             </div>
+            <div class="item-info-fragment selected-product-${selectedProduct.itemId.replace(/\s+/g, '')}" id="item-info-fragment-${pet.id}"></div>
+            <div class="item-info-fragment selected-product-${selectedProduct.itemId.replace(/\s+/g, '')}"></div>
         </div>
         <div class="auto-renew">
             <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
@@ -210,6 +234,16 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   </div>
   `;
 
+  // Loading additional information for selected products
+  uniqSelectedProduct.forEach((value) => {
+    getItemInfoFragment(value).then((fragment) => {
+      const itemInfoFragments = document.querySelectorAll(`.selected-product-${value.replace(/\s+/g, '')}`);
+      itemInfoFragments.forEach((itemInfoFragment) => {
+        itemInfoFragment.append(fragment.cloneNode(true));
+      });
+    });
+  });
+
   const confirmationDialog = document.getElementById('confirmation-dialog');
   const confirmationDialogHeader = document.getElementById('confirmation-dialog-header');
   const confirmationDialogNote = document.getElementById('confirmation-dialog-note');
@@ -254,16 +288,30 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   }
 
+  function itemInfoFragmentButtonHandler(target) {
+    const petID = target.getAttribute('data-pet-id');
+    const itemInfoFragment = document.getElementById(`item-info-fragment-${petID}`);
+    itemInfoFragment.classList.toggle('show');
+    target.classList.toggle('up');
+  }
+
   const itemsContainer = document.querySelector('.summary-quote');
   itemsContainer.addEventListener('click', (event) => {
-    if (event.target && event.target.classList.contains('edit-pet')) {
-      const petID = event.target.getAttribute('data-pet-id');
-      editPetHandler(petID);
-    } else if (event.target && event.target.classList.contains('remove-pet')) {
-      const petID = event.target.getAttribute('data-pet-id');
-      removePetHandler(petID);
-    } else if (event.target && event.target.classList.contains('auto-renew-checkbox')) {
-      updateAutoRenewHandler(event.target);
+    switch (true) {
+      case event.target.classList.contains('edit-pet'):
+        editPetHandler(event.target.getAttribute('data-pet-id'));
+        break;
+      case event.target.classList.contains('remove-pet'):
+        removePetHandler(event.target.getAttribute('data-pet-id'));
+        break;
+      case event.target.classList.contains('auto-renew-checkbox'):
+        updateAutoRenewHandler(event.target);
+        break;
+      case event.target.classList.contains('item-info-fragment-button'):
+        itemInfoFragmentButtonHandler(event.target);
+        break;
+      default:
+        break;
     }
   });
 
