@@ -534,30 +534,41 @@ export default async function decorate(block) {
   const navMega = nav.querySelector('.nav-meganav');
   const languageSelected = nav.querySelector('.language-selector #country-name');
   let countryName = isCanada ? 'Canada' : 'United States';
-  if (window.innerWidth <= 1200) {
+
+  if (window.innerWidth <= 1199) {
     if (window.innerWidth >= 720) {
       navBrand.append(login);
+    }
+    if (window.innerWidth <= 719) {
+      loginText.className = 'before-click';
     }
     navBrand.append(nav.querySelector('.button-container'));
     navMembershipText.append(membershipsHoverContent);
     navRegisterText.append(registerHoverContent);
-    loginText.className = 'before-click';
     languageSelected.append(countryName);
   }
+
+
   // Do this on resize
   window.addEventListener('resize', () => {
     countryName = isCanada ? 'Canada' : 'United States';
+    const navBrandLogin = navBrand.querySelector('.login');
     if (window.innerWidth <= 1200) {
       if (window.innerWidth >= 720) {
         navBrand.append(login);
+        loginText.classList.remove('before-click');
+        loginText.classList.remove('after-click');
       }
-      if (window.innerWidth <= 720 && login !== null) {
-        login.remove();
+      if (window.innerWidth <= 719) {
+        if (navBrandLogin !== null) {
+          navBrandLogin.remove();
+        }
+        loginText.className = 'before-click';
+        navMega.append(login);
       }
       navBrand.append(nav.querySelector('.button-container'));
       navMembershipText.append(membershipsHoverContent);
       navRegisterText.append(registerHoverContent);
-      loginText.className = 'before-click';
       if (languageSelected.innerHTML === '') {
         languageSelected.innerHTML = countryName;
       }
@@ -647,7 +658,7 @@ export default async function decorate(block) {
     if (!loginHoverContent.contains(e.target) && loginText.classList.contains('active') && !loginDiv.contains(e.target)) {
       loginHoverContent.style.display = 'none';
       loginText.className = '';
-      if (window.innerWidth <= 1200) {
+      if (window.innerWidth <= 719) {
         loginText.className = 'before-click';
       }
     }
