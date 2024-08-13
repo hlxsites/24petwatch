@@ -78,7 +78,7 @@ export default async function decorate(block) {
       <div class="error-message"></div>
     </div>
     <div class="wrapper wrapper-info">
-      <input type="number" id="microchipId" name="microchipId" required placeholder="">
+      <input type="text" id="microchipId" name="microchipId" required placeholder="" maxlength="15">
       <label for="microchipId" class="float-label">Microchip number (up to 15 digits)*</label>
       <span class="checkmark"></span>
       <div class="error-message"></div>
@@ -93,7 +93,7 @@ export default async function decorate(block) {
     <div class="error-message"></div>
   </div>
   <div class="wrapper">
-    <input type="number" id="phoneNumber" name="phoneNumber" placeholder="" maxlength="10">
+    <input type="tel" id="phoneNumber" name="phoneNumber" placeholder="" maxlength="12">
     <label for="phoneNumber" class="float-label">Phone Number*</label>
     <span class="checkmark"></span>
     <div class="error-message"></div>
@@ -168,7 +168,8 @@ export default async function decorate(block) {
   // REGEX for validators
   const AT_LEAST_ONE_SYMBOL_REGEX = /.+/;
   const AT_LEAST_ONE_SYMBOL_OR_NUMBER_REGEX = /[0-9\p{P}\p{S}]/u;
-  const PHONE_OPTIONAL_REGEX = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+  // const PHONE_OPTIONAL_REGEX = /^\(?(\d{3})\)?[- ]?(\d{3})[- ]?(\d{4})$/;
+  const PHONE_OPTIONAL_REGEX = /^\d{3}-?\d{3}-?\d{4}$/;
   const EMAIL_OPTIONAL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
   const states = {
@@ -275,7 +276,7 @@ export default async function decorate(block) {
     validateField(event.target, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
   });
   microchipId.addEventListener('blur', (event) => {
-    validateField(event.target, AT_LEAST_ONE_SYMBOL_OR_NUMBER_REGEX, 'This value is required.');
+    validateField(event.target, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
   });
   ownerName.addEventListener('blur', (event) => {
     validateField(event.target, AT_LEAST_ONE_SYMBOL_REGEX, 'This value is required.');
