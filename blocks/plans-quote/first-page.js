@@ -1,6 +1,7 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import Loader from './loader.js';
+import { doDecoration } from '../plans-quote-perks-decorator/plans-quote-perks-decorator.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
@@ -765,21 +766,5 @@ export function decorateLeftBlock(block, apiBaseUrl) {
 
 export function decorateRightBlock(block) {
   const grayDiv = block.children[0].children[1];
-  grayDiv.querySelectorAll('H2').forEach((h2) => {
-    let nextSibling = h2.nextElementSibling;
-    let pCount = 0;
-    let wrapperDiv = null;
-
-    while (nextSibling && nextSibling.tagName === 'P') {
-      if (pCount % 3 === 0) {
-        wrapperDiv = document.createElement('div');
-        nextSibling.parentNode.insertBefore(wrapperDiv, nextSibling);
-      }
-      if (wrapperDiv) {
-        wrapperDiv.appendChild(nextSibling);
-      }
-      nextSibling = wrapperDiv.nextElementSibling;
-      pCount += 1;
-    }
-  });
+  doDecoration(grayDiv);
 }
