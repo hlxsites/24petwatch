@@ -1,5 +1,6 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
+import Loader from './loader.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
@@ -131,14 +132,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     </form>
   `;
 
-  const loaderWrapper = document.createElement('div');
-  loaderWrapper.classList.add('loader-wrapper', 'hide');
-  loaderWrapper.innerHTML = jsx`
-    <div class="loader"></div>
-    <div class="loader-txt">Loading</div>
-    <div class="loader-bg"></div>
-  `;
-  document.body.insertBefore(loaderWrapper, document.body.firstChild);
+  Loader.addLoader();
 
   const APIClientObj = new APIClient(apiBaseUrl);
   const countryId = isCanada ? 1 : 2;
@@ -164,14 +158,6 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     setTimeout(() => {
       errorElement.style.display = '';
     }, 10000);
-  }
-
-  function showLoader() {
-    loaderWrapper.classList.remove('hide');
-  }
-
-  function hideLoader() {
-    loaderWrapper.classList.add('hide');
   }
 
   function showErrorMessage(element, message) {
@@ -314,7 +300,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
       zipCode = zipCode.replace(/ /g, ''); // remove any interior spaces
     }
 
-    showLoader();
+    Loader.showLoader();
     try {
       await new Promise((resole, reject) => {
         APIClientObj.getCountryStates(zipCode, (data) => {
@@ -345,7 +331,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.log('Something went wrong during zip code validation', e);
     }
-    hideLoader();
+    Loader.hideLoader();
 
     return handlerStatus;
   }
@@ -408,7 +394,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
   applyPromoCodeButton.addEventListener('click', () => {
     const promoCode = promocodeInput.value.trim();
 
-    showLoader();
+    Loader.showLoader();
     APIClientObj.validateNonInsurancePromoCodeWithSpecies(
       promoCode,
       countryId,
@@ -421,13 +407,13 @@ export function decorateLeftBlock(block, apiBaseUrl) {
           showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
           formData.promoCode = '';
         }
-        hideLoader();
+        Loader.hideLoader();
       },
       (status) => {
         // eslint-disable-next-line no-console
         console.log('Failed validating the promo code:', status);
         hideErrorMessage(promocodeInput);
-        hideLoader();
+        Loader.hideLoader();
       },
     );
   });
@@ -592,14 +578,14 @@ export function decorateLeftBlock(block, apiBaseUrl) {
 
   async function executeSubmit() {
     const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
-    showLoader();
+    Loader.showLoader();
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
     if (!formData.ownerId) {
       console.log('Failed to save the owner.');
       showGeneralErrorMessage(apiErrorMsg);
-      hideLoader();
+      Loader.hideLoader();
       return;
     }
 
@@ -608,7 +594,7 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     if (!formData.petId) {
       console.log('Failed to save the pet.');
       showGeneralErrorMessage(apiErrorMsg);
-      hideLoader();
+      Loader.hideLoader();
       return;
     }
 
@@ -616,17 +602,17 @@ export function decorateLeftBlock(block, apiBaseUrl) {
     if (!formData.productId) {
       console.log('Failed to get the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
-      hideLoader();
+      Loader.hideLoader();
       return;
     }
     if (!await saveSelectedProduct(formData.petId, formData.productId)) {
       console.log('Failed to save the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
-      hideLoader();
+      Loader.hideLoader();
       return;
     }
 
-    hideLoader();
+    Loader.hideLoader();
 
     // remember the critical information for future steps
     setCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, [formData.ownerId, formData.petId]);
@@ -764,9 +750,9 @@ export function decorateLeftBlock(block, apiBaseUrl) {
       pureBreedMixed.checked = true;
       formData.purebreed = 'false'; // string
     }
-    showLoader();
+    Loader.showLoader();
     await ensureBreedListIsPopulated();
-    hideLoader();
+    Loader.hideLoader();
     if (data.breedId) {
       const breedName = getBreedNameForId(data.breedId);
       formData.breed = { breedName, breedId: data.breedId.toString() };
