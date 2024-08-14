@@ -596,13 +596,14 @@ export function decorateButtons(element) {
  */
 export function decorateLinks(element) {
   const currentDomain = window.location.hostname;
-  const domainRegex = new RegExp(`^https?://(www\\.)?${currentDomain.replace(/\./g, '\\.')}`);
 
   element.querySelectorAll('a').forEach((a) => {
+    const url = new URL(a.href);
     // open non-current domain pages in new tab
-    if (!domainRegex.test(a.href)) {
+    if (url.hostname !== currentDomain) {
       a.target = '_blank';
     }
+
     // open tel: links in the same tab
     if (/^tel:/.test(a.href)) {
       a.target = '_self';
@@ -637,7 +638,13 @@ export async function waitForLCP(lcpBlocks) {
  * @returns {Promise}
  */
 export function loadHeader(header) {
-  const headerBlock = buildBlock('header', '');
+  let headerBlock = '';
+  if (!document.body.classList.contains('paid')) {
+    headerBlock = buildBlock('header', '');
+  } else if (document.body.classList.contains('paid')) {
+    // Load special header for paid section of the website
+    headerBlock = buildBlock('header-paid', '');
+  }
   header.append(headerBlock);
   decorateBlock(headerBlock);
   return loadBlock(headerBlock);
@@ -649,7 +656,13 @@ export function loadHeader(header) {
  * @returns {Promise}
  */
 export function loadFooter(footer) {
-  const footerBlock = buildBlock('footer', '');
+  let footerBlock = '';
+  if (!document.body.classList.contains('paid')) {
+    footerBlock = buildBlock('footer', '');
+  } else if (document.body.classList.contains('paid')) {
+    // Load special footer for paid section of the website
+    footerBlock = buildBlock('footer-paid', '');
+  }
   footer.append(footerBlock);
   decorateBlock(footerBlock);
   return loadBlock(footerBlock);

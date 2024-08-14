@@ -132,6 +132,39 @@ function buildAutoBlocks(main) {
   }
 }
 
+export function changeDomain(block) {
+  block.querySelectorAll('a').forEach((anchor) => {
+    const url = new URL(anchor.href);
+    if (url.hostname === 'www.24petwatch.com' || url.hostname === '24petwatch.com') {
+      url.protocol = window.location.protocol;
+      url.hostname = window.location.hostname;
+      url.port = window.location.port;
+      anchor.href = url.toString();
+    }
+  });
+}
+
+/**
+ * Rewrite links to add Canada to the path
+ * @param {Element} block The block element
+ */
+export function addCanadaToLinks(block) {
+  if (isCanada) {
+    block.querySelectorAll('a').forEach((anchor) => {
+      if (anchor.getAttribute('rel') === 'alternate') return;
+      const url = new URL(anchor.href);
+      const newUrl = new URL(anchor.href, window.location.origin);
+      if (url.hostname === window.location.hostname) {
+        // change only for internal links
+        if (!url.pathname.startsWith('/ca/')) {
+          newUrl.pathname = `/ca${url.pathname}`;
+          anchor.href = newUrl.toString();
+        }
+      }
+    });
+  }
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -141,6 +174,8 @@ export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
+  changeDomain(main);
+  addCanadaToLinks(main);
   decorateLinks(main);
   buildAutoBlocks(main);
   decorateSections(main);
@@ -210,6 +245,7 @@ function instrumentTrackingEvents(main) {
       anchor.addEventListener('click', (e) => {
         const linkText = (e.target.textContent || '').trim();
         const linkUrl = e.target.href;
+        const pageUrl = window.location.href;
 
         // track cta clicks on main
         if (e.target.classList.contains('button')) {
@@ -217,6 +253,18 @@ function instrumentTrackingEvents(main) {
             link_text: linkText,
             link_url: linkUrl,
           });
+        }
+
+        // track clicks to call for telephone numbers
+        if (linkUrl.startsWith('tel')) {
+          trackGTMEvent('click_to_call', {
+            page_url: pageUrl,
+          });
+        }
+
+        // track clicks for Login to MyPetHealth
+        if (linkUrl === 'https://mypethealth.com/auth/login') {
+          trackGTMEvent('pet_lost_report_mypethealth_link');
         }
       });
     });

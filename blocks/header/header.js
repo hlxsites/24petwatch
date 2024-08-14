@@ -13,6 +13,7 @@ import {
   baseDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 
 // let positionY = 0;
 // const SCROLL_STEP = 25;
@@ -342,38 +343,6 @@ function addLinkToLogo(header) {
 }
 
 /**
- * Rewrite links to add Canada to the path
- * @param {Element} header The header block element
- */
-function addCanadaToLinks(header) {
-  if (isCanada) {
-    header.querySelectorAll('a').forEach((anchor) => {
-      if (anchor.getAttribute('rel') === 'alternate') return;
-      const url = new URL(anchor.href);
-      const newUrl = new URL(anchor.href, window.location.origin);
-      if (url.hostname === window.location.hostname) {
-        // change only for internal links
-        newUrl.pathname = `/ca${url.pathname}`;
-        anchor.href = newUrl.toString();
-      }
-    });
-  }
-}
-
-/**
- * Adds external link icons to links
- * @param {Element} header
- */
-function addExternalLinkIcons(header) {
-  header.querySelectorAll('a').forEach((anchor) => {
-    const url = new URL(anchor.href);
-    if (url.hostname !== window.location.hostname) {
-      anchor.classList.add('icon-external');
-    }
-  });
-}
-
-/**
  * Fetch images from the document based media folder.
  * @param {Element} block The header block element
  */
@@ -446,7 +415,6 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
-  addCanadaToLinks(navWrapper);
 
   // Append membership hover content
   const membershipsHoverContent = nav.querySelector('.nav-memberships');
@@ -455,15 +423,12 @@ export default async function decorate(block) {
   // Append register hover content
   const registerHoverContent = nav.querySelector('.nav-register');
   navWrapper.append(registerHoverContent);
-  decorateLinks(registerHoverContent);
-
-  // Add icon to login links
-  const loginLinks = nav.querySelector('.login');
-  addExternalLinkIcons(loginLinks);
 
   decorateIcons(nav);
   decorateButtons(nav);
-  decorateLinks(nav);
+  changeDomain(block);
+  addCanadaToLinks(block);
+  decorateLinks(block);
   instrumentTrackingEvents(nav);
   removeTargetBlank(nav);
   addLinkToLogo(nav);

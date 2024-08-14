@@ -99,6 +99,11 @@ main .hero.no-bottom-padding {
     width: 490px;
   }
 
+  main .hero p > sub {
+    font-size: 1rem;
+    line-height: 1rem; 
+  }
+
   main .hero p:not([class*="button"]) {
     font-weight: 400;
   }

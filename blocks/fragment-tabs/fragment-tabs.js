@@ -25,7 +25,7 @@ class Tabs {
     return currentPath + newPath;
   }
 
-  preloadTabs() {
+  async preloadTabs() {
     const currentTab = Tabs.getURLHash() || Object.keys(this.tabs)[0];
     const fetchPromises = Object.entries(this.tabs)
       .filter(([tab]) => tab !== currentTab) // Skip the current tab
@@ -34,14 +34,44 @@ class Tabs {
         const resp = await fetch(`${path}.plain.html`);
         if (resp.ok) {
           this.preloadedContent[tab] = await resp.text();
+          await Tabs.createTabContent(tab, this.preloadedContent[tab], path);
         }
       });
 
-    return Promise.all(fetchPromises);
+    await Promise.all(fetchPromises);
+
+    // Create an array of tabs with currentTab first
+    const tabsInOrder = [currentTab, ...Object.keys(this.tabs).filter((tab) => tab !== currentTab)];
+
+    // Create an array of promises for decorateMain and loadBlocks
+    const decorateAndLoadPromises = tabsInOrder.map(async (tab) => {
+      const tabDiv = document.getElementById(`tab-content-${tab}`);
+      if (tabDiv) {
+        decorateMain(tabDiv);
+        await loadBlocks(tabDiv);
+      }
+    });
+
+    await Promise.all(decorateAndLoadPromises);
+  }
+
+  static async createTabContent(tab, content, path) {
+    const tabsContainer = document.getElementById('tab-content');
+    tabsContainer.innerHTML += jsx`<div id="tab-content-${tab}" class="tab-content" style="display: none;">${content}</div>`;
+    const tabDiv = document.getElementById(`tab-content-${tab}`);
+
+    // Reset base path for media to fragment base
+    const resetAttributeBase = (tag, attr) => {
+      tabDiv.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
+        elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
+      });
+    };
+    resetAttributeBase('img', 'src');
+    resetAttributeBase('source', 'srcset');
   }
 
   async loadTab() {
-    const tabsContainer = document.getElementById('tab-content');
+    // const tabsContainer = document.getElementById('tab-content');
     let currentTab = Tabs.getURLHash();
 
     if (!this.tabs[currentTab]) {
@@ -65,31 +95,21 @@ class Tabs {
     if (currentTabContent) {
       currentTabContent.style.display = 'block';
     } else {
-      let content;
-      if (this.preloadedContent[currentTab]) {
-        content = this.preloadedContent[currentTab];
-      } else {
+      let content = this.preloadedContent[currentTab]; // Check for preloaded content first
+      if (!content) { // If not preloaded, fetch the content
         const resp = await fetch(`${path}.plain.html`);
         if (resp.ok) {
           content = await resp.text();
         }
       }
       if (content) {
-        tabsContainer.innerHTML += jsx`<div id="tab-content-${currentTab}" class="tab-content">${content}</div>`;
+        this.preloadedContent[currentTab] = content;
+        await Tabs.createTabContent(currentTab, content, path);
         const tabDiv = document.getElementById(`tab-content-${currentTab}`);
-
-        // reset base path for media to fragment base
-        const resetAttributeBase = (tag, attr) => {
-          tabDiv.querySelectorAll(`${tag}[${attr}^="./media_"]`).forEach((elem) => {
-            elem[attr] = new URL(elem.getAttribute(attr), new URL(path, window.location)).href;
-          });
-        };
-        resetAttributeBase('img', 'src');
-        resetAttributeBase('source', 'srcset');
-
-        decorateMain(tabDiv);
-        await loadBlocks(tabDiv);
+        tabDiv.style.display = 'block';
       }
+      // We need to preload other tabs so LazyLoad can assign event listeners correctly
+      await this.preloadTabs();
     }
   }
 }
@@ -124,13 +144,4 @@ export default async function decorate(block) {
   window.addEventListener('hashchange', () => {
     tabs.loadTab();
   }, false);
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      tabs.preloadTabs();
-    });
-  } else {
-    // DOMContentLoaded has already fired
-    tabs.preloadTabs();
-  }
 }
