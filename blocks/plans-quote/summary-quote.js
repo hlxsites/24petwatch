@@ -185,7 +185,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
               </div>
             </div>
             <div class="item-info-fragment selected-product-${selectedProduct.itemId.replace(/\s+/g, '')}" id="item-info-fragment-${pet.id}"></div>
-            <div class="item-info-fragment selected-product-${selectedProduct.itemId.replace(/\s+/g, '')}"></div>
         </div>
         <div class="auto-renew">
             <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
