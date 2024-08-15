@@ -206,6 +206,37 @@ main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-inf
   display: block;
 }
 
+main .plans-quote.summary-quote > div.new-pet-form {
+  background: #fff;
+  border: 3px solid #007680;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 20px 30px;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-pet {
+  cursor: pointer;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-pet:after {
+  display: block;
+  width: 25px;
+  height: 25px;
+  content: "+";
+  font-size: 25px;
+  line-height: 25px;
+  text-align: center;
+  font-weight: 900;
+  border: 3px solid #007680;
+  border-radius: 50%;
+}
+
 main .plans-quote.summary-quote > div.payment-summary > div.payments {
   border-top: 2px solid #edf2f7;
   padding: 0 2rem;

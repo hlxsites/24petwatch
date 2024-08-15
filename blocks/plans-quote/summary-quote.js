@@ -2,14 +2,13 @@ import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import { loadFragment } from '../fragment/fragment.js';
+import formDecoration from './form.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
-  COOKIE_NAME_FOR_PET_PLANS,
   PET_PLANS_LPM_URL,
   PET_PLANS_LPM_PLUS_URL,
   PET_PLANS_ANNUAL_URL,
   getCookie,
-  getCombinedCookie, PET_PLANS_SUMMARY_QUOTE_URL,
 } from '../../scripts/24petwatch-utils.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
@@ -207,6 +206,13 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     </div>
   </dialog>
   ${petListHTML}
+  <div class="new-pet-form">
+    <div class="new-pet-form-header">
+      <span>Add Another Pet</span>
+      <span id="add-pet">Add</span>
+    </div>
+    <div id="form-wrapper"></div>
+  </div>
   <div class="payment-summary">
     <h5>Payment Summary</h5>
     <div class="payments">
@@ -338,5 +344,13 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.log('Failed to post sales for payment for owner:', ownerData.id, ' status:', status);
     }
+  };
+
+  const addPetButton = document.getElementById('add-pet');
+  const formWrapper = document.getElementById('form-wrapper');
+
+  addPetButton.onclick = () => {
+    formWrapper.innerHTML = '';
+    formDecoration(formWrapper, apiBaseUrl);
   };
 }
