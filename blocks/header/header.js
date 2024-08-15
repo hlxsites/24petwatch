@@ -4,7 +4,6 @@ import {
   decorateButtons,
   decorateLinks,
   isMobile,
-  isTablet,
   isDesktopLG,
   isCanada,
   // isLiveSite,
@@ -480,7 +479,7 @@ export default async function decorate(block) {
       registerHoverContent.style.display = 'none';
       registerDiv.className = 'before-click';
       loginText.className = '';
-      if (window.innerWidth <= 1200) {
+      if (window.innerWidth <= 1199) {
         loginText.className = 'before-click';
       }
       loginHoverContent.style.display = 'none';
@@ -510,7 +509,7 @@ export default async function decorate(block) {
     if (loginHoverContent.style.display === 'flex') {
       loginHoverContent.style.display = 'none';
       loginText.className = '';
-      if (window.innerWidth <= 900) {
+      if (window.innerWidth <= 719) {
         loginText.className = 'before-click';
       }
     } else {
@@ -520,7 +519,7 @@ export default async function decorate(block) {
       membershipDiv.className = 'before-click';
       registerHoverContent.style.display = 'none';
       registerDiv.className = 'before-click';
-      if (window.innerWidth <= 900) {
+      if (window.innerWidth <= 719) {
         loginText.className = 'after-click active';
       }
     }
@@ -548,12 +547,11 @@ export default async function decorate(block) {
     languageSelected.append(countryName);
   }
 
-
   // Do this on resize
   window.addEventListener('resize', () => {
     countryName = isCanada ? 'Canada' : 'United States';
     const navBrandLogin = navBrand.querySelector('.login');
-    if (window.innerWidth <= 1200) {
+    if (window.innerWidth <= 1199) {
       if (window.innerWidth >= 720) {
         navBrand.append(login);
         loginText.classList.remove('before-click');
@@ -640,7 +638,7 @@ export default async function decorate(block) {
     membershipDiv.className = 'before-click';
     loginHoverContent.style.display = 'none';
     loginText.className = '';
-    if (window.innerWidth <= 1200) {
+    if (window.innerWidth <= 719) {
       loginText.className = 'before-click';
     }
   }, false);
