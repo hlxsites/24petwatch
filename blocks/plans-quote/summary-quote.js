@@ -184,7 +184,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
                 <div class="price-comment">${getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment}</div>
               </div>
             </div>
-            <div class="item-info-fragment selected-product-${selectedProduct.itemId.replace(/\s+/g, '')}" id="item-info-fragment-${pet.id}"></div>
+            <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>
         </div>
         <div class="auto-renew">
             <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
@@ -239,13 +239,12 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   </div>
   `;
 
-  // Loading additional information for selected products
-  uniqSelectedProduct.forEach((value) => {
-    getItemInfoFragment(value).then((fragment) => {
-      const itemInfoFragments = document.querySelectorAll(`.selected-product-${value.replace(/\s+/g, '')}`);
-      itemInfoFragments.forEach((itemInfoFragment) => {
-        itemInfoFragment.append(fragment.cloneNode(true));
-      });
+  // Loading item info fragments
+  const itemInfoFragmets = document.querySelectorAll('.item-info-fragment');
+  itemInfoFragmets.forEach((infoFragments) => {
+    const itemId = infoFragments.getAttribute('data-selected-product-id');
+    getItemInfoFragment(itemId).then((fragment) => {
+      infoFragments.append(fragment);
     });
   });
 
