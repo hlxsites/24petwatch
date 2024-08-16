@@ -220,11 +220,11 @@ main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header {
   justify-content: space-between;
 }
 
-main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-pet {
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-another-pet {
   cursor: pointer;
 }
 
-main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-pet:after {
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-another-pet:after {
   display: block;
   width: 25px;
   height: 25px;
@@ -353,6 +353,17 @@ main .plans-quote form .checkbox-text-wrapper > div > input[type="checkbox"] {
 main .plans-quote form .wrapper-text-center {
   display: block;
   text-align: center;
+}
+
+main .plans-quote form .wrapper-several-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin: 0 auto;
+}
+
+main .plans-quote form .wrapper-several-buttons button.cancel {
+  background-color: var(--button-secondary-color);
 }
 
 main .plans-quote form .flex-wrapper .error-message {

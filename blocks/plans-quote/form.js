@@ -15,6 +15,7 @@ import {
   getQueryParam,
   getCookie,
   isSummaryPage,
+  getSelectedProductAdditionalInfo,
 } from '../../scripts/24petwatch-utils.js';
 
 const US_LEGAL_HEADER = '';
@@ -65,6 +66,19 @@ export default function formDecoration(block, apiBaseUrl) {
       <label for="zipcode" class="float-label">${zipcodeLabel}</label>
       <span class="checkmark"></span>
       <div class="error-message"></div>
+    </div>
+  `;
+
+  const firstPageButtomsHTML = jsx`
+    <div class="wrapper wrapper-text-center">
+      <button type="button" id="submit">Continue \u003E</button>
+    </div>
+  `;
+
+  const summaryPageButtomsHTML = jsx`
+    <div class="wrapper wrapper-several-buttons">
+      <button type="button" class="cancel" id="cancel">Cancel</button>
+      <button type="button" id="add-pet">Add pet</button>
     </div>
   `;
 
@@ -134,9 +148,7 @@ export default function formDecoration(block, apiBaseUrl) {
       <div class="wrapper wrapper-text-center">
         Please see <a href="${privacyPolicyURL}" target="_blank">Privacy Policy</a> for more information.
       </div>
-      <div class="wrapper wrapper-text-center">
-        <button type="button" id="submit">Continue \u003E</button>
-      </div>
+      ${isSummaryPage() ? summaryPageButtomsHTML : firstPageButtomsHTML}
       <div class="error-message general-error-message content-center"></div>
     </form>
   `;
@@ -159,6 +171,8 @@ export default function formDecoration(block, apiBaseUrl) {
   const applyPromoCodeButton = document.getElementById('apply-promo-code');
   const checkboxes = document.querySelectorAll('.termsAndConditions');
   const submitButton = document.getElementById('submit');
+  const cancelButton = document.getElementById('cancel');
+  const addPetButton = document.getElementById('add-pet');
 
   function showGeneralErrorMessage(errorMessage) {
     const errorElement = document.querySelector('.error-message.general-error-message');
@@ -437,7 +451,11 @@ export default function formDecoration(block, apiBaseUrl) {
 
   function updateButtonState() {
     const allChecked = Array.from(checkboxes).every((checkbox) => checkbox.checked);
-    submitButton.disabled = !allChecked;
+    if (isSummaryPage()) {
+      addPetButton.disabled = !allChecked;
+    } else {
+      submitButton.disabled = !allChecked;
+    }
   }
   checkboxes.forEach((checkbox) => {
     checkbox.addEventListener('change', updateButtonState);
@@ -456,7 +474,7 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
-  async function savePet(petId) {
+  async function savePet(petId = '') {
     try {
       // eslint-disable-next-line max-len
       const data = await APIClientObj.savePet(petId, formData.ownerId, formData.petName, formData.breed.breedId, formData.speciesId, formData.purebreed, formData.microchip);
@@ -481,19 +499,31 @@ export default function formDecoration(block, apiBaseUrl) {
     return token;
   }
 
-  async function getSelectedProduct(petId) {
+  async function getAvailableProducts(petId) {
+    let petPlans = [];
     try {
-      formData.productId = ''; // reset
       // eslint-disable-next-line max-len
       const data = await APIClientObj.getAvailableProducts(petId); // returns all products for the pet
       const isPetPlan = (item) => item.itemGroupId.includes('Pet Recovery Services');
-      const petPlans = data.reduce((acc, item) => {
+      petPlans = data.reduce((acc, item) => {
         if (isPetPlan(item)) {
           acc.push({ itemId: item.itemId, recId: item.recId });
         }
         return acc;
       }, []);
-      const productId = getUniqueProductIdForThisFlow();
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the available products:', status);
+    }
+
+    return petPlans;
+  }
+
+  async function findAndApplySelectedProduct(petId, productId) {
+    try {
+      formData.productId = ''; // reset
+      // eslint-disable-next-line max-len
+      const petPlans = await getAvailableProducts(petId);
       const matchingPlan = petPlans.find((plan) => plan.itemId === productId);
       if (matchingPlan) {
         formData.productId = matchingPlan.recId; // remember the selected product
@@ -538,7 +568,7 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
 
-    await getSelectedProduct(formData.petId);
+    await findAndApplySelectedProduct(formData.petId, getUniqueProductIdForThisFlow());
     if (!formData.productId) {
       console.log('Failed to get the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
@@ -557,6 +587,33 @@ export default function formDecoration(block, apiBaseUrl) {
     // remember the critical information for future steps
     setCookie(COOKIE_NAME_SAVED_OWNER_ID, formData.ownerId);
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
+  }
+
+  async function executeAddPet() {
+    const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
+    Loader.showLoader();
+
+    const { ownerId } = formData;
+    if (!ownerId) {
+      console.log('Owner ID is missing.');
+      showGeneralErrorMessage(apiErrorMsg);
+      Loader.hideLoader();
+      return;
+    }
+
+    await savePet(); // Create or Update the pet
+    if (!formData.petId) {
+      console.log('Failed to save the pet.');
+      showGeneralErrorMessage(apiErrorMsg);
+      Loader.hideLoader();
+      return;
+    }
+
+    const availableProducts = await getAvailableProducts(formData.petId);
+
+    console.log(availableProducts);
+
+    Loader.hideLoader();
   }
 
   async function getOwner(ownerId) {
@@ -765,35 +822,66 @@ export default function formDecoration(block, apiBaseUrl) {
     radioInput.addEventListener('change', pureBreedHandler);
   });
 
-  document.addEventListener('click', () => {
-    clearResults();
-  });
+  document.addEventListener('click', clearResults);
 
-  submitButton.addEventListener('click', async () => {
-    // verify we have all the required fields
-    const fieldHandlers = [
-      petNameHandler,
-      emailHandler,
-      speciesHandler,
-      pureBreedHandler,
-      petBreedHandler,
-      microchipHandler,
-      zipcodeHandler,
-    ];
-    let allPassed = true;
+  if (isSummaryPage()) {
+    cancelButton.addEventListener('click', () => {
+      const formWrapper = document.getElementById('form-wrapper');
+      formWrapper.innerHTML = '';
+    });
 
-    for (let i = 0; i < fieldHandlers.length; i += 1) {
-      const fieldHandler = fieldHandlers[i];
-      // eslint-disable-next-line no-await-in-loop
-      if (!await fieldHandler()) {
-        allPassed = false;
+    addPetButton.addEventListener('click', async () => {
+      // verify we have all the required fields
+      const fieldHandlers = [
+        petNameHandler,
+        speciesHandler,
+        pureBreedHandler,
+        petBreedHandler,
+        microchipHandler,
+      ];
+      let allPassed = true;
+
+      for (let i = 0; i < fieldHandlers.length; i += 1) {
+        const fieldHandler = fieldHandlers[i];
+        // eslint-disable-next-line no-await-in-loop
+        if (!await fieldHandler()) {
+          allPassed = false;
+        }
       }
-    }
 
-    if (allPassed) {
-      await executeSubmit();
-    } else {
-      showGeneralErrorMessage('Please ensure all required fields are filled out.');
-    }
-  });
+      if (allPassed) {
+        await executeAddPet();
+      } else {
+        showGeneralErrorMessage('Please ensure all required fields are filled out.');
+      }
+    });
+  } else {
+    submitButton.addEventListener('click', async () => {
+      // verify we have all the required fields
+      const fieldHandlers = [
+        petNameHandler,
+        emailHandler,
+        speciesHandler,
+        pureBreedHandler,
+        petBreedHandler,
+        microchipHandler,
+        zipcodeHandler,
+      ];
+      let allPassed = true;
+
+      for (let i = 0; i < fieldHandlers.length; i += 1) {
+        const fieldHandler = fieldHandlers[i];
+        // eslint-disable-next-line no-await-in-loop
+        if (!await fieldHandler()) {
+          allPassed = false;
+        }
+      }
+
+      if (allPassed) {
+        await executeSubmit();
+      } else {
+        showGeneralErrorMessage('Please ensure all required fields are filled out.');
+      }
+    });
+  }
 }

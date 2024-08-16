@@ -6,10 +6,8 @@ import { loadFragment } from '../fragment/fragment.js';
 import formDecoration from './form.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
-  PET_PLANS_LPM_URL,
-  PET_PLANS_LPM_PLUS_URL,
-  PET_PLANS_ANNUAL_URL,
   getCookie,
+  getSelectedProductAdditionalInfo,
 } from '../../scripts/24petwatch-utils.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
@@ -78,43 +76,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     return selectedProducts.find((item) => item.petID === petId);
   }
 
-  function getSelectedProductAdditionalInfo(itemId) {
-    const additionalInfo = {
-      PLH_000007: {
-        name: 'Lifetime Protection Membership™',
-        priceComment: '(A one-time fee)',
-        pageLink: PET_PLANS_LPM_URL,
-        fragmentLink: '/lost-pet-protection/fragments/lpm-info',
-      },
-      'LPM-PLUS-US-CATS': {
-        name: 'Lifetime Protection Membership™ Plus',
-        priceComment: '(A one-time fee)',
-        pageLink: PET_PLANS_LPM_PLUS_URL,
-        fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
-      },
-      'LPM-PLUS': {
-        name: 'Lifetime Protection Membership™ Plus',
-        priceComment: '(A one-time fee)',
-        pageLink: PET_PLANS_LPM_PLUS_URL,
-        fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
-      },
-      'Annual Plan-DOGS': {
-        name: 'Annual Protection Membership',
-        priceComment: 'for the first year $19.95/year thereafter',
-        pageLink: PET_PLANS_ANNUAL_URL,
-        fragmentLink: '/lost-pet-protection/fragments/annual-info',
-      },
-      'Annual Plan-CATS': {
-        name: 'Annual Protection Membership',
-        priceComment: 'for the first year $19.95/year thereafter',
-        pageLink: PET_PLANS_ANNUAL_URL,
-        fragmentLink: '/lost-pet-protection/fragments/annual-info',
-      },
-    };
-
-    return additionalInfo[itemId] || '';
-  }
-
   function editPet(petId) {
     window.location.href = `.${getSelectedProductAdditionalInfo(getSelectedProduct(petId).itemId).pageLink}?petId=${petId}`;
   }
@@ -165,6 +126,9 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   const petListHTML = petsList.map((pet) => {
     const selectedProduct = getSelectedProduct(pet.id);
+    if (!selectedProduct) {
+      return '';
+    }
     return jsx`
     <div class="item">
         <div class="item-header">
@@ -202,11 +166,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       <button type="button" class="no" id="confirmation-dialog-no" autofocus>No</button>
     </div>
   </dialog>
-  ${petListHTML}
+  ${petListHTML.join('')}
   <div class="new-pet-form">
     <div class="new-pet-form-header">
       <span>Add Another Pet</span>
-      <span id="add-pet">Add</span>
+      <span id="add-another-pet">Add</span>
     </div>
     <div id="form-wrapper"></div>
   </div>
@@ -344,11 +308,14 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   };
 
-  const addPetButton = document.getElementById('add-pet');
+  const addPetButton = document.getElementById('add-another-pet');
   const formWrapper = document.getElementById('form-wrapper');
 
   addPetButton.onclick = () => {
-    formWrapper.innerHTML = '';
-    formDecoration(formWrapper, apiBaseUrl);
+    if (formWrapper.innerHTML === '') {
+      formDecoration(formWrapper, apiBaseUrl);
+    } else {
+      formWrapper.innerHTML = '';
+    }
   };
 }

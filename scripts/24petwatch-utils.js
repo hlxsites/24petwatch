@@ -60,3 +60,40 @@ export function deleteCookie(name) {
 export function isSummaryPage() {
   return window.location.pathname.endsWith(PET_PLANS_SUMMARY_QUOTE_URL);
 }
+
+export function getSelectedProductAdditionalInfo(itemId) {
+  const additionalInfo = {
+    PLH_000007: {
+      name: 'Lifetime Protection Membership™',
+      priceComment: '(A one-time fee)',
+      pageLink: PET_PLANS_LPM_URL,
+      fragmentLink: '/lost-pet-protection/fragments/lpm-info',
+    },
+    'LPM-PLUS-US-CATS': {
+      name: 'Lifetime Protection Membership™ Plus',
+      priceComment: '(A one-time fee)',
+      pageLink: PET_PLANS_LPM_PLUS_URL,
+      fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
+    },
+    'LPM-PLUS': {
+      name: 'Lifetime Protection Membership™ Plus',
+      priceComment: '(A one-time fee)',
+      pageLink: PET_PLANS_LPM_PLUS_URL,
+      fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
+    },
+    'Annual Plan-DOGS': {
+      name: 'Annual Protection Membership',
+      priceComment: 'for the first year $19.95/year thereafter',
+      pageLink: PET_PLANS_ANNUAL_URL,
+      fragmentLink: '/lost-pet-protection/fragments/annual-info',
+    },
+    'Annual Plan-CATS': {
+      name: 'Annual Protection Membership',
+      priceComment: 'for the first year $19.95/year thereafter',
+      pageLink: PET_PLANS_ANNUAL_URL,
+      fragmentLink: '/lost-pet-protection/fragments/annual-info',
+    },
+  };
+
+  return additionalInfo[itemId] || '';
+}
