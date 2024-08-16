@@ -6,6 +6,5 @@ export function decorateLeftBlock(block, apiBaseUrl) {
 }
 
 export function decorateRightBlock(block) {
-  const grayDiv = block.children[0].children[1];
-  doDecoration(grayDiv);
+  doDecoration(block.children[0].children[1]);
 }

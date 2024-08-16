@@ -161,12 +161,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     return fragment;
   }
 
-  const uniqSelectedProduct = new Set();
   const petListHTML = petsList.map((pet) => {
     const selectedProduct = getSelectedProduct(pet.id);
-    if (selectedProduct) {
-      uniqSelectedProduct.add(selectedProduct.itemId);
-    }
     return jsx`
     <div class="item">
         <div class="item-header">
