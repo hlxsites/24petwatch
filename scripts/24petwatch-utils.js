@@ -56,3 +56,7 @@ export function setCombinedCookie(name, values, days = 1) {
 export function deleteCookie(name) {
   document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;Secure;SameSite=Strict`;
 }
+
+export function isSummaryPage() {
+  return window.location.pathname.endsWith(PET_PLANS_SUMMARY_QUOTE_URL);
+}
