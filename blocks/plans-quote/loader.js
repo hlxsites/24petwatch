@@ -4,10 +4,14 @@ const Loader = {
   loaderWrapper: null,
 
   addLoader() {
+    [this.loaderWrapper] = document.getElementsByClassName('loader-wrapper');
+    if (this.loaderWrapper) {
+      return;
+    }
     this.loaderWrapper = document.createElement('div');
     this.loaderWrapper.classList.add('loader-wrapper', 'hide');
     this.loaderWrapper.innerHTML = jsx`
-      <div class="loader"></div>
+      <div class="loader"></div>    
       <div class="loader-txt">Loading</div>
       <div class="loader-bg"></div>
     `;
