@@ -12,7 +12,9 @@ import {
   PET_PLANS_ANNUAL_URL,
   PET_PLANS_SUMMARY_QUOTE_URL,
   setCookie,
-  getQueryParam, getCookie,
+  getQueryParam,
+  getCookie,
+  isSummaryPage,
 } from '../../scripts/24petwatch-utils.js';
 
 const US_LEGAL_HEADER = '';
