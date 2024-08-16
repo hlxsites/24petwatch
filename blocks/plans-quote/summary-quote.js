@@ -1,6 +1,7 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
+import Loader from './loader.js';
 import { loadFragment } from '../fragment/fragment.js';
 import formDecoration from './form.js';
 import {
@@ -14,6 +15,7 @@ import {
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
   const APIClientObj = new APIClient(apiBaseUrl);
+  Loader.addLoader();
 
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
 
@@ -24,6 +26,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   // eslint-disable-next-line no-shadow
   async function getPurchaseSummary(ownerId) {
+    Loader.showLoader();
     // eslint-disable-next-line no-shadow
     let purchaseSummary = {};
     try {
@@ -32,10 +35,12 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.log('Failed to get the purchase summary for owner:', ownerId, ' status:', status);
     }
+    Loader.hideLoader();
 
     return purchaseSummary;
   }
 
+  Loader.showLoader();
   try {
     ownerData = await APIClientObj.getOwner(ownerId);
   } catch (status) {
@@ -67,10 +72,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       console.log('Failed to get the purchase summary for owner:', ownerData.id, ' status:', status);
     }
   }
-
-  console.dir(petsList);
-  console.dir(selectedProducts);
-  console.dir(purchaseSummary);
+  Loader.hideLoader();
 
   function getSelectedProduct(petId) {
     return selectedProducts.find((item) => item.petID === petId);
@@ -277,6 +279,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   }
 
   async function updateAutoRenewHandler(target) {
+    Loader.showLoader();
     const petID = target.getAttribute('data-pet-id');
     const recID = target.getAttribute('data-rec-id');
     const isChecked = target.checked;
@@ -286,6 +289,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.log('Failed to update the auto-renew for pet:', petID, ' status:', status);
     }
+    Loader.hideLoader();
   }
 
   function itemInfoFragmentButtonHandler(target) {
