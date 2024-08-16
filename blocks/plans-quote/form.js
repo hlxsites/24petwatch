@@ -11,7 +11,6 @@ import {
   PET_PLANS_LPM_PLUS_URL,
   PET_PLANS_ANNUAL_URL,
   PET_PLANS_SUMMARY_QUOTE_URL,
-  getCombinedCookie,
   setCookie,
   getQueryParam, getCookie,
 } from '../../scripts/24petwatch-utils.js';
@@ -25,6 +24,8 @@ const CA_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Petheal
 const CA_LEGAL_CONSENT_FOR_LOST_PET_CONTACT = 'I agree that 24Petwatch® may release my contact information to anyone who finds my pet in order to facilitate pet recovery.';
 
 const CART_FLOW = 2; // membership
+
+const usedChipNumbers = new Set();
 
 export default function formDecoration(block, apiBaseUrl) {
   // prepare for Canada vs US
@@ -267,6 +268,12 @@ export default function formDecoration(block, apiBaseUrl) {
         showErrorMessage(microchipInput, 'We\'re sorry, we don\'t recognize the format of the chip number you have entered. Please double check the value you entered and try again.');
         return false;
       }
+
+      if (usedChipNumbers.has(microchip)) {
+        showErrorMessage(microchipInput, 'This microchip number has already been used. Please enter a different microchip number.');
+        return false;
+      }
+
       hideErrorMessage(microchipInput);
       formData.microchip = microchip;
       return true;
@@ -709,6 +716,15 @@ export default function formDecoration(block, apiBaseUrl) {
       await zipcodeHandler();
     }
 
+    // Collect used microchip numbers
+    try {
+      const petsList = await APIClientObj.getPets(ownerId);
+      petsList.forEach((pet) => usedChipNumbers.add(pet.microchipId));
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the pets for owner:', ownerId, ' status:', status);
+    }
+
     // pet {petName, microchip, speciesId, purebreed, breed {breedId, breedName}}
     const petId = getQueryParam('petId');
     if (!petId) {
@@ -725,6 +741,8 @@ export default function formDecoration(block, apiBaseUrl) {
     }
     if (data.microchipId) {
       microchipInput.value = data.microchipId;
+      // Remove microchip number of current pet from used list
+      usedChipNumbers.delete(data.microchipId);
       microchipHandler();
     }
     if (data.speciesId) {
