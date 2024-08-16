@@ -50,6 +50,24 @@ export default function formDecoration(block, apiBaseUrl) {
     `;
   }
 
+  const emailFieldHTML = jsx`
+    <div class="wrapper">
+      <input type="email" id="email" name="email" placeholder="Example: yourname@email.com" maxlength="40" required>
+      <label for="email" class="float-label">Email address*</label>
+      <span class="checkmark"></span>
+      <div class="error-message"></div>
+    </div>
+  `;
+
+  const zipcodeFieldHTML = jsx`
+    <div class="wrapper">
+      <input type="text" id="zipcode" name="zipcode" placeholder="${zipcodePlaceholder}" required>
+      <label for="zipcode" class="float-label">${zipcodeLabel}</label>
+      <span class="checkmark"></span>
+      <div class="error-message"></div>
+    </div>
+  `;
+
   // create the HTML for the left block
   block.innerHTML += jsx`
     <h2>Let's start by getting to know your pet.</h2>
@@ -98,18 +116,8 @@ export default function formDecoration(block, apiBaseUrl) {
         <span class="checkmark"></span>
         <div class="error-message"></div>
       </div>
-      <div class="wrapper">
-        <input type="email" id="email" name="email" placeholder="Example: yourname@email.com" maxlength="40" required>
-        <label for="email" class="float-label">Email address*</label>
-        <span class="checkmark"></span>
-        <div class="error-message"></div>
-      </div>
-      <div class="wrapper">
-        <input type="text" id="zipcode" name="zipcode" placeholder="${zipcodePlaceholder}" required>
-        <label for="zipcode" class="float-label">${zipcodeLabel}</label>
-        <span class="checkmark"></span>
-        <div class="error-message"></div>
-      </div>
+      ${!isSummaryPage() ? emailFieldHTML : ''}
+      ${!isSummaryPage() ? zipcodeFieldHTML : ''}
       <div class="wrapper promocode-wrapper">
         <input type="text" id="promocode" name="promocode" placeholder="Enter Promo Code">
         <label for="promocode" class="float-label">Your Promo Code (optional)</label>
@@ -247,6 +255,10 @@ export default function formDecoration(block, apiBaseUrl) {
   }
 
   function emailHandler() {
+    if (isSummaryPage()) {
+      return true; // no need to validate email on the summary page
+    }
+
     formData.email = ''; // reset our validated email
     const email = emailInput.value.trim();
     if (email !== '') {
@@ -382,58 +394,6 @@ export default function formDecoration(block, apiBaseUrl) {
     return true;
   }
 
-  petNameInput.addEventListener('blur', () => {
-    petNameHandler();
-  });
-
-  emailInput.addEventListener('blur', () => {
-    emailHandler();
-  });
-
-  microchipInput.addEventListener('blur', () => {
-    microchipHandler();
-  });
-
-  zipcodeInput.addEventListener('blur', async () => {
-    await zipcodeHandler();
-  });
-
-  applyPromoCodeButton.addEventListener('click', () => {
-    const promoCode = promocodeInput.value.trim();
-
-    Loader.showLoader();
-    APIClientObj.validateNonInsurancePromoCodeWithSpecies(
-      promoCode,
-      countryId,
-      formData.speciesId ?? null,
-      (data) => {
-        if (data.isValid === true) {
-          hideErrorMessage(promocodeInput);
-          formData.promoCode = promoCode;
-        } else {
-          showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
-          formData.promoCode = '';
-        }
-        Loader.hideLoader();
-      },
-      (status) => {
-        // eslint-disable-next-line no-console
-        console.log('Failed validating the promo code:', status);
-        hideErrorMessage(promocodeInput);
-        Loader.hideLoader();
-      },
-    );
-  });
-
-  promocodeInput.addEventListener('input', () => {
-    if (promocodeInput.value.trim() === '') {
-      hideErrorMessage(promocodeInput);
-      applyPromoCodeButton.disabled = true;
-    } else {
-      applyPromoCodeButton.disabled = false;
-    }
-  });
-
   function highlightMatch(text, query) {
     const regex = new RegExp(`(${query})`, 'gi');
     return text.replace(regex, '<b>$1</b>');
@@ -474,33 +434,6 @@ export default function formDecoration(block, apiBaseUrl) {
       clearResults('Clear');
     }
   }
-
-  resultsList.addEventListener('click', (event) => {
-    const liElement = event.target.closest('li');
-    if (liElement) {
-      const breedId = liElement.getAttribute('data-breed-id');
-      const breedName = liElement.getAttribute('data-breed-name');
-      formData.breed = { breedId, breedName };
-      petBreedInput.value = breedName;
-      clearResults();
-      hideErrorMessage(petBreedInput);
-    }
-  });
-
-  petBreedInput.addEventListener('input', petBreedInputHandler);
-  petBreedInput.addEventListener('blur', petBreedHandler);
-
-  speciesRadioGroups.forEach((radioInput) => {
-    radioInput.addEventListener('change', speciesHandler);
-  });
-
-  pureBreedRadioGroups.forEach((radioInput) => {
-    radioInput.addEventListener('change', pureBreedHandler);
-  });
-
-  document.addEventListener('click', () => {
-    clearResults();
-  });
 
   function updateButtonState() {
     const allChecked = Array.from(checkboxes).every((checkbox) => checkbox.checked);
@@ -626,34 +559,6 @@ export default function formDecoration(block, apiBaseUrl) {
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 
-  submitButton.addEventListener('click', async () => {
-    // verify we have all the required fields
-    const fieldHandlers = [
-      petNameHandler,
-      emailHandler,
-      speciesHandler,
-      pureBreedHandler,
-      petBreedHandler,
-      microchipHandler,
-      zipcodeHandler,
-    ];
-    let allPassed = true;
-
-    for (let i = 0; i < fieldHandlers.length; i += 1) {
-      const fieldHandler = fieldHandlers[i];
-      // eslint-disable-next-line no-await-in-loop
-      if (!await fieldHandler()) {
-        allPassed = false;
-      }
-    }
-
-    if (allPassed) {
-      await executeSubmit();
-    } else {
-      showGeneralErrorMessage('Please ensure all required fields are filled out.');
-    }
-  });
-
   async function getOwner(ownerId) {
     try {
       const data = await APIClientObj.getOwner(ownerId);
@@ -709,13 +614,16 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
     formData.ownerId = ownerId;
-    if (data.email) {
-      emailInput.value = data.email;
-      emailHandler();
-    }
-    if (data.zipCode) {
-      zipcodeInput.value = data.zipCode;
-      await zipcodeHandler();
+
+    if (!isSummaryPage()) {
+      if (data.email) {
+        emailInput.value = data.email;
+        emailHandler();
+      }
+      if (data.zipCode) {
+        zipcodeInput.value = data.zipCode;
+        await zipcodeHandler();
+      }
     }
 
     // Collect used microchip numbers
@@ -778,4 +686,114 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
   prefillFormIfPossible();
+
+  // Add event listener
+  if (!isSummaryPage()) {
+    emailInput.addEventListener('blur', () => {
+      emailHandler();
+    });
+
+    zipcodeInput.addEventListener('blur', async () => {
+      await zipcodeHandler();
+    });
+  }
+
+  petNameInput.addEventListener('blur', () => {
+    petNameHandler();
+  });
+
+  microchipInput.addEventListener('blur', () => {
+    microchipHandler();
+  });
+
+  applyPromoCodeButton.addEventListener('click', () => {
+    const promoCode = promocodeInput.value.trim();
+
+    Loader.showLoader();
+    APIClientObj.validateNonInsurancePromoCodeWithSpecies(
+      promoCode,
+      countryId,
+      formData.speciesId ?? null,
+      (data) => {
+        if (data.isValid === true) {
+          hideErrorMessage(promocodeInput);
+          formData.promoCode = promoCode;
+        } else {
+          showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
+          formData.promoCode = '';
+        }
+        Loader.hideLoader();
+      },
+      (status) => {
+        // eslint-disable-next-line no-console
+        console.log('Failed validating the promo code:', status);
+        hideErrorMessage(promocodeInput);
+        Loader.hideLoader();
+      },
+    );
+  });
+
+  promocodeInput.addEventListener('input', () => {
+    if (promocodeInput.value.trim() === '') {
+      hideErrorMessage(promocodeInput);
+      applyPromoCodeButton.disabled = true;
+    } else {
+      applyPromoCodeButton.disabled = false;
+    }
+  });
+
+  resultsList.addEventListener('click', (event) => {
+    const liElement = event.target.closest('li');
+    if (liElement) {
+      const breedId = liElement.getAttribute('data-breed-id');
+      const breedName = liElement.getAttribute('data-breed-name');
+      formData.breed = { breedId, breedName };
+      petBreedInput.value = breedName;
+      clearResults();
+      hideErrorMessage(petBreedInput);
+    }
+  });
+
+  petBreedInput.addEventListener('input', petBreedInputHandler);
+  petBreedInput.addEventListener('blur', petBreedHandler);
+
+  speciesRadioGroups.forEach((radioInput) => {
+    radioInput.addEventListener('change', speciesHandler);
+  });
+
+  pureBreedRadioGroups.forEach((radioInput) => {
+    radioInput.addEventListener('change', pureBreedHandler);
+  });
+
+  document.addEventListener('click', () => {
+    clearResults();
+  });
+
+  submitButton.addEventListener('click', async () => {
+    // verify we have all the required fields
+    const fieldHandlers = [
+      petNameHandler,
+      emailHandler,
+      speciesHandler,
+      pureBreedHandler,
+      petBreedHandler,
+      microchipHandler,
+      zipcodeHandler,
+    ];
+    let allPassed = true;
+
+    for (let i = 0; i < fieldHandlers.length; i += 1) {
+      const fieldHandler = fieldHandlers[i];
+      // eslint-disable-next-line no-await-in-loop
+      if (!await fieldHandler()) {
+        allPassed = false;
+      }
+    }
+
+    if (allPassed) {
+      await executeSubmit();
+    } else {
+      showGeneralErrorMessage('Please ensure all required fields are filled out.');
+    }
+  });
 }
