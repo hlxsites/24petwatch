@@ -4,7 +4,6 @@ import Loader from './loader.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
-  COOKIE_NAME_FOR_PET_PLANS,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
   POSTAL_CODE_CANADA_REGEX,
@@ -13,9 +12,8 @@ import {
   PET_PLANS_ANNUAL_URL,
   PET_PLANS_SUMMARY_QUOTE_URL,
   getCombinedCookie,
-  setCombinedCookie,
   setCookie,
-  getQueryParam,
+  getQueryParam, getCookie,
 } from '../../scripts/24petwatch-utils.js';
 
 const US_LEGAL_HEADER = '';
@@ -615,7 +613,6 @@ export default function formDecoration(block, apiBaseUrl) {
     Loader.hideLoader();
 
     // remember the critical information for future steps
-    setCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, [formData.ownerId, formData.petId]);
     setCookie(COOKIE_NAME_SAVED_OWNER_ID, formData.ownerId);
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
@@ -689,7 +686,7 @@ export default function formDecoration(block, apiBaseUrl) {
 
   async function prefillFormIfPossible() {
     // the owner info must come from the cookie
-    const [ownerId = '', petIdFromCookie = ''] = getCombinedCookie(COOKIE_NAME_FOR_PET_PLANS, []);
+    const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
 
     // owner {email, zipCode}
     if (!ownerId) {
@@ -713,7 +710,7 @@ export default function formDecoration(block, apiBaseUrl) {
     }
 
     // pet {petName, microchip, speciesId, purebreed, breed {breedId, breedName}}
-    const petId = getQueryParam('petId', petIdFromCookie);
+    const petId = getQueryParam('petId');
     if (!petId) {
       return;
     }
