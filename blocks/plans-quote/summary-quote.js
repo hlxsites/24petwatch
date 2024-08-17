@@ -2,12 +2,12 @@ import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import Loader from './loader.js';
-import { loadFragment } from '../fragment/fragment.js';
 import formDecoration from './form.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   getCookie,
   getSelectedProductAdditionalInfo,
+  getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
@@ -45,8 +45,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     // eslint-disable-next-line no-console
     console.log('Failed to get the owner:', ownerId, ' status:', status);
   }
-
-  console.dir(ownerData);
 
   if (ownerData.id) {
     try {
@@ -110,18 +108,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         <div class="auto-renew-info-text">As part of the Lifetime Protection Membership, these two benefits are free for the first year. Renew them together for just $19.95 per year (plus applicable taxes. Price is subject to change). Your credit card will be charged on your renewal date, which is one year from today.</div>
     </div>
     `;
-  }
-
-  async function getItemInfoFragment(itemId) {
-    let fragment = '';
-    try {
-      fragment = await loadFragment(getSelectedProductAdditionalInfo(itemId).fragmentLink, false);
-    } catch (status) {
-      // eslint-disable-next-line no-console
-      console.log('Failed to load the fragment for item:', itemId, ' status:', status);
-    }
-
-    return fragment;
   }
 
   const petListHTML = petsList.map((pet) => {

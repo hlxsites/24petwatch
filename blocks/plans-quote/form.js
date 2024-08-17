@@ -16,6 +16,7 @@ import {
   getCookie,
   isSummaryPage,
   getSelectedProductAdditionalInfo,
+  getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
 
 const US_LEGAL_HEADER = '';
@@ -27,6 +28,8 @@ const CA_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Petheal
 const CA_LEGAL_CONSENT_FOR_LOST_PET_CONTACT = 'I agree that 24Petwatch® may release my contact information to anyone who finds my pet in order to facilitate pet recovery.';
 
 const CART_FLOW = 2; // membership
+
+const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
 
 const usedChipNumbers = new Set();
 
@@ -507,7 +510,7 @@ export default function formDecoration(block, apiBaseUrl) {
       const isPetPlan = (item) => item.itemGroupId.includes('Pet Recovery Services');
       petPlans = data.reduce((acc, item) => {
         if (isPetPlan(item)) {
-          acc.push({ itemId: item.itemId, recId: item.recId });
+          acc.push({ itemId: item.itemId, recId: item.recId, salesPrice: item.salesPrice });
         }
         return acc;
       }, []);
@@ -547,7 +550,6 @@ export default function formDecoration(block, apiBaseUrl) {
   }
 
   async function executeSubmit() {
-    const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
     Loader.showLoader();
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
@@ -589,8 +591,20 @@ export default function formDecoration(block, apiBaseUrl) {
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 
+  async function executeAddPet2Step(recId) {
+    Loader.showLoader();
+    if (!await saveSelectedProduct(formData.petId, recId)) {
+      console.log('Failed to save the selected product.');
+      showGeneralErrorMessage(apiErrorMsg);
+      Loader.hideLoader();
+      return;
+    }
+
+    Loader.hideLoader();
+    window.location.reload();
+  }
+
   async function executeAddPet() {
-    const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
     Loader.showLoader();
 
     const { ownerId } = formData;
@@ -611,7 +625,43 @@ export default function formDecoration(block, apiBaseUrl) {
 
     const availableProducts = await getAvailableProducts(formData.petId);
 
-    console.log(availableProducts);
+    if (availableProducts) {
+      block.innerHTML = ''; // clear the form
+      availableProducts.forEach((product) => {
+        const additionalInfo = getSelectedProductAdditionalInfo(product.itemId);
+        if (additionalInfo) {
+          block.innerHTML += jsx`
+          <div class="availavle-product">
+            <div class="price-info">
+                <h2>${additionalInfo.name}</h2>
+                <p>$${product.salesPrice}</p>
+                <p>${additionalInfo.priceComment}</p>
+            </div>
+          </div>
+          <div class="product-fragment" data-product-id="${product.itemId}"></div>
+          <div><button class="choose-product" data-product-rec-id="${product.recId}">Add</button></div>
+          `;
+        }
+      });
+
+      // Loading item info fragments
+      const itemInfoFragmetDivs = document.querySelectorAll('.product-fragment');
+      itemInfoFragmetDivs.forEach((infoFragmentDiv) => {
+        const itemId = infoFragmentDiv.getAttribute('data-product-id');
+        getItemInfoFragment(itemId).then((fragment) => {
+          infoFragmentDiv.append(fragment);
+        });
+      });
+
+      const chooseProductButtons = document.querySelectorAll('.choose-product');
+      chooseProductButtons.forEach((button) => {
+        button.addEventListener('click', (event) => {
+          executeAddPet2Step(event.target.getAttribute('data-product-rec-id'));
+        });
+      });
+    } else {
+      showGeneralErrorMessage(apiErrorMsg);
+    }
 
     Loader.hideLoader();
   }

@@ -1,3 +1,5 @@
+import { loadFragment } from '../blocks/fragment/fragment.js';
+
 // ---- the following constants are not expected to change ----
 export const PET_PLANS_LPM_URL = '/lps-quote'; // aka 'PET_PLANS_LPS_URL'
 export const PET_PLANS_LPM_PLUS_URL = '/lpm-plus';
@@ -96,4 +98,16 @@ export function getSelectedProductAdditionalInfo(itemId) {
   };
 
   return additionalInfo[itemId] || '';
+}
+
+export async function getItemInfoFragment(itemId) {
+  let fragment = '';
+  try {
+    fragment = await loadFragment(getSelectedProductAdditionalInfo(itemId).fragmentLink, false);
+  } catch (status) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to load the fragment for item:', itemId, ' status:', status);
+  }
+
+  return fragment;
 }
