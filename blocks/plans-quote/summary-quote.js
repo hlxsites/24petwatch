@@ -78,8 +78,16 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     window.location.href = `.${getSelectedProductAdditionalInfo(getSelectedProduct(petId).itemId).pageLink}?petId=${petId}`;
   }
 
-  function removePet(petId) {
-    console.log('Remove pet:', petId);
+  async function removePet(petId) {
+    Loader.showLoader();
+    try {
+      await APIClientObj.deletePet(petId);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to delete the pet:', petId, ' status:', status);
+    }
+    Loader.hideLoader();
+    window.location.reload();
   }
 
   function getAutoRenewTet(itemId) {

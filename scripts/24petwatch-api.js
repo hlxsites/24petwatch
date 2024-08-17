@@ -142,6 +142,14 @@ export default class APIClient {
     });
   }
 
+  deletePet(petId) {
+    const path = 'Pet';
+    const params = { petId };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_DELETE, params, null, resolve, reject, 'json');
+    });
+  }
+
   getPets(ownerId) {
     const path = `Pet/GetByOwner/${ownerId}`;
     return new Promise((resolve, reject) => {
