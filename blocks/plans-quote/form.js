@@ -635,15 +635,15 @@ export default function formDecoration(block, apiBaseUrl) {
         const additionalInfo = getSelectedProductAdditionalInfo(product.itemId);
         if (additionalInfo) {
           block.innerHTML += jsx`
-          <div class="availavle-product">
+          <div class="available-product">
             <div class="price-info">
                 <h2>${additionalInfo.name}</h2>
                 <p>$${product.salesPrice}</p>
                 <p>${additionalInfo.priceComment}</p>
             </div>
+            <div class="product-fragment" data-product-id="${product.itemId}"></div>
+            <div class="button-wrapper"><button class="choose-product" data-product-rec-id="${product.recId}">Add</button></div>
           </div>
-          <div class="product-fragment" data-product-id="${product.itemId}"></div>
-          <div><button class="choose-product" data-product-rec-id="${product.recId}">Add</button></div>
           `;
         }
       });

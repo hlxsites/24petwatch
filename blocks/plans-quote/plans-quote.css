@@ -237,6 +237,31 @@ main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > s
   border-radius: 50%;
 }
 
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.button-wrapper {
+  text-align: center;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info {
+  margin-top: 1rem;
+  border-radius: .625rem;
+  border: .1875rem solid #e5e5e5;
+  text-align: center;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > p:first-of-type {
+  font-size: 1.75rem;
+  line-height: 2.375rem;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > p {
+  font-size: 1rem;
+}
+
 main .plans-quote.summary-quote > div.payment-summary > div.payments {
   border-top: 2px solid #edf2f7;
   padding: 0 2rem;
