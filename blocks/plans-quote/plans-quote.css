@@ -404,6 +404,14 @@ main .plans-quote .bottom-section .amount-info {
   font-weight: 700;
 }
 
+main .plans-quote .bottom-section > button {
+  display: inline-block;
+}
+
+main .plans-quote form div.wrapper button#submit {
+  display: inline-block;
+}
+
 #pet-breed-list {
   background-color: #fff;
   box-sizing: border-box;
@@ -566,5 +574,30 @@ body .loader-wrapper .loader {
   87.5% {
     -webkit-box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em;
     box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em
+  }
+}
+
+main div.trustedsite-wrapper {
+  margin-top: 1rem;
+}
+
+@media (max-width: 768px) {
+  main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
+    margin: 0 .5rem;
+  }
+
+  form label {
+    font-size: .75rem;
+  }
+}
+
+@media (max-width: 536px) {
+  main .plans-quote form .wrapper-several-buttons {
+    display: block;
+    width: 60%;
+    margin: 0 auto;
+  }
+  main .plans-quote form .wrapper-several-buttons button {
+    width: 100%;
   }
 }
