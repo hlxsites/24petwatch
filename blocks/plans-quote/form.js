@@ -497,9 +497,11 @@ export default function formDecoration(block, apiBaseUrl) {
     const currentPath = window.location.pathname;
     let token = 'PLH_000007'; // default
     if (currentPath.includes(PET_PLANS_LPM_URL)) {
-      token = 'PLH_000007';
+      token = isCanada ? 'PHL_000006' : 'PLH_000007';
     } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
-      token = (parseInt(formData.speciesId, 10) === 1) ? 'LPM-PLUS' : 'LPM-PLUS-US-CATS';
+      // eslint-disable-next-line no-nested-ternary
+      token = (parseInt(formData.speciesId, 10) === 1)
+        ? (isCanada ? 'LPM-PLUS-CA' : 'LPM-PLUS') : (isCanada ? 'LPM-PLUS-CA-CATS' : 'LPM-PLUS-US-CATS');
     } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
       token = (parseInt(formData.speciesId, 10) === 1) ? 'Annual Plan-DOGS' : 'Annual Plan-CATS';
     }

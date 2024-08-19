@@ -1,4 +1,5 @@
 import { loadFragment } from '../blocks/fragment/fragment.js';
+import { isCanada } from './lib-franklin.js';
 
 // ---- the following constants are not expected to change ----
 export const PET_PLANS_LPM_URL = '/lps-quote'; // aka 'PET_PLANS_LPS_URL'
@@ -65,6 +66,12 @@ export function isSummaryPage() {
 
 export function getSelectedProductAdditionalInfo(itemId) {
   const additionalInfo = {
+    PHL_000006: {
+      name: 'Lifetime Protection Membership™',
+      priceComment: '(A one-time fee)',
+      pageLink: PET_PLANS_LPM_URL,
+      fragmentLink: '/ca/lost-pet-protection/fragments/lpm-info',
+    },
     PLH_000007: {
       name: 'Lifetime Protection Membership™',
       priceComment: '(A one-time fee)',
@@ -77,11 +84,23 @@ export function getSelectedProductAdditionalInfo(itemId) {
       pageLink: PET_PLANS_LPM_PLUS_URL,
       fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
     },
+    'LPM-PLUS-CA-CATS': {
+      name: 'Lifetime Protection Membership™ Plus',
+      priceComment: '(A one-time fee)',
+      pageLink: PET_PLANS_LPM_PLUS_URL,
+      fragmentLink: '/ca/lost-pet-protection/fragments/lpm-plus-info',
+    },
     'LPM-PLUS': {
       name: 'Lifetime Protection Membership™ Plus',
       priceComment: '(A one-time fee)',
       pageLink: PET_PLANS_LPM_PLUS_URL,
       fragmentLink: '/lost-pet-protection/fragments/lpm-plus-info',
+    },
+    'LPM-PLUS-CA': {
+      name: 'Lifetime Protection Membership™ Plus',
+      priceComment: '(A one-time fee)',
+      pageLink: PET_PLANS_LPM_PLUS_URL,
+      fragmentLink: '/ca/lost-pet-protection/fragments/lpm-plus-info',
     },
     'Annual Plan-DOGS': {
       name: 'Annual Protection Membership',
