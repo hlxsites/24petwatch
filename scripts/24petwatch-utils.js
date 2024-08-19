@@ -1,5 +1,4 @@
 import { loadFragment } from '../blocks/fragment/fragment.js';
-import { isCanada } from './lib-franklin.js';
 
 // ---- the following constants are not expected to change ----
 export const PET_PLANS_LPM_URL = '/lps-quote'; // aka 'PET_PLANS_LPS_URL'

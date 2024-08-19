@@ -1,5 +1,4 @@
 import { jsx } from '../../scripts/scripts.js';
-import { isCanada } from '../../scripts/lib-franklin.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import Loader from './loader.js';
 import formDecoration from './form.js';
@@ -280,9 +279,10 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   const proceedToPaymentButton = document.getElementById('proceedToPayment');
 
   function replaceUrlPlaceholders(urlTemplate, ...values) {
-    return urlTemplate.replace(/{(\d+)}/g, (match, index) => {
-      return typeof values[index] !== 'undefined' ? values[index] : match;
-    });
+    return urlTemplate.replace(
+      /{(\d+)}/g,
+      (match, index) => (typeof values[index] !== 'undefined' ? values[index] : match),
+    );
   }
 
   proceedToPaymentButton.onclick = async () => {

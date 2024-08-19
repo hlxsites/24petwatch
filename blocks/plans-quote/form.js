@@ -561,6 +561,7 @@ export default function formDecoration(block, apiBaseUrl) {
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
     if (!formData.ownerId) {
+      // eslint-disable-next-line no-console
       console.log('Failed to save the owner.');
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
@@ -570,6 +571,7 @@ export default function formDecoration(block, apiBaseUrl) {
     const petId = (!formData.petId) ? '' : formData.petId;
     await savePet(petId); // Create or Update the pet
     if (!formData.petId) {
+      // eslint-disable-next-line no-console
       console.log('Failed to save the pet.');
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
@@ -578,12 +580,14 @@ export default function formDecoration(block, apiBaseUrl) {
 
     await findAndApplySelectedProduct(formData.petId, getUniqueProductIdForThisFlow());
     if (!formData.productId) {
+      // eslint-disable-next-line no-console
       console.log('Failed to get the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
       return;
     }
     if (!await saveSelectedProduct(formData.petId, formData.productId)) {
+      // eslint-disable-next-line no-console
       console.log('Failed to save the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
@@ -600,6 +604,7 @@ export default function formDecoration(block, apiBaseUrl) {
   async function executeAddPet2Step(recId) {
     Loader.showLoader();
     if (!await saveSelectedProduct(formData.petId, recId)) {
+      // eslint-disable-next-line no-console
       console.log('Failed to save the selected product.');
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
@@ -615,6 +620,7 @@ export default function formDecoration(block, apiBaseUrl) {
 
     const { ownerId } = formData;
     if (!ownerId) {
+      // eslint-disable-next-line no-console
       console.log('Owner ID is missing.');
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
@@ -623,6 +629,7 @@ export default function formDecoration(block, apiBaseUrl) {
 
     await savePet(); // Create or Update the pet
     if (!formData.petId) {
+      // eslint-disable-next-line no-console
       console.log('Failed to save the pet.');
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();

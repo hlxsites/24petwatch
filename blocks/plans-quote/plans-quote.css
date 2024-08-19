@@ -1,3 +1,36 @@
+dialog {
+  border: none;
+  border-radius: 10px;
+}
+
+dialog h3 {
+  margin-top: 0.5rem;
+}
+
+dialog p {
+  padding: 1rem;
+  border-top: 1px solid var(--summary-quote-outline-color);
+  border-bottom: 1px solid var(--summary-quote-outline-color);
+}
+
+dialog .dialog-buttons-container {
+  display: flex;
+  justify-content: right;
+}
+
+dialog button {
+  margin: 0.5rem 0.5rem 0.5rem 1.5rem;
+}
+
+dialog button.yes {
+  background-color: var(--dialog-yes-color);
+}
+
+dialog button.yes:hover,
+dialog button.yes:focus {
+  background-color: var(--dialog-yes-hover-color);
+}
+
 /* stylelint-disable property-no-vendor-prefix */
 main .plans-quote.first-step > div {
   display: flex;
@@ -13,6 +46,13 @@ main .plans-quote.first-step > div > div {
   display: block;
   position: relative;
   flex: calc(65% - 15px);
+  box-sizing: border-box;
+}
+
+main .plans-quote form .checkbox-text-wrapper > div {
+  display: block;
+  position: relative;
+  flex: 24px;
   box-sizing: border-box;
 }
 
@@ -43,6 +83,12 @@ main .plans-quote.first-step > div > div:nth-child(1) > p {
   padding: 0 2rem;
 }
 
+main .plans-quote.first-step > div > div:nth-child(2) > div > p {
+  font-size: .813rem;
+  line-height: .938rem;
+  text-align: center;
+}
+
 main .plans-quote.first-step > div > div:nth-child(1) > p:first-of-type {
   background-color: #007680;
   color: #fff;
@@ -58,9 +104,12 @@ main .plans-quote.first-step > div > div:nth-child(2) {
   padding: 1rem 2rem;
   color: #333f48;
   display: flex;
-  flex-direction: row;
   justify-content: center;
-  flex-wrap: wrap;
+  flex-flow: row wrap;
+}
+
+main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
+  flex: calc(100% - 44px);
 }
 
 main .plans-quote.first-step > div > div:nth-child(2) > div {
@@ -72,12 +121,6 @@ main .plans-quote.first-step > div > div:nth-child(2) > h2 {
   font-size: 1.625rem;
   line-height: 2.25rem;
   width: 100%;
-  text-align: center;
-}
-
-main .plans-quote.first-step > div > div:nth-child(2) > div > p {
-  font-size: .813rem;
-  line-height: .938rem;
   text-align: center;
 }
 
@@ -224,7 +267,7 @@ main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > s
   cursor: pointer;
 }
 
-main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-another-pet:after {
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-another-pet::after {
   display: block;
   width: 25px;
   height: 25px;
@@ -253,13 +296,13 @@ main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.avai
   line-height: 2.25rem;
 }
 
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > p {
+  font-size: 1rem;
+}
+
 main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > p:first-of-type {
   font-size: 1.75rem;
   line-height: 2.375rem;
-}
-
-main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > p {
-  font-size: 1rem;
 }
 
 main .plans-quote.summary-quote > div.payment-summary > div.payments {
@@ -277,39 +320,6 @@ main .plans-quote.summary-quote > div.payment-summary > div.payments > div {
 main .plans-quote.summary-quote > div.payment-summary > div.payments > div.due-today {
   border-top: 2px solid #a0aec0;
   font-weight: 700;
-}
-
-dialog {
-  border: none;
-  border-radius: 10px;
-}
-
-dialog h3 {
-  margin-top: 0.5rem;
-}
-
-dialog p {
-  padding: 1rem;
-  border-top: 1px solid var(--summary-quote-outline-color);
-  border-bottom: 1px solid var(--summary-quote-outline-color);
-}
-
-dialog .dialog-buttons-container {
-  display: flex;
-  justify-content: right;
-}
-
-dialog button {
-  margin: 0.5rem 0.5rem 0.5rem 1.5rem;
-}
-
-dialog button.yes {
-  background-color: var(--dialog-yes-color);
-}
-
-dialog button.yes:hover,
-dialog button.yes:focus {
-  background-color: var(--dialog-yes-hover-color);
 }
 
 main .plans-quote form {
@@ -355,17 +365,6 @@ main .plans-quote form .checkbox-text-wrapper {
   justify-content: center;
   align-items: flex-start;
   padding: 0;
-}
-
-main .plans-quote form .checkbox-text-wrapper > div {
-  display: block;
-  position: relative;
-  flex: 24px;
-  box-sizing: border-box;
-}
-
-main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
-  flex: calc(100% - 44px);
 }
 
 main .plans-quote form .checkbox-text-wrapper > div > input[type="checkbox"] {
@@ -493,6 +492,7 @@ body .loader-wrapper .loader {
   transform: translateZ(0);
 }
 
+/* stylelint-disable at-rule-no-vendor-prefix */
 @-webkit-keyframes loading-animation {
   0%, 100% {
     -webkit-box-shadow: 0 -3em 0 .2em,2em -2em 0 0,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 0;
@@ -597,6 +597,7 @@ main div.trustedsite-wrapper {
     width: 60%;
     margin: 0 auto;
   }
+
   main .plans-quote form .wrapper-several-buttons button {
     width: 100%;
   }
