@@ -292,7 +292,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         window.location.href = replaceUrlPlaceholders(
           data.paymentProcessorRedirectBackURL,
           ownerData.id,
-          ownerData.cartFlow,
+          'protectionfirst',
           data.paymentProcessingUserId,
         );
       }
