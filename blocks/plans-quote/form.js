@@ -72,6 +72,16 @@ export default function formDecoration(block, apiBaseUrl) {
     </div>
   `;
 
+  const promocodeFieldHTML = jsx`
+    <div class="wrapper promocode-wrapper">
+      <input type="text" id="promocode" name="promocode" placeholder="Enter Promo Code">
+      <label for="promocode" class="float-label">Your Promo Code (optional)</label>
+      <span class="checkmark"></span>
+      <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
+      <div class="error-message"></div>
+    </div>
+  `;
+
   const firstPageButtomsHTML = jsx`
     <div class="wrapper wrapper-text-center">
       <button type="button" id="submit">Continue \u003E</button>
@@ -135,13 +145,7 @@ export default function formDecoration(block, apiBaseUrl) {
       </div>
       ${!isSummaryPage() ? emailFieldHTML : ''}
       ${!isSummaryPage() ? zipcodeFieldHTML : ''}
-      <div class="wrapper promocode-wrapper">
-        <input type="text" id="promocode" name="promocode" placeholder="Enter Promo Code">
-        <label for="promocode" class="float-label">Your Promo Code (optional)</label>
-        <span class="checkmark"></span>
-        <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
-        <div class="error-message"></div>
-      </div>
+      ${!isSummaryPage() ? promocodeFieldHTML : ''}
       <div class="wrapper">${legalHeader}</div>
       <div class="wrapper checkbox-text-wrapper">
         <div><input class="termsAndConditions" id="agreement" name="agreement" type="checkbox" autocomplete="off" /></div>
@@ -803,6 +807,42 @@ export default function formDecoration(block, apiBaseUrl) {
     zipcodeInput.addEventListener('blur', async () => {
       await zipcodeHandler();
     });
+
+    applyPromoCodeButton.addEventListener('click', () => {
+      const promoCode = promocodeInput.value.trim();
+
+      Loader.showLoader();
+      APIClientObj.validateNonInsurancePromoCodeWithSpecies(
+        promoCode,
+        countryId,
+        formData.speciesId ?? null,
+        (data) => {
+          if (data.isValid === true) {
+            hideErrorMessage(promocodeInput);
+            formData.promoCode = promoCode;
+          } else {
+            showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
+            formData.promoCode = '';
+          }
+          Loader.hideLoader();
+        },
+        (status) => {
+          // eslint-disable-next-line no-console
+          console.log('Failed validating the promo code:', status);
+          hideErrorMessage(promocodeInput);
+          Loader.hideLoader();
+        },
+      );
+    });
+
+    promocodeInput.addEventListener('input', () => {
+      if (promocodeInput.value.trim() === '') {
+        hideErrorMessage(promocodeInput);
+        applyPromoCodeButton.disabled = true;
+      } else {
+        applyPromoCodeButton.disabled = false;
+      }
+    });
   }
 
   petNameInput.addEventListener('blur', () => {
@@ -811,42 +851,6 @@ export default function formDecoration(block, apiBaseUrl) {
 
   microchipInput.addEventListener('blur', () => {
     microchipHandler();
-  });
-
-  applyPromoCodeButton.addEventListener('click', () => {
-    const promoCode = promocodeInput.value.trim();
-
-    Loader.showLoader();
-    APIClientObj.validateNonInsurancePromoCodeWithSpecies(
-      promoCode,
-      countryId,
-      formData.speciesId ?? null,
-      (data) => {
-        if (data.isValid === true) {
-          hideErrorMessage(promocodeInput);
-          formData.promoCode = promoCode;
-        } else {
-          showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
-          formData.promoCode = '';
-        }
-        Loader.hideLoader();
-      },
-      (status) => {
-        // eslint-disable-next-line no-console
-        console.log('Failed validating the promo code:', status);
-        hideErrorMessage(promocodeInput);
-        Loader.hideLoader();
-      },
-    );
-  });
-
-  promocodeInput.addEventListener('input', () => {
-    if (promocodeInput.value.trim() === '') {
-      hideErrorMessage(promocodeInput);
-      applyPromoCodeButton.disabled = true;
-    } else {
-      applyPromoCodeButton.disabled = false;
-    }
   });
 
   resultsList.addEventListener('click', (event) => {
