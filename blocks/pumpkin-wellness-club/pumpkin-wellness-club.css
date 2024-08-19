@@ -1,0 +1,168 @@
+.pumpkin-wellness-club-container { display: none; }
+
+.section.member-services-pumpkin-wellness.block-with-header,
+.section:not(.block-with-header) > div {
+  max-width: 62.5rem; /* 1000px */
+}
+
+/* Cards */
+.cards-pumpkin-wellness {
+  .cards-card-body h3 {
+    /* h5 font size */
+    font-size: var(--heading-font-size-s);
+    line-height: var(--heading-line-height-s);
+  }
+}
+
+/* How It Works */
+.how-it-works-pumpkin-wellness {
+  .columns > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  ol {
+    counter-reset: how-it-works-counter;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  ol > li {
+    counter-increment: how-it-works-counter;
+    display: flex;
+    align-items: start;
+    gap: 12px;
+    font-size: 1.3rem; /* 20px */
+
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+    
+    &::before {
+      content: counter(how-it-works-counter);
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      font-size: 1.3rem; /* 20px */
+      font-weight: 600;
+      color: #fff;
+      background-color: #007680;
+      border-radius: 100%;
+    }
+
+    + li {
+      margin-top: 24px;
+    }
+  }
+}
+
+/* Member Services */
+.member-services-pumpkin-wellness {
+  .columns h3 {
+    font-size: 1.3rem; /* 20px */
+    text-align: left;
+
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+
+  .columns h3,
+  .columns-wrapper .columns h3 + p {
+    display: inline-block;
+  }
+
+  .columns-wrapper .columns h3 + p {
+    margin: 0;
+    padding: 0;
+  }
+
+  ul {
+    padding: 0 0 0 20px;
+  }
+
+  ul li {
+    padding-left: 6px;
+    font-size: 1.3rem; /* 20px */
+
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+}
+
+/* Testimonial */
+.testimonial-pumpkin-wellness {
+  font-size: 1.3rem; /* 20px */
+
+  @media (min-width: 768px) {
+    font-size: 1.5rem; /* 24px */
+  }
+
+  h2 {    
+    position: absolute;
+    top: auto;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    width: 1px;
+    height: 1px;
+    white-space: nowrap;
+  }
+}
+
+/* Curated Products */
+.curated-products-pumpkin-wellness {
+  h2 {
+    font-size: 2rem; /* 32px */
+
+    @media (min-width: 768px) {
+      font-size: 2.375rem; /* 38px */
+    }
+  }
+
+  h3 {
+    font-size: 1.3rem; /* 20px */
+  
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+}
+
+.curated-products {
+  text-align: center;
+
+  img {
+    width: 100%;
+    height: max-content;
+  }
+}
+
+/* Pre Footer */
+.prefooter-pumpkin-wellness {
+  background-color: var(--footer-background-color);
+  color: var(--footer-font-color);
+
+  .columns > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  h2 {
+    font-size: 1.1rem; /* 18px */
+    font-weight: 600;
+    color: var(--footer-font-color);
+  }
+
+  a {
+    color: var(--footer-font-color);
+  }
+}
+
+.section.prefooter-pumpkin-wellness .columns-wrapper {
+  max-width: 30.5rem; /* 488px */
+  text-align: center;
+}
