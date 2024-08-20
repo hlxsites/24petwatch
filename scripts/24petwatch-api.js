@@ -135,6 +135,17 @@ export default class APIClient {
     });
   }
 
+  savePromoCode(ownerId, promoCode) {
+    const path = 'Product/NonInsurance/SavePromoCode';
+    const params = {
+      ownerId,
+      promoCode,
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
+    });
+  }
+
   getPet(petId) {
     const path = `Pet/${petId}`;
     return new Promise((resolve, reject) => {

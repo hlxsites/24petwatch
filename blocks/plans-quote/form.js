@@ -199,12 +199,12 @@ export default function formDecoration(block, apiBaseUrl) {
     container.classList.add('error');
   }
 
-  function hideErrorMessage(element) {
+  function hideErrorMessage(element, showCheckmark = true) {
     const container = element.parentElement;
     const errorMessage = container.querySelector('.error-message');
     const checkmark = container.querySelector('.checkmark');
     errorMessage.textContent = '';
-    checkmark.setAttribute('style', 'opacity: 1;');
+    if (showCheckmark) checkmark.setAttribute('style', 'opacity: 1;');
     container.classList.remove('error');
   }
 
@@ -456,6 +456,50 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
+  async function promocodeHandler() {
+    const promoCode = promocodeInput.value.trim();
+    let handlerStatus = false;
+    if (promoCode === '') {
+      return true;
+    }
+
+    Loader.showLoader();
+    try {
+      await new Promise((resolve, reject) => {
+        APIClientObj.validateNonInsurancePromoCodeWithSpecies(
+          promoCode,
+          countryId,
+          formData.speciesId ?? null,
+          (data) => {
+            if (data.isValid === true) {
+              hideErrorMessage(promocodeInput);
+              formData.promoCode = promoCode;
+              handlerStatus = true;
+              resolve();
+            } else {
+              showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
+              formData.promoCode = '';
+              handlerStatus = false;
+              reject();
+            }
+            Loader.hideLoader();
+          },
+          (status) => {
+            // eslint-disable-next-line no-console
+            console.log('Failed validating the promo code:', status);
+            hideErrorMessage(promocodeInput);
+            Loader.hideLoader();
+            handlerStatus = false;
+            reject();
+          },
+        );
+      });
+    } catch (status) {
+      handlerStatus = false;
+    }
+    return handlerStatus;
+  }
+
   function updateButtonState() {
     const allChecked = Array.from(checkboxes).every((checkbox) => checkbox.checked);
     if (isSummaryPage()) {
@@ -478,6 +522,15 @@ export default function formDecoration(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.log('Failed to create/update the owner:', status);
       formData.ownerId = '';
+    }
+  }
+
+  async function savePromoCode(ownerId, promoCode) {
+    try {
+      await APIClientObj.savePromoCode(ownerId, promoCode);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to save the promo code:', status);
     }
   }
 
@@ -566,6 +619,10 @@ export default function formDecoration(block, apiBaseUrl) {
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
       return;
+    }
+
+    if (formData.promoCode) {
+      await savePromoCode(formData.ownerId, formData.promoCode);
     }
 
     const petId = (!formData.petId) ? '' : formData.petId;
@@ -722,11 +779,22 @@ export default function formDecoration(block, apiBaseUrl) {
     // the owner info must come from the cookie
     const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
 
+    // promo code from query param
+    const promoCode = getQueryParam('promo_code');
+    if (promoCode) {
+      promocodeInput.value = promoCode.trim();
+      Loader.showLoader();
+      await promocodeHandler();
+      Loader.hideLoader();
+    }
+
     // owner {email, zipCode}
     if (!ownerId) {
       return;
     }
+    Loader.showLoader();
     let data = await getOwner(ownerId);
+    Loader.hideLoader();
     if (!data) {
       return;
     }
@@ -735,14 +803,24 @@ export default function formDecoration(block, apiBaseUrl) {
     }
     formData.ownerId = ownerId;
 
+    // promocode from owner data
+    if (data.nonInsPromoCode) {
+      promocodeInput.value = data.nonInsPromoCode;
+      Loader.showLoader();
+      await promocodeHandler();
+      Loader.hideLoader();
+    }
+
     if (!isSummaryPage()) {
       if (data.email) {
         emailInput.value = data.email;
         emailHandler();
       }
       if (data.zipCode) {
+        Loader.showLoader();
         zipcodeInput.value = data.zipCode;
         await zipcodeHandler();
+        Loader.hideLoader();
       }
     }
 
@@ -818,35 +896,12 @@ export default function formDecoration(block, apiBaseUrl) {
     });
 
     applyPromoCodeButton.addEventListener('click', () => {
-      const promoCode = promocodeInput.value.trim();
-
-      Loader.showLoader();
-      APIClientObj.validateNonInsurancePromoCodeWithSpecies(
-        promoCode,
-        countryId,
-        formData.speciesId ?? null,
-        (data) => {
-          if (data.isValid === true) {
-            hideErrorMessage(promocodeInput);
-            formData.promoCode = promoCode;
-          } else {
-            showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
-            formData.promoCode = '';
-          }
-          Loader.hideLoader();
-        },
-        (status) => {
-          // eslint-disable-next-line no-console
-          console.log('Failed validating the promo code:', status);
-          hideErrorMessage(promocodeInput);
-          Loader.hideLoader();
-        },
-      );
+      promocodeHandler();
     });
 
     promocodeInput.addEventListener('input', () => {
       if (promocodeInput.value.trim() === '') {
-        hideErrorMessage(promocodeInput);
+        hideErrorMessage(promocodeInput, false);
         applyPromoCodeButton.disabled = true;
       } else {
         applyPromoCodeButton.disabled = false;
@@ -929,6 +984,7 @@ export default function formDecoration(block, apiBaseUrl) {
         petBreedHandler,
         microchipHandler,
         zipcodeHandler,
+        promocodeHandler,
       ];
       let allPassed = true;
 
