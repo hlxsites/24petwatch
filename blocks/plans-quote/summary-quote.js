@@ -291,9 +291,9 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       if (data.isSuccess) {
         window.location.href = replaceUrlPlaceholders(
           data.paymentProcessorRedirectBackURL,
-          ownerData.id,
-          'protectionfirst',
           data.paymentProcessingUserId,
+          'protectionfirst',
+          ownerData.id,
         );
       }
     } catch (status) {
