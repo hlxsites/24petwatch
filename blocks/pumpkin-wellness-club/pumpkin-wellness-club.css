@@ -5,6 +5,23 @@
   max-width: 62.5rem; /* 1000px */
 }
 
+main a.button.primary {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    max-width: 250px;
+  }
+}
+
+/* Hero */
+.hero-pumpkin-wellness {
+  @media (min-width: 991px) {
+    .hero img {
+        min-width: 450px;
+    }
+  }
+}
+
 /* Cards */
 .cards-pumpkin-wellness {
   .cards-card-body h3 {
