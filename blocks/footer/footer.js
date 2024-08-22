@@ -8,7 +8,7 @@ import {
 } from '../../scripts/lib-franklin.js';
 import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 
-const socialNetworks = ['Instagram', 'Twitter', 'Facebook'];
+const socialNetworks = ['Instagram', 'X', 'Facebook'];
 
 /**
  * instruments the tracking in the footer
@@ -50,6 +50,27 @@ function instrumentTrackingEvents(footer) {
         }
       });
     });
+}
+
+/**
+ * Wraps images followed by links within a matching <a> tag.
+ * @param {Element} container The container element
+ */
+function wrapImgsInLinks(container) {
+  const pictures = container.querySelectorAll('picture');
+  pictures.forEach((pic) => {
+    const link = pic.nextElementSibling;
+    if (link && link.tagName === 'A' && link.href) {
+      const img = pic.querySelector('img');
+      if (img) {
+        const newAnchor = document.createElement('a');
+        newAnchor.href = link.href;
+        img.parentNode.insertBefore(newAnchor, img);
+        newAnchor.appendChild(img);
+      }
+      link.remove();
+    }
+  });
 }
 
 /**
@@ -144,6 +165,7 @@ export default async function decorate(block) {
         const logo = document.createElement('div');
         logo.classList.add('footer-logo');
         logos.forEach((img) => {
+          wrapImgsInLinks(img);
           logo.appendChild(img);
         });
         footer.appendChild(logo);
