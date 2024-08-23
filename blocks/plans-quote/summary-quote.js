@@ -170,6 +170,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   <div class="payment-summary">
     <h5>Payment Summary</h5>
     <div class="payments">
+        ${purchaseSummary.summary.discount ? `<div><div>Discount</div><div>$${purchaseSummary.summary.discount}</div></div>` : ''}
         <div>
             <div>Monthly Fee</div>
             <div>$0.00</div>

@@ -81,7 +81,7 @@ export default class APIClient {
     APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, { speciesId, purebreed }, null, done, fail, 'json');
   }
 
-  validateNonInsurancePromoCodeWithSpecies(promoCode, countryId, speciesId, done, fail) {
+  validateNonInsurancePromoCodeWithSpecies(promoCode, countryId, speciesId, petId, done, fail) {
     const path = 'Product/ValidateNonInsurancePromoCodeWithSpecies';
     const params = {
       promoCode,
@@ -89,6 +89,9 @@ export default class APIClient {
     };
     if (speciesId) {
       params.species = speciesId;
+    }
+    if (petId) {
+      params.petId = petId;
     }
     APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, params, null, done, fail, 'json');
   }
@@ -135,10 +138,11 @@ export default class APIClient {
     });
   }
 
-  savePromoCode(ownerId, promoCode) {
+  savePromoCode(ownerId, petId, promoCode) {
     const path = 'Product/NonInsurance/SavePromoCode';
     const params = {
       ownerId,
+      petId,
       promoCode,
     };
     return new Promise((resolve, reject) => {

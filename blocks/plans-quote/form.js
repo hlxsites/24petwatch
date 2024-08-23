@@ -470,6 +470,7 @@ export default function formDecoration(block, apiBaseUrl) {
           promoCode,
           countryId,
           formData.speciesId ?? null,
+          formData.petId ?? null,
           (data) => {
             if (data.isValid === true) {
               hideErrorMessage(promocodeInput);
@@ -525,9 +526,9 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
-  async function savePromoCode(ownerId, promoCode) {
+  async function savePromoCode(ownerId, petId, promoCode) {
     try {
-      await APIClientObj.savePromoCode(ownerId, promoCode);
+      await APIClientObj.savePromoCode(ownerId, petId, promoCode);
     } catch (status) {
       // eslint-disable-next-line no-console
       console.log('Failed to save the promo code:', status);
@@ -621,10 +622,6 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
 
-    if (formData.promoCode) {
-      await savePromoCode(formData.ownerId, formData.promoCode);
-    }
-
     const petId = (!formData.petId) ? '' : formData.petId;
     await savePet(petId); // Create or Update the pet
     if (!formData.petId) {
@@ -633,6 +630,10 @@ export default function formDecoration(block, apiBaseUrl) {
       showGeneralErrorMessage(apiErrorMsg);
       Loader.hideLoader();
       return;
+    }
+
+    if (formData.promoCode) {
+      await savePromoCode(formData.ownerId, formData.petId, formData.promoCode);
     }
 
     await findAndApplySelectedProduct(formData.petId, getUniqueProductIdForThisFlow());
@@ -803,14 +804,6 @@ export default function formDecoration(block, apiBaseUrl) {
     }
     formData.ownerId = ownerId;
 
-    // promocode from owner data
-    if (data.nonInsPromoCode) {
-      promocodeInput.value = data.nonInsPromoCode;
-      Loader.showLoader();
-      await promocodeHandler();
-      Loader.hideLoader();
-    }
-
     if (!isSummaryPage()) {
       if (data.email) {
         emailInput.value = data.email;
@@ -881,6 +874,14 @@ export default function formDecoration(block, apiBaseUrl) {
       formData.breed = { breedName, breedId: data.breedId.toString() };
       petBreedInput.value = breedName;
       petBreedHandler();
+    }
+
+    // promocode from owner data
+    if (data.couponCode) {
+      promocodeInput.value = data.couponCode;
+      Loader.showLoader();
+      await promocodeHandler();
+      Loader.hideLoader();
     }
   }
   prefillFormIfPossible();
