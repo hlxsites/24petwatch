@@ -95,8 +95,20 @@ export default function formDecoration(block, apiBaseUrl) {
     </div>
   `;
 
+  const dialogHTML = jsx`
+    <dialog id="confirmation-dialog">
+      <h3 id="confirmation-dialog-header"></h3>
+      <p id="confirmation-dialog-note"></p>
+      <div class="dialog-buttons-container">
+        <button type="button" class="yes" id="confirmation-dialog-yes">Yes</button>
+        <button type="button" class="no" id="confirmation-dialog-no" autofocus>No</button>
+      </div>
+    </dialog>
+  `;
+
   // create the HTML for the left block
   block.innerHTML += jsx`
+    ${!isSummaryPage() ? dialogHTML : ''}
     <h2>Let's start by getting to know your pet.</h2>
     <p><i>*All fields are required.</i></p>
     <form id="pet-info">
@@ -317,6 +329,29 @@ export default function formDecoration(block, apiBaseUrl) {
     return false;
   }
 
+  const confirmationDialog = document.getElementById('confirmation-dialog');
+  const confirmationDialogHeader = document.getElementById('confirmation-dialog-header');
+  const confirmationDialogNote = document.getElementById('confirmation-dialog-note');
+  const confirmationDialogYes = document.getElementById('confirmation-dialog-yes');
+  const confirmationDialogNo = document.getElementById('confirmation-dialog-no');
+
+  function openAnotherCountyPage() {
+    confirmationDialogHeader.textContent = 'Country Changed';
+    confirmationDialogNote.textContent = 'You appear to have entered a zip code for the wrong country. Would you like to be redirected to the appropriate page for your zip code?';
+    confirmationDialog.showModal();
+    confirmationDialogYes.onclick = () => {
+      confirmationDialog.close();
+      if (isCanada) {
+        window.location.pathname = window.location.pathname.replace(/^\/ca/, '');
+      } else {
+        window.location.href = `/ca${window.location.pathname}`;
+      }
+    };
+    confirmationDialogNo.onclick = () => {
+      confirmationDialog.close();
+    };
+  }
+
   async function zipcodeHandler() {
     const errorMsg = isCanada ? 'Please enter a valid postal code' : 'Please enter a valid zip code';
     let zipCode = zipcodeInput.value.trim();
@@ -350,6 +385,7 @@ export default function formDecoration(block, apiBaseUrl) {
             handlerStatus = true;
           } else {
             showErrorMessage(zipcodeInput, errorMsg);
+            openAnotherCountyPage();
             zipcodeInput.value = ''; // valid zip code, but for the wrong country
             handlerStatus = false;
           }
