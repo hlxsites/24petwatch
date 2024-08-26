@@ -21,7 +21,7 @@ main a.button.primary {
   }
 
   @media (min-width: 768px) {
-    .hero img {
+    .hero div > div:first-child img {
           max-width: 312px;
           min-width: 240px;
     }
