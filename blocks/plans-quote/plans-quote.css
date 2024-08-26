@@ -116,6 +116,10 @@ main .plans-quote.first-step > div > div:nth-child(2) {
   flex-flow: row wrap;
 }
 
+main .plans-quote form input:not(:placeholder-shown)~label {
+  transform: unset;
+}
+
 main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
   flex: calc(100% - 44px);
 }
@@ -341,10 +345,6 @@ main .plans-quote.summary-quote > div.payment-summary > div.payments > div.due-t
 main .plans-quote form {
   border: unset;
   border-radius: unset;
-}
-
-main .plans-quote form input:not(:placeholder-shown)~label {
-  transform: unset;
 }
 
 main .plans-quote form button#apply-promo-code {
@@ -595,6 +595,10 @@ body .loader-wrapper .loader {
 
 main div.trustedsite-wrapper {
   margin-top: 1rem;
+}
+
+main div.section.plans-quote-container {
+  padding-top: 5rem;
 }
 
 @media (max-width: 768px) {

@@ -637,12 +637,12 @@ export async function waitForLCP(lcpBlocks) {
  * @returns {Promise}
  */
 export function loadHeader(header) {
-  let headerBlock = '';
-  if (!document.body.classList.contains('paid')) {
-    headerBlock = buildBlock('header', '');
-  } else if (document.body.classList.contains('paid')) {
+  let headerBlock = buildBlock('header', '');
+  if (document.body.classList.contains('paid')) {
     // Load special header for paid section of the website
     headerBlock = buildBlock('header-paid', '');
+  } else if (document.body.classList.contains('only-logo')) {
+    headerBlock = buildBlock('header-only-logo', '');
   }
   header.append(headerBlock);
   decorateBlock(headerBlock);
