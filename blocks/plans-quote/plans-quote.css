@@ -50,6 +50,10 @@ main div.section.plans-quote-container #trustedsite-trustmark-wrapper {
   width: calc(65% - 15px);
 }
 
+main div.section.plans-quote-container .summary-quote #trustedsite-trustmark-wrapper {
+  width: 100%;
+}
+
 main .plans-quote.first-step > div > div {
   display: block;
   position: relative;
