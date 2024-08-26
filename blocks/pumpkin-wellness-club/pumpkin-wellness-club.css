@@ -97,6 +97,7 @@ main a.button.primary {
   .columns h3,
   .columns-wrapper .columns h3 + p {
     display: inline-block;
+    vertical-align: middle;
   }
 
   .columns-wrapper .columns h3 + p {
@@ -123,10 +124,10 @@ main a.button.primary {
     }
   }
 
-  .columns > div > div + div {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
+  .columns > div {
+    @media (max-width: 1023px) {
+      display: block;
+    }
   }
 }
 
