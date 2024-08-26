@@ -49,7 +49,7 @@ export default function formDecoration(block, apiBaseUrl) {
     termsAndConditionsDataConsent = jsx`
       <div class="wrapper checkbox-text-wrapper">
         <div><input class="termsAndConditions" id="dataConsent" name="dataConsent" type="checkbox" autocomplete="off" /></div>
-        <div class="text">${legalConsentForLostPetContact}</div>
+        <div class="text"><label for="dataConsent">${legalConsentForLostPetContact}</label></div>
       </div>
     `;
   }
@@ -149,7 +149,7 @@ export default function formDecoration(block, apiBaseUrl) {
       <div class="wrapper">${legalHeader}</div>
       <div class="wrapper checkbox-text-wrapper">
         <div><input class="termsAndConditions" id="agreement" name="agreement" type="checkbox" autocomplete="off" /></div>
-        <div class="text">${legalConsentForPromoContact}</div>
+        <div class="text"><label for="agreement">${legalConsentForPromoContact}</label></div>
       </div>
       ${termsAndConditionsDataConsent}
       <div class="wrapper wrapper-text-center">

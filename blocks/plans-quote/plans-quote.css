@@ -42,6 +42,14 @@ main .plans-quote.first-step > div {
   margin-top: 2.5rem;
 }
 
+main div.section.microchip-policy p {
+  font-size: .625rem;
+}
+
+main div.section.plans-quote-container #trustedsite-trustmark-wrapper {
+  width: calc(65% - 15px);
+}
+
 main .plans-quote.first-step > div > div {
   display: block;
   position: relative;
@@ -112,6 +120,12 @@ main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
   flex: calc(100% - 44px);
 }
 
+main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) > label {
+  color: var(--text-color);
+  padding: 0;
+  cursor: pointer;
+}
+
 main .plans-quote.first-step > div > div:nth-child(2) > div {
   width: calc(50% - 20px);
   margin: 10px;
@@ -148,6 +162,8 @@ main .plans-quote.summary-quote > div.item > div.item-header > div.item-menu > a
   display: inline-block;
   margin: 1.5rem 1.5rem 1.5rem 0;
   color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
 main .plans-quote.summary-quote > div.item > div.item-info {
@@ -588,6 +604,12 @@ main div.trustedsite-wrapper {
 
   form label {
     font-size: .75rem;
+  }
+}
+
+@media (max-width: 670px) {
+  main div.section.plans-quote-container #trustedsite-trustmark-wrapper {
+    width: 100%;
   }
 }
 
