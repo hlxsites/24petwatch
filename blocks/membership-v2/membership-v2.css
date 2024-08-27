@@ -1,0 +1,106 @@
+.membership-v2-container { display: none;}
+
+/* Hero */
+.hero-paid-membership {
+  h1 {
+    font-size: 3rem; /* 48px */
+    line-height: 3.625rem; /* 58px */
+
+    @media (min-width: 768px) {
+      font-size: 3.5rem; /* 56px */
+      line-height: 3.75rem; /* 60px */
+    }
+  }
+
+  .hero > div > div:first-child {
+    h1, p { 
+      text-align: left;
+    }
+
+    img {
+      width: auto;
+      min-width: initial;
+    }
+
+    .button-container + p {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
+      text-align: center;
+      font-family: var(--body-font-family);
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.75rem; /* 28px */
+    }
+
+    .button-container + p picture {
+      display: inline-block;
+    }
+  }
+
+  .hero > div > div:last-child {
+    display: flex;
+
+    picture {
+      align-self: center;
+      position: relative;
+    }
+
+    picture::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 20%;
+      background: linear-gradient(to bottom, rgba(214, 247, 250, 1), rgba(214, 247, 250, 0));
+    }
+
+    @media (min-width: 768px) {
+      picture::before {
+        right: auto;
+        bottom: 0;
+        height: 100%;
+        width: 20%;
+        background: linear-gradient(to right, rgba(214, 247, 250, 1), rgba(214, 247, 250, 0));
+      }
+    }
+
+    img {
+      border-radius: 0 0 16px 16px;
+
+      @media (min-width: 768px) {
+        border-radius:  0 16px 16px 0;
+      }
+    }
+  }
+}
+
+/* Lifetime Paid Membership */
+.lifetime-paid-membership {
+  h2 {
+    font-size: 3rem; /* 48px */
+    line-height: 3.625rem; /* 58px */
+
+    @media (min-width: 768px) {
+      font-size: 3.5rem; /* 56px */
+      line-height: 3.75rem; /* 60px */
+    }
+  }
+
+  h3 {
+    font-size: 1.625rem; /* 26px */
+    line-height: 2.25rem; /* 36px */
+  }
+
+  .columns > div > div {
+    img { 
+      max-height: none;
+    }
+  }
+
+  .columns > div > div:first-child {
+  }
+
+  .columns > div > div:last-child {
+  }
+}

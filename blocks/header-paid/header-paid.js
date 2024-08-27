@@ -22,6 +22,17 @@ function onDomContentLoaded() {
 
     lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
   });
+
+  // Adjust margin-top of main content
+  const main = document.querySelector('header + main');
+  let headerHeight = header.offsetHeight;
+
+  main.style.marginTop = `${headerHeight}px`;
+
+  window.addEventListener('resize', () => {
+    headerHeight = header.offsetHeight;
+    main.style.marginTop = `${headerHeight}px`;
+  });
 }
 
 export default async function decorate(block) {

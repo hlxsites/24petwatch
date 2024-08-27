@@ -443,6 +443,11 @@ main .section.teal a:hover {
   color: aqua;
 }
 
+main .section.light-teal-bg, 
+main .section.light-teal {
+  background-color: #D6F7FA;
+}
+
 main .section.palegray {
   background-color: #edf5fb;
 }
