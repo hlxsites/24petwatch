@@ -236,7 +236,21 @@ main a.button.primary {
   }
 }
 
-.section.prefooter-pumpkin-wellness .columns-wrapper {
-  max-width: 30.5rem; /* 488px */
-  text-align: center;
+.section.prefooter-pumpkin-wellness {
+  padding-bottom: 36px;
+  
+  .columns > div {
+    margin-inline: auto;
+  }
+
+  .columns > div:first-child {
+    max-width: 30.5rem; /* 488px */
+    text-align: center;
+  }
+
+  .columns > div:last-child {
+    margin-top: 8px;
+    max-width: 62.5rem; /* 1000px */
+    font-size: 0.75rem; /* 12px */
+  }
 }
