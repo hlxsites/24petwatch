@@ -3,6 +3,10 @@
 .section.member-services-pumpkin-wellness.block-with-header,
 .section:not(.block-with-header) > div {
   max-width: 62.5rem; /* 1000px */
+
+  @media (min-width: 1060px) {
+    margin-inline: auto;
+  }
 }
 
 main a.button.primary {
