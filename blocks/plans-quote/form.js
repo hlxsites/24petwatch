@@ -6,7 +6,6 @@ import {
   COOKIE_NAME_SAVED_OWNER_ID,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
-  POSTAL_CODE_CANADA_REGEX,
   PET_PLANS_LPM_URL,
   PET_PLANS_LPM_PLUS_URL,
   PET_PLANS_ANNUAL_URL,
@@ -368,10 +367,6 @@ export default function formDecoration(block, apiBaseUrl) {
     formData.zipCode = ''; // reset our validated zip code
 
     if (isCanada) {
-      if (!POSTAL_CODE_CANADA_REGEX.test(zipCode)) {
-        showErrorMessage(zipcodeInput, errorMsg);
-        return false;
-      }
       zipCode = zipCode.replace(/ /g, ''); // remove any interior spaces
     }
 
