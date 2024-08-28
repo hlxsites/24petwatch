@@ -1,0 +1,11 @@
+.thank-you-container {
+  display: none;
+}
+
+.thank-you-purchase {
+  @media (min-width: 768px) {
+    .columns > div {
+      align-items: flex-start;
+    }
+  }
+}
