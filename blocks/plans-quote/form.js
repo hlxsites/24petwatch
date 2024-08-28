@@ -73,8 +73,8 @@ export default function formDecoration(block, apiBaseUrl) {
 
   const promocodeFieldHTML = jsx`
     <div class="wrapper promocode-wrapper">
-      <input type="text" id="promocode" name="promocode" placeholder="Enter Promo Code">
-      <label for="promocode" class="float-label">Your Promo Code (optional)</label>
+      <input type="text" id="promocode" name="promocode" placeholder="Enter Code">
+      <label for="promocode" class="float-label">Promo/Coupon Code (optional)<div>*Only one promotional/coupon code can be used per transaction</div></label>
       <span class="checkmark"></span>
       <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
       <div class="error-message"></div>
@@ -509,7 +509,7 @@ export default function formDecoration(block, apiBaseUrl) {
               handlerStatus = true;
               resolve();
             } else {
-              showErrorMessage(promocodeInput, 'Oops, looks like the promo code is invalid.');
+              showErrorMessage(promocodeInput, 'This code is invalid.');
               formData.promoCode = '';
               handlerStatus = false;
               reject();
@@ -518,7 +518,7 @@ export default function formDecoration(block, apiBaseUrl) {
           },
           (status) => {
             // eslint-disable-next-line no-console
-            console.log('Failed validating the promo code:', status);
+            console.log('Failed validating the code:', status);
             hideErrorMessage(promocodeInput);
             Loader.hideLoader();
             handlerStatus = false;

@@ -124,6 +124,16 @@ main .plans-quote form input:not(:placeholder-shown)~label {
   transform: unset;
 }
 
+main .plans-quote form .promocode-wrapper label {
+  top: -14px;
+}
+
+main .plans-quote form .promocode-wrapper label > div {
+  display: block;
+  font-size: 0.8rem;
+  color: #333f48;
+}
+
 main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
   flex: calc(100% - 44px);
 }
