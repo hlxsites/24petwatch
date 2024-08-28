@@ -172,11 +172,12 @@ header nav .nav-meganav .mega-nav > div {
   display: flex;
   flex-direction: row;
   align-items: flex-start;
-  gap: 12px;
+  gap: 42px 12px;
   /* stylelint-disable-next-line */
   flex-wrap: wrap;
   padding: 48px;
   width: 75%;
+  align-content: flex-start;
 }
 
 .header .nav-memberships .pet-protection-memberships > div,
