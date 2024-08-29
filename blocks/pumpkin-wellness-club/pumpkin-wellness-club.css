@@ -263,7 +263,11 @@ main a.button.primary {
     color: var(--footer-font-color);
   }
 
+  strong { font-weight: 600; }
+
   a {
+    font-weight: 600;
+    text-decoration: none;
     color: var(--footer-font-color);
   }
 }
