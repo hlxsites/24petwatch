@@ -30,6 +30,26 @@ main a.button.primary {
           min-width: 240px;
     }
   }
+
+  .hero > div:last-child {
+    grid-template-columns: 1fr;
+
+    > div {
+      flex-direction: column;
+      padding: 32px 0;
+      max-width: 62.5rem; /* 1000px */
+      font-size: 0.75rem; /* 12px */
+
+      @media breakpoint (min-width: 768px) {
+        padding: 32px 0 40px;
+      }
+
+      &, a {
+        display: inline;
+        color: #727272;
+      }
+    }
+  }
 }
 
 /* Cards */
@@ -246,11 +266,5 @@ main a.button.primary {
   .columns > div:first-child {
     max-width: 30.5rem; /* 488px */
     text-align: center;
-  }
-
-  .columns > div:last-child {
-    margin-top: 8px;
-    max-width: 62.5rem; /* 1000px */
-    font-size: 0.75rem; /* 12px */
   }
 }
