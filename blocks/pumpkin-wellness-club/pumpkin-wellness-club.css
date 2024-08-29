@@ -59,6 +59,11 @@ main a.button.primary {
     font-size: var(--heading-font-size-s);
     line-height: var(--heading-line-height-s);
   }
+
+  &.cards-icon .cards-card-image img {
+    width: 80px;
+    height: 80px;
+  }
 }
 
 /* How It Works */
