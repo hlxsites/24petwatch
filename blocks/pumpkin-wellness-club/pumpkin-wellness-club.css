@@ -55,6 +55,8 @@ main a.button.primary {
         display: inline-block;
         color: #727272;
       }
+
+      a { text-decoration: none; }
     }
   }
 }
