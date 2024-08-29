@@ -33,19 +33,26 @@ main a.button.primary {
 
   .hero > div:last-child {
     grid-template-columns: 1fr;
+    
+    @media (max-width: 767px) {
+      text-align: center;
+    }
 
     > div {
       flex-direction: column;
+      margin: 0 auto;
       padding: 32px 0;
+      width: calc(100% - 30px);
       max-width: 62.5rem; /* 1000px */
       font-size: 0.75rem; /* 12px */
+      text-align: left;
 
-      @media breakpoint (min-width: 768px) {
-        padding: 32px 0 40px;
+      @media (min-width: 768px) {
+        padding: 32px 0 24px;
       }
 
       &, a {
-        display: inline;
+        display: inline-block;
         color: #727272;
       }
     }
