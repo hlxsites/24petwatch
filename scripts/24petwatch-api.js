@@ -81,7 +81,7 @@ export default class APIClient {
     APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, { speciesId, purebreed }, null, done, fail, 'json');
   }
 
-  validateNonInsurancePromoCodeWithSpecies(promoCode, countryId, speciesId, done, fail) {
+  validateNonInsurancePromoCodeWithSpecies(promoCode, countryId, speciesId, petId, done, fail) {
     const path = 'Product/ValidateNonInsurancePromoCodeWithSpecies';
     const params = {
       promoCode,
@@ -89,6 +89,9 @@ export default class APIClient {
     };
     if (speciesId) {
       params.species = speciesId;
+    }
+    if (petId) {
+      params.petId = petId;
     }
     APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, params, null, done, fail, 'json');
   }
@@ -105,27 +108,11 @@ export default class APIClient {
     });
   }
 
-  /*
-  getOwnerByPaymentProcessorId(paymentProcessorId) {
-    const path = `Owner/${paymentProcessorId}`;
-    return new Promise((resolve, reject) => {
-      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
-    });
-  } */
-
-    getPaymentCustomerIDFromUUID(customerUUID) {
-      const path = 'Owner/Transaction/GetPaymentCustomerIDFromUUID';
-      const body = { CustomerUUID: customerUUID };
-      return new Promise((resolve, reject) => {
-        APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, body, null, resolve, reject, 'json');
-      });
-    }
-
   /** Creates or Updates an owner, depending on whether the ownerId is provided.
    * @param ownerId - if provided, the owner will be updated, otherwise a new owner will be created
-   * @param email
-   * @param zipCode
-   * @param cartFlow
+   * @param email - string
+   * @param zipCode - string
+   * @param cartFlow - int
    * @returns {Promise<unknown>} - resolves with the owner data
    */
   saveOwner(ownerId, email, zipCode, cartFlow) {
@@ -134,8 +121,8 @@ export default class APIClient {
     const path = (ownerAlreadyExists) ? `Owner/${ownerId}` : 'Owner';
     const data = {
       email,
-      zipCode,
-      cartFlow,
+      zipCode: zipCode.toString(),
+      cartFlow: asInt(cartFlow),
       partnerID: 84, // hardcoded
       referralURL: '',
       firstName: '',
@@ -151,29 +138,61 @@ export default class APIClient {
     });
   }
 
+  savePromoCode(ownerId, petId, promoCode) {
+    const path = 'Product/NonInsurance/SavePromoCode';
+    const params = {
+      ownerId,
+      petId,
+      promoCode,
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
+    });
+  }
+
+  getPet(petId) {
+    const path = `Pet/${petId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
+  deletePet(petId) {
+    const path = 'Pet';
+    const params = { petId };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_DELETE, params, null, resolve, reject, 'json');
+    });
+  }
+
+  getPets(ownerId) {
+    const path = `Pet/GetByOwner/${ownerId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
   /** Creates or Updates a pet, depending on whether the petId is provided.
    * @param petId - if provided, the pet will be updated, otherwise a new pet will be created
    * @param ownerId - string
    * @param petName - string
    * @param breedId - string (like '1234567890')
    * @param speciesId - integer (1 = Dog, 2 = Cat)
-   * @param isPureBreed - boolean (true = Pure Breed, false = Mixed Breed)
+   * @param pureBreed - boolean (true = Pure Breed, false = Mixed Breed)
    * @param microchipId - string
    * @returns {Promise<unknown>} - resolves with the pet data
    */
-  savePet(petId, ownerId, petName, breedId, speciesId, isPureBreed, microchipId) {
-    const pureBreed = asBoolean();
-
+  savePet(petId, ownerId, petName, breedId, speciesId, pureBreed, microchipId) {
     const petAlreadyExists = (petId !== '');
     const method = (petAlreadyExists) ? 'PUT' : 'POST';
     const path = (petAlreadyExists) ? `Pet/${petId}` : 'Pet';
     const data = {
       ownerId,
       petName,
-      breedId,
-      speciesId: parseInt(speciesId, 10),
-      pureBreed,
-      microchipId,
+      breedId: breedId.toString(),
+      speciesId: asInt(speciesId),
+      pureBreed: asBoolean(pureBreed),
+      microchipId: microchipId.toString(),
       conditions: [], // hardcoded
     };
     return new Promise((resolve, reject) => {
@@ -194,7 +213,7 @@ export default class APIClient {
   }
 
   /** Save the selected product for a pet.
-   *    If the {petId, productId} combination already exists, it will be updated.
+   *    If the {petId, productId} combination already exists in the backend, it will be updated.
    *    To "delete" the product from the pet, set the quantity to 0.
    * @param petId - string
    * @param productId - int
@@ -221,10 +240,36 @@ export default class APIClient {
     });
   }
 
+  getSelectedProductsForOwner(ownerId) {
+    const path = `Product/NonInsurance/GetSelectedForOwner/${ownerId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
   getSelectedProductsForPet(petId) {
     const path = `Product/NonInsurance/GetSelectedForPet/${petId}`;
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
+  getPurchaseSummary(ownerId) {
+    const path = 'Utility/GetPurchaseSummary';
+    const params = { ownerId };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, params, null, resolve, reject, 'json');
+    });
+  }
+
+  postSalesForPayment(ownerId, flowId) {
+    const path = 'Transaction/PostSalesForPayment';
+    const params = {
+      ownerId,
+      flow: flowId,
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
     });
   }
 }
