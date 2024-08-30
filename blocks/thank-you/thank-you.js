@@ -1,32 +1,29 @@
+import APIClient from '../../scripts/24petwatch-api.js';
 import { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
+/* import {
+  getQueryParam,
+} from '../../scripts/24petwatch-utils.js'; */
 
-let API_BASE_URL = '';
+// prep for API calls
+const apiBaseUrl = await getAPIBaseUrl();
+
+const APIClientObj = new APIClient(apiBaseUrl);
 
 // get paymentProcessorId from the URL query string param, ex. https://XXX.24petwatch.com/thank-you?PaymentProcessorCustomerId={0}&flow={1}
 // Example: PaymentProcessorCustomerId=0b5b3da1-9a8f-4c2a-b75a-b25e34adcbcc&flow=protectionfirst
-const urlParams = new URLSearchParams(window.location.search);
-const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
 let ownerId = null;
 
 // Sequence of steps to get the owner info from the API
 // Step 1 - Get the owner info from the API
-async function getInfoForExistingOwner() {
+async function getOwner(paymentProcessorId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Owner/${paymentProcessorId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
-  } catch (error) {
+    const data = await APIClientObj.getOwner(paymentProcessorId);
+    return data;
+  } catch (status) {
     // eslint-disable-next-line no-console
-    console.error('Error:', error);
+    console.log('Failed to get the owner:', ownerId, ' status:', status);
+    return [];
   }
-  return null;
 }
 
 // Step 2 - Update owner sale status
@@ -90,29 +87,12 @@ async function sendEmailReceiptForPackageItem(ownerId) {
 }
 
 export default async function decorate(block) {
-  // prep for API calls
-  API_BASE_URL = await getAPIBaseUrl();
+  const urlParams = new URLSearchParams(window.location.search);
+  const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
 
-  // Call the function to get the owner info
-  const ownerInfo = await getInfoForExistingOwner();
+  console.log('PaymentProcessorCustomerId:', paymentProcessorId);
 
-  // use the ownerInfo to update owner sale status
-  if (ownerInfo) {
-    ownerId = ownerInfo.id; // Assuming ownerInfo contains an id field
-    await getUpdateOwnerSaleStatus();
-  }
+  let data = await getOwner(paymentProcessorId);
 
-  // call the function to get the purchase summary
-  const purchaseSummary = await getPurchaseSummary();
-
-  // use the purchaseSummary to populate the block
-  if (purchaseSummary) {
-    const purchaseSummaryDiv = block.querySelector('.thank-you-purchase .columns > div > div');
-    purchaseSummaryDiv.innerHTML = purchaseSummary;
-  }
-
-  // send the email receipt for package item
-  if (ownerId) {
-    await sendEmailReceiptForPackageItem(ownerId);
-  }
+  console.log('Owner data:', data);
 }

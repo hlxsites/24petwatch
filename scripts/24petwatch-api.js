@@ -98,6 +98,29 @@ export default class APIClient {
     APIClient.callAPI(`${this.basePath}/${path}/${zipCode}`, APIClient.METHOD_GET, null, null, done, fail, 'json');
   }
 
+  getOwner(ownerId) {
+    const path = `Owner/${ownerId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  }
+
+  /*
+  getOwnerByPaymentProcessorId(paymentProcessorId) {
+    const path = `Owner/${paymentProcessorId}`;
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
+    });
+  } */
+
+    getPaymentCustomerIDFromUUID(customerUUID) {
+      const path = 'Owner/Transaction/GetPaymentCustomerIDFromUUID';
+      const body = { CustomerUUID: customerUUID };
+      return new Promise((resolve, reject) => {
+        APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, body, null, resolve, reject, 'json');
+      });
+    }
+
   /** Creates or Updates an owner, depending on whether the ownerId is provided.
    * @param ownerId - if provided, the owner will be updated, otherwise a new owner will be created
    * @param email
