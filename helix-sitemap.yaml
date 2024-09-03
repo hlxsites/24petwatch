@@ -1,0 +1,17 @@
+sitemaps:
+  site_us:
+    origin: https://www.24petwatch.com
+    source: /query-index.json
+    destination: /sitemap.xml
+  site_ca:
+    origin: https://www.24petwatch.com/ca
+    source: /query-index.json
+    destination: /ca/sitemap.xml
+  blog_us:
+    origin: https://www.24petwatch.com/blog
+    source: /blog/query-index.json
+    destination: /blog-sitemap.xml
+  blog_ca:
+    origin: https://www.24petwatch.com/ca/blog
+    source: /blog/query-index.json
+    destination: /ca/blog-sitemap.xml
