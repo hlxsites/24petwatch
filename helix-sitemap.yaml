@@ -13,5 +13,5 @@ sitemaps:
     destination: /blog-sitemap.xml
   blog_ca:
     origin: https://www.24petwatch.com/ca/blog
-    source: /blog/query-index.json
+    source: /ca/blog/query-index.json
     destination: /ca/blog-sitemap.xml

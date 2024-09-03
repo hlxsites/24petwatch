@@ -63,6 +63,7 @@ indices:
       - /**
     exclude:
       - /ca/**
+      - /blog/*
     target: /query-index.json
     properties:
       title:

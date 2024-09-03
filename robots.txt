@@ -9,5 +9,5 @@ Allow: /
 Allow: /content*
 Sitemap: https://www.24petwatch.com/sitemap.xml
 Sitemap: https://www.24petwatch.com/ca/sitemap.xml
-Sitemap: https://www.24petwatch.com/blog-sitemap.xml
-Sitemap: https://www.24petwatch.com/ca/blog-sitemap.xml
+Sitemap: https://www.24petwatch.com/blog/blog-sitemap.xml
+Sitemap: https://www.24petwatch.com/ca/blog/blog-sitemap.xml
