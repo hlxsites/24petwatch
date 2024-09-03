@@ -100,11 +100,18 @@
   --heading-font-weight: 400;
 
   /* nav height */
-  --nav-height: 95px;
+  --nav-height: 65px;
   --header-height: var(--nav-height);
 
   /* border */
   --border-color: #c5c9cb;
+}
+
+@media (min-width: 720px) {
+  :root {
+    --nav-height: 80px;
+    --header-height: calc(44px + var(--nav-height));
+  }
 }
 
 @media (min-width: 768px) {
@@ -120,22 +127,6 @@
     --heading-line-height-xl: 3.125rem;
     --heading-line-height-l: 2.813rem;
     --heading-line-height-m: 2.25rem;
-
-    /* nav height */
-    --nav-height: 95px;
-    --header-height: calc(44px + var(--nav-height));
-  }
-}
-
-@media (min-width: 900px) {
-  :root {
-    --nav-height: 119px;
-  }
-}
-
-@media (min-width: 1300px) {
-  :root {
-    --nav-height: 95px;
   }
 }
 
@@ -470,6 +461,10 @@ main .section.lightergray {
 main .section.warm-white-bg,
 main .section.cream {
   background-color: #fff1d6;
+}
+
+main .section.light-blue-bg {
+  background-color: #D6F7FA;
 }
 
 .section.text-center-block > div {
@@ -811,7 +806,7 @@ main .section.about-us ~ div.teal-bg.highlight {
   padding-bottom: 0;
 }
 
-a[target="_blank"]:not([href*="tel:"]):not([href$=".pdf"]):not([href^="https://www.24petwatch.com"]):not([href^="https://24petwatch.com"]):not([href^=localhost]):not([href^="/"]):not([href*="petmicrochiplookup.org"])::after {
+a[target="_blank"]:not([href*="tel:"]):not([href$=".pdf"]):not([href^="https://www.24petwatch.com"]):not([href^="https://24petwatch.com"]):not([href^=localhost]):not([href^="/"]):not([href*="mailto:"]):not([href*="petmicrochiplookup.org"])::after {
   display: inline-block;
   font-family: 'Font Awesome 6 Pro', sans-serif;
   content: "";

@@ -692,6 +692,7 @@ export function setup() {
 export const isMobile = window.matchMedia('(max-width: 767px)');
 export const isTablet = window.matchMedia('(min-width: 768px)');
 export const isDesktop = window.matchMedia('(min-width: 900px)');
+export const isDesktopLG = window.matchMedia('(min-width: 1200px)');
 export const edsBlogDomain = 'main--24petwatch--hlxsites.hlx.live';
 export const edsXWalkDomain = 'main--24petwatch-crosswalk--hlxsites.hlx.live';
 export const edsXWalkDomainProd = 'main--24petwatch-crosswalk-prod--hlxsites.hlx.live';
