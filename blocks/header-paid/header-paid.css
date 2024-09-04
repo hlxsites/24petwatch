@@ -1,5 +1,13 @@
-
 header.header-paid-wrapper {
+    --header-height: 130px;
+
+  @media (min-width: 768px) {
+    --header-height: 70px;
+  }
+}
+
+
+.header-paid {
   height: initial;
   position: fixed;
   right: 0;
@@ -71,41 +79,6 @@ header.header-paid-wrapper a:any-link {
   overflow: hidden;
   text-overflow: ellipsis;
   border-radius: 0.625rem;
-}
-
-@keyframes slide-down {
-  0% {
-      transform: translateY(-100%)
-  }
-
-  100% {
-      transform: translateY(0)
-  }
-}
-
-.animated.slide-down {
-  animation-name: slide-down
-}
-
-@keyframes slide-up {
-  0% {
-      transform: translateY(0)
-  }
-
-  100% {
-      transform: translateY(-100%)
-  }
-}
-
-.animated.slide-up {
-  animation-name: slide-up
-}
-
-.animated {
-  animation-duration: 500ms;
-  animation-fill-mode: both;
-  animation-delay: 300ms;
-  will-change: transform,opacity
 }
 
 @media (width >= 768px) {
