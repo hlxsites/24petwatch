@@ -1,0 +1,13 @@
+User-Agent: *
+Disallow: /lost-pet-protection/pet-tags/summary-quote
+Disallow: /ca/lost-pet-protection/pet-tags/summary-quote
+Disallow: /adoptionoffer*
+Disallow: /AdoptionOffer*
+Disallow: /trial/*
+Disallow: /ca/trial/*
+Allow: /
+Allow: /content*
+Sitemap: https://www.24petwatch.com/sitemap.xml
+Sitemap: https://www.24petwatch.com/ca/sitemap.xml
+Sitemap: https://www.24petwatch.com/blog/blog-sitemap.xml
+Sitemap: https://www.24petwatch.com/ca/blog/blog-sitemap.xml
