@@ -15,9 +15,9 @@ let ownerId = null;
 
 // Sequence of steps to get the owner info from the API
 // Step 1 - Get the owner info from the API
-async function getOwner(paymentProcessorId) {
+async function getPaymentCustomerIDFromUUID(paymentProcessorId) {
   try {
-    const data = await APIClientObj.getOwner(paymentProcessorId);
+    const data = await APIClientObj.getPaymentCustomerIDFromUUID(paymentProcessorId);
     return data;
   } catch (status) {
     // eslint-disable-next-line no-console
@@ -92,7 +92,7 @@ export default async function decorate(block) {
 
   console.log('PaymentProcessorCustomerId:', paymentProcessorId);
 
-  let data = await getOwner(paymentProcessorId);
+  let data = await getPaymentCustomerIDFromUUID(paymentProcessorId);
 
   console.log('Owner data:', data);
 }
