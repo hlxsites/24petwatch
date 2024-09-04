@@ -5,7 +5,7 @@ sitemaps:
     destination: /sitemap.xml
   site_ca:
     origin: https://www.24petwatch.com/ca
-    source: /query-index.json
+    source: /ca/query-index.json
     destination: /ca/sitemap.xml
   blog_us:
     origin: https://www.24petwatch.com/blog
