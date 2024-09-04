@@ -222,7 +222,12 @@ main .columns.cat-dog-background > div > div:last-child {
 
 
 main .columns.cat-dog-background-lpp > div > div:last-child {
-  margin-top: -236px;
+  @media (max-width: 767px) {
+    background-size: contain;
+  }
+
+  margin-top: -80px;
+  min-height: 450px;
   background-image: url('/images/cat-dog-2.png');
   background-size: 119%;
 }
