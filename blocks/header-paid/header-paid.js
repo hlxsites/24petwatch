@@ -2,39 +2,6 @@ import { jsx, changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { isCanada, decorateLinks } from '../../scripts/lib-franklin.js';
 
-// Adding animation for header
-function onDomContentLoaded() {
-  const header = document.querySelector('header');
-  let lastScrollTop = 0;
-
-  window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY || document.documentElement.scrollTop;
-
-    if (scrollTop > lastScrollTop) {
-      // Scrolling down
-      header.classList.remove('slide-down');
-      header.classList.add('animated', 'slide-up');
-    } else {
-      // Scrolling up
-      header.classList.remove('slide-up');
-      header.classList.add('animated', 'slide-down');
-    }
-
-    lastScrollTop = scrollTop <= 0 ? 0 : scrollTop; // For Mobile or negative scrolling
-  });
-
-  // Adjust margin-top of main content
-  const main = document.querySelector('header + main');
-  let headerHeight = header.offsetHeight;
-
-  main.style.marginTop = `${headerHeight}px`;
-
-  window.addEventListener('resize', () => {
-    headerHeight = header.offsetHeight;
-    main.style.marginTop = `${headerHeight}px`;
-  });
-}
-
 export default async function decorate(block) {
   let baseHeaderUrl = '/fragments/us/header-paid';
   if (isCanada) {
@@ -50,13 +17,6 @@ export default async function decorate(block) {
 
   const headerContainer = document.querySelector('#header-paid');
   headerContainer.append(headerPaidContent);
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', onDomContentLoaded);
-  } else {
-    // DOM is already loaded
-    onDomContentLoaded();
-  }
 
   changeDomain(block);
   addCanadaToLinks(block);
