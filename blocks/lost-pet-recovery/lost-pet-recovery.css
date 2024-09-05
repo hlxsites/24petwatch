@@ -11,3 +11,9 @@
     line-height: var(--heading-line-height-l);
   }
 }
+
+.table-lost-pet-recovery {
+  .table.care-plan th .button-container a {
+    text-decoration: none;
+  }
+}
