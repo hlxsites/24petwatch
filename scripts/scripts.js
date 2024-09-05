@@ -249,10 +249,28 @@ function instrumentTrackingEvents(main) {
 
         // track cta clicks on main
         if (e.target.classList.contains('button')) {
-          trackGTMEvent('cta_click', {
-            link_text: linkText,
-            link_url: linkUrl,
-          });
+          // track clicks on the Pumpkin Wellness Club page
+          if (e.target.closest('[class*="pumpkin-wellness"]')) {
+            let ctaLocation = null;
+            if (e.target.closest('.hero-pumpkin-wellness')) {
+              ctaLocation = 'join_the_club_header';
+            } else if (e.target.closest('.how-it-works-pumpkin-wellness')) {
+              ctaLocation = 'pick_your_plan';
+            } else if (e.target.closest('.curated-products-pumpkin-wellness')) {
+              ctaLocation = 'join_the_club_footer';
+            }
+            trackGTMEvent('cta_click', {
+              cta_location: ctaLocation,
+              link_text: linkText,
+              link_url: linkUrl,
+            });
+          // track clicks on every other anchor with a button class
+          } else {
+            trackGTMEvent('cta_click', {
+              link_text: linkText,
+              link_url: linkUrl,
+            });
+          }
         }
 
         // track clicks to call for telephone numbers
