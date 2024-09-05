@@ -1,0 +1,13 @@
+.lost-pet-recovery-container { display: none; }
+
+.microchip-lost-pet-recovery {
+  .columns h2 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    line-height: 1.25;
+    font-size: var(--heading-font-size-l);
+    line-height: var(--heading-line-height-l);
+  }
+}
