@@ -64,7 +64,7 @@ indices:
     exclude:
       - /ca/**
       - /blog/*
-    target: /query-index.json
+    target: /query-index.xlsx
     properties:
       title:
         select: head > meta[property="og:title"]
