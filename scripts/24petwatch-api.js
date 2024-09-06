@@ -128,10 +128,25 @@ export default class APIClient {
   }
 
   getPaymentCustomerIDFromUUID(customerUUID) {
-    const path = 'Owner/Transaction/GetPaymentCustomerIDFromUUID';
+    const path = '/Transaction/GetPaymentCustomerIDFromUUID';
     const body = { CustomerUUID: customerUUID };
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, body, null, resolve, reject, 'json');
+    });
+  }
+
+  putUpdateOwnerSaleStatus(id) {
+    const path = 'Owner/UpdateOwnerSaleStatus';
+    const body = { id, status: 1 };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_PUT, body, null, resolve, reject, 'json');
+    });
+  }
+
+  postEmailReceipt(ownerId) {
+    const path = 'Transaction/SendEmailReciptForPackageItem';
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}/${ownerId}`, APIClient.METHOD_POST, null, null, resolve, reject, 'json');
     });
   }
 

@@ -14,10 +14,23 @@ const APIClientObj = new APIClient(apiBaseUrl);
 let ownerId = null;
 
 // Sequence of steps to get the owner info from the API
-// Step 1 - Get the owner info from the API
+
+// Step 1 - get the payment customer ID from the UUID
 async function getPaymentCustomerIDFromUUID(paymentProcessorId) {
   try {
     const data = await APIClientObj.getPaymentCustomerIDFromUUID(paymentProcessorId);
+    return data;
+  } catch (status) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to get the payment customer ID:', paymentProcessorId, ' status:', status);
+    return [];
+  }
+}
+
+// Step 2 - get the owner info, which provides the ownerId
+async function getOwner(paymentProcessorId) {
+  try {
+    const data = await APIClientObj.getOwner(paymentProcessorId);
     return data;
   } catch (status) {
     // eslint-disable-next-line no-console
@@ -26,64 +39,41 @@ async function getPaymentCustomerIDFromUUID(paymentProcessorId) {
   }
 }
 
-// Step 2 - Update owner sale status
-async function getUpdateOwnerSaleStatus() {
+// Step 3 - Update (PUT) owner sale status
+async function putUpdateOwnerSaleStatus(guidID) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Owner/UpdateOwnerSaleStatus`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
-  } catch (error) {
+    const data = await APIClientObj.putUpdateOwnerSaleStatus(guidID);
+    return data;
+  } catch (status) {
+    // this is a put request, so we expect a 204 status code
     // eslint-disable-next-line no-console
-    console.error('Error:', error);
+    console.log('Failed to update the owner sale status:', status);
   }
-  return null;
+  return null; // Add a return statement at the end of the function
 }
 
-// Step 3 - get the purchase summary
-async function getPurchaseSummary() {
+// Step 4 - get the purchase summary
+async function getPurchaseSummary(paymentProcessorId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Utility/GetPurchaseSummary`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
-  } catch (error) {
+    const data = await APIClientObj.getPurchaseSummary(paymentProcessorId);
+    return data;
+  } catch (status) {
     // eslint-disable-next-line no-console
-    console.error('Error:', error);
+    console.log('Failed to get the purchase summary:', status);
+    return [];
   }
-  return null;
 }
 
-// Step 4 - send the email receipt for package item, using the ownerId
-async function sendEmailReceiptForPackageItem(ownerId) {
+// Step 5 - send the email receipt for package item, using the ownerId
+async function postEmailReceipt(ownerId) {
   try {
-    const response = await fetch(`${API_BASE_URL}/api/Transaction/SendEmailReceiptForPackageItem/${ownerId}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-    if (response.ok) {
-      const data = await response.json();
-      return data;
-    }
-  } catch (error) {
+    const data = await APIClientObj.postEmailReceipt(ownerId);
+    return data;
+  } catch (status) {
     // eslint-disable-next-line no-console
-    console.error('Error:', error);
+    console.log('Failed to send the email receipt:', status);
+    return [];
   }
-  return null;
 }
 
 export default async function decorate(block) {
@@ -92,7 +82,29 @@ export default async function decorate(block) {
 
   console.log('PaymentProcessorCustomerId:', paymentProcessorId);
 
-  let data = await getPaymentCustomerIDFromUUID(paymentProcessorId);
+  const data = await getPaymentCustomerIDFromUUID(paymentProcessorId);
 
   console.log('Owner data:', data);
+
+  const getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
+  console.log(getOwnerDetails);
+
+  await putUpdateOwnerSaleStatus(getOwnerDetails.id);
+
+  const getPurchaseSummaryDetails = await getPurchaseSummary(getOwnerDetails.id);
+  console.log(getPurchaseSummaryDetails);
+
+  await postEmailReceipt(getOwnerDetails.id);
+
+  const h1 = document.querySelector('h1');
+  const { firstName, lastName } = getOwnerDetails;
+  const { petSummaries } = getPurchaseSummaryDetails;
+
+  h1.innerHTML = `Congratulations, ${firstName} ${lastName}!`;
+
+  petSummaries.forEach((pet, index) => {
+    const petName = pet.name;
+    const petElement = document.querySelector(`.thank-you-purchase .columns > div:nth-child(${index + 1}) > div h3`);
+    petElement.innerHTML = `For ${petName}`;
+  });
 }
