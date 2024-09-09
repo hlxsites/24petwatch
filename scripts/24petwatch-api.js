@@ -23,17 +23,6 @@ function asInt(value) {
   return parseInt(value, 10);
 }
 
-// convert a UUID string to a BigInt
-function uuidToBigInt(uuid) {
-  // Remove hyphens from UUID
-  const hex = uuid.replace(/-/g, '');
-
-  // Convert hex string to BigInt
-  const bigInt = BigInt('0x' + hex);
-
-  return bigInt;
-}
-
 export default class APIClient {
   static METHOD_GET = 'GET';
 
@@ -116,14 +105,6 @@ export default class APIClient {
     const path = `Owner/${ownerId}`;
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null, resolve, reject, 'json');
-    });
-  }
-
-  getOwnerByPaymentProcessorId(paymentProcessorId) {
-    const ppid = uuidToBigInt(paymentProcessorId);
-    const path = `Owner/${ppid}`;
-    return new Promise((resolve, reject) => {
-      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, null, null,resolve, reject, 'json');
     });
   }
 
