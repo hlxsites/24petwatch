@@ -463,6 +463,10 @@ main .section.cream {
   background-color: #fff1d6;
 }
 
+main .section.light-blue-bg {
+  background-color: #D6F7FA;
+}
+
 .section.text-center-block > div {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
@@ -802,7 +806,7 @@ main .section.about-us ~ div.teal-bg.highlight {
   padding-bottom: 0;
 }
 
-a[target="_blank"]:not([href*="tel:"]):not([href$=".pdf"]):not([href^="https://www.24petwatch.com"]):not([href^="https://24petwatch.com"]):not([href^=localhost]):not([href^="/"]):not([href*="petmicrochiplookup.org"])::after {
+a[target="_blank"]:not([href*="tel:"]):not([href$=".pdf"]):not([href^="https://www.24petwatch.com"]):not([href^="https://24petwatch.com"]):not([href^=localhost]):not([href^="/"]):not([href*="mailto:"]):not([href*="petmicrochiplookup.org"])::after {
   display: inline-block;
   font-family: 'Font Awesome 6 Pro', sans-serif;
   content: "";
