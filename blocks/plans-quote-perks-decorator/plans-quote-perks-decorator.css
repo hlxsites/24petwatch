@@ -17,7 +17,7 @@
 }
 
 .plans-quote-perks-decorator > div > div > div.special-wrapper {
-  width: auto; /* Ширина блока автоматически подстраивается под контент */
+  width: auto;
   margin: 0 auto;
 }
 
