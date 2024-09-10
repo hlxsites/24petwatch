@@ -203,9 +203,10 @@ export default class APIClient {
    * @param speciesId - integer (1 = Dog, 2 = Cat)
    * @param pureBreed - boolean (true = Pure Breed, false = Mixed Breed)
    * @param microchipId - string
+   * @param birthDate - string
    * @returns {Promise<unknown>} - resolves with the pet data
    */
-  savePet(petId, ownerId, petName, breedId, speciesId, pureBreed, microchipId) {
+  savePet(petId, ownerId, petName, breedId, speciesId, pureBreed, microchipId, birthDate) {
     const petAlreadyExists = (petId !== '');
     const method = (petAlreadyExists) ? 'PUT' : 'POST';
     const path = (petAlreadyExists) ? `Pet/${petId}` : 'Pet';
@@ -217,6 +218,7 @@ export default class APIClient {
       pureBreed: asBoolean(pureBreed),
       microchipId: microchipId.toString(),
       conditions: [], // hardcoded
+      birthDate,
     };
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, `${method}`, null, data, resolve, reject, 'json');
