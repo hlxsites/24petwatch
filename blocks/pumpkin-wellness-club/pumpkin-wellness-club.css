@@ -1,0 +1,290 @@
+/* stylelint-disable no-descending-specificity */
+
+.pumpkin-wellness-club-container { display: none; }
+
+.section.member-services-pumpkin-wellness.block-with-header,
+.section:not(.block-with-header) > div {
+  max-width: 62.5rem; /* 1000px */
+
+  @media (min-width: 1060px) {
+    margin-inline: auto;
+  }
+}
+
+main a.button.primary {
+  width: 100%;
+
+  @media (min-width: 768px) {
+    max-width: 250px;
+  }
+}
+
+/* Hero */
+.hero-pumpkin-wellness {
+  h1 {
+    font-size: var(--heading-font-size-xl);
+    line-height: 2.75rem;
+  }
+
+  @media (min-width: 768px) {
+    .hero div > div:first-child img {
+          max-width: 312px;
+          min-width: 240px;
+    }
+  }
+
+  .hero > div:last-child {
+    grid-template-columns: 1fr;
+    
+    @media (max-width: 767px) {
+      text-align: center;
+    }
+
+    > div {
+      flex-direction: column;
+      margin: 0 auto;
+      padding: 32px 0;
+      width: calc(100% - 30px);
+      max-width: 62.5rem; /* 1000px */
+      font-size: 0.75rem; /* 12px */
+      text-align: left;
+
+      @media (min-width: 768px) {
+        padding: 32px 0 24px;
+      }
+
+      &, a {
+        display: inline-block;
+        color: #727272;
+      }
+
+      a { text-decoration: none; }
+    }
+  }
+}
+
+/* Cards */
+.cards-pumpkin-wellness {
+  .cards-card-body h3 {
+    /* h5 font size */
+    font-size: var(--heading-font-size-s);
+    line-height: var(--heading-line-height-s);
+  }
+
+  &.cards-icon .cards-card-image img {
+    width: 80px;
+    height: 80px;
+  }
+}
+
+/* How It Works */
+.how-it-works-pumpkin-wellness {
+  .columns > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  
+  ol {
+    counter-reset: how-it-works-counter;
+    padding: 0;
+    list-style-type: none;
+  }
+
+  ol > li {
+    counter-increment: how-it-works-counter;
+    display: flex;
+    align-items: start;
+    gap: 12px;
+    font-size: 1.3rem; /* 20px */
+
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+    
+    &::before {
+      content: counter(how-it-works-counter);
+      display: flex;
+      align-items: center;
+      flex-shrink: 0;
+      justify-content: center;
+      width: 34px;
+      height: 34px;
+      font-size: 1.3rem; /* 20px */
+      font-weight: 600;
+      color: #fff;
+      background-color: #007680;
+      border-radius: 100%;
+    }
+
+    + li {
+      margin-top: 24px;
+    }
+  }
+}
+
+/* Member Services */
+.member-services-pumpkin-wellness {
+  .columns h3 {
+    margin: 0;
+    font-size: 1.3rem; /* 20px */
+    text-align: left;
+
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+
+  .columns h3,
+  .columns-wrapper .columns h3 + p {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .columns-wrapper .columns h3 + p {
+    margin: 0 0 0 8px;
+    padding: 0;
+    line-height: 1;
+  }
+
+  .columns-wrapper .columns h3 + p picture {
+    display: flex;
+    align-items: center;
+  }
+
+  ul {
+    padding: 0 0 0 20px;
+  }
+
+  ul li {
+    padding-left: 6px;
+    font-size: 1.3rem; /* 20px */
+
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+
+  .columns > div {
+    @media (max-width: 1023px) {
+      display: block;
+    }
+  }
+}
+
+/* Testimonial */
+.testimonial-pumpkin-wellness {
+  font-size: 1.3rem; /* 20px */
+
+  @media (min-width: 768px) {
+    font-size: 1.5rem; /* 24px */
+  }
+
+  .columns > div {
+    @media (max-width: 767px) {
+      flex-direction: column-reverse;
+    }
+  }
+
+  h2 {    
+    position: absolute;
+    top: auto;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    width: 1px;
+    height: 1px;
+    white-space: nowrap;
+  }
+}
+
+/* Curated Products */
+.curated-products-pumpkin-wellness {
+  h2 {
+    font-size: 2rem; /* 32px */
+
+    @media (min-width: 768px) {
+      font-size: 2.375rem; /* 38px */
+    }
+  }
+
+  h3 {
+    font-size: 1.3rem; /* 20px */
+  
+    @media (min-width: 768px) {
+      font-size: 1.5rem; /* 24px */
+    }
+  }
+}
+
+.curated-products {
+  text-align: center;
+
+  img {
+    width: 100%;
+    height: max-content;
+  }
+}
+
+/* Pre Footer */
+.prefooter-pumpkin-wellness {
+  position: relative;
+  background-color: var(--footer-background-color);
+  color: var(--footer-font-color);
+
+  &::after {
+    content: '';
+    display: block;
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    margin: 0 auto;
+    max-width: 344px;
+    width: 100%;
+    height: 2px;
+    background-color: var(--background-color);
+  }
+
+
+
+  @media (min-width: 768px) {
+    &::after {
+      max-width: 640px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    &::after {
+      max-width: 1312px;
+    }
+  }
+
+  .columns > div {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  h2 {
+    font-size: 1.1rem; /* 18px */
+    font-weight: 600;
+    color: var(--footer-font-color);
+  }
+
+  strong { font-weight: 600; }
+
+  a {
+    font-weight: 600;
+    text-decoration: none;
+    color: var(--footer-font-color);
+  }
+}
+
+.section.prefooter-pumpkin-wellness {
+  padding-bottom: 36px;
+  
+  .columns > div {
+    margin-inline: auto;
+  }
+
+  .columns > div:first-child {
+    max-width: 30.5rem; /* 488px */
+    text-align: center;
+  }
+}
