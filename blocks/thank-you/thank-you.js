@@ -31,7 +31,7 @@ async function getOwner(paymentProcessorId) {
   }
 }
 
-// Step 3 - Update (PUT) owner sale status
+// Step 3 - Update (PUT) owner sale status w/ the ownerId
 async function putUpdateOwnerSaleStatus(guidID) {
   try {
     await APIClientObj.putUpdateOwnerSaleStatus(guidID);
@@ -70,9 +70,12 @@ export default async function decorate() {
   const urlParams = new URLSearchParams(window.location.search);
   const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
   const data = await getPaymentCustomerIDFromUUID(paymentProcessorId);
-  const getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
+  let getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
 
-  putUpdateOwnerSaleStatus(getOwnerDetails.id);
+  await putUpdateOwnerSaleStatus(getOwnerDetails.id);
+
+  // get the owner details again after the sale status has been updated
+  getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
 
   const getPurchaseSummaryDetails = await getPurchaseSummary(getOwnerDetails.id);
 
