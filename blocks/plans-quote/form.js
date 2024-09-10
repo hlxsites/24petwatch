@@ -568,7 +568,7 @@ export default function formDecoration(block, apiBaseUrl) {
 
   async function savePet(petId = '') {
     try {
-      formData.birthDate = `${new Date().getFullYear() - 1}-01-01T00:00:00.000Z`;
+      formData.birthDate = '1900-01-01-01T00:00:00.000Z';
       // eslint-disable-next-line max-len
       const data = await APIClientObj.savePet(petId, formData.ownerId, formData.petName, formData.breed.breedId, formData.speciesId, formData.purebreed, formData.microchip, formData.birthDate);
       formData.petId = data.id;
