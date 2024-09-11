@@ -1,0 +1,141 @@
+/* stylelint-disable no-descending-specificity */
+
+.thank-you-container {
+  display: none;
+}
+
+.thank-you-greeting,
+.thank-you-purchase {
+  h2 {
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    font-size: var(--heading-font-size-m);
+    line-height: var(--heading-line-height-m);
+  }
+}
+
+.thank-you-greeting {
+  h1 {
+    margin-top: 0;
+  }
+
+  h2 {
+    margin-top: 85px;
+  }
+
+  h2,
+  .columns {
+    text-align: left;
+  }
+
+  .columns div {
+    flex-direction: row;
+    gap: 15px;
+
+    @media (max-width: 767px) {
+      align-items: center;
+    }
+  }
+
+  .columns > div > div {
+    &:first-child {
+      flex: 0 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      flex: none;
+    }
+  }
+
+  .columns .columns-img-col {
+    @media (max-width: 767px) {
+     order: 1;
+    }
+
+    img {
+      width: 50px;
+    }
+  }
+}
+
+.thank-you-purchase {
+  .columns > div {
+    padding-bottom: 80px;
+
+    @media (min-width: 768px) {
+      align-items: flex-start;
+    }
+  }
+
+  .columns h2 {
+    padding: 8px 0 10px;
+    text-align: center;
+    background-color: #e7e9ea;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .columns h3 {
+    display: flex;
+    margin-inline: auto;
+    width: max-content;
+    font-family: var(--heading-font-family);
+    font-weight: var(--heading-font-weight);
+    font-size: var(--heading-font-size-xl);
+    line-height: var(--heading-line-height-xl);
+    border-bottom: 2px solid #f4ba3b;
+  }
+
+  .columns ul {
+    padding: 0;
+    list-style: none;
+    margin: 0;
+  }
+
+  .columns ul li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0 10px;
+  }
+
+  ul.thank-you-purchase-totals {
+    margin-top: 30px;
+    font-size: var(--heading-font-size-s);
+  }  
+  
+  .columns .columns-img-col {
+    @media (max-width: 767px) {
+      margin-top: 40px;
+    }
+  }
+
+  .columns ul:last-of-type li:last-of-type {
+    padding: 10px 0 0;
+    font-weight: bold;
+    border-top: 1px solid #333f48;
+  }
+
+  .button {
+    display: flex;
+    margin:  65px auto 0;
+  }
+}
+
+.visually-hidden {
+  position: absolute;
+  top: auto;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+}
+
+@media print {
+  .columns .button, .columns .columns-img-col, footer, header, .onetrust-consent-sdk {
+      display: none
+  }
+
+  main {
+      margin-top: 0!important
+  }
+}
