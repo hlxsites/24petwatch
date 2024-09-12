@@ -60,7 +60,6 @@
 
 .thank-you-purchase {
   .columns > div {
-
     @media (min-width: 768px) {
       padding-bottom: 20px;
       align-items: flex-start;
