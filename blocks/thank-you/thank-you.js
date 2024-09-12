@@ -7,7 +7,7 @@ const APIClientObj = new APIClient(apiBaseUrl);
 
 // Sequence of steps to get the owner info from the API
 
-// Step 1 - get the payment customer ID from the UUID
+// Step 1 - get the paymentPortalCustomerId from the UUID (aka paymentProcessorId)
 async function getPaymentCustomerIDFromUUID(paymentProcessorId) {
   try {
     const data = await APIClientObj.getPaymentCustomerIDFromUUID(paymentProcessorId);
@@ -19,22 +19,22 @@ async function getPaymentCustomerIDFromUUID(paymentProcessorId) {
   }
 }
 
-// Step 2 - get the owner info, which provides the ownerId
-async function getOwner(paymentProcessorId) {
+// Step 2 & Step 4 - get the owner info, which provides the owner id as well as the owner info
+async function getOwner(paymentPortalCustomerId) {
   try {
-    const data = await APIClientObj.getOwner(paymentProcessorId);
+    const data = await APIClientObj.getOwner(paymentPortalCustomerId);
     return data;
   } catch (status) {
     // eslint-disable-next-line no-console
-    console.log('Failed to get the owner:', paymentProcessorId, ' status:', status);
+    console.log('Failed to get the owner:', paymentPortalCustomerId, ' status:', status);
     return [];
   }
 }
 
 // Step 3 - Update (PUT) owner sale status w/ the ownerId
-async function putUpdateOwnerSaleStatus(guidID) {
+async function putUpdateOwnerSaleStatus(ownerId) {
   try {
-    await APIClientObj.putUpdateOwnerSaleStatus(guidID);
+    await APIClientObj.putUpdateOwnerSaleStatus(ownerId);
   } catch (status) {
     // this is a put request, so we expect a 204 status code
     // eslint-disable-next-line no-console
@@ -42,10 +42,10 @@ async function putUpdateOwnerSaleStatus(guidID) {
   }
 }
 
-// Step 4 - get the purchase summary
-async function getPurchaseSummary(paymentProcessorId) {
+// Step 5 - get the purchase summary
+async function getPurchaseSummary(ownerId) {
   try {
-    const data = await APIClientObj.getPurchaseSummary(paymentProcessorId);
+    const data = await APIClientObj.getPurchaseSummary(ownerId);
     return data;
   } catch (status) {
     // eslint-disable-next-line no-console
@@ -54,7 +54,7 @@ async function getPurchaseSummary(paymentProcessorId) {
   }
 }
 
-// Step 5 - send the email receipt for package item, using the ownerId
+// Step 6 - send the email receipt for package item, using the ownerId
 async function postEmailReceipt(ownerId) {
   try {
     const data = await APIClientObj.postEmailReceipt(ownerId);
@@ -111,9 +111,14 @@ export default async function decorate() {
   // build sub-total, tax, and total of items purchased
   const totals = document.createElement('ul');
   totals.classList.add('thank-you-purchase-totals');
+
   const { summary } = getPurchaseSummaryDetails;
 
-  // build out the sub-total
+  if (summary.discount > 0.0) {
+    const discount = `<li><div>Discount</div><div>- $${summary.discount}</div></li>`;
+    totals.innerHTML += discount;
+  }
+
   const subTotal = `<li><div>Subtotal</div><div>$${summary.subTotal}</div></li>`;
   totals.innerHTML += subTotal;
 

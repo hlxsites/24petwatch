@@ -42,7 +42,7 @@
       flex: 0 0 auto;
     }
 
-    @media (min-width: 768px) {
+    @media (min-width: 1024px) {
       flex: none;
     }
   }
@@ -60,9 +60,8 @@
 
 .thank-you-purchase {
   .columns > div {
-    padding-bottom: 80px;
-
     @media (min-width: 768px) {
+      padding-bottom: 20px;
       align-items: flex-start;
     }
   }
@@ -118,6 +117,12 @@
     display: flex;
     margin:  65px auto 0;
   }
+}
+
+.thank-you-disclaimer {
+  padding-bottom: 40px;
+  font-size: 0.813rem;
+  color: #535e66;
 }
 
 .visually-hidden {
