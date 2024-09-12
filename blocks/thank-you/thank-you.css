@@ -15,12 +15,17 @@
 }
 
 .thank-you-greeting {
+  .default-content-wrapper > p:first-of-type img {
+    width: 92px;
+  }
+
   h1 {
     margin-top: 0;
   }
 
   h2 {
     margin-top: 85px;
+    font-size: var(--body-font-size-m);
   }
 
   h2,
