@@ -68,6 +68,18 @@ main .plans-quote form .checkbox-text-wrapper > div {
   box-sizing: border-box;
 }
 
+main .plans-quote form .promocode-wrapper label {
+  top: -30px;
+}
+
+main .plans-quote form input:not(:placeholder-shown)~label {
+  transform: unset;
+}
+
+main .plans-quote form .wrapper:not(.flex-wrapper) label {
+  padding-bottom: 0;
+}
+
 main .plans-quote form .promocode-wrapper label > div {
   display: block;
   font-size: 0.8rem;
@@ -111,10 +123,6 @@ main .plans-quote form .promocode-wrapper {
   margin-bottom: 3.25rem;
 }
 
-main .plans-quote form .promocode-wrapper label {
-  top: -30px;
-}
-
 main .plans-quote.first-step > div > div:nth-child(1) > p:first-of-type {
   background-color: #007680;
   color: #fff;
@@ -132,10 +140,6 @@ main .plans-quote.first-step > div > div:nth-child(2) {
   display: flex;
   justify-content: center;
   flex-flow: row wrap;
-}
-
-main .plans-quote form input:not(:placeholder-shown)~label {
-  transform: unset;
 }
 
 main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
