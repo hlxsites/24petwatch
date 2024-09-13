@@ -126,7 +126,7 @@
 
 .thank-you-disclaimer {
   padding-bottom: 40px;
-  font-size: 0.813rem;
+  font-size: 0.625rem; /* 10px */ 
   color: #535e66;
 }
 
