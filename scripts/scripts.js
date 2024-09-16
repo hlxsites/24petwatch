@@ -277,16 +277,24 @@ function instrumentTrackingEvents(main) {
           } else if (body.classList.contains('paid')) {
             if (e.target.closest('.hero-paid-membership')) {
               ctaLocation = 'hero_cta';
+            } else if (e.target.closest('.lifetime-paid-membership')) {
+              ctaLocation = 'lpm_cta';
+            } else if (e.target.closest('.callout-vet-helpline')) {
+              ctaLocation = 'vet_helpline_cta';
+            } else if (e.target.closest('.callout-faq')) {
+              ctaLocation = 'faq_cta';
             } else if (linkUrl.includes('lifetime-protection-membership-plus')) {
               ctaLocation = 'lpm_plus_cta';
             } else if (linkUrl.includes('annual-protection-membership')) {
               ctaLocation = 'annual_cta';
             }
             trackCTAEvent(ctaLocation);
+            return;
 
           // track clicks on every other anchor with a button class
           } else {
             trackCTAEvent(null);
+            return;
           }
         }
 
