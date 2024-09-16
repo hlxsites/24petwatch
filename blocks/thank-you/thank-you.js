@@ -1,4 +1,8 @@
 import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
+import {
+  COOKIE_NAME_SAVED_OWNER_ID,
+  deleteCookie,
+} from '../../scripts/24petwatch-utils.js';
 
 // prep for API calls
 const apiBaseUrl = await getAPIBaseUrl();
@@ -67,6 +71,9 @@ async function postEmailReceipt(ownerId) {
 }
 
 export default async function decorate() {
+  // delete cookie with customer id
+  deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
+
   const urlParams = new URLSearchParams(window.location.search);
   const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
   const data = await getPaymentCustomerIDFromUUID(paymentProcessorId);

@@ -828,7 +828,7 @@ export default function formDecoration(block, apiBaseUrl) {
     Loader.showLoader();
     let data = await getOwner(ownerId);
     Loader.hideLoader();
-    if (!data) {
+    if (!data || (Array.isArray(data) ? data.length === 0 : Object.keys(data).length === 0)) {
       return;
     }
     if (isCanada && data.countryID !== 1) {
@@ -864,7 +864,7 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
     data = await getPet(petId, ownerId);
-    if (!data) {
+    if (!data || (Array.isArray(data) ? data.length === 0 : Object.keys(data).length === 0)) {
       return;
     }
     formData.petId = petId;
