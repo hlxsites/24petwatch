@@ -164,6 +164,10 @@
 .faq-paid-membership {
   background-color: #fbfbfb;
 
+  .default-content-wrapper h2 {
+    text-align: center;
+  }
+
   .accordion details summary {
     padding: 1.25rem 2.25rem 1.25rem 1.563rem;
     color: #555;
