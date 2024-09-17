@@ -123,12 +123,66 @@
 }
 
 /* Vet Helpline / FAQ */
-.vet-helpline-paid-membership h2 + p,
+.vet-helpline-paid-membership h3 + p,
 .faq-paid-membership .accordion-item-label h3 {
   font-family: var(--heading-font-family);
   font-weight: var(--heading-font-weight);
   font-size: var(--heading-font-size-m);
   line-height: var(--heading-line-height-m);
+}
+
+/* Vet Helpline */
+.vet-helpline-paid-membership {
+  .columns  > div {
+    @media (max-width: 767px) {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .columns h2 {
+    margin-top: 45px;
+    margin-bottom: 0;
+    font-size: 2.188rem; /* 35px */
+
+    @media (min-width: 768px) {
+      font-size: 3.313rem; /* 53px */
+    }
+  }
+
+  .columns h3 {
+    margin-top: 16px;
+    font-size: 1.313rem; /* 21px */
+
+    @media (min-width: 768px) {
+      font-size: 2.188rem; /* 35px */
+    }
+  }
+
+}
+
+/* FAQ */
+.faq-paid-membership {
+  background-color: #fbfbfb;
+
+  .accordion details summary {
+    padding: 1.25rem 2.25rem 1.25rem 1.563rem;
+    color: #555;
+    border-radius: 0.5rem;
+    background-color: #fff;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .accordion-item-label h3 {
+    margin: 0;
+
+    @media (max-width: 767px) {
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+  }
 }
 
 /* Options */
