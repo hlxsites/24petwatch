@@ -1,0 +1,652 @@
+dialog {
+  border: none;
+  border-radius: 10px;
+}
+
+dialog h3 {
+  margin-top: 0.5rem;
+}
+
+dialog p {
+  padding: 1rem;
+  border-top: 1px solid var(--summary-quote-outline-color);
+  border-bottom: 1px solid var(--summary-quote-outline-color);
+}
+
+dialog .dialog-buttons-container {
+  display: flex;
+  justify-content: right;
+}
+
+dialog button {
+  margin: 0.5rem 0.5rem 0.5rem 1.5rem;
+}
+
+dialog button.yes {
+  background-color: var(--dialog-yes-color);
+}
+
+dialog button.yes:hover,
+dialog button.yes:focus {
+  background-color: var(--dialog-yes-hover-color);
+}
+
+/* stylelint-disable property-no-vendor-prefix */
+main .plans-quote.first-step > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+  margin-top: 2.5rem;
+}
+
+main div.section.microchip-policy p {
+  font-size: .625rem;
+}
+
+main div.section.plans-quote-container #trustedsite-trustmark-wrapper {
+  width: calc(65% - 15px);
+}
+
+main div.section.plans-quote-container .summary-quote #trustedsite-trustmark-wrapper {
+  width: 100%;
+}
+
+main .plans-quote.first-step > div > div {
+  display: block;
+  position: relative;
+  flex: calc(65% - 15px);
+  box-sizing: border-box;
+}
+
+main .plans-quote form .checkbox-text-wrapper > div {
+  display: block;
+  position: relative;
+  flex: 24px;
+  box-sizing: border-box;
+}
+
+main .plans-quote form .promocode-wrapper label {
+  top: -30px;
+}
+
+main .plans-quote form input:not(:placeholder-shown)~label {
+  transform: unset;
+}
+
+main .plans-quote form .wrapper:not(.flex-wrapper) label {
+  padding-bottom: 0;
+}
+
+main .plans-quote form .promocode-wrapper label > div {
+  display: block;
+  font-size: 0.8rem;
+  color: #333f48;
+}
+
+main .plans-quote.first-step > div > div:nth-child(1) {
+  border: .1875rem solid #007680;
+  border-radius: 10px;
+}
+
+main .plans-quote.first-step > div > div:nth-child(1) > h1:first-of-type {
+  background-color: #007680;
+  margin: 0;
+  padding: .5rem .5rem .625rem;
+  border-radius: 6px 6px 0 0;
+  color: #fff;
+  font-weight: 400;
+  font-size: 2.5rem;
+  line-height: 3.125rem;
+  text-align: center;
+}
+
+main .plans-quote.first-step > div > div:nth-child(1) > h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  padding: 0 2rem;
+}
+
+main .plans-quote.first-step > div > div:nth-child(1) > p {
+  padding: 0 2rem;
+}
+
+main .plans-quote.first-step > div > div:nth-child(2) > div > p {
+  font-size: .813rem;
+  line-height: .938rem;
+  text-align: center;
+}
+
+main .plans-quote form .promocode-wrapper {
+  margin-bottom: 3.25rem;
+}
+
+main .plans-quote.first-step > div > div:nth-child(1) > p:first-of-type {
+  background-color: #007680;
+  color: #fff;
+  text-align: center;
+  padding: .5rem .5rem .625rem;
+  margin: 0;
+}
+
+main .plans-quote.first-step > div > div:nth-child(2) {
+  flex: calc(35% - 15px);
+  background-color: #e7e9ea;
+  border-radius: 10px;
+  padding: 1rem 2rem;
+  color: #333f48;
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
+main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) {
+  flex: calc(100% - 44px);
+}
+
+main .plans-quote form .checkbox-text-wrapper > div:nth-child(2) > label {
+  color: var(--text-color);
+  padding: 0;
+  cursor: pointer;
+}
+
+main .plans-quote.first-step > div > div:nth-child(2) > div {
+  width: calc(50% - 20px);
+  margin: 10px;
+}
+
+main .plans-quote.first-step > div > div:nth-child(2) > h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+  width: 100%;
+  text-align: center;
+}
+
+main .plans-quote.first-step > div > div:nth-child(2) > div > p > span.icon
+{
+  height: 65px;
+  width: 65px;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-header {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+  background-color: #007680;
+  color: #fff;
+  font-weight: 700;
+  border-radius: 20px;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-header > p {
+  margin: 1.5rem 0 1.5rem 1.5rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-header > div.item-menu > a {
+  display: inline-block;
+  margin: 1.5rem 1.5rem 1.5rem 0;
+  color: #fff;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info {
+  box-sizing: border-box;
+  margin: 0 1rem;
+  padding: 0 1.5rem;
+  border: 1px solid #e5e5e5;
+  border-radius: 0 0 20px 20px;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > .item-info-fragment {
+  display: none;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > .item-info-fragment.show {
+  display: block;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > .item-info-fragment .section {
+  padding: unset;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.pet-name {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.pet-name > span {
+  display: inline-block;
+  margin-bottom: .25rem;
+  margin-left: .25rem;
+  width: .5rem;
+  height: .5rem;
+  border-bottom: 2px solid #000;
+  border-right: 2px solid #000;
+  transform: rotate(45deg);
+  cursor: pointer;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.pet-name > span.up {
+  transform: rotate(-135deg);
+  margin-bottom: 0;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.price-info {
+  font-size: 1.125rem;
+  text-align: right;
+}
+
+main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-header > div.price-info > div.price {
+  font-weight: 700;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew {
+  display: inline-flex;
+  margin: 1rem 1.5rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-checkbox-container {
+  margin: .25rem 1rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
+  margin: 0 4rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info {
+  margin: .25rem 4rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  background-image: url('/icons/info-circle.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info > div.auto-renew-info-text {
+  display: none;
+  position: absolute;
+  width: 300px;
+  font-size: .825rem;
+  border: 1px solid #cbd5e0;
+  background-color: #fff;
+  z-index: 999;
+  top: 0;
+  right: .6rem;
+  padding: 1rem;
+  border-radius: .5rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info:hover > div.auto-renew-info-text {
+  display: block;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form {
+  background: #fff;
+  border: 3px solid #007680;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 20px 30px;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header {
+  width: 100%;
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-another-pet {
+  cursor: pointer;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header > span#add-another-pet::after {
+  display: block;
+  width: 25px;
+  height: 25px;
+  content: "+";
+  font-size: 25px;
+  line-height: 25px;
+  text-align: center;
+  font-weight: 900;
+  border: 3px solid #007680;
+  border-radius: 50%;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.button-wrapper {
+  text-align: center;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info {
+  margin-top: 1rem;
+  border-radius: .625rem;
+  border: .1875rem solid #e5e5e5;
+  text-align: center;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > h2 {
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > p {
+  font-size: 1rem;
+}
+
+main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.available-product > div.price-info > p:first-of-type {
+  font-size: 1.75rem;
+  line-height: 2.375rem;
+}
+
+main .plans-quote.summary-quote > div.payment-summary > div.payments {
+  border-top: 2px solid #edf2f7;
+  padding: 0 2rem;
+}
+
+main .plans-quote.summary-quote > div.payment-summary > div.payments > div {
+  display: inline-flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: .5rem 0;
+}
+
+main .plans-quote.summary-quote > div.payment-summary > div.payments > div.due-today {
+  border-top: 2px solid #a0aec0;
+  font-weight: 700;
+}
+
+main .plans-quote form {
+  border: unset;
+  border-radius: unset;
+}
+
+main .plans-quote form button#apply-promo-code {
+  position: absolute;
+  font-size: 1rem;
+  right: .5rem;
+  bottom: 1rem;
+  margin: 0;
+  padding: 0 2rem;
+  height: 1.7rem;
+  width: 7rem;
+}
+
+main .plans-quote form button#apply-promo-code:hover {
+  background-color: var(--button-secondary-hover-color);
+}
+
+main .plans-quote form button#apply-promo-code:disabled {
+  background-color: #ccc;
+}
+
+main .plans-quote form .promocode-wrapper.error button#apply-promo-code {
+  bottom: 2.2rem;
+}
+
+main .plans-quote form .promocode-wrapper span.checkmark {
+  right: 8rem;
+}
+
+main .plans-quote form .checkbox-text-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+}
+
+main .plans-quote form .checkbox-text-wrapper > div > input[type="checkbox"] {
+  width: 24px;
+  height: 24px;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+main .plans-quote form .wrapper-text-center {
+  display: block;
+  text-align: center;
+}
+
+main .plans-quote form .wrapper-several-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 60%;
+  margin: 0 auto;
+}
+
+main .plans-quote form .wrapper-several-buttons button.cancel {
+  background-color: var(--button-secondary-color);
+}
+
+main .plans-quote form .flex-wrapper .error-message {
+  flex-grow: 1;
+  width: 100%;
+}
+
+main .plans-quote .bottom-section {
+  text-align: center;
+}
+
+main .plans-quote .bottom-section .amount-info {
+  font-weight: 700;
+}
+
+main .plans-quote .bottom-section > button {
+  display: inline-block;
+}
+
+main .plans-quote form div.wrapper button#submit {
+  display: inline-block;
+}
+
+#pet-breed-list {
+  background-color: #fff;
+  box-sizing: border-box;
+  width: 100%;
+  position: absolute;
+  z-index: 99;
+  border: 1px solid #ccc;
+  max-height: 20rem;
+  overflow-y: auto;
+  visibility: hidden;
+}
+
+#pet-breed-list ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#pet-breed-list ul li {
+  display: block;
+  padding: 0 1rem;
+  margin: .5rem 0;
+  cursor: pointer;
+}
+
+body .loader-wrapper {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 1060;
+  top: 0;
+  display: block;
+}
+
+body .loader-wrapper.hide {
+  display: none;
+}
+
+body .loader-wrapper .loader-bg {
+  --bg-opacity: 1;
+
+  opacity: .75;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+}
+
+body .loader-wrapper .loader-txt {
+  position: absolute;
+  z-index: 10;
+  width: .875rem;
+  height: .875rem;
+
+  --text-opacity: 1;
+
+  color: #fff;
+  top: calc(50% + 2.5rem);
+  right: calc(50% + 1rem);
+}
+
+body .loader-wrapper .loader {
+  z-index: 10;
+  width: 14px;
+  height: 14px;
+
+  --text-opacity: 1;
+
+  color: #fff;
+  font-size: 1.25rem;
+  margin: 6rem auto;
+  border-radius: 50%;
+  position: absolute;
+  top: calc(50% - 3rem);
+  right: 50%;
+  text-indent: -9999em;
+  -webkit-animation: loading-animation 1.3s linear infinite;
+  animation: loading-animation 1.3s linear infinite;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* stylelint-disable at-rule-no-vendor-prefix */
+@-webkit-keyframes loading-animation {
+  0%, 100% {
+    -webkit-box-shadow: 0 -3em 0 .2em,2em -2em 0 0,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 0;
+    box-shadow: 0 -3em 0 .2em,2em -2em 0 0,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 0
+  }
+
+  12.5% {
+    -webkit-box-shadow: 0 -3em 0 0,2em -2em 0 .2em,3em 0 0 0,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 0,2em -2em 0 .2em,3em 0 0 0,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  25% {
+    -webkit-box-shadow: 0 -3em 0 -.5em,2em -2em 0 0,3em 0 0 .2em,2em 2em 0 0,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -.5em,2em -2em 0 0,3em 0 0 .2em,2em 2em 0 0,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  37.5% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 0,2em 2em 0 .2em,0 3em 0 0,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 0,2em 2em 0 .2em,0 3em 0 0,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  50% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 0,0 3em 0 .2em,-2em 2em 0 0,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 0,0 3em 0 .2em,-2em 2em 0 0,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  62.5% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 0,-2em 2em 0 .2em,-3em 0 0 0,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 0,-2em 2em 0 .2em,-3em 0 0 0,-2em -2em 0 -1em
+  }
+
+  75% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 .2em,-2em -2em 0 0;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 .2em,-2em -2em 0 0
+  }
+
+  87.5% {
+    -webkit-box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em;
+    box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em
+  }
+}
+
+@keyframes loading-animation {
+  0%, 100% {
+    -webkit-box-shadow: 0 -3em 0 .2em,2em -2em 0 0,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 0;
+    box-shadow: 0 -3em 0 .2em,2em -2em 0 0,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 0
+  }
+
+  12.5% {
+    -webkit-box-shadow: 0 -3em 0 0,2em -2em 0 .2em,3em 0 0 0,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 0,2em -2em 0 .2em,3em 0 0 0,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  25% {
+    -webkit-box-shadow: 0 -3em 0 -.5em,2em -2em 0 0,3em 0 0 .2em,2em 2em 0 0,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -.5em,2em -2em 0 0,3em 0 0 .2em,2em 2em 0 0,0 3em 0 -1em,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  37.5% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 0,2em 2em 0 .2em,0 3em 0 0,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 0,2em 2em 0 .2em,0 3em 0 0,-2em 2em 0 -1em,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  50% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 0,0 3em 0 .2em,-2em 2em 0 0,-3em 0 0 -1em,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 0,0 3em 0 .2em,-2em 2em 0 0,-3em 0 0 -1em,-2em -2em 0 -1em
+  }
+
+  62.5% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 0,-2em 2em 0 .2em,-3em 0 0 0,-2em -2em 0 -1em;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 0,-2em 2em 0 .2em,-3em 0 0 0,-2em -2em 0 -1em
+  }
+
+  75% {
+    -webkit-box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 .2em,-2em -2em 0 0;
+    box-shadow: 0 -3em 0 -1em,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 .2em,-2em -2em 0 0
+  }
+
+  87.5% {
+    -webkit-box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em;
+    box-shadow: 0 -3em 0 0,2em -2em 0 -1em,3em 0 0 -1em,2em 2em 0 -1em,0 3em 0 -1em,-2em 2em 0 0,-3em 0 0 0,-2em -2em 0 .2em
+  }
+}
+
+main div.trustedsite-wrapper {
+  margin-top: 1rem;
+}
+
+main div.section.plans-quote-container {
+  padding-top: 5rem;
+}
+
+@media (max-width: 768px) {
+  main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
+    margin: 0 .5rem;
+  }
+
+  form label {
+    font-size: .75rem;
+  }
+}
+
+@media (max-width: 670px) {
+  main div.section.plans-quote-container #trustedsite-trustmark-wrapper {
+    width: 100%;
+  }
+}
+
+@media (max-width: 536px) {
+  main .plans-quote form .wrapper-several-buttons {
+    display: block;
+    width: 60%;
+    margin: 0 auto;
+  }
+
+  main .plans-quote form .wrapper-several-buttons button {
+    width: 100%;
+  }
+}
