@@ -151,10 +151,8 @@
   }
 
   h2 ~ p {
-    @media (min-width: 768px) {
-      font-size: 1.5rem; /* 24px */
-      line-height: 2.125rem; /* 34px */
-    }
+    font-size: 1rem; /* 16px */
+    line-height: 1.563rem; /* 25px */
   }
 }
 
@@ -186,10 +184,8 @@
   }
 
   h3 ~ p {
-    @media (min-width: 768px) {
-      font-size: 1.5rem; /* 24px */
-      line-height: 2.125rem; /* 34px */
-    }
+    font-size: 1rem; /* 16px */
+    line-height: 1.563rem; /* 25px */
   }
 }
 
