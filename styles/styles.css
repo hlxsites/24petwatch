@@ -445,6 +445,11 @@ main .section.teal a:hover {
   color: aqua;
 }
 
+main .section.light-teal-bg, 
+main .section.light-teal {
+  background-color: #D6F7FA;
+}
+
 main .section.palegray {
   background-color: #edf5fb;
 }
@@ -678,6 +683,11 @@ main .columns.block-with-header div div strong, main .section.block-with-header 
 
 main .emphasis-red em {
   color: var(--button-primary-color);
+  font-style: normal;
+}
+
+main .emphasis-teal em {
+  color: var(--button-secondary-color);
   font-style: normal;
 }
 

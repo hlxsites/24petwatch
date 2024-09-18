@@ -220,6 +220,18 @@ main .columns.cat-dog-background > div > div:last-child {
   background-position-y: bottom;
 }
 
+
+main .columns.cat-dog-background-lpp > div > div:last-child {
+  @media (max-width: 767px) {
+    background-size: contain;
+  }
+
+  margin-top: -80px;
+  min-height: 450px;
+  background-image: url('/images/cat-dog-2.png');
+  background-size: 119%;
+}
+
 /* images */
 .columns.lpm-multi.content-tight > div > div:nth-child(odd),
 .columns.lpm-just1.content-tight > div > div:nth-child(odd) {

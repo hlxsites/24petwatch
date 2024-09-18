@@ -4,17 +4,17 @@ export const calcEnvironment = () => {
 
   const detectEnvironment = () => {
     const environmentMap = {
-      '24petwatch.com': 'prod',
-      'aem-dev.24petwatch.com': 'stage',
-      'aem-stage.24petwatch.com': 'stage',
-      '.hlx.page': 'stage',
+      '24petwatch\\.com': 'prod',
+      'aem-dev\\.24petwatch\\.com': 'dev',
+      'aem-stage\\.24petwatch\\.com': 'stage',
+      '.*\\.hlx\\.page': 'dev',
       localhost: 'dev',
     };
 
     let environment = 'prod';
 
     Object.keys(environmentMap).some((pattern) => {
-      const regex = new RegExp(`^https?://(www\\.)?${pattern.replace(/\./g, '\\.')}`);
+      const regex = new RegExp(`^https?://(www\\.)?${pattern}`);
       if (regex.test(href)) {
         environment = environmentMap[pattern];
         return true;

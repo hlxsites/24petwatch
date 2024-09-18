@@ -243,15 +243,27 @@ function instrumentTrackingEvents(main) {
   main.querySelectorAll('a')
     .forEach((anchor) => {
       anchor.addEventListener('click', (e) => {
+        const body = document.querySelector('body');
         const linkText = (e.target.textContent || '').trim();
         const linkUrl = e.target.href;
         const pageUrl = window.location.href;
+        let ctaLocation = null;
+
+        const trackCTAEvent = (location) => {
+          const eventData = {
+            link_text: linkText,
+            link_url: linkUrl,
+          };
+          if (location) {
+            eventData.cta_location = location;
+          }
+          trackGTMEvent('cta_click', eventData);
+        };
 
         // track cta clicks on main
         if (e.target.classList.contains('button')) {
           // track clicks on the Pumpkin Wellness Club page
           if (e.target.closest('[class*="pumpkin-wellness"]')) {
-            let ctaLocation = null;
             if (e.target.closest('.hero-pumpkin-wellness')) {
               ctaLocation = 'join_the_club_header';
             } else if (e.target.closest('.how-it-works-pumpkin-wellness')) {
@@ -259,17 +271,30 @@ function instrumentTrackingEvents(main) {
             } else if (e.target.closest('.curated-products-pumpkin-wellness')) {
               ctaLocation = 'join_the_club_footer';
             }
-            trackGTMEvent('cta_click', {
-              cta_location: ctaLocation,
-              link_text: linkText,
-              link_url: linkUrl,
-            });
+            trackCTAEvent(ctaLocation);
+
+          // track .button cta clicks for paid pages
+          } else if (body.classList.contains('paid')) {
+            if (e.target.closest('.hero-paid-membership')) {
+              ctaLocation = 'hero_cta';
+            } else if (e.target.closest('.lifetime-paid-membership')) {
+              ctaLocation = 'lpm_cta';
+            } else if (e.target.closest('.callout-vet-helpline')) {
+              ctaLocation = 'vet_helpline_cta';
+            } else if (e.target.closest('.callout-faq')) {
+              ctaLocation = 'faq_cta';
+            } else if (linkUrl.includes('lifetime-protection-membership-plus')) {
+              ctaLocation = 'lpm_plus_cta';
+            } else if (linkUrl.includes('annual-protection-membership')) {
+              ctaLocation = 'annual_cta';
+            }
+            trackCTAEvent(ctaLocation);
+            return;
+
           // track clicks on every other anchor with a button class
           } else {
-            trackGTMEvent('cta_click', {
-              link_text: linkText,
-              link_url: linkUrl,
-            });
+            trackCTAEvent(null);
+            return;
           }
         }
 
@@ -283,6 +308,15 @@ function instrumentTrackingEvents(main) {
         // track clicks for Login to MyPetHealth
         if (linkUrl === 'https://mypethealth.com/auth/login') {
           trackGTMEvent('pet_lost_report_mypethealth_link');
+        }
+
+        // track clicks on the Paid: FAQ page
+        if (body.classList.contains('paid')) {
+          if (e.target.closest('.faq-paid-membership')) {
+            ctaLocation = 'faq_cta';
+          }
+
+          trackCTAEvent(ctaLocation);
         }
       });
     });
