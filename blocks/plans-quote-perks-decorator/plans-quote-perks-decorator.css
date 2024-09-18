@@ -1,0 +1,33 @@
+.plans-quote-perks-decorator > div > div {
+  display: flex;
+  justify-content: center;
+  flex-flow: row wrap;
+}
+
+.plans-quote-perks-decorator > div > div > h2 {
+  width: 100%;
+  font-size: 1.625rem;
+  line-height: 2.25rem;
+}
+
+.plans-quote-perks-decorator > div > div > div {
+  width: calc(33.333% - 10px);
+  margin: 5px;
+  box-sizing: border-box;
+}
+
+.plans-quote-perks-decorator > div > div > div.special-wrapper {
+  width: auto;
+  margin: 0 auto;
+}
+
+.plans-quote-perks-decorator > div > div > div > p > span.icon {
+  height: 65px;
+  width: 65px;
+}
+
+.plans-quote-perks-decorator > div > div > div > p {
+  font-size: .813rem;
+  line-height: .938rem;
+  text-align: center;
+}

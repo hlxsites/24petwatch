@@ -177,7 +177,6 @@ export async function decorateIcons(element) {
   await Promise.all(icons.map(async (span) => {
     const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
     if (!ICONS_CACHE[iconName]) {
-      ICONS_CACHE[iconName] = true;
       try {
         const response = await fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`);
         if (!response.ok) {
@@ -638,12 +637,12 @@ export async function waitForLCP(lcpBlocks) {
  * @returns {Promise}
  */
 export function loadHeader(header) {
-  let headerBlock = '';
-  if (!document.body.classList.contains('paid')) {
-    headerBlock = buildBlock('header', '');
-  } else if (document.body.classList.contains('paid')) {
+  let headerBlock = buildBlock('header', '');
+  if (document.body.classList.contains('paid')) {
     // Load special header for paid section of the website
     headerBlock = buildBlock('header-paid', '');
+  } else if (document.body.classList.contains('only-logo')) {
+    headerBlock = buildBlock('header-only-logo', '');
   }
   header.append(headerBlock);
   decorateBlock(headerBlock);

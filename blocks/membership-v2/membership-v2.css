@@ -1,0 +1,213 @@
+/* stylelint-disable no-descending-specificity */
+
+.membership-v2-container { display: none;}
+
+/* Hero */
+.hero-paid-membership {
+  h1 {
+    font-size: 3rem; /* 48px */
+    line-height: 3.625rem; /* 58px */
+
+    @media (min-width: 768px) {
+      font-size: 3.5rem; /* 56px */
+      line-height: 3.75rem; /* 60px */
+    }
+  }
+
+  .hero > div > div:first-child {
+    h1, p { 
+      text-align: left;
+    }
+
+    img {
+      width: auto;
+      min-width: initial;
+    }
+
+    .button-container + p {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 40px;
+      text-align: center;
+      font-family: var(--body-font-family);
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.75rem; /* 28px */
+
+      @media (min-width: 768px) {
+        flex-direction: row;
+        gap: 16px;
+        text-align: left;
+      }
+    }
+
+    .button-container + p picture {
+      display: inline-block;
+    }
+  }
+
+  .hero > div > div:last-child {
+    display: flex;
+
+    picture {
+      align-self: center;
+      position: relative;
+    }
+
+    picture::before {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 20%;
+      background: linear-gradient(to bottom, rgba(214 247 250 / 100%), rgba(214 247 250 / 0%));
+    }
+
+    @media (min-width: 768px) {
+      picture::before {
+        right: auto;
+        bottom: 0;
+        height: 100%;
+        width: 20%;
+        background: linear-gradient(to right, rgba(214 247 250 / 100%), rgba(214 247 250 / 0%));
+      }
+    }
+
+    img {
+      border-radius: 0 0 16px 16px;
+
+      @media (min-width: 768px) {
+        border-radius:  0 16px 16px 0;
+      }
+    }
+  }
+}
+
+/* Callout */
+.callout-paid-membership {
+  h2 {
+    margin: 24px 0;
+  }
+}
+
+/* Lifetime Paid Membership */
+.lifetime-paid-membership {
+  h2 {
+    font-size: 3rem; /* 48px */
+    line-height: 3.625rem; /* 58px */
+
+    @media (min-width: 768px) {
+      font-size: 3.5rem; /* 56px */
+      line-height: 3.75rem; /* 60px */
+    }
+  }
+
+  h3 {
+    font-size: 1.625rem; /* 26px */
+    line-height: 2.25rem; /* 36px */
+  }
+
+  .columns > div > div {
+    img { 
+      max-height: none;
+    }
+  }
+  
+  .columns .button-container {
+    text-align: center;
+  }
+
+  .columns .button-container + p {
+    text-align: center;
+  }
+}
+
+/* Vet Helpline / FAQ */
+.vet-helpline-paid-membership h3 + p,
+.faq-paid-membership .accordion-item-label h3 {
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  font-size: var(--heading-font-size-m);
+  line-height: var(--heading-line-height-m);
+}
+
+/* Vet Helpline */
+.vet-helpline-paid-membership {
+  .columns  > div {
+    @media (max-width: 767px) {
+      flex-direction: column-reverse;
+    }
+  }
+
+  .columns h2 {
+    margin-top: 45px;
+    margin-bottom: 0;
+    font-size: 2.188rem; /* 35px */
+
+    @media (min-width: 768px) {
+      font-size: 3.313rem; /* 53px */
+    }
+  }
+
+  .columns h3 {
+    margin-top: 16px;
+    font-size: 1.313rem; /* 21px */
+
+    @media (min-width: 768px) {
+      font-size: 2.188rem; /* 35px */
+    }
+  }
+
+}
+
+/* FAQ */
+.faq-paid-membership {
+  background-color: #fbfbfb;
+
+  .default-content-wrapper h2 {
+    text-align: center;
+  }
+
+  .accordion details summary {
+    padding: 1.25rem 2.25rem 1.25rem 1.563rem;
+    color: #555;
+    border-radius: 0.5rem;
+    background-color: #fff;
+
+    p {
+      margin: 0;
+    }
+  }
+
+  .accordion-item-label h3 {
+    margin: 0;
+
+    @media (max-width: 767px) {
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+  }
+}
+
+/* Options */
+.options-paid-membership {
+  .cards > ul > li .cards-card-body {
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+
+    h3 + p {
+      margin: 0;
+    }
+
+    p:last-of-type {
+      align-self: center;
+      margin: auto 0 0;
+
+      a {
+        margin: 0;
+      }
+    }
+  }
+
+}
