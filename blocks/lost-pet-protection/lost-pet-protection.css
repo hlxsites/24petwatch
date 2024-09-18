@@ -1,0 +1,33 @@
+
+
+.lost-pet-protection-container { display: none; }
+
+.perks-lost-pet-protection h2 + p,
+.microchip-lost-pet-protection .columns h2 {
+  font-family: var(--heading-font-family);
+  font-weight: var(--heading-font-weight);
+  line-height: 1.25;
+}
+
+/* Perks */
+.perks-lost-pet-protection {
+  h2 + p {
+    font-size: var(--heading-font-size-s);
+    line-height: var(--heading-line-height-s);
+  }
+}
+
+/* Microchip */
+.microchip-lost-pet-protection {
+  .columns h2 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-size: var(--heading-font-size-l);
+    line-height: var(--heading-line-height-l);
+  }
+}
+
+
+main .section.microchip-lost-pet-protection.cat-dog-background-lpp {
+  margin-top: 56px;
+}
