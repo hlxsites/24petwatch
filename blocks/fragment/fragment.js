@@ -15,13 +15,14 @@ import {
 /**
  * Loads a fragment.
  * @param {string} path The path to the fragment
+ * @param {boolean} createMainTag If true - creates a main tag, otherwise a div
  * @returns {HTMLElement} The root element of the fragment
  */
-export async function loadFragment(path) {
+export async function loadFragment(path, createMainTag = true) {
   if (path && path.startsWith('/')) {
     const resp = await fetch(`${path}.plain.html`);
     if (resp.ok) {
-      const main = document.createElement('main');
+      const main = document.createElement(createMainTag ? 'main' : 'div');
       main.innerHTML = await resp.text();
 
       // reset base path for media to fragment base
