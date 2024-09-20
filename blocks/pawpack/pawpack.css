@@ -1,29 +1,22 @@
-div[class*="pawpack"] {
-  --font-weight-book: 350;
+/* stylelint-disable no-descending-specificity */
 
+div[class*="pawpack"] {
   --heading-font-size-xs: 1.3125rem; /* 21px */
   --heading-line-height-xs: 1.938rem; /* 31px */
-
   --heading-font-size-s: 1.625rem; /* 26px */
   --heading-line-height-s: 2.25rem; /* 36px */
-
   --heading-font-size-m: 2.188rem; /* 35px */
   --heading-line-height-m: 2.8125rem; /* 45px */
-
   --heading-font-size-xl: 3rem; /* 48px */
   --heading-line-height-xl: 3.625rem; /* 58px */
-
   --body-font-size-xs: .75rem; /* 12px */
   --body-line-height-xs: 1.3125rem; /* 21px */
-
   --body-line-height-l: 2.125rem; /* 34px */
-
   --body-font-size-xl: 1.75rem; /* 28px */
   --body-line-height-xl: 2.375rem; /* 38px */
 }
 
-/* !!!! DEV NOTE: REMOVE THIS LINE BEFORE PUSHING TO PRODUCTION !!!! */
-#onetrust-banner-sdk,
+
 .packpack-container {
   display: none;
 }
@@ -73,7 +66,6 @@ div[class*="pawpack"] {
 
     h2 {
       font-size: var(--heading-font-size-xs);
-      font-weight: var(--font-weight-book);
       line-height: var(--heading-line-height-xs);
 
       @media (min-width: 768px) {
