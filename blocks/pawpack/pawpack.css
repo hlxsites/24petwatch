@@ -145,6 +145,7 @@ div[class*="pawpack"] {
 
   .carousel-wrapper + .default-content-wrapper picture {
     display: flex;
+    justify-content: center;
   }
 }
 
@@ -189,10 +190,22 @@ div[class*="pawpack"] {
       }
     }
 
+    h2 ~ p {
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.75rem; /* 28px */
+
+    }
+
     img {
       @media (min-width: 768px) {
-        height: auto;
+        height: 302px;
       }
+    }
+  }
+
+  .carousel > .active > div:first-child {
+    > * {
+      text-align: left;
     }
   }
 
