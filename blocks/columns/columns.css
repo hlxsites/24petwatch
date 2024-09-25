@@ -133,6 +133,9 @@ main .lost-pet-data > div div {
   border-radius: 10px;
   padding: 1rem;
   margin-top: 8rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 main .lost-pet-data > div div:first-child {
@@ -379,6 +382,7 @@ main .section.cat-dog-background {
 
 .columns.transfer-microchip-registration-learn-more p.button-container {
   text-align: center;
+  margin-top: auto;
 }
 
 .columns.transfer-microchip-registration-learn-more > div > div > p:first-child {
