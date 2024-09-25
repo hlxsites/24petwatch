@@ -35,6 +35,11 @@
   box-shadow: 0 2px 6px 0 rgb(0 0 0 / 22%);
 }
 
+.cards-no-background .cards > ul > li {
+  background-color: transparent;
+  box-shadow: none;
+}
+
 .cards .cards-card-body {
   margin: 26px;
   margin-top: 10px;

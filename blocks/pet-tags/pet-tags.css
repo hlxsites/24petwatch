@@ -47,12 +47,8 @@ form[id^="pet-tags-"] span.label {
     text-align: center;
 }
 
-form[id^="pet-tags-"] .image-above-text a {
-    display: ruby-text;
-}
-
 form[id^="pet-tags-"] .image-above-text a button {
-    width: 66%;
+    width: 80%;
 }
 
 form[id^="pet-tags-"] .circular {

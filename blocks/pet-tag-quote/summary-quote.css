@@ -8,8 +8,6 @@
 :root {
     --summary-quote-outline-color: #dfe6ed;
     --sec2-disabled-color: #cdcdcd;
-    --dialog-yes-color: #48bb78;
-    --dialog-yes-hover-color: #7bc99c;
 }
 
 .summary {
