@@ -17,6 +17,7 @@ import {
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
+import { getConfigValue } from '../../scripts/configs.js';
 
 const US_LEGAL_HEADER = '';
 const US_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services (USA) Inc. may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from 24Pet regarding microchip services. Additionally, PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may offer you promotions and the latest information from 24Petprotect™ regarding pet insurance services and products. By checking “Continue”, Pethealth Services (USA) Inc. and PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may contact you via commercial electronic messages, automatic telephone dialing systems, prerecorded/automated messages or text messages at the telephone number provided above, including your mobile number. These calls or emails are not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
@@ -31,6 +32,8 @@ const CART_FLOW = 2; // membership
 const apiErrorMsg = 'Cannot continue at this time.  Please try again later.';
 
 const usedChipNumbers = new Set();
+
+const promoResultKey = await getConfigValue('promo-result');
 
 export default function formDecoration(block, apiBaseUrl) {
   // prepare for Canada vs US
@@ -503,7 +506,7 @@ export default function formDecoration(block, apiBaseUrl) {
           formData.speciesId ?? null,
           formData.petId ?? null,
           (data) => {
-            if (data.isValid === true) {
+            if (data[promoResultKey] === true) {
               hideErrorMessage(promocodeInput);
               formData.promoCode = promoCode;
               handlerStatus = true;
