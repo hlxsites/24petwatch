@@ -424,7 +424,7 @@ export default async function decorate(block) {
   navWrapper.append(registerHoverContent);
 
   decorateIcons(nav);
-  decorateButtons(nav);
+  //decorateButtons(nav);
   changeDomain(block);
   addCanadaToLinks(block);
   decorateLinks(block);

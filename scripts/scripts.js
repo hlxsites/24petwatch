@@ -34,6 +34,43 @@ export function jsx(html, ...args) {
   return html.slice(1).reduce((str, elem, i) => str + args[i] + elem, html[0]);
 }
 
+window.hlx.templates.add([
+  '/templates/paid-blog-page',
+]);
+
+/**
+ * A generic helper function that checks if we are in a mobile context based on viewport size
+ * @returns true if we are on a mobile, and false otherwise
+ */
+export function isMobile() {
+  return window.innerWidth < 600;
+}
+
+/**
+ * A generic helper function that checks if we are in a tablet context based on viewport size
+ * @returns true if we are on a tablet, and false otherwise
+ */
+export function isTablet() {
+  return window.innerWidth < 1024;
+}
+
+/**
+ * Gets the value of a placeholder.
+ * @param {string} key The key of the placeholder to retrieve
+ * @param {Object} options The template strings to use
+ * @returns the desired placeholder string, or throws an error if not found
+ */
+export function getPlaceholder(key, options = {}) {
+  if (!window.placeholders) {
+    throw new Error('Please load placeholders first using "fetchPlaceholders".');
+  }
+  const placeholders = window.placeholders[window.hlx.contentBasePath || 'default'];
+  if (!placeholders[key]) {
+    throw new Error(`Placeholder "${key}" not found`);
+  }
+  return Object.entries(options).reduce((str, [k, v]) => str.replace(`{{${k}}}`, v), placeholders[key]);
+}
+
 /**
  * Builds hero block and prepends to main in a new section.
  * @param {Element} main The container element
@@ -204,6 +241,9 @@ export function loadScript(url, attrs, callback) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+
+  await window.hlx.plugins.run('loadEager');
+
   const main = doc.querySelector('main');
   if (main) {
     createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
@@ -347,6 +387,7 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
+  await window.hlx.plugins.run('loadLazy');
   loadHeader(doc.querySelector('header'));
   loadFooter(doc.querySelector('footer'));
 
@@ -368,13 +409,19 @@ async function loadLazy(doc) {
  * without impacting the user experience.
  */
 function loadDelayed() {
-  // eslint-disable-next-line import/no-cycle
-  window.setTimeout(() => import('./delayed.js'), 3000);
   // load anything that can be postponed to the latest here
+  window.setTimeout(() => {
+    window.hlx.plugins.load('delayed');
+    window.hlx.plugins.run('loadDelayed');
+    // eslint-disable-next-line import/no-cycle
+    return import('./delayed.js');
+  }, 3000);
 }
 
 async function loadPage() {
+  await window.hlx.plugins.load('eager');
   await loadEager(document);
+  await window.hlx.plugins.load('lazy');
   await loadLazy(document);
   loadDelayed();
 }
