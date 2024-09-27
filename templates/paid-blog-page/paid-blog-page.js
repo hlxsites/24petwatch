@@ -1,5 +1,3 @@
-console.log('paid-blog-page.js loaded');
-
 import {
   buildBlock,
   decorateBlock,
@@ -39,7 +37,6 @@ export async function loadEager(document) {
 
   // top
   createTableOfContents(main);
-  createTemplateBlock(main, 'article-author');
 
   // sidebar
   createTemplateBlock(main, 'article-cta');
@@ -54,14 +51,13 @@ export async function loadLazy(document) {
   heroTitleSection.classList.add('hero-title-container', 'section');
 
   const articleTitle = main.querySelector('h1');
-  const authorDiv = main.querySelector('.article-author-container');
-  authorDiv.classList.remove('section');
+  const authorTitle = main.querySelector('h2');
   const heroImgContainer = main.querySelectorAll('p')[0];
   heroImgContainer.classList.add('hero-pic-div');
 
-  heroTitleSection.append(articleTitle);
-  heroTitleSection.append(authorDiv);
   heroTitleSection.append(heroImgContainer);
+  heroTitleSection.append(articleTitle);
+  heroTitleSection.append(authorTitle);
   main.prepend(heroTitleSection);
 
   const contentSection = main.querySelectorAll('.section')[1];
