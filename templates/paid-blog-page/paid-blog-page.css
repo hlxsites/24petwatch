@@ -31,12 +31,23 @@
   min-height: fit-content;
 }
 
+.paid-blog-page .hero-title-container > * {
+  text-align: left;
+}
+
 .paid-blog-page .hero-title-container h1 {
   color: #000;
   margin-top: 0;
   font-size: 1.75rem;
   font-weight: 700;
   line-height: 1.17;
+}
+
+.paid-blog-page .hero-title-container h2 {
+  font-size: 1.3125rem;
+  line-height: 1.5;
+  font-weight: 300;
+  color: var(--heading-text-color);
 }
 
 .section.article-content-container {
@@ -72,6 +83,10 @@
 
   ol + p {
     margin-top: 2rem;
+  }
+
+  > p:first-child {
+    margin-top: 0;
   }
 }
 
@@ -143,6 +158,7 @@
     }
 
     a.button {
+      margin: 0;
       width: auto;
     }
   }
