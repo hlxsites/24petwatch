@@ -8,8 +8,6 @@ import {
   isMobile,
 } from '../../scripts/scripts.js';
 
-// import { pushToDataLayer } from '../../scripts/utils/helpers.js';
-
 function createTableOfContents(main) {
   const hasToc = getMetadata('has-toc');
   if (!hasToc) {

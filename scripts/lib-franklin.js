@@ -623,7 +623,7 @@ export function decorateButtons(element) {
       const down = a.firstElementChild;
       const twoup = a.parentElement.parentElement;
       if (!a.querySelector('img')) {
-        if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV')) {
+        if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV') && twoup.parentElement.className !== 'mega-nav' && twoup.parentElement.parentElement.className !== 'login') {
           a.className = 'button'; // default
           up.classList.add('button-container');
           if (a.childElementCount === 1 && down.tagName === 'STRONG') {

@@ -300,6 +300,18 @@ function instrumentTrackingEvents(main) {
           trackGTMEvent('cta_click', eventData);
         };
 
+        // Body CTAs
+        const handleBodyCtaClicks = () => {
+          const callOuts = document.querySelectorAll('.callout-get-a-quote');
+          if (!callOuts) return;
+          callOuts.forEach((callOut, i) => {
+            callOut.addEventListener('click', () => {
+              ctaLocation = `body_${i + 1}_cta`;
+              trackCTAEvent(ctaLocation);
+            });
+          });
+        };
+
         // track cta clicks on main
         if (e.target.classList.contains('button')) {
           // track clicks on the Pumpkin Wellness Club page
@@ -332,6 +344,9 @@ function instrumentTrackingEvents(main) {
             return;
 
           // track clicks on every other anchor with a button class
+          } else if (window.location.pathname.includes('/paid-blog-page')) {
+            handleBodyCtaClicks();
+            return;
           } else {
             trackCTAEvent(null);
             return;
@@ -355,11 +370,27 @@ function instrumentTrackingEvents(main) {
           if (e.target.closest('.faq-paid-membership')) {
             ctaLocation = 'faq_cta';
           }
-
           trackCTAEvent(ctaLocation);
         }
       });
     });
+
+  if (window.location.pathname.includes('/paid-blog-page')) {
+    // Sidebar Btns
+    const sidebarBtns = document.querySelectorAll('.sidebar-right button');
+    if (!sidebarBtns) return;
+    sidebarBtns.forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        const eventData = {
+          link_text: (e.target.textContent || '').trim(),
+          link_url: e.target.href,
+          cta_location: 'sidebar_cta',
+        };
+
+        trackGTMEvent('cta_click', eventData);
+      });
+    });
+  }
 }
 
 function cleanLocalhostLinks(main) {
