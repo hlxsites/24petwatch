@@ -164,7 +164,6 @@ export function toCamelCase(name) {
  * @returns an array of HTMLElement nodes that match the given scope
  */
 export function getAllMetadata(scope) {
-  console.log('run get all metadata');
   return [...document.head.querySelectorAll(`meta[property^="${scope}:"],meta[name^="${scope}-"]`)]
     .reduce((res, meta) => {
       const id = toClassName(meta.name
