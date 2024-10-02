@@ -143,14 +143,17 @@
   }
 
   .callout-get-a-quote {
+
     > div > div {
       display: flex;
       align-items: center;
+      gap: 2rem;
     }
 
     h2 {
-      font-size: 1.625rem;
-      line-height: 1.908;
+      font-size: 1.375rem;
+      line-height: 1.625rem;
+      text-align: left;
     }
 
     .button-container {

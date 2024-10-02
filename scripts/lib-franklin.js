@@ -724,9 +724,9 @@ export function loadHeader(header) {
  */
 export function loadFooter(footer) {
   let footerBlock = '';
-  if (!document.body.classList.contains('paid')) {
+  if (!document.body.className.includes('paid')) {
     footerBlock = buildBlock('footer', '');
-  } else if (document.body.classList.contains('paid')) {
+  } else if (document.body.className.includes('paid')) {
     // Load special footer for paid section of the website
     footerBlock = buildBlock('footer-paid', '');
   }
