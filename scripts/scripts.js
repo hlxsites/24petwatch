@@ -300,18 +300,6 @@ function instrumentTrackingEvents(main) {
           trackGTMEvent('cta_click', eventData);
         };
 
-        // Body CTAs
-        const handleBodyCtaClicks = () => {
-          const callOuts = document.querySelectorAll('.callout-get-a-quote');
-          if (!callOuts) return;
-          callOuts.forEach((callOut, i) => {
-            callOut.addEventListener('click', () => {
-              ctaLocation = `body_${i + 1}_cta`;
-              trackCTAEvent(ctaLocation);
-            });
-          });
-        };
-
         // track cta clicks on main
         if (e.target.classList.contains('button')) {
           // track clicks on the Pumpkin Wellness Club page
@@ -339,13 +327,12 @@ function instrumentTrackingEvents(main) {
               ctaLocation = 'lpm_plus_cta';
             } else if (linkUrl.includes('annual-protection-membership')) {
               ctaLocation = 'annual_cta';
+            } else if (e.target.closest('.callout-get-a-quote1')) {
+              ctaLocation = 'body_1_cta';
+            } else if (e.target.closest('.callout-get-a-quote2')) {
+              ctaLocation = 'body_2_cta';
             }
             trackCTAEvent(ctaLocation);
-            return;
-
-          // track clicks on every other anchor with a button class
-          } else if (window.location.pathname.includes('/paid-blog-page')) {
-            handleBodyCtaClicks();
             return;
           } else {
             trackCTAEvent(null);
@@ -374,23 +361,6 @@ function instrumentTrackingEvents(main) {
         }
       });
     });
-
-  if (window.location.pathname.includes('/paid-blog-page')) {
-    // Sidebar Btns
-    const sidebarBtns = document.querySelectorAll('.sidebar-right button');
-    if (!sidebarBtns) return;
-    sidebarBtns.forEach((btn) => {
-      btn.addEventListener('click', (e) => {
-        const eventData = {
-          link_text: (e.target.textContent || '').trim(),
-          link_url: e.target.href,
-          cta_location: 'sidebar_cta',
-        };
-
-        trackGTMEvent('cta_click', eventData);
-      });
-    });
-  }
 }
 
 function cleanLocalhostLinks(main) {
