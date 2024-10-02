@@ -26,7 +26,7 @@ export default async function decorate(block) {
   button.textContent = 'Get Started';
   button.addEventListener('click', (e) => {
     e.preventDefault();
-    window.open('/pet-insurance', '_blank');
+    window.open('/lost-pet-protection/membership', '_blank');
   });
 
   block.append(heading);
