@@ -314,7 +314,7 @@ function instrumentTrackingEvents(main) {
             trackCTAEvent(ctaLocation);
 
           // track .button cta clicks for paid pages
-          } else if (body.classList.contains('paid')) {
+          } else if (body.className.includes('paid')) {
             if (e.target.closest('.hero-paid-membership')) {
               ctaLocation = 'hero_cta';
             } else if (e.target.closest('.lifetime-paid-membership')) {
