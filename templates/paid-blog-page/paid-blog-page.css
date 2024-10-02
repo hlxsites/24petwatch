@@ -90,6 +90,10 @@
   }
 }
 
+.sidebar-right {
+  display: none;
+}
+
 .sidebar-right h2 {
   font-size: 1.5rem;
 }
@@ -121,12 +125,8 @@
 
   .paid-blog-page > main {
     display: grid;
-    grid-template:
-      '. left-side .. right-side .' min-content
-      / minmax(1rem, 1fr) minmax(420px, 670px) minmax(1rem, 80px) minmax(
-        280px,
-        370px
-      )
+    grid-template: '. left-side .. right-side .' min-content
+      / minmax(1rem, 1fr) minmax(420px, 670px) 
       minmax(1rem, 1fr);
     padding: 2.5rem 0 5rem;
   }
