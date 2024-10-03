@@ -71,6 +71,7 @@ div[class*="pawpack"] {
       @media (min-width: 768px) {
         font-size: var(--heading-font-size-m);
         line-height: var(--heading-line-height-m);
+        text-align: left;
       }
     }
 
@@ -144,6 +145,8 @@ div[class*="pawpack"] {
 /* Carousel */
 .pawpack-carousel {
   .default-content-wrapper {
+    text-align: center;
+
     h2 {
       font-size: var(--heading-font-size-s);
       line-height: var(--heading-line-height-s);
@@ -189,9 +192,17 @@ div[class*="pawpack"] {
     }
 
     img {
+      height: 165px;
+
       @media (min-width: 768px) {
         height: 302px;
       }
+    }
+  }
+
+  .carousel > .active {
+    @media (max-width: 767px) {
+      grid-template-rows: 2fr 4fr;
     }
   }
 
