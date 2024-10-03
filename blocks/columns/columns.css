@@ -50,6 +50,11 @@ main .lost-pet-data > div div {
   border: none;
 }
 
+.columns-home-pumpkin-wellness .button-container ~ p {
+  font-size: 0.625rem;
+  color: #333F48;
+}
+
 .columns.transfer-microchip-registration-how-to > div {
   align-items: self-start;
   flex-direction: column-reverse;
