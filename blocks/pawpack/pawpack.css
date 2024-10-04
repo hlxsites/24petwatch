@@ -133,6 +133,10 @@ div[class*="pawpack"] {
   }
 }
 
+.pawpack-cat {
+  background-color: #ECEDEE;
+}
+
 /* Last Carousel */
 .pawpack-cat + .pawpack-carousel {
   padding-bottom: 0;
