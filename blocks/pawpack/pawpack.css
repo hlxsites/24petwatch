@@ -34,6 +34,7 @@ div[class*="pawpack"] {
   }
 
   h2 {
+    font-family: var(--body-font-family);
     font-size: var(--body-font-size-l);
     line-height: var(--body-line-height-l);
     
@@ -187,8 +188,15 @@ div[class*="pawpack"] {
 
     h2 ~ p {
       font-size: 1.125rem; /* 18px */
+      font-weight: 350;
       line-height: 1.75rem; /* 28px */
+    }
 
+    h2 ~ p:last-of-type em {
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.75rem; /* 28px */
+      font-weight: 400;
+      color: #000;
     }
 
     img {
