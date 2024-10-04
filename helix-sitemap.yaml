@@ -4,14 +4,14 @@ sitemaps:
     source: /query-index.json
     destination: /sitemap.xml
   site_ca:
-    origin: https://www.24petwatch.com/ca
+    origin: https://www.24petwatch.com
     source: /ca/query-index.json
     destination: /ca/sitemap.xml
   blog_us:
-    origin: https://www.24petwatch.com/blog
+    origin: https://www.24petwatch.com
     source: /blog/query-index.json
-    destination: /blog-sitemap.xml
+    destination: /blog/blog-sitemap.xml
   blog_ca:
-    origin: https://www.24petwatch.com/ca/blog
+    origin: https://www.24petwatch.com
     source: /ca/blog/query-index.json
-    destination: /ca/blog-sitemap.xml
+    destination: /ca/blog/blog-sitemap.xml
