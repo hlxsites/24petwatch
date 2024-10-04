@@ -20,6 +20,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   let petsList = [];
   let selectedProducts = [];
   let purchaseSummary = {};
+  let totalShipping = 0;
 
   // eslint-disable-next-line no-shadow
   async function getPurchaseSummary(ownerId) {
@@ -62,6 +63,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
     try {
       purchaseSummary = await getPurchaseSummary(ownerData.id);
+
+      totalShipping = purchaseSummary.petSummaries.reduce((sum, pet) => {
+        const shipping = pet.nonInsurancePetSummary?.shipping || 0;
+        return sum + shipping;
+      }, 0);
     } catch (status) {
       // eslint-disable-next-line no-console
       console.log('Failed to get the purchase summary for owner:', ownerData.id, ' status:', status);
@@ -175,6 +181,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             <div>Monthly Fee</div>
             <div>$0.00</div>
         </div>
+        ${(totalShipping > 0) ? `<div><div>Shipping of Tag</div><div>$${totalShipping.toFixed(2)}</div></div>` : ''}
         <div>
             <div>Subtotal</div>
             <div>$${purchaseSummary.summary.subTotal}</div>

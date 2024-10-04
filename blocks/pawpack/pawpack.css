@@ -1,0 +1,221 @@
+/* stylelint-disable no-descending-specificity */
+
+div[class*="pawpack"] {
+  --heading-font-size-xs: 1.3125rem; /* 21px */
+  --heading-line-height-xs: 1.938rem; /* 31px */
+  --heading-font-size-s: 1.625rem; /* 26px */
+  --heading-line-height-s: 2.25rem; /* 36px */
+  --heading-font-size-m: 2.188rem; /* 35px */
+  --heading-line-height-m: 2.8125rem; /* 45px */
+  --heading-font-size-xl: 3rem; /* 48px */
+  --heading-line-height-xl: 3.625rem; /* 58px */
+  --body-font-size-xs: .75rem; /* 12px */
+  --body-line-height-xs: 1.3125rem; /* 21px */
+  --body-line-height-l: 2.125rem; /* 34px */
+  --body-font-size-xl: 1.75rem; /* 28px */
+  --body-line-height-xl: 2.375rem; /* 38px */
+}
+
+
+.packpack-container {
+  display: none;
+}
+
+/* Hero */
+.pawpack-hero {
+  h1 {
+    position: absolute;
+    top: auto;
+    overflow: hidden;
+    clip: rect(1px, 1px, 1px, 1px);
+    width: 1px;
+    height: 1px;
+    white-space: nowrap;
+  }
+
+  h2 {
+    font-size: var(--body-font-size-l);
+    line-height: var(--body-line-height-l);
+    
+    @media (min-width: 768px) {
+      font-size: var(--body-font-size-xl);
+      line-height: var(--body-line-height-xl);
+    }
+  }
+
+  .button-container a {
+    margin-top: 32px;
+  }
+}
+
+/* Callout */
+.pawpack-callout {
+  .default-content-wrapper {
+    display: flex;
+    align-items: center;
+    padding-block: 32px;
+
+    @media (min-width: 768px) {
+      gap: 38px;
+    }
+
+    > p,
+    > h2 {
+      margin: 0;
+    }
+
+    h2 {
+      font-size: var(--heading-font-size-xs);
+      line-height: var(--heading-line-height-xs);
+
+      @media (min-width: 768px) {
+        font-size: var(--heading-font-size-m);
+        line-height: var(--heading-line-height-m);
+        text-align: left;
+      }
+    }
+
+    @media (max-width: 767px) {
+      flex-direction: column;
+    }
+  }
+}
+
+/* Dog / Cat */
+.pawpack-dog,
+.pawpack-cat {
+  .columns > div {
+    @media (max-width: 767px) {
+      flex-direction: column-reverse;
+    }
+  } 
+
+  h2, h3 {
+    font-size: var(--heading-font-size-m);
+    line-height: var(--heading-line-height-m);
+  }
+
+  h2 {
+    @media (min-width: 768px) {
+      font-size: var(--heading-font-size-xl);
+      line-height: var(--heading-line-height-xl);
+    }
+  }
+
+  h2 + p {
+    font-size: var(--body-font-size-l);
+    line-height: var(--body-line-height-l);
+  }
+
+  h3 + p {
+    font-size: 1.25rem; /* 20px */
+    line-height: 1.5625rem; /* 25px */
+  }
+
+  .button-container + h4 {
+    margin-top: 56px;
+    padding: 8px 0;
+    font-size: var(--body-font-size-l);
+    line-height: var(--body-line-height-l);
+    color: #007680;
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+
+    @media (min-width: 768px) {
+      margin-top: 0;
+    }
+  }
+
+  ul ~ p {
+    font-size: var(--body-font-size-xs);
+    line-height: var(--body-line-height-xs);
+  }
+}
+
+/* Last Carousel */
+.pawpack-cat + .pawpack-carousel {
+  padding-bottom: 0;
+
+  .carousel-wrapper + .default-content-wrapper picture {
+    display: flex;
+    justify-content: center;
+  }
+}
+
+/* Carousel */
+.pawpack-carousel {
+  .default-content-wrapper {
+    text-align: center;
+
+    h2 {
+      font-size: var(--heading-font-size-s);
+      line-height: var(--heading-line-height-s);
+
+      @media (min-width: 768px) {
+        font-size: 2.375rem; /* 38px */
+        line-height: 2.4375rem; /* 39px */
+      }
+    }
+
+    > p,
+    > h2 {
+      margin: 0;
+    }
+
+    > h2 + p,
+    > .button-container {
+      margin-top: 32px;
+    }
+
+    > h2 + p {
+      font-size: var(--body-font-size-l);
+      line-height: var(--body-line-height-l);
+    }
+  }
+  
+  .carousel-wrapper {/* 
+    border: 1px solid #666A6C; */
+
+    h2 {
+      color: #007680;
+
+      @media (min-width: 768px) {
+        font-size: var(--heading-font-size-s); /* 26px */
+        line-height: var(--heading-line-height-s); /* 36px */
+      }
+    }
+
+    h2 ~ p {
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.75rem; /* 28px */
+
+    }
+
+    img {
+      height: 165px;
+
+      @media (min-width: 768px) {
+        height: 302px;
+      }
+    }
+  }
+
+  .carousel > .active {
+    @media (max-width: 767px) {
+      grid-template-rows: 2fr 4fr;
+    }
+  }
+
+  .carousel > .active > div:first-child {
+    > * {
+      text-align: left;
+    }
+  }
+
+  .carousel > .active > div:last-child {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 252px;
+  }
+}
