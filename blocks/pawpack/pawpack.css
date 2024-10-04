@@ -174,8 +174,9 @@ div[class*="pawpack"] {
     }
   }
   
-  .carousel-wrapper {/* 
-    border: 1px solid #666A6C; */
+  .carousel-wrapper {
+    margin-top: 34px;
+    border: 1px solid #666A6C;
 
     h2 {
       color: #007680;
