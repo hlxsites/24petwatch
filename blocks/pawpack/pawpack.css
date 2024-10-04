@@ -196,7 +196,7 @@ div[class*="pawpack"] {
     h2 ~ p:last-of-type em {
       font-size: 1.125rem; /* 18px */
       line-height: 1.75rem; /* 28px */
-      font-weight: 400;
+      font-weight: 700;
       color: #000;
     }
 
