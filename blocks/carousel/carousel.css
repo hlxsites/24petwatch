@@ -20,7 +20,8 @@ main .carousel img {
     margin: 0 auto;
 }
 
-.section.pet-tags > .carousel-wrapper > div {
+.section.pet-tags > .carousel-wrapper > div,
+.section.pawpack-carousel > .carousel-wrapper > div {
     margin: 3rem;
 }
 

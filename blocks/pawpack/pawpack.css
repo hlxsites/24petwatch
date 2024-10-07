@@ -34,6 +34,7 @@ div[class*="pawpack"] {
   }
 
   h2 {
+    font-family: var(--body-font-family);
     font-size: var(--body-font-size-l);
     line-height: var(--body-line-height-l);
     
@@ -132,6 +133,10 @@ div[class*="pawpack"] {
   }
 }
 
+.pawpack-cat {
+  background-color: #ECEDEE;
+}
+
 /* Last Carousel */
 .pawpack-cat + .pawpack-carousel {
   padding-bottom: 0;
@@ -173,8 +178,9 @@ div[class*="pawpack"] {
     }
   }
   
-  .carousel-wrapper {/* 
-    border: 1px solid #666A6C; */
+  .carousel-wrapper {
+    margin-top: 34px;
+    border: 1px solid #666A6C;
 
     h2 {
       color: #007680;
@@ -187,8 +193,15 @@ div[class*="pawpack"] {
 
     h2 ~ p {
       font-size: 1.125rem; /* 18px */
+      font-weight: 350;
       line-height: 1.75rem; /* 28px */
+    }
 
+    h2 ~ p:last-of-type em {
+      font-size: 1.125rem; /* 18px */
+      line-height: 1.75rem; /* 28px */
+      font-weight: 700;
+      color: #000;
     }
 
     img {
