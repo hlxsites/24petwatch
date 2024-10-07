@@ -3,11 +3,7 @@
   width: 100%;
   height: 350px;
 
-  @media (max-width: 1024px) {
+  @media (max-width: 812px) {
     height: 750px;
   }
-}
-
-.article-page .widget-aggregator iframe {
-  height: 750px;
 }
