@@ -475,6 +475,7 @@ export default async function decorate(block) {
     if (membershipsHoverContent.style.display === 'flex') {
       membershipsHoverContent.style.display = 'none';
       membershipDiv.className = 'before-click';
+      toggleMenu(nav, nav);
     } else {
       registerHoverContent.style.display = 'none';
       registerDiv.className = 'before-click';
