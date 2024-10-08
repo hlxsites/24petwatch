@@ -619,25 +619,11 @@ export function decorateButtons(element) {
     a.title = a.title || a.textContent;
     if (a.href !== a.textContent) {
       const up = a.parentElement;
-      const down = a.firstElementChild;
       const twoup = a.parentElement.parentElement;
       if (!a.querySelector('img')) {
-        if (up.childNodes.length === 1 && (up.tagName === 'P' || up.tagName === 'DIV') && twoup.parentElement.className !== 'mega-nav' && twoup.parentElement.parentElement.className !== 'login') {
-          a.className = 'button'; // default
-          up.classList.add('button-container');
-          if (a.childElementCount === 1 && down.tagName === 'STRONG') {
-            a.classList.add('cta');
-            a.innerHTML = down.innerHTML;
-          } else if (a.childElementCount === 1 && down.tagName === 'EM') {
-            a.classList.add('secondary');
-            a.innerHTML = down.innerHTML;
-          } else {
-            a.classList.add('primary');
-          }
-        }
         if (up.childNodes.length === 1 && up.tagName === 'STRONG'
           && twoup.childNodes.length === 1 && twoup.tagName === 'P') {
-          a.className = 'button cta';
+          a.className = 'button primary';
           twoup.classList.add('button-container');
         }
         if (up.childNodes.length === 1 && up.tagName === 'EM'
@@ -647,12 +633,6 @@ export function decorateButtons(element) {
         }
       }
     }
-  });
-  // If we have several primary buttons after one other
-  // then just add them to the same container
-  document.querySelectorAll('.button-container + .button-container').forEach((c) => {
-    c.previousElementSibling.append(c.firstElementChild);
-    c.remove();
   });
 }
 
