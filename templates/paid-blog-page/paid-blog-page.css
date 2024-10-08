@@ -112,6 +112,30 @@
     line-height: 1.5;
     color: #333;
   }
+
+  h2 + p {
+    margin: 0;
+  }
+
+  a {
+    font-family: var(--body-font-family);
+    display: block;
+    box-sizing: border-box;
+    text-decoration: none;
+    border: 2px solid transparent;
+    padding: .875rem 1.625rem;
+    text-align: center;
+    font-style: normal;
+    font-weight: 600;
+    cursor: pointer;
+    color: var(--background-color);
+    background-color: var(--button-primary-color);
+    margin: 16px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border-radius: .625rem;
+  }
 }
 
 @media (min-width: 768px) {
@@ -156,12 +180,8 @@
       text-align: left;
     }
 
-    .button-container {
+    a {
       margin: 0 0 0 auto;
-    }
-
-    a.button {
-      margin: 0;
       width: auto;
     }
   }
