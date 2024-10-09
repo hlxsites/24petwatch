@@ -5,6 +5,22 @@ application:
       24petwatch-appbuilder:
         license: Apache-2.0
         actions:
+          authentication-salesforce:
+            function: actions/salesforce-abandoned-cart/authentication.js
+            web: 'yes'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              SALESFORCE_CLIENT_ID: $SALESFORCE_CLIENT_ID
+              SALESFORCE_CLIENT_SECRET: $SALESFORCE_CLIENT_SECRET
+              SALESFORCE_BASE_URI: $SALESFORCE_BASE_URI
+          salesfore-event:
+            function: actions/salesforce-abandoned-cart/salesforce.js
+            web: 'yes'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              SALESFORCE_REST_URI: $SALESFORCE_REST_URI
           contact-form:
             function: actions/contact-form/index.js
             web: 'yes'
