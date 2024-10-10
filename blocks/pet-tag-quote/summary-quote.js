@@ -476,6 +476,30 @@ async function proceedToPayment() {
     showGeneralErrorMessage('Please select at least one pet tag before proceeding to payment.');
     return;
   }
+
+  try {
+    await fetch('https://462515-24petwatch-dev.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-salesforce-services', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        data: {
+          EmailAddress: 'example@example.com',
+          OrderCompleted: false,
+          OwnerId: '12123123',
+          PetId: '123123123',
+          PetName: 'Bonita',
+          SiteURL: 'https://24petwtach.com',
+          Species: 'Dog',
+        },
+      }),
+    });
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('There was an error when sending the data to Salesforce:');
+  }
+
   // prepare payment transaction
   const apiErrorMsg = 'Failed to create the payment transaction. Please try again later.';
   const endPoint = 'Transaction/PostSalesForPayment';
