@@ -7,7 +7,7 @@ application:
         actions:
           authentication-salesforce:
             function: actions/salesforce-abandoned-cart/authentication.js
-            web: 'yes'
+            web: 'no'
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
@@ -18,11 +18,12 @@ application:
               SALESFORCE_SCOPES: "data_extensions_write data_extensions_read journeys_read list_and_subscribers_read"
           salesfore-event:
             function: actions/salesforce-abandoned-cart/salesforce.js
-            web: 'yes'
+            web: 'no'
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
               SALESFORCE_REST_URI: $SALESFORCE_REST_URI
+              SALESFORCE_EVENT_DEFINITION: "APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1"
           contact-form:
             function: actions/contact-form/index.js
             web: 'yes'
@@ -60,4 +61,7 @@ application:
         sequences:
           proxy-pethealth-services:
             actions: authentication-pethealth, service-pethealth
+            web: 'yes'
+          proxy-salesforce-services:
+            actions: authentication-salesforce, salesfore-event
             web: 'yes'

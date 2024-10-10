@@ -17,12 +17,12 @@ const fetch = require('node-fetch')
 const { Core } = require('@adobe/aio-sdk')
 const { errorResponse, stringParameters, checkMissingRequestInputs } = require('../utils')
 
-const cache = {};
+let logger;
 
 // main function that will be executed by Adobe I/O Runtime
 async function main(params) {
   // create a Logger
-  const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' })
+  logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' })
 
   try {
     // 'info' is the default level if not set
@@ -31,8 +31,17 @@ async function main(params) {
     // log parameters, only if params.LOG_LEVEL === 'debug'
     logger.error(stringParameters(params))
 
+    if (params.__ow_method !== 'post') {
+        return errorResponse(405, 'Only POST allowed', logger)
+    }
+
     // check for missing request input parameters and headers
-    const requiredParams = [ 'SALESFORCE_TOKEN', 'SALESFORCE_REST_URI']
+    const requiredParams = [
+        'SALESFORCE_TOKEN',
+        'SALESFORCE_REST_URI',
+        'SALESFORCE_EVENT_DEFINITION',
+        'data'
+    ]
     const requiredHeaders = []
     const errorMessage = checkMissingRequestInputs(params, requiredParams, requiredHeaders)
     if (errorMessage) {
@@ -40,9 +49,17 @@ async function main(params) {
       return errorResponse(400, errorMessage, logger)
     }
 
-    const url = `${params['SALESFORCE_REST_URI']}${params.__ow_path}`
+    const data = {"Data": params.data};
+    if (params.data['EmailAddress'] !== undefined) {
+        data['ContactKey'] = params.data['EmailAddress'];
+    }
+    data['EventDefinitionKey'] = params.SALESFORCE_EVENT_DEFINITION;
 
-    return await performRequest(params.__ow_method, url, params.PETHEALTH_TOKEN, queryParams, payload)
+
+    //const url = new URL('/interaction/v1/events', params.SALESFORCE_REST_URI);
+    const url = new URL('https://webhook.site/72f3d3b9-a9d4-4ed2-aaf8-609fba3e4d1c')
+
+    return await performRequest('post', url.toString(), params.SALESFORCE_TOKEN, [], data)
   } catch (error) {
     // log any server errors
     logger.error(error)

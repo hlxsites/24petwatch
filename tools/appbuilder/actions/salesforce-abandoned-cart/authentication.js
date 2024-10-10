@@ -55,10 +55,11 @@ async function main(params) {
     );
 
     if (!token) {
+      return { SALESFORCE_TOKEN: 'fake-token', ...params }
       return errorResponse(401, 'Authenticaction failed', logger)
     }
 
-    return {status: 200, body: {SALESFORCE_TOKEN: token, ...params}}
+    return {SALESFORCE_TOKEN: token, ...params}
     //return errorResponse(500, 'server error', logger)
   } catch (error) {
     // log any server errors
@@ -103,7 +104,6 @@ async function fetchToken(client_id, client_secret, account_id, scope, authUrl) 
 
     const response = await (res.json())
     logger.debug('response', response)
-    throw new Error('error fetching token')
 
     return response.access_token;
 }
