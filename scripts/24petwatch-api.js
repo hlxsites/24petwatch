@@ -109,7 +109,7 @@ export default class APIClient {
   }
 
   getPaymentCustomerIDFromUUID(customerUUID) {
-    const path = '/Transaction/GetPaymentCustomerIDFromUUID';
+    const path = 'Transaction/GetPaymentCustomerIDFromUUID';
     const body = { CustomerUUID: customerUUID };
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, body, null, resolve, reject, 'json');

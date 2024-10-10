@@ -105,7 +105,7 @@ export default async function decorate() {
   const { externalTransactionID, paymentMethod } = transactionDetails;
 
   const h1 = document.querySelector('h1');
-  const { firstName, lastName, nonInsPromoCode } = getOwnerDetails;
+  const { cartFlow, firstName, lastName, nonInsPromoCode } = getOwnerDetails;
   const { petSummaries } = getPurchaseSummaryDetails;
   const contentColumn = document.querySelector('.thank-you-purchase .columns > div:nth-child(1) > div');
 
@@ -165,7 +165,7 @@ export default async function decorate() {
     shipping: petSummaries[0].nonInsurancePetSummary.shipping,
     coupon: nonInsPromoCode,
     ga_session_id: '',
-    flow: 'membership',
+    flow: cartFlow,
     customerid: getOwnerDetails.id,
   };
 
