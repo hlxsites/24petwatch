@@ -131,6 +131,14 @@ export default class APIClient {
     });
   }
 
+  getTransaction(customerUUID) {
+    const path = '/Product/NonInsurance/GetTransaction';
+    const body = { CustomerUUID: customerUUID };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, body, null, resolve, reject, 'json');
+    });
+  }
+
   /** Creates or Updates an owner, depending on whether the ownerId is provided.
    * @param ownerId - if provided, the owner will be updated, otherwise a new owner will be created
    * @param email - string

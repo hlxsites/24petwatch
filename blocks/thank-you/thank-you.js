@@ -3,6 +3,7 @@ import {
   COOKIE_NAME_SAVED_OWNER_ID,
   deleteCookie,
 } from '../../scripts/24petwatch-utils.js';
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
 // prep for API calls
 const apiBaseUrl = await getAPIBaseUrl();
@@ -70,6 +71,18 @@ async function postEmailReceipt(ownerId) {
   }
 }
 
+// Step 7 - get transaction details
+async function getTransaction(paymentProcessorId) {
+  try {
+    const data = await APIClientObj.getTransaction(paymentProcessorId);
+    return data;
+  } catch (status) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to get the transaction details:', status);
+    return [];
+  }
+}
+
 export default async function decorate() {
   // delete cookie with customer id
   deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
@@ -88,8 +101,11 @@ export default async function decorate() {
 
   await postEmailReceipt(getOwnerDetails.id);
 
+  const transactionDetails = await getTransaction(paymentProcessorId);
+  const { externalTransactionID, paymentMethod } = transactionDetails;
+
   const h1 = document.querySelector('h1');
-  const { firstName, lastName } = getOwnerDetails;
+  const { firstName, lastName, nonInsPromoCode } = getOwnerDetails;
   const { petSummaries } = getPurchaseSummaryDetails;
   const contentColumn = document.querySelector('.thank-you-purchase .columns > div:nth-child(1) > div');
 
@@ -137,6 +153,24 @@ export default async function decorate() {
   totals.innerHTML += total;
 
   contentColumn.appendChild(totals);
+
+  const trackingData = {
+    microchip_number: petSummaries[0].microChipNumber,
+    product_type: 'membership',
+    transaction_id: externalTransactionID,
+    affiliation: '24petwatch',
+    tax: summary.salesTaxes,
+    payment_type: paymentMethod,
+    value: summary.totalDueToday,
+    shipping: petSummaries[0].nonInsurancePetSummary.shipping,
+    coupon: nonInsPromoCode,
+    ga_session_id: '',
+    flow: 'purchase',
+    customerid: getOwnerDetails.id,
+  };
+
+  // send the GTM event
+  trackGTMEvent('purchase', trackingData);
 
   const printButton = document.createElement('button');
   printButton.classList.add('button');
