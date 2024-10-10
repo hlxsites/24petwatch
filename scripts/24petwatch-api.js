@@ -132,7 +132,7 @@ export default class APIClient {
   }
 
   getTransaction(customerUUID) {
-    const path = '/Product/NonInsurance/GetTransaction';
+    const path = 'Product/NonInsurance/GetTransaction';
     const body = { CustomerUUID: customerUUID };
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, body, null, resolve, reject, 'json');
