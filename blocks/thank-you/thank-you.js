@@ -165,7 +165,7 @@ export default async function decorate() {
     shipping: petSummaries[0].nonInsurancePetSummary.shipping,
     coupon: nonInsPromoCode,
     ga_session_id: '',
-    flow: 'purchase',
+    flow: 'membership',
     customerid: getOwnerDetails.id,
   };
 
