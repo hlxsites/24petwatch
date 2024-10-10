@@ -16,7 +16,7 @@
 const fetch = require('node-fetch')
 const { Core } = require('@adobe/aio-sdk')
 const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
-
+let logger;
 
 const cache = {
   date: 0,
@@ -26,7 +26,7 @@ const cache = {
 // main function that will be executed by Adobe I/O Runtime
 async function main(params) {
   // create a Logger
-  const logger = Core.Logger('main', { level: 'debug' })
+  logger = Core.Logger('main', { level: 'debug' })
 
   try {
     // 'info' is the default level if not set
@@ -37,7 +37,7 @@ async function main(params) {
     logger.error(stringParameters(cache))
 
     // check for missing request input parameters and headers
-    const requiredParams = [ 'SALESFORCE_CLIENT_ID' , 'SALESFORCE_CLIENT_SECRET', 'SALESFORCE_AUTH_URI']
+    const requiredParams = [ 'SALESFORCE_CLIENT_ID' , 'SALESFORCE_CLIENT_SECRET', 'SALESFORCE_AUTH_URI', 'SALESFORCE_ACCOUNT_ID']
     const requiredHeaders = []
     const errorMessage = checkMissingRequestInputs(params, requiredParams, requiredHeaders)
     if (errorMessage) {
@@ -46,10 +46,11 @@ async function main(params) {
     }
 
     const authUrl = new URL('/v2/token', params.SALESFORCE_AUTH_URI);
-    logger.debug('authUrl', authUrl);
     const token = await getToken(
       params.SALESFORCE_CLIENT_ID,
-      params.SALESFORCE_CLIENT_SECRET, 
+      params.SALESFORCE_CLIENT_SECRET,
+      params.SALESFORCE_ACCOUNT_ID,
+      params.SALESFORCE_SCOPES || false,
       authUrl.toString()
     );
 
@@ -67,24 +68,29 @@ async function main(params) {
   }
 }
 
-async function getToken(user, key, authUrl) {
+async function getToken(user, key, accountId, scope, authUrl) {
     const now = Date.now();
     if (cache.date === undefined || now - cache.date > 60 * 60 * 3) {
         cache.date = now;
-        cache.token = await fetchToken(user, key, authUrl);
+        cache.token = await fetchToken(user, key, accountId, scope, authUrl);
     }
 
     return cache.token;
 } 
 
-async function fetchToken(client_id, client_secret, authUrl) {
+async function fetchToken(client_id, client_secret, account_id, scope, authUrl) {
     const data ={
       "grant_type": "client_credentials",
       "client_id": client_id,
       "client_secret": client_secret,
-      "scope": "email_read email_write email_send",
-      "account_id": "12345"
+      "account_id": account_id
     }
+
+    if (scope) {
+      data.scope = scope;
+    }
+
+    logger.debug('data', data)
     const res = await fetch(authUrl, {
         method: 'POST',
         body: JSON.stringify(data),
@@ -96,6 +102,8 @@ async function fetchToken(client_id, client_secret, authUrl) {
     }
 
     const response = await (res.json())
+    logger.debug('response', response)
+    throw new Error('error fetching token')
 
     return response.access_token;
 }

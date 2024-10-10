@@ -13,7 +13,9 @@ application:
               LOG_LEVEL: debug
               SALESFORCE_CLIENT_ID: $SALESFORCE_CLIENT_ID
               SALESFORCE_CLIENT_SECRET: $SALESFORCE_CLIENT_SECRET
-              SALESFORCE_BASE_URI: $SALESFORCE_BASE_URI
+              SALESFORCE_AUTH_URI: $SALESFORCE_AUTH_URI
+              SALESFORCE_ACCOUNT_ID: $SALESFORCE_ACCOUNT_ID
+              SALESFORCE_SCOPES: "data_extensions_write data_extensions_read journeys_read list_and_subscribers_read"
           salesfore-event:
             function: actions/salesforce-abandoned-cart/salesforce.js
             web: 'yes'
