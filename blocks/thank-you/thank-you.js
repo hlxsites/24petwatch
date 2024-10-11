@@ -156,7 +156,7 @@ export default async function decorate() {
 
   const trackingData = {
     microchip_number: petSummaries[0].microChipNumber,
-    product_type: 'membership',
+    product_type: petSummaries[0].membershipName,
     transaction_id: externalTransactionID,
     affiliation: '24petwatch',
     tax: summary.salesTaxes,
@@ -164,7 +164,6 @@ export default async function decorate() {
     value: summary.totalDueToday,
     shipping: petSummaries[0].nonInsurancePetSummary.shipping,
     coupon: nonInsPromoCode,
-    ga_session_id: '',
     flow: cartFlow,
     customerid: getOwnerDetails.id,
   };
