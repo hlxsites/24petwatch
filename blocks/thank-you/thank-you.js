@@ -105,7 +105,9 @@ export default async function decorate() {
   const { externalTransactionID, paymentMethod } = transactionDetails;
 
   const h1 = document.querySelector('h1');
-  const { cartFlow, firstName, lastName, nonInsPromoCode } = getOwnerDetails;
+  const {
+    cartFlow, firstName, lastName, nonInsPromoCode,
+  } = getOwnerDetails;
   const { petSummaries } = getPurchaseSummaryDetails;
   const contentColumn = document.querySelector('.thank-you-purchase .columns > div:nth-child(1) > div');
 
