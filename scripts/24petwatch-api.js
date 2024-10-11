@@ -109,7 +109,7 @@ export default class APIClient {
   }
 
   getPaymentCustomerIDFromUUID(customerUUID) {
-    const path = '/Transaction/GetPaymentCustomerIDFromUUID';
+    const path = 'Transaction/GetPaymentCustomerIDFromUUID';
     const body = { CustomerUUID: customerUUID };
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, body, null, resolve, reject, 'json');
@@ -128,6 +128,14 @@ export default class APIClient {
     const path = 'Transaction/SendEmailReciptForPackageItem';
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}/${ownerId}`, APIClient.METHOD_POST, null, null, resolve, reject, 'json');
+    });
+  }
+
+  getTransaction(customerUUID) {
+    const path = 'Product/NonInsurance/GetTransaction';
+    const body = { CustomerUUID: customerUUID };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_GET, body, null, resolve, reject, 'json');
     });
   }
 
