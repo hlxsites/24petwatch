@@ -8,12 +8,14 @@ import {
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
+import { getConfigValue } from '../../scripts/configs.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
   const APIClientObj = new APIClient(apiBaseUrl);
   Loader.addLoader();
 
+  const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
 
   let ownerData = [];
@@ -71,6 +73,31 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     } catch (status) {
       // eslint-disable-next-line no-console
       console.log('Failed to get the purchase summary for owner:', ownerData.id, ' status:', status);
+    }
+
+    // Send data for abandoned cart journey
+    try {
+      await fetch(salesforceProxyEndpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            ContactKey: ownerData.email,
+            EmailAddress: ownerData.email,
+            OrderCompleted: false,
+            OwnerId: ownerData.id,
+            PetId: selectedProducts.petID,
+            PetName: petsList[0].petName,
+            SiteURL: 'https://24petwtach.com',
+            Species: petsList[0].speciesId === '1' ? 'Dog' : 'Cat',
+          },
+        }),
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('There was an error when sending the data to Salesforce:');
     }
   }
   Loader.hideLoader();
