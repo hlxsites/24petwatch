@@ -8,12 +8,14 @@ import {
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
+import { getConfigValue } from '../../scripts/configs.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
   const APIClientObj = new APIClient(apiBaseUrl);
   Loader.addLoader();
 
+  const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
 
   let ownerData = [];
@@ -75,7 +77,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
     // Send data for abandoned cart journey
     try {
-      await fetch('https://462515-24petwatch-dev.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-salesforce-services', {
+      await fetch(salesforceProxyEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
