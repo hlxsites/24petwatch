@@ -77,22 +77,25 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   }
   Loader.hideLoader();
 
-  async function sendDataToSalesforce(ownerData, selectedProducts, petsList) {
-    if (!ownerData || !ownerData.email || !ownerData.id) {
+  async function sendDataToSalesforce(owner, products, pets) {
+    if (!owner || !owner.email || !owner.id) {
+      // eslint-disable-next-line no-console
       console.error('invalid owner data');
       return;
     }
 
-    if (!selectedProducts || !selectedProducts[0] || !selectedProducts[0].petID) {
+    if (!products || !products[0] || !products[0].petID) {
+      // eslint-disable-next-line no-console
       console.error('Invalid selected products data');
       return;
     }
 
-    if (!petsList || !petsList[0] || !petsList[0].petName || !petsList[0].speciesId === undefined) {
+    if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
+      // eslint-disable-next-line no-console
       console.error('Invalid pets list data');
       return;
     }
-    
+
     const payload = {
       data: {
         ContactKey: ownerData.email,
@@ -113,17 +116,16 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       },
       body: JSON.stringify(payload),
     };
-    await fetch(salesforceProxyEndpoint, options)
+    await fetch(salesforceProxyEndpoint, options);
   }
 
-  //Send data for abandoned cart journey
+  // Send data for abandoned cart journey
   try {
     await sendDataToSalesforce(ownerData, selectedProducts, petsList);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('There was an error sending the data to Salesforce', error);
   }
-
 
   function getSelectedProduct(petId) {
     return selectedProducts.find((item) => item.petID === petId);
