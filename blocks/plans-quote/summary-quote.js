@@ -89,7 +89,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             PetId: selectedProducts.petID,
             PetName: petsList[0].petName,
             SiteURL: 'https://24petwtach.com',
-            Species: petsList[0].speciesId == "1" ? "Dog" : "Cat",
+            Species: petsList[0].speciesId === '1' ? 'Dog' : 'Cat',
           },
         }),
       });
@@ -97,7 +97,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.error('There was an error when sending the data to Salesforce:');
     }
-      
   }
   Loader.hideLoader();
 
