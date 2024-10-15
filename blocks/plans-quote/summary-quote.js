@@ -72,6 +72,32 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       // eslint-disable-next-line no-console
       console.log('Failed to get the purchase summary for owner:', ownerData.id, ' status:', status);
     }
+
+    // Send data for abandoned cart journey
+    try {
+      await fetch('https://462515-24petwatch-dev.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-salesforce-services', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: {
+            ContactKey: ownerData.email,
+            EmailAddress: ownerData.email,
+            OrderCompleted: false,
+            OwnerId: ownerData.id,
+            PetId: selectedProducts.petID,
+            PetName: petsList[0].petName,
+            SiteURL: 'https://24petwtach.com',
+            Species: petsList[0].speciesId == "1" ? "Dog" : "Cat",
+          },
+        }),
+      });
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('There was an error when sending the data to Salesforce:');
+    }
+      
   }
   Loader.hideLoader();
 
