@@ -97,15 +97,19 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
 
     const payload = {
-      data: {
+      payload: {
+        Data: {
+          ContactKey: ownerData.email,
+          EmailAddress: ownerData.email,
+          OrderCompleted: false,
+          OwnerId: ownerData.id,
+          PetId: selectedProducts[0].petID,
+          PetName: petsList[0].petName,
+          SiteURL: 'https://24petwtach.com',
+          Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
+        },
+        EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
         ContactKey: ownerData.email,
-        EmailAddress: ownerData.email,
-        OrderCompleted: false,
-        OwnerId: ownerData.id,
-        PetId: selectedProducts[0].petID,
-        PetName: petsList[0].petName,
-        SiteURL: 'https://24petwtach.com',
-        Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
       },
     };
 
