@@ -38,7 +38,7 @@ async function main(params) {
     // check for missing request input parameters and headers
     const requiredParams = [
         'SALESFORCE_TOKEN',
-        'SALESFORCE_REST_URI',
+        'SALESFORCE_REST_EVENTS_URI',
         'SALESFORCE_EVENT_DEFINITION',
         'data'
     ]
@@ -55,11 +55,7 @@ async function main(params) {
     }
     data['EventDefinitionKey'] = params.SALESFORCE_EVENT_DEFINITION;
 
-
-    //const url = new URL('/interaction/v1/events', params.SALESFORCE_REST_URI);
-    const url = new URL('https://webhook.site/72f3d3b9-a9d4-4ed2-aaf8-609fba3e4d1c')
-
-    return await performRequest('post', url.toString(), params.SALESFORCE_TOKEN, [], data)
+    return await performRequest('post', params.SALESFORCE_REST_EVENTS_URI, params.SALESFORCE_TOKEN, [], data)
   } catch (error) {
     // log any server errors
     logger.error(error)

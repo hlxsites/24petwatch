@@ -22,7 +22,7 @@ application:
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
-              SALESFORCE_REST_URI: $SALESFORCE_REST_URI
+              SALESFORCE_REST_EVENTS_URI: $SALESFORCE_REST_EVENTS_URI
               SALESFORCE_EVENT_DEFINITION: "APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1"
           contact-form:
             function: actions/contact-form/index.js
