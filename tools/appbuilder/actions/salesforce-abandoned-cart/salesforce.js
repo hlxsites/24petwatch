@@ -39,6 +39,7 @@ async function main(params) {
     const requiredParams = [
         'SALESFORCE_TOKEN',
         'SALESFORCE_REST_EVENTS_URI',
+        'SALESFORCE_REST_EVENTS_UPSERT_URI',
         'payload',
     ]
     const requiredHeaders = []
@@ -50,8 +51,13 @@ async function main(params) {
 
     const data = params.payload || {};
 
-    return await performRequest('post', params.SALESFORCE_REST_EVENTS_URI, params.SALESFORCE_TOKEN, [], data)
-  } catch (error) {
+    const response = await createRequest('post', params.SALESFORCE_REST_EVENTS_URI, params.SALESFORCE_TOKEN, [], data)
+    if (response.status !== 201) {
+        return await updateRequest('put', params.SALESFORCE_REST_EVENTS_UPSERT_URI, params.SALESFORCE_TOKEN, [], data)
+    } else {
+        return {statusCode: 200, body: {values: data.Data}};
+    }
+} catch (error) {
     // log any server errors
     logger.error(error)
     // return with 500
@@ -59,8 +65,7 @@ async function main(params) {
   }
 }
 
-async function performRequest(method, url, token, queryParams, payload = false) {
-
+async function createRequest(method, url, token, queryParams, payload = false) {
     const params = {
         method: method,
         headers: {
@@ -78,20 +83,43 @@ async function performRequest(method, url, token, queryParams, payload = false) 
         finalUrl = url + '?' + new URLSearchParams(queryParams)
     }
 
+    return await fetch(finalUrl , params);
+}
+
+async function updateRequest(method, url, token, queryParams, payload = false) {
+    const params = {
+        method: method,
+        headers: {
+            'Authorization': 'Bearer ' + token,
+            'Content-Type': 'application/json',
+        }
+    }
+
+    if (payload) {
+        params.body = JSON.stringify(payload)
+
+        url = url + 'EmailAdress:' + payload.ContactKey;
+    }
+
+
+    let finalUrl = url;
+    if (Object.keys(queryParams).length > 0) {
+        finalUrl = url + '?' + new URLSearchParams(queryParams)
+    }
+
     const res = await fetch(finalUrl , params);
     const body = await res.text();
 
     try {
         const jsonBody = JSON.parse(body);
         return {
-            statusCode: res.status,
-            body: jsonBody,
+            statusCode: 200,
+            body: {
+                "values": payload.Data,
+            },
         }
     } catch (error) {
-        return {
-            statusCode: res.status,
-            body: body,
-        }
+        return errorResponse(500, 'Catched internal server error', logger)
     }
 }
 
