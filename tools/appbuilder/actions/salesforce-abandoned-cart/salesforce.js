@@ -39,8 +39,7 @@ async function main(params) {
     const requiredParams = [
         'SALESFORCE_TOKEN',
         'SALESFORCE_REST_EVENTS_URI',
-        'SALESFORCE_EVENT_DEFINITION',
-        'data'
+        'payload',
     ]
     const requiredHeaders = []
     const errorMessage = checkMissingRequestInputs(params, requiredParams, requiredHeaders)
@@ -49,11 +48,7 @@ async function main(params) {
       return errorResponse(400, errorMessage, logger)
     }
 
-    const data = {"Data": params.data};
-    if (params.data['EmailAddress'] !== undefined) {
-        data['ContactKey'] = params.data['EmailAddress'];
-    }
-    data['EventDefinitionKey'] = params.SALESFORCE_EVENT_DEFINITION;
+    const data = params.payload || {};
 
     return await performRequest('post', params.SALESFORCE_REST_EVENTS_URI, params.SALESFORCE_TOKEN, [], data)
   } catch (error) {
