@@ -27,9 +27,17 @@ function instrumentTrackingEvents(header) {
 }
 
 export default async function decorate(block) {
+  // default paid header
   let baseHeaderUrl = '/fragments/us/header-paid';
   if (isCanada) {
     baseHeaderUrl = '/fragments/ca/header-paid';
+  }
+  // paid blog page header
+  if (document.body.className.includes('paid-blog-page')) {
+    baseHeaderUrl = '/fragments/us/header-paid-blog';
+    if (isCanada) {
+      baseHeaderUrl = '/fragments/ca/header-paid-blog';
+    }
   }
 
   const headerPaidContent = await loadFragment(baseHeaderUrl);
