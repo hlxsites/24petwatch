@@ -96,7 +96,7 @@ async function updateRequest(method, url, token, queryParams, payload = false) {
     }
 
     if (payload) {
-        params.body = JSON.stringify(payload)
+        params.body = JSON.stringify({value: payload.Data})
 
         url = url + 'EmailAdress:' + payload.ContactKey;
     }
