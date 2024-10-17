@@ -187,7 +187,6 @@ export default async function decorate() {
         Data: {
           OrderCompleted: true,
         },
-        // EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
         ContactKey: email,
       },
     };
