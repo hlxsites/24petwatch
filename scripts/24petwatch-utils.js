@@ -16,6 +16,9 @@ export function getQueryParam(param, defaultValue = null) {
   return urlParams.has(param) ? urlParams.get(param) : defaultValue;
 }
 
+// ----- sessionStorage / localStorage helpers -----
+export const SS_KEY_FORM_ENTRY_URL = 'formEntryURL';
+
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';
 export const COOKIE_NAME_FOR_PET_PLANS = 'ph.PetPlanQuote';

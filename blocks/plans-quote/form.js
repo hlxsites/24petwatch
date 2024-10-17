@@ -4,6 +4,7 @@ import Loader from './loader.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
+  SS_KEY_FORM_ENTRY_URL,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
   PET_PLANS_LPM_URL,
@@ -691,6 +692,7 @@ export default function formDecoration(block, apiBaseUrl) {
 
     // remember the critical information for future steps
     setCookie(COOKIE_NAME_SAVED_OWNER_ID, formData.ownerId);
+    sessionStorage.setItem(SS_KEY_FORM_ENTRY_URL, window.location.href);
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 

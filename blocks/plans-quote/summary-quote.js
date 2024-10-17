@@ -4,6 +4,7 @@ import Loader from './loader.js';
 import formDecoration from './form.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
+  SS_KEY_FORM_ENTRY_URL,
   getCookie,
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
@@ -17,12 +18,14 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
+  const entryURL = sessionStorage.getItem(SS_KEY_FORM_ENTRY_URL);
 
   let ownerData = [];
   let petsList = [];
   let selectedProducts = [];
   let purchaseSummary = {};
   let totalShipping = 0;
+  let abandonedCartData = true;
 
   // eslint-disable-next-line no-shadow
   async function getPurchaseSummary(ownerId) {
@@ -75,25 +78,33 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       console.log('Failed to get the purchase summary for owner:', ownerData.id, ' status:', status);
     }
   }
+
   Loader.hideLoader();
 
   async function sendDataToSalesforce(owner, products, pets) {
+    Loader.showLoader();
     if (!owner || !owner.email || !owner.id) {
       // eslint-disable-next-line no-console
       console.error('invalid owner data');
-      return;
+      abandonedCartData = false;
     }
 
     if (!products || !products[0] || !products[0].petID) {
       // eslint-disable-next-line no-console
       console.error('Invalid selected products data');
-      return;
+      abandonedCartData = false;
     }
 
     if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
       // eslint-disable-next-line no-console
       console.error('Invalid pets list data');
-      return;
+      abandonedCartData = false;
+    }
+
+    if (!entryURL) {
+       // eslint-disable-next-line no-console
+       console.error('Invalid entry URL');
+       abandonedCartData = false; 
     }
 
     const payload = {
@@ -105,7 +116,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
           OwnerId: ownerData.id,
           PetId: selectedProducts[0].petID,
           PetName: petsList[0].petName,
-          SiteURL: 'https://24petwtach.com',
+          SiteURL: entryURL,
           Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
         },
         EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
@@ -121,6 +132,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       body: JSON.stringify(payload),
     };
     await fetch(salesforceProxyEndpoint, options);
+
+    Loader.hideLoader();
   }
 
   // Send data for abandoned cart journey
