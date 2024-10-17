@@ -164,17 +164,19 @@ export default async function decorate() {
   contentColumn.appendChild(totals);
 
   const trackingData = {
-    microchip_number: petSummaries[0].microChipNumber,
-    product_type: petSummaries[0].membershipName,
-    transaction_id: externalTransactionID,
-    affiliation: '24petwatch',
-    tax: summary.salesTaxes,
-    payment_type: paymentMethod,
-    value: summary.totalDueToday,
-    shipping: petSummaries[0].nonInsurancePetSummary.shipping,
-    coupon: nonInsPromoCode,
-    flow: cartFlow,
-    customerid: getOwnerDetails.id,
+    ecommerce: {
+      microchip_number: petSummaries[0].microChipNumber,
+      product_type: petSummaries[0].membershipName,
+      transaction_id: externalTransactionID,
+      affiliation: '24petwatch',
+      tax: summary.salesTaxes,
+      payment_type: paymentMethod,
+      value: summary.totalDueToday,
+      shipping: petSummaries[0].nonInsurancePetSummary.shipping,
+      coupon: nonInsPromoCode,
+      flow: cartFlow,
+      customerid: getOwnerDetails.id,
+    },
   };
 
   // send the GTM event
