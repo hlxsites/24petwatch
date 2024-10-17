@@ -25,7 +25,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   let selectedProducts = [];
   let purchaseSummary = {};
   let totalShipping = 0;
-  let abandonedCartData = true;
 
   // eslint-disable-next-line no-shadow
   async function getPurchaseSummary(ownerId) {
@@ -86,25 +85,21 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     if (!owner || !owner.email || !owner.id) {
       // eslint-disable-next-line no-console
       console.error('invalid owner data');
-      abandonedCartData = false;
     }
 
     if (!products || !products[0] || !products[0].petID) {
       // eslint-disable-next-line no-console
       console.error('Invalid selected products data');
-      abandonedCartData = false;
     }
 
     if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
       // eslint-disable-next-line no-console
       console.error('Invalid pets list data');
-      abandonedCartData = false;
     }
 
     if (!entryURL) {
-       // eslint-disable-next-line no-console
-       console.error('Invalid entry URL');
-       abandonedCartData = false; 
+      // eslint-disable-next-line no-console
+      console.error('Invalid entry URL');
     }
 
     const payload = {
