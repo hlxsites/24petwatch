@@ -2,7 +2,10 @@ import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   deleteCookie,
+  CURRENCY_CANADA,
+  CURRENCY_US,
 } from '../../scripts/24petwatch-utils.js';
+import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
 // prep for API calls
@@ -91,6 +94,7 @@ export default async function decorate() {
   const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
   const data = await getPaymentCustomerIDFromUUID(paymentProcessorId);
   let getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
+  const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
 
   await putUpdateOwnerSaleStatus(getOwnerDetails.id);
 
@@ -157,17 +161,20 @@ export default async function decorate() {
   contentColumn.appendChild(totals);
 
   const trackingData = {
-    microchip_number: petSummaries[0].microChipNumber,
-    product_type: petSummaries[0].membershipName,
-    transaction_id: externalTransactionID,
-    affiliation: '24petwatch',
-    tax: summary.salesTaxes,
-    payment_type: paymentMethod,
-    value: summary.totalDueToday,
-    shipping: petSummaries[0].nonInsurancePetSummary.shipping,
-    coupon: nonInsPromoCode,
-    flow: cartFlow,
-    customerid: getOwnerDetails.id,
+    ecommerce: {
+      microchip_number: petSummaries[0].microChipNumber,
+      product_type: petSummaries[0].membershipName,
+      transaction_id: externalTransactionID,
+      affiliation: '24petwatch',
+      tax: summary.salesTaxes,
+      payment_type: paymentMethod,
+      value: summary.totalDueToday,
+      currency: currencyValue,
+      shipping: petSummaries[0].nonInsurancePetSummary.shipping,
+      coupon: nonInsPromoCode,
+      flow: cartFlow,
+      customerid: getOwnerDetails.id,
+    },
   };
 
   // send the GTM event
