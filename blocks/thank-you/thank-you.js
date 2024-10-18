@@ -3,7 +3,10 @@ import {
   COOKIE_NAME_SAVED_OWNER_ID,
   deleteCookie,
   SS_KEY_FORM_ENTRY_URL,
+  CURRENCY_CANADA,
+  CURRENCY_US,
 } from '../../scripts/24petwatch-utils.js';
+import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 import { getConfigValue } from '../../scripts/configs.js';
 
@@ -98,6 +101,7 @@ export default async function decorate() {
   const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
   const data = await getPaymentCustomerIDFromUUID(paymentProcessorId);
   let getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
+  const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
 
   await putUpdateOwnerSaleStatus(getOwnerDetails.id);
 
@@ -172,6 +176,7 @@ export default async function decorate() {
       tax: summary.salesTaxes,
       payment_type: paymentMethod,
       value: summary.totalDueToday,
+      currency: currencyValue,
       shipping: petSummaries[0].nonInsurancePetSummary.shipping,
       coupon: nonInsPromoCode,
       flow: cartFlow,
