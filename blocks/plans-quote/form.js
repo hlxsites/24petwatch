@@ -18,6 +18,7 @@ import {
   getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
 const US_LEGAL_HEADER = '';
 const US_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services (USA) Inc. may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from 24Pet regarding microchip services. Additionally, PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may offer you promotions and the latest information from 24Petprotect™ regarding pet insurance services and products. By checking “Continue”, Pethealth Services (USA) Inc. and PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may contact you via commercial electronic messages, automatic telephone dialing systems, prerecorded/automated messages or text messages at the telephone number provided above, including your mobile number. These calls or emails are not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
@@ -644,8 +645,33 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
+  function instrumentTracking() {
+    // call instrument tracking
+    const trackingData = {
+      ecommerce: {
+        microchip_number: formData.microchip,
+        affiliation: '24petwatch',
+        coupon: formData.promoCode,
+        customerid: formData.ownerId,
+        petName: formData.petName,
+        petSpecies: formData.speciesId,
+        petPureBreed: formData.purebreed,
+        petBreed: formData.breed.breedName,
+        petChipNumber: formData.microchip,
+        zip: formData.zipCode,
+        email: formData.email,
+      },
+    };
+
+    // send the GTM event
+    trackGTMEvent('add_to_cart', trackingData);
+  }
+
   async function executeSubmit() {
     Loader.showLoader();
+
+    // call instrument tracking
+    instrumentTracking();
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
