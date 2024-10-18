@@ -29,7 +29,7 @@ async function main(params) {
     logger.info('Calling the main action')
 
     // log parameters, only if params.LOG_LEVEL === 'debug'
-    logger.error(stringParameters(params))
+    logger.debug(stringParameters(params))
 
     if (params.__ow_method !== 'post') {
         return errorResponse(405, 'Only POST allowed', logger)
@@ -53,7 +53,8 @@ async function main(params) {
 
     const response = await createRequest('post', params.SALESFORCE_REST_EVENTS_URI, params.SALESFORCE_TOKEN, [], data)
     if (response.status !== 201) {
-        return await updateRequest('put', params.SALESFORCE_REST_EVENTS_UPSERT_URI, params.SALESFORCE_TOKEN, [], data)
+
+        return await updateRequest('put', params.SALESFORCE_REST_EVENTS_UPSERT_URI, params.SALESFORCE_TOKEN, [], data, logger)
     } else {
         return {statusCode: 200, body: {values: data.Data}};
     }
@@ -86,7 +87,7 @@ async function createRequest(method, url, token, queryParams, payload = false) {
     return await fetch(finalUrl , params);
 }
 
-async function updateRequest(method, url, token, queryParams, payload = false) {
+async function updateRequest(method, url, token, queryParams, payload = false, logger) {
     const params = {
         method: method,
         headers: {
@@ -96,9 +97,9 @@ async function updateRequest(method, url, token, queryParams, payload = false) {
     }
 
     if (payload) {
-        params.body = JSON.stringify({value: payload.Data})
+        params.body = JSON.stringify({values: payload.Data})
 
-        url = url + 'EmailAdress:' + payload.ContactKey;
+        url = url + 'EmailAddress:' + payload.ContactKey;
     }
 
 
@@ -115,6 +116,7 @@ async function updateRequest(method, url, token, queryParams, payload = false) {
         return {
             statusCode: 200,
             body: {
+                "action": "updated",
                 "values": payload.Data,
             },
         }
