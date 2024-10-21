@@ -1,0 +1,45 @@
+application:
+  actions: actions
+  runtimeManifest:
+    packages:
+      24petwatch-appbuilder:
+        license: Apache-2.0
+        actions:
+          contact-form:
+            function: actions/contact-form/index.js
+            web: 'yes'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+            annotions:
+              require-adobe-auth: false
+              final: true
+          service-pethealth:
+            function: actions/cart-service/pethealth.js
+            web: 'false'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              PETHEALTH_BASE_DOMAIN: $PETHEALTH_BASE_DOMAIN
+          authentication-pethealth:
+            function: actions/cart-service/authentication.js
+            web: 'no'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              PETHEALTH_USERNAME: $PETHEALTH_USERNAME
+              PETHEALTH_API_KEY: $PETHEALTH_API_KEY
+              PETHEALTH_BASE_DOMAIN: $PETHEALTH_BASE_DOMAIN
+          report-lost:
+            function: actions/report-lost/index.js
+            web: 'yes'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+            annotions:
+              require-adobe-auth: false
+              final: true
+        sequences:
+          proxy-pethealth-services:
+            actions: authentication-pethealth, service-pethealth
+            web: 'yes'
