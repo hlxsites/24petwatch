@@ -2,16 +2,21 @@ import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   deleteCookie,
+  SS_KEY_FORM_ENTRY_URL,
   CURRENCY_CANADA,
   CURRENCY_US,
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { getConfigValue } from '../../scripts/configs.js';
 
 // prep for API calls
 const apiBaseUrl = await getAPIBaseUrl();
 
 const APIClientObj = new APIClient(apiBaseUrl);
+
+// salesforce proxy
+const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
 
 // Sequence of steps to get the owner info from the API
 
@@ -89,6 +94,8 @@ async function getTransaction(paymentProcessorId) {
 export default async function decorate() {
   // delete cookie with customer id
   deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
+  // unset sessionStorage form entry URL
+  sessionStorage.removeItem(SS_KEY_FORM_ENTRY_URL);
 
   const urlParams = new URLSearchParams(window.location.search);
   const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
@@ -179,6 +186,35 @@ export default async function decorate() {
 
   // send the GTM event
   trackGTMEvent('purchase', trackingData);
+
+  // Salesforce Upsert
+  async function setUpsertToSalesforce(email) {
+    const payload = {
+      payload: {
+        Data: {
+          OrderCompleted: true,
+        },
+        ContactKey: email,
+      },
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+    await fetch(salesforceProxyEndpoint, options);
+  }
+
+  // Send data for abandoned cart journey
+  try {
+    await setUpsertToSalesforce(getOwnerDetails.email);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('There was an error sending the data to Salesforce', error);
+  }
 
   const printButton = document.createElement('button');
   printButton.classList.add('button');

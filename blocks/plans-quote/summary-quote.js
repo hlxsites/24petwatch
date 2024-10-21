@@ -4,17 +4,21 @@ import Loader from './loader.js';
 import formDecoration from './form.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
+  SS_KEY_FORM_ENTRY_URL,
   getCookie,
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
+import { getConfigValue } from '../../scripts/configs.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
   const APIClientObj = new APIClient(apiBaseUrl);
   Loader.addLoader();
 
+  const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
+  const entryURL = sessionStorage.getItem(SS_KEY_FORM_ENTRY_URL);
 
   let ownerData = [];
   let petsList = [];
@@ -73,7 +77,67 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       console.log('Failed to get the purchase summary for owner:', ownerData.id, ' status:', status);
     }
   }
+
   Loader.hideLoader();
+
+  async function sendDataToSalesforce(owner, products, pets) {
+    Loader.showLoader();
+    if (!owner || !owner.email || !owner.id) {
+      // eslint-disable-next-line no-console
+      console.error('invalid owner data');
+    }
+
+    if (!products || !products[0] || !products[0].petID) {
+      // eslint-disable-next-line no-console
+      console.error('Invalid selected products data');
+    }
+
+    if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
+      // eslint-disable-next-line no-console
+      console.error('Invalid pets list data');
+    }
+
+    if (!entryURL) {
+      // eslint-disable-next-line no-console
+      console.error('Invalid entry URL');
+    }
+
+    const payload = {
+      payload: {
+        Data: {
+          ContactKey: ownerData.email,
+          EmailAddress: ownerData.email,
+          OrderCompleted: false,
+          OwnerId: ownerData.id,
+          PetId: selectedProducts[0].petID,
+          PetName: petsList[0].petName,
+          SiteURL: entryURL,
+          Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
+        },
+        EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
+        ContactKey: ownerData.email,
+      },
+    };
+
+    const options = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload),
+    };
+    await fetch(salesforceProxyEndpoint, options);
+
+    Loader.hideLoader();
+  }
+
+  // Send data for abandoned cart journey
+  try {
+    await sendDataToSalesforce(ownerData, selectedProducts, petsList);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('There was an error sending the data to Salesforce', error);
+  }
 
   function getSelectedProduct(petId) {
     return selectedProducts.find((item) => item.petID === petId);
