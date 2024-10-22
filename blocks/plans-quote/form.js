@@ -669,7 +669,7 @@ export default function formDecoration(block, apiBaseUrl) {
         items: [
           {
             item_name: productType,
-            coupon: formData.promoCode,
+            // coupon: formData.promoCode,
             currency: currencyValue,
             discount: '', // not available until step 2
             item_category: 'membership',
