@@ -4,6 +4,8 @@ import Loader from './loader.js';
 import APIClient from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
+  CURRENCY_CANADA,
+  CURRENCY_US,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
   PET_PLANS_LPM_URL,
@@ -38,6 +40,7 @@ const promoResultKey = await getConfigValue('promo-result');
 
 export default function formDecoration(block, apiBaseUrl) {
   // prepare for Canada vs US
+  const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
   const zipcodePlaceholder = isCanada ? 'A1A 1A1' : '00000';
   const privacyPolicyURL = isCanada ? '/ca/privacy-policy' : '/privacy-policy';
@@ -645,21 +648,37 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
-  function instrumentTracking() {
+  function instrumentTrackingStep1() {
+    const currentPath = window.location.pathname;
+    let productType = null;
+
+    if (currentPath.includes(PET_PLANS_LPM_URL)) {
+      productType = 'Lifetime Protection Membership';
+    } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
+      productType = 'Lifetime Protection Membership Plus';
+    } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
+      productType = 'Annual Protection Membership';
+    }
+
     // call instrument tracking
     const trackingData = {
       ecommerce: {
-        microchip_number: formData.microchip,
-        affiliation: '24petwatch',
-        coupon: formData.promoCode,
-        customerid: formData.ownerId,
-        petName: formData.petName,
-        petSpecies: formData.speciesId,
-        petPureBreed: formData.purebreed,
-        petBreed: formData.breed.breedName,
-        petChipNumber: formData.microchip,
-        zip: formData.zipCode,
-        email: formData.email,
+        // New GTM dataLayer
+        product_type: productType, // annual protection membership
+        items: [
+          {
+            item_name: productType,
+            coupon: formData.promoCode,
+            currency: currencyValue,
+            discount: '', // not available until step 2
+            item_category: 'membership',
+            item_variant: '', // okay to be left empty
+            microchip_number: formData.microchip,
+            product_type: productType,
+            price: '', // not available until step 2
+            quantity: 1,
+          },
+        ],
       },
     };
 
@@ -669,9 +688,6 @@ export default function formDecoration(block, apiBaseUrl) {
 
   async function executeSubmit() {
     Loader.showLoader();
-
-    // call instrument tracking
-    instrumentTracking();
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
@@ -712,6 +728,9 @@ export default function formDecoration(block, apiBaseUrl) {
       Loader.hideLoader();
       return;
     }
+
+    // call instrument tracking
+    instrumentTrackingStep1();
 
     Loader.hideLoader();
 
