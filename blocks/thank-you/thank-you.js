@@ -120,8 +120,9 @@ export default async function decorate() {
 
   const h1 = document.querySelector('h1');
   const {
-    firstName, lastName,
+    cartFlow, firstName, lastName,
   } = getOwnerDetails;
+  const isMembershipFlow = cartFlow === 2;
   const { petSummaries } = getPurchaseSummaryDetails;
   const contentColumn = document.querySelector('.thank-you-purchase .columns > div:nth-child(1) > div');
 
@@ -146,21 +147,23 @@ export default async function decorate() {
 
     contentColumn.appendChild(ul);
 
-    // update analyics values
-    totalShipping += pet.nonInsurancePetSummary.shipping;
-    productTypes.push(pet.nonInsurancePetSummary.membership.itemName);
-    // push each item object to items array
-    dlItems.push({
-      item_name: pet.nonInsurancePetSummary.membership.itemName,
-      currency: currencyValue,
-      discount: pet.nonInsurancePetSummary.discount,
-      item_category: 'membership', // membership
-      item_variant: '', // okay to be left empty
-      price: pet.nonInsurancePetSummary.amount,
-      quantity: pet.nonInsurancePetSummary.membership.quantity,
-      microchip_number: pet.microChipNumber,
-      product_type: pet.nonInsurancePetSummary.membership.itemName,
-    });
+    // update analyics values if cart flow is membership
+    if (isMembershipFlow) {
+      totalShipping += pet.nonInsurancePetSummary.shipping;
+      productTypes.push(pet.nonInsurancePetSummary.membership.itemName);
+      // push each item object to items array
+      dlItems.push({
+        item_name: pet.nonInsurancePetSummary.membership.itemName,
+        currency: currencyValue,
+        discount: pet.nonInsurancePetSummary.discount,
+        item_category: 'membership', // membership
+        item_variant: '', // okay to be left empty
+        price: pet.nonInsurancePetSummary.amount,
+        quantity: pet.nonInsurancePetSummary.membership.quantity,
+        microchip_number: pet.microChipNumber,
+        product_type: pet.nonInsurancePetSummary.membership.itemName,
+      });
+    }
   });
 
   // build sub-total, tax, and total of items purchased
@@ -186,22 +189,24 @@ export default async function decorate() {
 
   contentColumn.appendChild(totals);
 
-  const trackingData = {
-    ecommerce: {
-      transaction_id: externalTransactionID,
-      affiliation: '24petwatch',
-      value: summary.totalDueToday,
-      tax: summary.salesTaxes,
-      shipping: totalShipping ? totalShipping.toFixed(2) : '0.00',
-      currency: currencyValue,
-      payment_type: paymentMethod,
-      product_type: productTypes.join(', '),
-      items: dlItems,
-    },
-  };
+  if (isMembershipFlow) {
+    const trackingData = {
+      ecommerce: {
+        transaction_id: externalTransactionID,
+        affiliation: '24petwatch',
+        value: summary.totalDueToday,
+        tax: summary.salesTaxes,
+        shipping: totalShipping ? totalShipping.toFixed(2) : '0.00',
+        currency: currencyValue,
+        payment_type: paymentMethod,
+        product_type: productTypes.join(', '),
+        items: dlItems,
+      },
+    };
 
-  // send the GTM event
-  trackGTMEvent('purchase', trackingData);
+    // send the GTM event
+    trackGTMEvent('purchase', trackingData);
+  }
 
   // Salesforce Upsert
   async function setUpsertToSalesforce(email) {
