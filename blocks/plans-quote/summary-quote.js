@@ -290,33 +290,26 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   console.log(purchaseSummary.petSummaries);
   console.log(petsList);
 
-
-  // const { petSummaries } = getPurchaseSummaryDetails;
-  // const contentColumn = document.querySelector('.thank-you-purchase .columns > div:nth-child(1) > div');
-
-  // h1.innerHTML = `Congratulations, ${firstName} ${lastName}!`;
-
-  // petSummaries.forEach((pet) =>
-
   // dataLayer
-  // petsList.map((pet) => {
-  //     // push each item object to items array
-  //     dlItems.push({
-  //       item_name: pet.membershipName ?? '',
-  //       // currency: currencyValue,
-  //       // discount: pet.nonInsurancePetSummary?.discount ?? '',
-  //       // item_category: 'membership', // membership
-  //       // item_variant: '', // okay to be left empty
-  //       // price: pet.nonInsurancePetSummary?.amount ?? '',
-  //       // quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
-  //       // microchip_number: pet.microChipNumber ?? '',
-  //       // product_type: pet.membershipName ?? '',
-  //     });
-  // });
-
-
-
+  const { petSummaries } = purchaseSummary;
   const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
+  petSummaries.forEach((pet) => {
+
+      // push each item object to items array
+      dlItems.push({
+        item_name: pet.membershipName ?? '',
+        currency: currencyValue,
+        discount: pet.nonInsurancePetSummary?.discount ?? '',
+        item_category: 'membership', // membership
+        item_variant: '', // okay to be left empty
+        price: pet.nonInsurancePetSummary?.amount ?? '',
+        quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+        microchip_number: pet.microChipNumber ?? '',
+        product_type: pet.membershipName ?? '',
+      });
+
+  });
+
   const trackingData = {
     ecommerce: {
       value: purchaseSummary.summary.totalDueToday,
@@ -325,10 +318,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     },
   };
 
-  console.log(trackingData);
-
-  // // Add view cart event
-  // trackGTMEvent('view_cart', trackingData);
+  // Add view cart event
+  trackGTMEvent('view_cart', trackingData);
 
 
 
