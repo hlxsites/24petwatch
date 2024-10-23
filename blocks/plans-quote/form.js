@@ -5,6 +5,8 @@ import APIClient from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   SS_KEY_FORM_ENTRY_URL,
+  CURRENCY_CANADA,
+  CURRENCY_US,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
   PET_PLANS_LPM_URL,
@@ -19,6 +21,7 @@ import {
   getItemInfoFragment,
 } from '../../scripts/24petwatch-utils.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
 const US_LEGAL_HEADER = '';
 const US_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services (USA) Inc. may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from 24Pet regarding microchip services. Additionally, PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may offer you promotions and the latest information from 24Petprotect™ regarding pet insurance services and products. By checking “Continue”, Pethealth Services (USA) Inc. and PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may contact you via commercial electronic messages, automatic telephone dialing systems, prerecorded/automated messages or text messages at the telephone number provided above, including your mobile number. These calls or emails are not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
@@ -38,6 +41,7 @@ const promoResultKey = await getConfigValue('promo-result');
 
 export default function formDecoration(block, apiBaseUrl) {
   // prepare for Canada vs US
+  const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
   const zipcodePlaceholder = isCanada ? 'A1A 1A1' : '00000';
   const privacyPolicyURL = isCanada ? '/ca/privacy-policy' : '/privacy-policy';
@@ -645,6 +649,44 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
+  function instrumentTrackingStep1() {
+    const currentPath = window.location.pathname;
+    let productType = null;
+
+    if (currentPath.includes(PET_PLANS_LPM_URL)) {
+      productType = 'Lifetime Protection Membership';
+    } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
+      productType = 'Lifetime Protection Membership - PLUS';
+    } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
+      productType = 'Annual Protection Membership';
+    }
+
+    // call instrument tracking
+    const trackingData = {
+      ecommerce: {
+        // New GTM dataLayer
+        product_type: productType, // annual protection membership
+        items: [
+          {
+            item_name: productType,
+            // coupon: formData.promoCode,
+            currency: currencyValue,
+            discount: '', // not available until step 2
+            item_category: 'membership',
+            item_variant: '', // okay to be left empty
+            microchip_number: formData.microchip,
+            product_type: productType,
+            price: '', // not available until step 2
+            quantity: 1,
+          },
+        ],
+      },
+    };
+
+    // send the GTM event
+    trackGTMEvent('add_to_cart', trackingData);
+  }
+
   async function executeSubmit() {
     Loader.showLoader();
 
@@ -687,6 +729,9 @@ export default function formDecoration(block, apiBaseUrl) {
       Loader.hideLoader();
       return;
     }
+
+    // call instrument tracking
+    instrumentTrackingStep1();
 
     Loader.hideLoader();
 
