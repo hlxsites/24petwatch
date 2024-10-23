@@ -153,15 +153,15 @@ export default async function decorate() {
       productTypes.push(pet.nonInsurancePetSummary.membership.itemName);
       // push each item object to items array
       dlItems.push({
-        item_name: pet.nonInsurancePetSummary.membership.itemName,
+        item_name: pet.nonInsurancePetSummary?.membership?.itemName ?? '',
         currency: currencyValue,
-        discount: pet.nonInsurancePetSummary.discount,
+        discount: pet.nonInsurancePetSummary?.discount ?? '',
         item_category: 'membership', // membership
         item_variant: '', // okay to be left empty
-        price: pet.nonInsurancePetSummary.amount,
-        quantity: pet.nonInsurancePetSummary.membership.quantity,
-        microchip_number: pet.microChipNumber,
-        product_type: pet.nonInsurancePetSummary.membership.itemName,
+        price: pet.nonInsurancePetSummary?.amount ?? '',
+        quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+        microchip_number: pet.microChipNumber ?? '',
+        product_type: pet.nonInsurancePetSummary?.membership?.itemName ?? '',
       });
     }
   });
@@ -194,8 +194,8 @@ export default async function decorate() {
       ecommerce: {
         transaction_id: externalTransactionID,
         affiliation: '24petwatch',
-        value: summary.totalDueToday,
-        tax: summary.salesTaxes,
+        value: summary.totalDueToday ?? '',
+        tax: summary.salesTaxes ?? '',
         shipping: totalShipping ? totalShipping.toFixed(2) : '0.00',
         currency: currencyValue,
         payment_type: paymentMethod,
