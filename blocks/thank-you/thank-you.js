@@ -150,10 +150,10 @@ export default async function decorate() {
     // update analyics values if cart flow is membership
     if (isMembershipFlow) {
       totalShipping += pet.nonInsurancePetSummary.shipping;
-      productTypes.push(pet.nonInsurancePetSummary.membership.itemName);
+      productTypes.push(pet.membershipName ?? '');
       // push each item object to items array
       dlItems.push({
-        item_name: pet.nonInsurancePetSummary?.membership?.itemName ?? '',
+        item_name: pet.membershipName ?? '',
         currency: currencyValue,
         discount: pet.nonInsurancePetSummary?.discount ?? '',
         item_category: 'membership', // membership
@@ -161,7 +161,7 @@ export default async function decorate() {
         price: pet.nonInsurancePetSummary?.amount ?? '',
         quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
         microchip_number: pet.microChipNumber ?? '',
-        product_type: pet.nonInsurancePetSummary?.membership?.itemName ?? '',
+        product_type: pet.membershipName ?? '',
       });
     }
   });
