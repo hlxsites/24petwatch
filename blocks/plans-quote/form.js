@@ -656,7 +656,7 @@ export default function formDecoration(block, apiBaseUrl) {
     if (currentPath.includes(PET_PLANS_LPM_URL)) {
       productType = 'Lifetime Protection Membership';
     } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
-      productType = 'Lifetime Protection Membership Plus';
+      productType = 'Lifetime Protection Membership - PLUS';
     } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
       productType = 'Annual Protection Membership';
     }
