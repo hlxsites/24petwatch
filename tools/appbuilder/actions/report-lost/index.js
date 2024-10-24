@@ -125,10 +125,14 @@ async function main(params) {
       return errorResponse(400, 'Captcha Invalid', logger);
     }
 
-    params.payload = body.payload;
-    params.__ow_path = '/Report/LostPet/SubmitReport'
+    const newParams = {
+      __ow_headers: params.__ow_headers,
+      payload: body.payload,
+      __ow_path: '/Report/LostPet/SubmitReport',
+      __ow_method: 'post',
+    }
 
-    return params;
+    return newParams;
 
   } catch (error) {
     // log any server errors
