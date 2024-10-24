@@ -10,6 +10,8 @@ import {
   getItemInfoFragment,
   CURRENCY_CANADA,
   CURRENCY_US,
+  SS_KEY_SUMMARY_ACTION,
+  DL_EVENTS,
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
@@ -29,7 +31,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   let selectedProducts = [];
   let purchaseSummary = {};
   let totalShipping = 0;
-  let dlItems = [];
 
   // eslint-disable-next-line no-shadow
   async function getPurchaseSummary(ownerId) {
@@ -45,6 +46,87 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     Loader.hideLoader();
 
     return purchaseSummary;
+  }
+
+  async function getPet(petId) {
+    try {
+      const data = await APIClientObj.getPet(petId);
+      return data;
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the pet', ' status:', status);
+      return [];
+    }
+  }
+
+  function setDataLayer(data, event, petData = '') {
+    const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
+    const dlItems = [];
+    // set items array
+    if ('petSummaries' in data) {
+      const { petSummaries } = data;
+      if (petSummaries && petSummaries.length > 0) {
+        petSummaries.forEach((pet) => {
+          // push each item object to items array
+          dlItems.push({
+            item_name: pet.membershipName ?? '',
+            currency: currencyValue,
+            discount: pet.nonInsurancePetSummary?.discount ?? '',
+            item_category: 'membership', // membership
+            item_variant: '', // okay to be left empty
+            price: pet.nonInsurancePetSummary?.amount ?? '',
+            quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+            microchip_number: pet.microChipNumber ?? '',
+            product_type: pet.membershipName ?? '',
+          });
+        });
+      }
+    }
+    // cart view
+    if (event === DL_EVENTS.view) {
+      const viewCartDL = {
+        ecommerce: {
+          value: purchaseSummary?.summary?.totalDueToday,
+          currency: currencyValue,
+          items: dlItems,
+        },
+      };
+      // Add view cart event
+      trackGTMEvent(DL_EVENTS.view, viewCartDL);
+    }
+    // remove from cart
+    if (event === DL_EVENTS.remove) {
+      // view cart DL object
+      const removeCartDL = {
+        ecommerce: {
+          items: [{
+            item_name: data.itemName ?? '',
+            currency: currencyValue,
+            discount: data.discount ?? '',
+            item_category: 'membership', // membership
+            item_variant: '', // okay to be left empty
+            price: data.salesPrice ?? '',
+            quantity: 1,
+            microchip_number: petData.microchipId ?? '',
+            product_type: data.itemName ?? '',
+          }],
+        },
+      };
+      // Add view cart event
+      trackGTMEvent(DL_EVENTS.remove, removeCartDL);
+    }
+    // begin checkout
+    if (event === DL_EVENTS.checkout) {
+      const checkoutCartDL = {
+        ecommerce: {
+          value: purchaseSummary?.summary?.totalDueToday,
+          currency: currencyValue,
+          items: dlItems,
+        },
+      };
+      // Add view cart event
+      trackGTMEvent(DL_EVENTS.checkout, checkoutCartDL);
+    }
   }
 
   Loader.showLoader();
@@ -107,31 +189,33 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       console.error('Invalid entry URL');
     }
 
-    const payload = {
-      payload: {
-        Data: {
+    if (selectedProducts.length > 0 && petsList.length > 0) {
+      const payload = {
+        payload: {
+          Data: {
+            ContactKey: ownerData.email,
+            EmailAddress: ownerData.email,
+            OrderCompleted: false,
+            OwnerId: ownerData.id,
+            PetId: selectedProducts[0].petID,
+            PetName: petsList[0].petName,
+            SiteURL: entryURL,
+            Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
+          },
+          EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
           ContactKey: ownerData.email,
-          EmailAddress: ownerData.email,
-          OrderCompleted: false,
-          OwnerId: ownerData.id,
-          PetId: selectedProducts[0].petID,
-          PetName: petsList[0].petName,
-          SiteURL: entryURL,
-          Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
         },
-        EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
-        ContactKey: ownerData.email,
-      },
-    };
+      };
 
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    };
-    await fetch(salesforceProxyEndpoint, options);
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      };
+      await fetch(salesforceProxyEndpoint, options);
+    }
 
     Loader.hideLoader();
   }
@@ -154,12 +238,18 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   async function removePet(petId) {
     Loader.showLoader();
+    // capture pet info before delete
+    const petInfo = await getPet(petId);
     try {
       await APIClientObj.deletePet(petId);
     } catch (status) {
       // eslint-disable-next-line no-console
       console.log('Failed to delete the pet:', petId, ' status:', status);
     }
+    // set dataLayer
+    sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.remove);
+    const removedProduct = getSelectedProduct(petId);
+    setDataLayer(removedProduct, DL_EVENTS.remove, petInfo);
     Loader.hideLoader();
     window.location.reload();
   }
@@ -286,42 +376,16 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   const confirmationDialogYes = document.getElementById('confirmation-dialog-yes');
   const confirmationDialogNo = document.getElementById('confirmation-dialog-no');
 
-  console.log(purchaseSummary);
-  console.log(purchaseSummary.petSummaries);
-  console.log(petsList);
-
-  // dataLayer
-  const { petSummaries } = purchaseSummary;
-  const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
-  petSummaries.forEach((pet) => {
-
-      // push each item object to items array
-      dlItems.push({
-        item_name: pet.membershipName ?? '',
-        currency: currencyValue,
-        discount: pet.nonInsurancePetSummary?.discount ?? '',
-        item_category: 'membership', // membership
-        item_variant: '', // okay to be left empty
-        price: pet.nonInsurancePetSummary?.amount ?? '',
-        quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
-        microchip_number: pet.microChipNumber ?? '',
-        product_type: pet.membershipName ?? '',
-      });
-
-  });
-
-  const trackingData = {
-    ecommerce: {
-      value: purchaseSummary.summary.totalDueToday,
-      currency: currencyValue,
-      items: dlItems,
-    },
-  };
-
-  // Add view cart event
-  trackGTMEvent('view_cart', trackingData);
-
-
+  // Trigger cart view DL event
+  if (purchaseSummary) {
+    // to avoid page view DL events on page refresh after add and remove
+    // const lastFormAction = sessionStorage.getItem(SS_KEY_SUMMARY_ACTION);
+    // if (!lastFormAction || (lastFormAction && !lastFormAction.includes(DL_EVENTS.remove))) {
+    // setDataLayer(purchaseSummary, DL_EVENTS.view);
+    // }
+    // leave default cart view on any page refresh
+    setDataLayer(purchaseSummary, DL_EVENTS.view);
+  }
 
   function editPetHandler(petID) {
     confirmationDialogHeader.textContent = 'Edit Confirmation';
@@ -403,6 +467,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     try {
       const data = await APIClientObj.postSalesForPayment(ownerData.id, ownerData.cartFlow);
       if (data.isSuccess) {
+        // trigger DL event
+        if (purchaseSummary) {
+          sessionStorage.removeItem(SS_KEY_SUMMARY_ACTION);
+          setDataLayer(purchaseSummary, DL_EVENTS.checkout);
+        }
         window.location.href = replaceUrlPlaceholders(
           data.paymentProcessorRedirectBackURL,
           data.paymentProcessingUserId,
@@ -422,6 +491,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   addPetButton.onclick = () => {
     if (formWrapper.innerHTML === '') {
       formDecoration(formWrapper, apiBaseUrl);
+      // set sessionStorage with add action
+      sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.add);
     } else {
       formWrapper.innerHTML = '';
     }
