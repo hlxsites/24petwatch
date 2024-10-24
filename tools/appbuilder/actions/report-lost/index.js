@@ -125,6 +125,9 @@ async function main(params) {
       return errorResponse(400, 'Captcha Invalid', logger);
     }
 
+    params.payload = body.payload;
+    params.__ow_path = '/Report/LostPet/SubmitReport'
+
     return params;
 
   } catch (error) {
