@@ -15,8 +15,15 @@ header.header-only-logo-wrapper p {
   margin: 0;
 }
 
+header.header-only-logo-wrapper .icon-logo {
+  height: auto;
+  max-width: calc(73.123rem - (1.875rem * 2));
+  margin: 0 1.875rem;
+}
+
 header.header-only-logo-wrapper .icon svg {
-  width: 220px;
+  height: 41px;
+  width: 200px;
 }
 
 @keyframes slide-down {
@@ -52,4 +59,16 @@ header.header-only-logo-wrapper .icon svg {
   animation-fill-mode: both;
   animation-delay: 300ms;
   will-change: transform,opacity
+}
+
+@media (min-width: 720px) {
+  header.header-only-logo-wrapper .icon svg {
+    height: 41px;
+  }
+}
+
+@media (min-width: 1210px) {
+  header.header-only-logo-wrapper .icon-logo {
+    margin: 0 auto;
+  }
 }
