@@ -15,7 +15,7 @@
 
 const fetch = require('node-fetch')
 const { Core } = require('@adobe/aio-sdk')
-const { errorResponse, getBearerToken, stringParameters, checkMissingRequestInputs } = require('../utils')
+const { errorResponse, stringParameters, checkMissingRequestInputs } = require('../utils')
 
 // main function that will be executed by Adobe I/O Runtime
 async function main(params) {
@@ -125,32 +125,7 @@ async function main(params) {
       return errorResponse(400, 'Captcha Invalid', logger);
     }
 
-    // Send body to final endpoint
-    // TODO Finalize the endpoint
-    const finalEndpoint = 'https://348665-24petwatch-stage.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-pethealth-services/Report/LostPet/SubmitReport';
-    // const finalEndpoint = 'https://www.24petwatch.com/content/24petwatch/us/en/lost-pet-protection/report-lost-found-pet/_jcr_content.api.json/api/v1/Report/LostPet/SubmitReport';
-    const finalResponse = await fetch(finalEndpoint, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
-    });
-
-    if (!finalResponse.ok) {
-      const responseStatus = finalResponse.status;
-      const responseBody = await finalResponse.json();
-      logger.debug(responseStatus, responseBody);
-
-      return errorResponse(500, `Contact Us API error occured: ${responseStatus} ${JSON.stringify(responseBody)}`, logger);
-    }
-
-    return {
-      statusCode: 200,
-      body: {
-        message: "Success",
-      }
-    };
+    return params;
 
   } catch (error) {
     // log any server errors

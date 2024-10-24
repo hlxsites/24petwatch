@@ -55,7 +55,6 @@ async function main(params) {
     );
 
     if (!token) {
-      return { SALESFORCE_TOKEN: 'fake-token', ...params }
       return errorResponse(401, 'Authenticaction failed', logger)
     }
 

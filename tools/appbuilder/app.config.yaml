@@ -52,7 +52,7 @@ application:
               PETHEALTH_BASE_DOMAIN: $PETHEALTH_BASE_DOMAIN
           report-lost:
             function: actions/report-lost/index.js
-            web: 'yes'
+            web: 'no'
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
@@ -65,4 +65,7 @@ application:
             web: 'yes'
           proxy-salesforce-services:
             actions: authentication-salesforce, salesfore-event
+            web: 'yes'
+          proxy-report-lost:
+            actions: report-lost, authentication-pethealth, service-pethealth
             web: 'yes'
