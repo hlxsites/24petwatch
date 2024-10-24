@@ -9,6 +9,7 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
+/* eslint-disable max-classes-per-file */
 
 /**
  * log RUM if part of the sample.
@@ -157,6 +158,22 @@ export function toCamelCase(name) {
   return toClassName(name).replace(/-([a-z])/g, (g) => g[1].toUpperCase());
 }
 
+/**
+ * Gets all the metadata elements that are in the given scope.
+ * @param {String} scope The scope/prefix for the metadata
+ * @returns an array of HTMLElement nodes that match the given scope
+ */
+export function getAllMetadata(scope) {
+  return [...document.head.querySelectorAll(`meta[property^="${scope}:"],meta[name^="${scope}-"]`)]
+    .reduce((res, meta) => {
+      const id = toClassName(meta.name
+        ? meta.name.substring(scope.length + 1)
+        : meta.getAttribute('property').split(':')[1]);
+      res[id] = meta.getAttribute('content');
+      return res;
+    }, {});
+}
+
 const ICONS_CACHE = {};
 /**
  * Replace icons with inline SVG and prefix with codeBasePath.
@@ -177,7 +194,6 @@ export async function decorateIcons(element) {
   await Promise.all(icons.map(async (span) => {
     const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
     if (!ICONS_CACHE[iconName]) {
-      ICONS_CACHE[iconName] = true;
       try {
         const response = await fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`);
         if (!response.ok) {
@@ -424,6 +440,36 @@ export function buildBlock(blockName, content) {
 }
 
 /**
+ * Dynamically loads JS and CSS resources
+ * @param {string} name The name of the module
+ * @param {string} jsPath The path to the JS file
+ * @param {string} cssPath The path to the CSS file
+ * @param  {...any} args Arguments to pass to the module
+ */
+async function loadModule(name, jsPath, cssPath, ...args) {
+  const cssLoaded = cssPath ? loadCSS(cssPath) : Promise.resolve();
+  const decorationComplete = jsPath
+    ? new Promise((resolve) => {
+      (async () => {
+        let mod;
+        try {
+          mod = await import(jsPath);
+          if (mod.default) {
+            await mod.default.apply(null, args);
+          }
+        } catch (error) {
+          // eslint-disable-next-line no-console
+          console.log(`failed to load module for ${name}`, error);
+        }
+        resolve(mod);
+      })();
+    })
+    : Promise.resolve();
+  return Promise.all([cssLoaded, decorationComplete])
+    .then(([, api]) => api);
+}
+
+/**
  * Loads JS and CSS for a block.
  * @param {Element} block The block element
  */
@@ -638,12 +684,13 @@ export async function waitForLCP(lcpBlocks) {
  * @returns {Promise}
  */
 export function loadHeader(header) {
-  let headerBlock = '';
-  if (!document.body.classList.contains('paid')) {
-    headerBlock = buildBlock('header', '');
-  } else if (document.body.classList.contains('paid')) {
+  let headerBlock = buildBlock('header', '');
+
+  if (document.body.className.includes('paid')) {
     // Load special header for paid section of the website
     headerBlock = buildBlock('header-paid', '');
+  } else if (document.body.classList.contains('only-logo')) {
+    headerBlock = buildBlock('header-only-logo', '');
   }
   header.append(headerBlock);
   decorateBlock(headerBlock);
@@ -657,15 +704,145 @@ export function loadHeader(header) {
  */
 export function loadFooter(footer) {
   let footerBlock = '';
-  if (!document.body.classList.contains('paid')) {
+  if (!document.body.className.includes('paid')) {
     footerBlock = buildBlock('footer', '');
-  } else if (document.body.classList.contains('paid')) {
+  } else if (document.body.className.includes('paid')) {
     // Load special footer for paid section of the website
     footerBlock = buildBlock('footer-paid', '');
   }
   footer.append(footerBlock);
   decorateBlock(footerBlock);
   return loadBlock(footerBlock);
+}
+
+/**
+ * Defines the execution context for the plugins.
+ * @type {object}
+ */
+export const executionContext = {
+  createOptimizedPicture,
+  getAllMetadata,
+  getMetadata,
+  decorateBlock,
+  decorateButtons,
+  decorateIcons,
+  loadBlock,
+  loadCSS,
+  loadScript,
+  sampleRUM,
+  toCamelCase,
+  toClassName,
+};
+
+/**
+ * Parses the plugin parameters.
+ * @param {string} id The plugin ID
+ * @param {string|object} config The plugin configuration
+ * @returns {object} The parsed plugin parameters
+ */
+function parsePluginParams(id, config) {
+  const pluginId = !config
+    ? id.split('/').splice(id.endsWith('/') ? -2 : -1, 1)[0].replace(/\.js/, '')
+    : id;
+  const pluginConfig = {
+    load: 'eager',
+    ...(typeof config === 'string' || !config
+      ? { url: (config || id).replace(/\/$/, '') }
+      : config),
+  };
+  pluginConfig.options ||= {};
+  return { id: pluginId, config: pluginConfig };
+}
+
+/**
+ * Plugins Registry - manage, load, and execute plugins
+ */
+class PluginsRegistry {
+  #plugins;
+
+  constructor() {
+    this.#plugins = new Map();
+  }
+
+  // Register a new plugin
+  add(id, config) {
+    const { id: pluginId, config: pluginConfig } = parsePluginParams(id, config);
+    this.#plugins.set(pluginId, pluginConfig);
+  }
+
+  // Get the plugin
+  get(id) { return this.#plugins.get(id); }
+
+  // Check if the plugin exists
+  includes(id) { return !!this.#plugins.has(id); }
+
+  // Load all plugins that are referenced by URL, and updated their configuration with the
+  // actual API they expose
+  async load(phase) {
+    [...this.#plugins.entries()]
+      .filter(([, plugin]) => plugin.condition
+      && !plugin.condition(document, plugin.options, executionContext))
+      .map(([id]) => this.#plugins.delete(id));
+    return Promise.all([...this.#plugins.entries()]
+      // Filter plugins that don't match the execution conditions
+      .filter(([, plugin]) => (
+        (!plugin.condition || plugin.condition(document, plugin.options, executionContext))
+        && phase === plugin.load && plugin.url
+      ))
+      .map(async ([key, plugin]) => {
+        try {
+          // If the plugin has a default export, it will be executed immediately
+          const pluginApi = (await loadModule(
+            key,
+            !plugin.url.endsWith('.js') ? `${plugin.url}/${key}.js` : plugin.url,
+            !plugin.url.endsWith('.js') ? `${plugin.url}/${key}.css` : null,
+            document,
+            plugin.options,
+            executionContext,
+          )) || {};
+          this.#plugins.set(key, { ...plugin, ...pluginApi });
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error('Could not load specified plugin', key);
+        }
+      }));
+  }
+
+  // Run a specific phase in the plugin
+  async run(phase) {
+    return [...this.#plugins.values()]
+      .reduce((promise, plugin) => ( // Using reduce to execute plugins sequencially
+        plugin[phase] && (!plugin.condition
+            || plugin.condition(document, plugin.options, executionContext))
+          ? promise.then(() => plugin[phase](document, plugin.options, executionContext))
+          : promise
+      ), Promise.resolve());
+  }
+}
+
+/**
+ * Templates Registry - manage templates
+ */
+class TemplatesRegistry {
+  // Register a new template
+  // eslint-disable-next-line class-methods-use-this
+  add(id, url) {
+    if (Array.isArray(id)) {
+      id.forEach((i) => window.hlx.templates.add(i));
+      return;
+    }
+    const { id: templateId, config: templateConfig } = parsePluginParams(id, url);
+    templateConfig.condition = () => toClassName(getMetadata('template')) === templateId;
+    window.hlx.plugins.add(templateId, templateConfig);
+  }
+
+  // Get the template
+  // eslint-disable-next-line class-methods-use-this
+  get(id) { return window.hlx.plugins.get(id); }
+
+  // Check if the template exists
+  // eslint-disable-next-line class-methods-use-this
+  includes(id) { return window.hlx.plugins.includes(id); }
 }
 
 /**
@@ -676,6 +853,8 @@ export function setup() {
   window.hlx.RUM_MASK_URL = 'full';
   window.hlx.codeBasePath = '';
   window.hlx.lighthouse = new URLSearchParams(window.location.search).get('lighthouse') === 'on';
+  window.hlx.plugins = new PluginsRegistry();
+  window.hlx.templates = new TemplatesRegistry();
 
   const scriptEl = document.querySelector('script[src$="/scripts/scripts.js"]');
   if (scriptEl) {

@@ -1,0 +1,9 @@
+.widget-aggregator iframe {
+  border: 0;
+  width: 100%;
+  height: 350px;
+
+  @media (max-width: 812px) {
+    height: 750px;
+  }
+}
