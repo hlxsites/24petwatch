@@ -56,7 +56,6 @@ function getValueFromData(configJSON, configParam) {
   const configElements = JSON.parse(configJSON).data;
   return configElements.find((c) => c.key === configParam)?.value;
 }
-;
 
 /**
  * @param {string} environment - leave empty to auto calculate the environment
