@@ -196,7 +196,7 @@ export default async function decorate() {
         affiliation: '24petwatch',
         value: summary.totalDueToday ?? '',
         tax: summary.salesTaxes ?? '',
-        shipping: totalShipping ? totalShipping.toFixed(2) : '0.00',
+        shipping: totalShipping ? Number(totalShipping) : 0,
         currency: currencyValue,
         payment_type: paymentMethod,
         product_type: productTypes.join(', '),
