@@ -96,24 +96,33 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
     // remove from cart
     if (event === DL_EVENTS.remove) {
-      // view cart DL object
-      const removeCartDL = {
-        ecommerce: {
-          items: [{
-            item_name: data.itemName ?? '',
-            currency: currencyValue,
-            discount: data.discount ?? '',
-            item_category: 'membership', // membership
-            item_variant: '', // okay to be left empty
-            price: data.salesPrice ?? '',
-            quantity: 1,
-            microchip_number: petData.microchipId ?? '',
-            product_type: data.itemName ?? '',
-          }],
-        },
-      };
-      // Add view cart event
-      trackGTMEvent(DL_EVENTS.remove, removeCartDL);
+      // check we have all required data
+      if ('petSummaries' in data && 'microchipId' in petData) {
+        const { petSummaries } = data;
+        const microchip = petData.microchipId;
+        const petIndex = petSummaries.findIndex((item) => item.microChipNumber === microchip);
+        const petSummary = petSummaries[petIndex];
+        if (petSummary) {
+          // remove cart DL object
+          const removeCartDL = {
+            ecommerce: {
+              items: [{
+                item_name: petSummary.membershipName ?? '',
+                currency: currencyValue,
+                discount: petSummary.nonInsurancePetSummary?.discount ?? '',
+                item_category: 'membership', // membership
+                item_variant: '', // okay to be left empty
+                price: petSummary.nonInsurancePetSummary?.amount ?? '',
+                quantity: 1,
+                microchip_number: microchip ?? '',
+                product_type: petSummary.membershipName ?? '',
+              }],
+            },
+          };
+          // Add view cart event
+          trackGTMEvent(DL_EVENTS.remove, removeCartDL);
+        }
+      }
     }
     // begin checkout
     if (event === DL_EVENTS.checkout) {
@@ -124,7 +133,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
           items: dlItems,
         },
       };
-      // Add view cart event
+      // Add checkout cart event
       trackGTMEvent(DL_EVENTS.checkout, checkoutCartDL);
     }
   }
@@ -247,9 +256,10 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       console.log('Failed to delete the pet:', petId, ' status:', status);
     }
     // set dataLayer
-    sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.remove);
-    const removedProduct = getSelectedProduct(petId);
-    setDataLayer(removedProduct, DL_EVENTS.remove, petInfo);
+    if (purchaseSummary && petInfo) {
+      sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.remove);
+      setDataLayer(purchaseSummary, DL_EVENTS.remove, petInfo);
+    }
     Loader.hideLoader();
     window.location.reload();
   }
