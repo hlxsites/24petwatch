@@ -649,16 +649,20 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
-  function instrumentTrackingStep1() {
+  function instrumentTracking(productName) {
     const currentPath = window.location.pathname;
     let productType = null;
 
-    if (currentPath.includes(PET_PLANS_LPM_URL)) {
-      productType = 'Lifetime Protection Membership';
-    } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
-      productType = 'Lifetime Protection Membership - PLUS';
-    } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
-      productType = 'Annual Protection Membership';
+    if (!productName) {
+      if (currentPath.includes(PET_PLANS_LPM_URL)) {
+        productType = 'Lifetime Protection Membership';
+      } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
+        productType = 'Lifetime Protection Membership - PLUS';
+      } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
+        productType = 'Annual Protection Membership';
+      }
+    } else {
+      productType = productName;
     }
 
     // call instrument tracking
@@ -731,7 +735,7 @@ export default function formDecoration(block, apiBaseUrl) {
     }
 
     // call instrument tracking
-    instrumentTrackingStep1();
+    instrumentTracking();
 
     Loader.hideLoader();
 
@@ -741,7 +745,7 @@ export default function formDecoration(block, apiBaseUrl) {
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 
-  async function executeAddPet2Step(recId) {
+  async function executeAddPet2Step(recId, productName) {
     Loader.showLoader();
     if (!await saveSelectedProduct(formData.petId, recId)) {
       // eslint-disable-next-line no-console
@@ -750,6 +754,9 @@ export default function formDecoration(block, apiBaseUrl) {
       Loader.hideLoader();
       return;
     }
+
+    // call instrument tracking
+    instrumentTracking(productName);
 
     Loader.hideLoader();
     window.location.reload();
@@ -791,7 +798,7 @@ export default function formDecoration(block, apiBaseUrl) {
                 <p>${additionalInfo.priceComment}</p>
             </div>
             <div class="product-fragment" data-product-id="${product.itemId}"></div>
-            <div class="button-wrapper"><button class="choose-product" data-product-rec-id="${product.recId}">Add</button></div>
+            <div class="button-wrapper"><button class="choose-product" data-product-rec-id="${product.recId}" data-product-name="${additionalInfo.name}">Add</button></div>
           </div>
           `;
         }
@@ -809,7 +816,7 @@ export default function formDecoration(block, apiBaseUrl) {
       const chooseProductButtons = document.querySelectorAll('.choose-product');
       chooseProductButtons.forEach((button) => {
         button.addEventListener('click', (event) => {
-          executeAddPet2Step(event.target.getAttribute('data-product-rec-id'));
+          executeAddPet2Step(event.target.getAttribute('data-product-rec-id'), event.target.getAttribute('data-product-name'));
         });
       });
     } else {
