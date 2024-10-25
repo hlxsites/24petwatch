@@ -651,9 +651,11 @@ export default function formDecoration(block, apiBaseUrl) {
 
   function instrumentTracking(productName) {
     const currentPath = window.location.pathname;
-    let productType = null;
+    const { microchip = '' } = formData || {};
 
-    if (!productName) {
+    let productType = productName || null;
+
+    if (!productType) {
       if (currentPath.includes(PET_PLANS_LPM_URL)) {
         productType = 'Lifetime Protection Membership';
       } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
@@ -661,8 +663,11 @@ export default function formDecoration(block, apiBaseUrl) {
       } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
         productType = 'Annual Protection Membership';
       }
-    } else {
-      productType = productName;
+    }
+
+    if (!productType) {
+      console.error('Product type could not be determined.');
+      return;
     }
 
     // call instrument tracking
@@ -678,7 +683,7 @@ export default function formDecoration(block, apiBaseUrl) {
             discount: '', // not available until step 2
             item_category: 'membership',
             item_variant: '', // okay to be left empty
-            microchip_number: formData.microchip,
+            microchip_number: microchip,
             product_type: productType,
             price: '', // not available until step 2
             quantity: 1,
