@@ -761,7 +761,7 @@ export default function formDecoration(block) {
     window.location.href = `.${PET_PLANS_SUMMARY_QUOTE_URL}`; // ex: './summary-quote'
   }
 
-  async function executeAddPet2Step(recId, productName) {
+  async function executeAddPet2Step(recId) {
     Loader.showLoader();
     if (!await saveSelectedProduct(formData.petId, recId)) {
       // eslint-disable-next-line no-console
@@ -816,7 +816,7 @@ export default function formDecoration(block) {
                 <p>${additionalInfo.priceComment}</p>
             </div>
             <div class="product-fragment" data-product-id="${product.itemId}"></div>
-            <div class="button-wrapper"><button class="choose-product" data-product-rec-id="${product.recId}" data-product-name="${additionalInfo.name}">Add</button></div>
+            <div class="button-wrapper"><button class="choose-product" data-product-rec-id="${product.recId}">Add</button></div>
           </div>
           `;
         }
@@ -834,7 +834,7 @@ export default function formDecoration(block) {
       const chooseProductButtons = document.querySelectorAll('.choose-product');
       chooseProductButtons.forEach((button) => {
         button.addEventListener('click', (event) => {
-          executeAddPet2Step(event.target.getAttribute('data-product-rec-id'), event.target.getAttribute('data-product-name'));
+          executeAddPet2Step(event.target.getAttribute('data-product-rec-id'));
         });
       });
     } else {
