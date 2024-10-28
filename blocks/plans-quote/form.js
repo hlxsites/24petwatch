@@ -1,7 +1,7 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import Loader from './loader.js';
-import APIClient from '../../scripts/24petwatch-api.js';
+import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   SS_KEY_FORM_ENTRY_URL,
@@ -19,6 +19,7 @@ import {
   isSummaryPage,
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
+  DL_EVENTS,
 } from '../../scripts/24petwatch-utils.js';
 import { getConfigValue } from '../../scripts/configs.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
@@ -39,7 +40,26 @@ const usedChipNumbers = new Set();
 
 const promoResultKey = await getConfigValue('promo-result');
 
-export default function formDecoration(block, apiBaseUrl) {
+const apiBaseUrl = await getAPIBaseUrl();
+const APIClientObj = new APIClient(apiBaseUrl);
+
+// eslint-disable-next-line no-shadow
+async function getPurchaseSummary(ownerId) {
+  Loader.showLoader();
+  // eslint-disable-next-line no-shadow
+  let purchaseSummary = {};
+  try {
+    purchaseSummary = await APIClientObj.getPurchaseSummary(ownerId);
+  } catch (status) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to get the purchase summary for owner:', ownerId, ' status:', status);
+  }
+  Loader.hideLoader();
+
+  return purchaseSummary;
+}
+
+export default function formDecoration(block) {
   // prepare for Canada vs US
   const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
@@ -181,7 +201,6 @@ export default function formDecoration(block, apiBaseUrl) {
 
   Loader.addLoader();
 
-  const APIClientObj = new APIClient(apiBaseUrl);
   const countryId = isCanada ? 1 : 2;
   const formData = {};
   const breedLists = {};
@@ -649,51 +668,40 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
-  function instrumentTracking(productName) {
-    const currentPath = window.location.pathname;
-    const { microchip = '' } = formData || {};
+  function setDataLayer(data) {
+    const dlItems = [];
 
-    let productType = productName || null;
-
-    if (!productType) {
-      if (currentPath.includes(PET_PLANS_LPM_URL)) {
-        productType = 'Lifetime Protection Membership';
-      } else if (currentPath.includes(PET_PLANS_LPM_PLUS_URL)) {
-        productType = 'Lifetime Protection Membership - PLUS';
-      } else if (currentPath.includes(PET_PLANS_ANNUAL_URL)) {
-        productType = 'Annual Protection Membership';
-      }
-    }
-
-    if (!productType) {
-      console.error('Product type could not be determined.');
-      return;
-    }
-
-    // call instrument tracking
-    const trackingData = {
-      ecommerce: {
-        // New GTM dataLayer
-        product_type: productType, // annual protection membership
-        items: [
-          {
-            item_name: productType,
-            // coupon: formData.promoCode,
+    if ('petSummaries' in data) {
+      const { petSummaries } = data;
+      let membershipName = '';
+      if (petSummaries && petSummaries.length > 0) {
+        petSummaries.forEach((pet) => {
+          membershipName = pet.membershipName ?? '';
+          // push each item object to items array
+          dlItems.push({
+            item_name: membershipName,
             currency: currencyValue,
-            discount: '', // not available until step 2
+            discount: pet.nonInsurancePetSummary?.discount ?? '',
             item_category: 'membership',
             item_variant: '', // okay to be left empty
-            microchip_number: microchip,
-            product_type: productType,
-            price: '', // not available until step 2
-            quantity: 1,
-          },
-        ],
-      },
-    };
+            microchip_number: pet.microChipNumber ?? '',
+            product_type: membershipName,
+            price: pet.nonInsurancePetSummary?.amount ?? '',
+            quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+          });
+        });
 
-    // send the GTM event
-    trackGTMEvent('add_to_cart', trackingData);
+        const trackingData = {
+          ecommerce: {
+            product_type: membershipName,
+            items: dlItems,
+          },
+        };
+
+        // send the GTM event
+        trackGTMEvent(DL_EVENTS.add, trackingData);
+      }
+    }
   }
 
   async function executeSubmit() {
@@ -701,6 +709,7 @@ export default function formDecoration(block, apiBaseUrl) {
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
+
     if (!formData.ownerId) {
       // eslint-disable-next-line no-console
       console.log('Failed to save the owner.');
@@ -739,8 +748,10 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
 
+    const getPurchaseSummaryDetails = await getPurchaseSummary(formData.ownerId);
+
     // call instrument tracking
-    instrumentTracking();
+    setDataLayer(getPurchaseSummaryDetails);
 
     Loader.hideLoader();
 
@@ -760,8 +771,10 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
 
+    const getPurchaseSummaryDetails = await getPurchaseSummary(formData.ownerId);
+
     // call instrument tracking
-    instrumentTracking(productName);
+    setDataLayer(getPurchaseSummaryDetails);
 
     Loader.hideLoader();
     window.location.reload();
