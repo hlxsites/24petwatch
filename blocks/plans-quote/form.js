@@ -771,6 +771,11 @@ export default function formDecoration(block) {
       return;
     }
 
+    const getPurchaseSummaryDetails = await getPurchaseSummary(formData.ownerId);
+
+    // call instrument tracking
+    setDataLayer(getPurchaseSummaryDetails);
+
     Loader.hideLoader();
     window.location.reload();
   }
