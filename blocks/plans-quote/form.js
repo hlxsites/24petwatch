@@ -1,10 +1,12 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import Loader from './loader.js';
-import APIClient from '../../scripts/24petwatch-api.js';
+import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   SS_KEY_FORM_ENTRY_URL,
+  CURRENCY_CANADA,
+  CURRENCY_US,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
   PET_PLANS_LPM_URL,
@@ -17,8 +19,10 @@ import {
   isSummaryPage,
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
+  DL_EVENTS,
 } from '../../scripts/24petwatch-utils.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 
 const US_LEGAL_HEADER = '';
 const US_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services (USA) Inc. may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from 24Pet regarding microchip services. Additionally, PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may offer you promotions and the latest information from 24Petprotect™ regarding pet insurance services and products. By checking “Continue”, Pethealth Services (USA) Inc. and PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may contact you via commercial electronic messages, automatic telephone dialing systems, prerecorded/automated messages or text messages at the telephone number provided above, including your mobile number. These calls or emails are not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
@@ -36,8 +40,28 @@ const usedChipNumbers = new Set();
 
 const promoResultKey = await getConfigValue('promo-result');
 
-export default function formDecoration(block, apiBaseUrl) {
+const apiBaseUrl = await getAPIBaseUrl();
+const APIClientObj = new APIClient(apiBaseUrl);
+
+// eslint-disable-next-line no-shadow
+async function getPurchaseSummary(ownerId) {
+  Loader.showLoader();
+  // eslint-disable-next-line no-shadow
+  let purchaseSummary = {};
+  try {
+    purchaseSummary = await APIClientObj.getPurchaseSummary(ownerId);
+  } catch (status) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to get the purchase summary for owner:', ownerId, ' status:', status);
+  }
+  Loader.hideLoader();
+
+  return purchaseSummary;
+}
+
+export default function formDecoration(block) {
   // prepare for Canada vs US
+  const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
   const zipcodePlaceholder = isCanada ? 'A1A 1A1' : '00000';
   const privacyPolicyURL = isCanada ? '/ca/privacy-policy' : '/privacy-policy';
@@ -177,7 +201,6 @@ export default function formDecoration(block, apiBaseUrl) {
 
   Loader.addLoader();
 
-  const APIClientObj = new APIClient(apiBaseUrl);
   const countryId = isCanada ? 1 : 2;
   const formData = {};
   const breedLists = {};
@@ -645,11 +668,48 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
+  function setDataLayer(data) {
+    const dlItems = [];
+
+    if ('petSummaries' in data) {
+      const { petSummaries } = data;
+      let membershipName = '';
+      if (petSummaries && petSummaries.length > 0) {
+        petSummaries.forEach((pet) => {
+          membershipName = pet.membershipName ?? '';
+          // push each item object to items array
+          dlItems.push({
+            item_name: membershipName,
+            currency: currencyValue,
+            discount: pet.nonInsurancePetSummary?.discount ?? '',
+            item_category: 'membership',
+            item_variant: '', // okay to be left empty
+            microchip_number: pet.microChipNumber ?? '',
+            product_type: membershipName,
+            price: pet.nonInsurancePetSummary?.amount ?? '',
+            quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+          });
+        });
+
+        const trackingData = {
+          ecommerce: {
+            product_type: membershipName,
+            items: dlItems,
+          },
+        };
+
+        // send the GTM event
+        trackGTMEvent(DL_EVENTS.add, trackingData);
+      }
+    }
+  }
+
   async function executeSubmit() {
     Loader.showLoader();
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
+
     if (!formData.ownerId) {
       // eslint-disable-next-line no-console
       console.log('Failed to save the owner.');
@@ -688,6 +748,11 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
 
+    const getPurchaseSummaryDetails = await getPurchaseSummary(formData.ownerId);
+
+    // call instrument tracking
+    setDataLayer(getPurchaseSummaryDetails);
+
     Loader.hideLoader();
 
     // remember the critical information for future steps
@@ -705,6 +770,11 @@ export default function formDecoration(block, apiBaseUrl) {
       Loader.hideLoader();
       return;
     }
+
+    const getPurchaseSummaryDetails = await getPurchaseSummary(formData.ownerId);
+
+    // call instrument tracking
+    setDataLayer(getPurchaseSummaryDetails);
 
     Loader.hideLoader();
     window.location.reload();

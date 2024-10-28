@@ -19,8 +19,18 @@ export function getQueryParam(param, defaultValue = null) {
   return urlParams.has(param) ? urlParams.get(param) : defaultValue;
 }
 
+// ----- dataLayer event helpers -----
+export const DL_EVENTS = {
+  add: 'add_to_cart',
+  remove: 'remove_from_cart',
+  view: 'view_cart',
+  checkout: 'begin_checkout',
+  purchase: 'purchase',
+};
+
 // ----- sessionStorage / localStorage helpers -----
 export const SS_KEY_FORM_ENTRY_URL = 'formEntryURL';
+export const SS_KEY_SUMMARY_ACTION = 'summaryAction';
 
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';

@@ -1,7 +1,14 @@
-Please always provide the [GitHub issue(s)](../issues) your PR is for, as well as test URLs where your change can be observed (before and after):
+## Jira Ticket ##
+<-- Story/Subtask/Bug: LINK_TO_TICKET -->
 
-Fix #<gh-issue-id>
+## Purpose ##
+<-- Why are we doing this? Any context or related work? -->
 
-Test URLs:
+## Changes ##
+<-- What changes are important to call out to the reviewer -->
+
+## Validate Changes ##
+<-- Include steps to test or links to content packages as needed -->
+
 - Before: https://main--24petwatch--hlxsites.hlx.page/
 - After: https://<branch>--24petwatch--hlxsites.hlx.page/
