@@ -670,22 +670,22 @@ export default function formDecoration(block) {
 
   function setDataLayer(data) {
     const dlItems = [];
+    const productTypes = [];
 
     if ('petSummaries' in data) {
       const { petSummaries } = data;
-      let membershipName = '';
       if (petSummaries && petSummaries.length > 0) {
         petSummaries.forEach((pet) => {
-          membershipName = pet.membershipName ?? '';
+          productTypes.push(pet.membershipName ?? '');
           // push each item object to items array
           dlItems.push({
-            item_name: membershipName,
+            item_name: pet.membershipName ?? '',
             currency: currencyValue,
             discount: pet.nonInsurancePetSummary?.discount ?? '',
             item_category: 'membership',
             item_variant: '', // okay to be left empty
             microchip_number: pet.microChipNumber ?? '',
-            product_type: membershipName,
+            product_type: pet.membershipName ?? '',
             price: pet.nonInsurancePetSummary?.amount ?? '',
             quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
           });
@@ -693,7 +693,7 @@ export default function formDecoration(block) {
 
         const trackingData = {
           ecommerce: {
-            product_type: membershipName,
+            product_type: productTypes.join(', '),
             items: dlItems,
           },
         };
