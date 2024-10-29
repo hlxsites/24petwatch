@@ -1,5 +1,6 @@
 import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
+  COOKIE_NAME_FOR_PET_TAGS,
   COOKIE_NAME_SAVED_OWNER_ID,
   deleteCookie,
   SS_KEY_FORM_ENTRY_URL,
@@ -147,7 +148,7 @@ export default async function decorate() {
 
     contentColumn.appendChild(ul);
 
-    // update analyics values if cart flow is membership
+    // update analytics values if cart flow is membership
     if (isMembershipFlow) {
       totalShipping += pet.nonInsurancePetSummary.shipping;
       productTypes.push(pet.membershipName ?? '');
@@ -206,6 +207,11 @@ export default async function decorate() {
 
     // send the GTM event
     trackGTMEvent('purchase', trackingData);
+  }
+
+  // remove pet tags cookie
+  if (!isMembershipFlow) {
+    deleteCookie(COOKIE_NAME_FOR_PET_TAGS);
   }
 
   // Salesforce Upsert
