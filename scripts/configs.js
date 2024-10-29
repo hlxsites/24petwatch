@@ -52,6 +52,11 @@ function buildConfigURL(environment) {
   return configURL;
 }
 
+function getValueFromData(configJSON, configParam) {
+  const configElements = JSON.parse(configJSON).data;
+  return configElements.find((c) => c.key === configParam)?.value;
+}
+
 /**
  * @param {string} environment - leave empty to auto calculate the environment
  * @returns - configuration (key,value) pairs of the environment as configured in configs.json
@@ -59,6 +64,14 @@ function buildConfigURL(environment) {
 export const getConfigForEnvironment = async (environment) => {
   const env = (!environment) ? calcEnvironment() : environment;
   let configJSON = window.sessionStorage.getItem(`config:${env}`);
+
+  if (configJSON) {
+    const foundPetUrl = getValueFromData(configJSON, 'found-pet-endpoint');
+    if (!foundPetUrl.includes('proxy')) {
+      configJSON = null;
+    }
+  }
+
   if (!configJSON) {
     const configURL = buildConfigURL(env);
     const response = await fetch(configURL);
