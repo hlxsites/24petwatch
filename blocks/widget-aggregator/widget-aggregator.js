@@ -31,7 +31,7 @@ export default async function decorate(block) {
           redirectUrl: 'https://quote.petted.com/quote',
           baseUrl: 'https://quote.petted.com/',
           urlParam: {
-            source: '24petwatch-widget',
+            source,
             utm_source: '',
             utm_medium: '',
             utm_campaign: '',
