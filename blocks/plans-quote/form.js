@@ -5,6 +5,7 @@ import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   SS_KEY_FORM_ENTRY_URL,
+  SS_KEY_FIGO_COSTCO,
   CURRENCY_CANADA,
   CURRENCY_US,
   EMAIL_REGEX,
@@ -42,6 +43,144 @@ const promoResultKey = await getConfigValue('promo-result');
 
 const apiBaseUrl = await getAPIBaseUrl();
 const APIClientObj = new APIClient(apiBaseUrl);
+
+const policyId = getQueryParam('poid'); // used for costco figo
+// UAT
+const FIGO_CLIENT_ID = '3MVG9WCdh6PFin0jWOu2ZjQxHc_Md6vOJw8_1h1HIOz7WgKUUll9zUdMSzBxPfyGCkiKVoCsnuc2HbhK87Nj0';
+const FIGO_CLIENT_SECRET = 'B659243DFCDF843C9DD559BD2795369461D0A88481BD0A7D1ADDF930C5A0973F';
+const FIGO_USERNAME = 'salesforceteamsync@ipgpet.com.situatfsc';
+const FIGO_PASSWORD = 'SqJnaQ5gpFceZNjIPG!uZa3b7M4hT3tvgozeoTuvTFs';
+const FIGO_TOKEN_ENDPOINT = 'https://ipgpet--situatfsc.sandbox.my.salesforce.com/services/oauth2/token';
+
+// PROD
+// const FIGO_CLIENT_ID = '3MVG9ux34Ig8G5erswJEx2TJKiPcW2Bc2PJCeCKEnZkuMkYQMlQcAMW4CT8szltOIvzNQmZLLWb2jpMUp3Hjy';
+// const FIGO_CLIENT_SECRET = 'EC661E6AA88155B6C1FDAAEDC8418E46FCF72E817F9DB24FDED76D7E35E5059D';
+// const FIGO_USERNAME = 'salesforceteamsync@ipgpet.com';
+// const FIGO_PASSWORD = 'AQF31d8qVEIPG!Qvunw2jYBtRE0F6QKpAdzn9o';
+// const FIGO_TOKEN_ENDPOINT = 'https://ipgpet.my.salesforce.com/services/oauth2/token';
+
+// is costco figo flow
+function isCostcoFigoFlow() {
+  const membership = window.location.pathname.endsWith(PET_PLANS_ANNUAL_URL);
+  if (membership && policyId) {
+    return true;
+  }
+  return false;
+}
+
+// get auth token from salesforce
+async function getFigoSalesforceToken() {
+  const tokenEndpoint = FIGO_TOKEN_ENDPOINT;
+  const params = new URLSearchParams();
+  params.append('grant_type', 'password');
+  params.append('client_id', FIGO_CLIENT_ID);
+  params.append('client_secret', FIGO_CLIENT_SECRET);
+  params.append('username', FIGO_USERNAME);
+  params.append('password', FIGO_PASSWORD);
+
+  try {
+    const response = await fetch(tokenEndpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: params,
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching token', error);
+    return null;
+  }
+}
+
+// get salesforce data
+async function querySalesforceData(token, endpoint, soqQuery) {
+  try {
+    const response = await fetch(endpoint + encodeURIComponent(soqQuery), {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status} ${response.statusText}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error querying Salesforce data', error);
+    return null;
+  }
+}
+
+// check costco figo eligibility
+function isCostcoFigoEligible(status, type, level) {
+    // set eligibility flag based on the following values
+    const eligibilityData = {
+      level: ['Executive'],
+      type: ['Costco', 'Family-Employee'],
+      status: 'Active',
+    };
+    // check all conditions are met
+    if (status === eligibilityData.status && eligibilityData.level.includes(level) && eligibilityData.type.includes(type)) {
+      return true;
+    }
+    return false;
+}
+
+if (isCostcoFigoFlow()) {
+  // store token
+  const authData = await getFigoSalesforceToken();
+  const token = authData.access_token;
+  const instanceUrl = authData.instance_url;
+  console.log(instanceUrl);
+  const endpoint = `${instanceUrl}/services/data/v61.0/query/?q=`;
+  // query
+  const soqQuery = `SELECT Id, Number__c, Type__c, Level__c, Status__c, Insurance_Policy__r.Status FROM Membership__c WHERE Insurance_Policy__c = '${policyId}'`;
+  console.log(soqQuery);
+  const salesforceData = await querySalesforceData(token, endpoint, soqQuery);
+  console.log('SF Data', salesforceData);
+
+  if (salesforceData && salesforceData.records) {
+    if (salesforceData.records.length > 0) {
+      const record = salesforceData.records[0];
+      console.log('check records');
+      console.log(record);
+      const status = record.Status__c ? record.Status__c : null;
+      const type = record.Type__c ? record.Type__c : null;
+      const level = record.Level__c ? record.Level__c : null;
+
+      const eligibilityFlag = status !== null && type !== null && level !== null ? isCostcoFigoEligible(status, type, level) : false;
+
+      console.log('is eligable?', eligibilityFlag);
+
+      if (eligibilityFlag) {
+        console.log('eligible');
+        // get coscoFigoPromoCode
+        let coscoFigoPromoCode = 'testVoucher';
+        // if we get a valid voucher, indicate this for summary step to disable add pet
+        if (coscoFigoPromoCode) {
+          const storedCostcoFigoData = {
+            promo: coscoFigoPromoCode,
+            policyId: policyId
+          }
+          // store data for next step
+          sessionStorage.setItem(SS_KEY_FIGO_COSTCO, JSON.stringify(storedCostcoFigoData));  
+        }
+      } else {
+          console.log('not eligible for promo');
+      }
+    }
+  }
+}
 
 // eslint-disable-next-line no-shadow
 async function getPurchaseSummary(ownerId) {
@@ -889,6 +1028,12 @@ export default function formDecoration(block) {
 
     // promo code from query param
     const promoCode = getQueryParam('promo_code');
+    // promo from Costco / Figo
+    //const costcoFigoPromoCode = sessionStorage.getItem(SS_KEY_FIGO_COSTCO);
+    // const storedCostcoFigoData = {
+    //   promo: coscoFigoPromoCode,
+    //   policyId: policyId
+    // }
     if (promoCode) {
       promocodeInput.value = promoCode.trim();
       Loader.showLoader();

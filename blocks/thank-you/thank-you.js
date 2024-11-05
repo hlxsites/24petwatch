@@ -212,6 +212,7 @@ export default async function decorate() {
   // remove pet tags cookie
   if (!isMembershipFlow) {
     deleteCookie(COOKIE_NAME_FOR_PET_TAGS);
+    sessionStorage.removeItem(SS_KEY_FIGO_COSTCO); 
   }
 
   // Salesforce Upsert

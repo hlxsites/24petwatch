@@ -13,6 +13,13 @@ export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|
 export const CURRENCY_CANADA = 'CAD';
 export const CURRENCY_US = 'USD';
 
+export const COSTCO_FIGO_ITEMS = {
+  queryParams: {
+    InsurancePolicyId: 'poid',
+  },
+  partnerId: 17,
+};
+
 // ----- general helpers -----
 export function getQueryParam(param, defaultValue = null) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -31,6 +38,7 @@ export const DL_EVENTS = {
 // ----- sessionStorage / localStorage helpers -----
 export const SS_KEY_FORM_ENTRY_URL = 'formEntryURL';
 export const SS_KEY_SUMMARY_ACTION = 'summaryAction';
+export const SS_KEY_FIGO_COSTCO = 'figoCostco';
 
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';
