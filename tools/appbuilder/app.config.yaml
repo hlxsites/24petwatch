@@ -60,7 +60,7 @@ application:
               require-adobe-auth: false
               final: true
           pauls-authentication:
-            function: actions/pauls-proxy/authentication.js
+            function: actions/costco-figo-proxy/authentication.js
             web: 'yes'
             runtime: nodejs:20
             inputs:
@@ -71,7 +71,7 @@ application:
               SALESFORCE_ACCOUNT_ID: $SALESFORCE_ACCOUNT_ID
               SALESFORCE_SCOPES: "data_extensions_write data_extensions_read journeys_read list_and_subscribers_read"
           pauls-service:
-            function: actions/pauls-proxy/service.js
+            function: actions/costco-figo-proxy/service.js
             web: 'yes'
             runtime: nodejs:20
             inputs:
