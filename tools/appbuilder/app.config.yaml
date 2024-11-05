@@ -59,6 +59,24 @@ application:
             annotions:
               require-adobe-auth: false
               final: true
+          pauls-authentication:
+            function: actions/pauls-proxy/authentication.js
+            web: 'yes'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              SALESFORCE_CLIENT_ID: $SALESFORCE_CLIENT_ID
+              SALESFORCE_CLIENT_SECRET: $SALESFORCE_CLIENT_SECRET
+              SALESFORCE_AUTH_URI: $SALESFORCE_AUTH_URI
+              SALESFORCE_ACCOUNT_ID: $SALESFORCE_ACCOUNT_ID
+              SALESFORCE_SCOPES: "data_extensions_write data_extensions_read journeys_read list_and_subscribers_read"
+          pauls-service:
+            function: actions/pauls-proxy/service.js
+            web: 'yes'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+
         sequences:
           proxy-pethealth-services:
             actions: authentication-pethealth, service-pethealth
@@ -68,4 +86,7 @@ application:
             web: 'yes'
           proxy-report-lost:
             actions: report-lost, authentication-pethealth, service-pethealth
+            web: 'yes'
+          proxy-pauls-services:
+            actions: pauls-authentication, pauls-service
             web: 'yes'
