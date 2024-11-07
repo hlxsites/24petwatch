@@ -98,7 +98,7 @@
   font-size: 1.5rem;
 }
 
-.callout-get-a-quote {
+div[class*='callout-get-a-quote'] {
   padding: 1.5rem;
   background-color: #D6F7FA;
   border-radius: 8px;
@@ -166,8 +166,7 @@
     top: 120px;
   }
 
-  .callout-get-a-quote {
-
+  div[class*='callout-get-a-quote'] {
     > div > div {
       display: flex;
       align-items: center;
