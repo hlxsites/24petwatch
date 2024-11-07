@@ -59,24 +59,24 @@ application:
             annotions:
               require-adobe-auth: false
               final: true
-          pauls-authentication:
+          authentication-costco-figo:
             function: actions/costco-figo-proxy/authentication.js
             web: 'yes'
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
-              SALESFORCE_CLIENT_ID: $SALESFORCE_CLIENT_ID
-              SALESFORCE_CLIENT_SECRET: $SALESFORCE_CLIENT_SECRET
-              SALESFORCE_AUTH_URI: $SALESFORCE_AUTH_URI
-              SALESFORCE_ACCOUNT_ID: $SALESFORCE_ACCOUNT_ID
-              SALESFORCE_SCOPES: "data_extensions_write data_extensions_read journeys_read list_and_subscribers_read"
-          pauls-service:
+              COSTCO_CLIENT_ID: $COSTCO_CLIENT_ID
+              COSTCO_CLIENT_SECRET: $COSTCO_CLIENT_SECRET
+              COSTCO_USERNAME: $COSTCO_USERNAME
+              COSTCO_PASSWORD: $COSTCO_PASSWORD
+              COSTCO_AUTH_URI: $COSTCO_AUTH_URI
+          service-costco-figo:
             function: actions/costco-figo-proxy/service.js
             web: 'yes'
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
-
+              COSTCO_REST_URI: $COSTCO_REST_URI
         sequences:
           proxy-pethealth-services:
             actions: authentication-pethealth, service-pethealth
@@ -87,6 +87,6 @@ application:
           proxy-report-lost:
             actions: report-lost, authentication-pethealth, service-pethealth
             web: 'yes'
-          proxy-pauls-services:
-            actions: pauls-authentication, pauls-service
+          proxy-costco-figo-services:
+            actions: authentication-costco-figo, service-costco-figo
             web: 'yes'

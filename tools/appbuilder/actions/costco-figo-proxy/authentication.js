@@ -35,9 +35,9 @@ async function main(params) {
     // log parameters, only if params.LOG_LEVEL === 'debug'
     logger.error(stringParameters(params))
     logger.error(stringParameters(cache))
-
+    
     // check for missing request input parameters and headers
-    const requiredParams = [ 'SALESFORCE_CLIENT_ID' , 'SALESFORCE_CLIENT_SECRET', 'SALESFORCE_AUTH_URI', 'SALESFORCE_ACCOUNT_ID']
+    const requiredParams = [ 'COSTCO_CLIENT_ID' , 'COSTCO_CLIENT_SECRET', 'COSTCO_AUTH_URI', 'COSTCO_USERNAME', 'COSTCO_PASSWORD']
     const requiredHeaders = []
     const errorMessage = checkMissingRequestInputs(params, requiredParams, requiredHeaders)
     if (errorMessage) {
@@ -45,12 +45,12 @@ async function main(params) {
       return errorResponse(400, errorMessage, logger)
     }
 
-    const authUrl = new URL('/v2/token', params.SALESFORCE_AUTH_URI);
+    const authUrl = new URL('/services/oauth2/token', params.COSTCO_AUTH_URI);
     const token = await getToken(
-      params.SALESFORCE_CLIENT_ID,
-      params.SALESFORCE_CLIENT_SECRET,
-      params.SALESFORCE_ACCOUNT_ID,
-      params.SALESFORCE_SCOPES || false,
+      params.COSTCO_CLIENT_ID,
+      params.COSTCO_CLIENT_SECRET,
+      params.COSTCO_USERNAME,
+      params.COSTCO_PASSWORD,
       authUrl.toString()
     );
 
@@ -58,10 +58,8 @@ async function main(params) {
       return errorResponse(401, 'Authenticaction failed', logger)
     }
 
-    const body = {SALESFORCE_TOKEN: token, ...params}
+    return {COSTCO_TOKEN: token, ...params}
 
-    return {statusCode: 200, body: body}
-    //return errorResponse(500, 'server error', logger)
   } catch (error) {
     // log any server errors
     logger.error(error)
@@ -70,33 +68,30 @@ async function main(params) {
   }
 }
 
-async function getToken(user, key, accountId, scope, authUrl) {
+async function getToken(client_id, client_secret, username, password, authUrl) {
     const now = Date.now();
     if (cache.date === undefined || now - cache.date > 60 * 60 * 3) {
         cache.date = now;
-        cache.token = await fetchToken(user, key, accountId, scope, authUrl);
+        cache.token = await fetchToken(client_id, client_secret, username, password, authUrl);
     }
 
     return cache.token;
 } 
 
-async function fetchToken(client_id, client_secret, account_id, scope, authUrl) {
-    const data ={
-      "grant_type": "client_credentials",
-      "client_id": client_id,
-      "client_secret": client_secret,
-      "account_id": account_id
-    }
+async function fetchToken(client_id, client_secret, username, password, authUrl) {
+  logger.info('authUrl', authUrl)
+  logger.info('client_id', client_id)
+    const data = new URLSearchParams();
+    data.append('grant_type', 'password');
+    data.append('client_id', client_id);
+    data.append('client_secret', client_secret);
+    data.append('username', username);
+    data.append('password', password);
 
-    if (scope) {
-      data.scope = scope;
-    }
-
-    logger.debug('data', data)
     const res = await fetch(authUrl, {
         method: 'POST',
-        body: JSON.stringify(data),
-        headers: { 'Content-Type': 'application/json' }
+        body: data,
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     })
 
     if (res.status !== 200 && res.status !== 401 && res.status !== 403 && res.status !== 404) {
@@ -104,7 +99,7 @@ async function fetchToken(client_id, client_secret, account_id, scope, authUrl) 
     }
 
     const response = await (res.json())
-    logger.debug('response', response)
+    logger.info('response', response)
 
     return response.access_token;
 }
