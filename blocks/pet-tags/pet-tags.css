@@ -101,6 +101,28 @@ form[id^="pet-tags-"] .radio-wrapper>input[type="radio"]:checked+label img {
     border: 0.25rem solid var(--button-secondary-color);
 }
 
+form[id^="pet-tags-"] .col1 a:any-link {
+  font-family: var(--body-font-family);
+  display: block;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: 2px solid transparent;
+  padding: 0.875rem 1.625rem;
+  text-align: center;
+  font-size: 1rem;
+  font-style: normal;
+  font-weight: 600;
+  cursor: pointer;
+  color: var(--background-color);
+  background-color: var(--button-primary-color);
+  margin: 6px auto;
+  width: 80%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-radius: 0.625rem;
+}
+
 @media screen and (width >=768px) {
     form[id^="pet-tags-"] .grid-wrapper-x4 {
         grid-template-columns: repeat(4, 1fr);
