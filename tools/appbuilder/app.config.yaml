@@ -61,7 +61,7 @@ application:
               final: true
           authentication-costco-figo:
             function: actions/costco-figo-proxy/authentication.js
-            web: 'yes'
+            web: 'no'
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
@@ -72,7 +72,7 @@ application:
               COSTCO_AUTH_URI: $COSTCO_AUTH_URI
           service-costco-figo:
             function: actions/costco-figo-proxy/service.js
-            web: 'yes'
+            web: 'no'
             runtime: nodejs:20
             inputs:
               LOG_LEVEL: debug
