@@ -80,7 +80,7 @@ main .plans-quote form .wrapper:not(.flex-wrapper) label {
   padding-bottom: 0;
 }
 
-.plans-quote .promo-code__details {
+.plans-quote .promo-code-details {
   display: block;
   font-size: 0.8rem;
   color: #333f48;
