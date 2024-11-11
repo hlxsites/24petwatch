@@ -68,10 +68,6 @@ main .plans-quote form .checkbox-text-wrapper > div {
   box-sizing: border-box;
 }
 
-main .plans-quote form .promocode-wrapper label {
-  top: -30px;
-}
-
 main .plans-quote form input:not(:placeholder-shown)~label {
   transform: unset;
 }
@@ -80,7 +76,11 @@ main .plans-quote form .wrapper:not(.flex-wrapper) label {
   padding-bottom: 0;
 }
 
-main .plans-quote form .promocode-wrapper label > div {
+main .plans-quote form .wrapper > label {
+  padding-left: 0;
+}
+
+.plans-quote .promocode__details {
   display: block;
   font-size: 0.8rem;
   color: #333f48;
@@ -372,8 +372,8 @@ main .plans-quote form {
 main .plans-quote form button#apply-promo-code {
   position: absolute;
   font-size: 1rem;
-  right: .5rem;
-  bottom: 1rem;
+  right: 0;
+  top: 1.2rem;
   margin: 0;
   padding: 0 2rem;
   height: 1.7rem;
@@ -393,7 +393,8 @@ main .plans-quote form .promocode-wrapper.error button#apply-promo-code {
 }
 
 main .plans-quote form .promocode-wrapper span.checkmark {
-  right: 8rem;
+  top: 1.4rem;
+  right: 7.25rem;
 }
 
 main .plans-quote form .checkbox-text-wrapper {
