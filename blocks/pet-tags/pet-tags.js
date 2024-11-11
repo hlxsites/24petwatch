@@ -1,13 +1,7 @@
 import { jsx } from '../../scripts/scripts.js';
 
-// link to the 24PetWatch website to buy pet tags
-const buyNowLink = 'https://www.24petwatch.com/ca/lost-pet-protection/pet-tags/tag-quote';
 // path to the images for pet tags
 const imagePath = '/images/tags/';
-// prices for pet tags
-const pricePerTagMetal = 19.95;
-const pricePerTagLifetimeSmall = 19.95;
-const pricePerTagLifetimeLarge = 19.95;
 
 function updateTagImage() {
   // lifetime tags
@@ -31,31 +25,67 @@ function updateTagImage() {
 }
 
 export default async function decorate(block) {
+  const blockMetadata = {};
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const row of block.children) {
+    let key = row.children[0].textContent;
+
+    key = key.replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) => {
+      if (+match === 0) return '';
+      return index === 0 ? match.toLowerCase() : match.toUpperCase();
+    });
+
+    const value = row.children[1].innerHTML;
+    if (key) {
+      blockMetadata[key] = value;
+    }
+  }
+
+  const {
+    primaryTagHeaderTitle,
+    primaryTagHeaderContent1Top,
+    primaryTagHeaderContent1Bottom,
+    primaryTagHeaderContent2Top,
+    primaryTagHeaderContent2Bottom,
+    primaryTagCTA,
+    primaryTagColumn2Title,
+    primaryTagColumn3Title,
+    primaryTagColumn4Title,
+    primaryTagColumn4Description,
+    secondaryTagHeaderTitle,
+    secondaryTagHeaderContent1Top,
+    secondaryTagHeaderContent1Bottom,
+    secondaryTagCTA,
+    secondaryTagColumn2Title,
+    secondaryTagColumn3Title,
+    secondaryTagColumn4Title,
+    secondaryTagColumn4Description,
+  } = blockMetadata;
+
   block.innerHTML = jsx`
     <!-- lifetime tags -->
     <form id="pet-tags-lifetime-form" class="content-center">
       <div class="title-wrapper">
         <div class="title-column">
-          <h4>Lifetime Warranty ID Tags</h4>
+          <h4>${primaryTagHeaderTitle}</h4>
         </div>
         <div class="title-column">
-          <p class="price">Small: $${pricePerTagLifetimeSmall}</p>
-          <p>(plus shipping)</p>
+          <p class="price">${primaryTagHeaderContent1Top}</p>
+          <p>${primaryTagHeaderContent1Bottom}</p>
         </div>
         <div class="title-column">
-          <p class="price">Large: $${pricePerTagLifetimeLarge}</p>
-          <p>(plus shipping)</p>
+          <p class="price">${primaryTagHeaderContent2Top}</p>
+          <p>${primaryTagHeaderContent2Bottom}</p>
         </div>
       </div>
       <div class="wrapper grid-wrapper-x4">
         <div class="col1 image-above-text">
           <img id="imageTagTypeLifetime" src="${imagePath}traditional-bone.png" alt="traditional bone lifetime tag">
-          <a href="${buyNowLink}">
-            <button type="button">Buy Now</button>
-          </a>
+          ${primaryTagCTA}
         </div>
         <div class="col2">
-          <h5>Choose from 2 prints:</h5>
+          <h5>${primaryTagColumn2Title}</h5>
           <div class="grid-wrapper-x2">
             <div class="radio-wrapper circular">
               <input type="radio" id="traditional" name="prints" value="traditional" checked>
@@ -74,7 +104,7 @@ export default async function decorate(block) {
           </div>
         </div>
         <div class="col3">
-          <h5>Choose from 2 shapes:</h5>
+          <h5>${primaryTagColumn3Title}</h5>
           <div class="grid-wrapper-x2">
             <div class="radio-wrapper shape-item">
               <input type="radio" id="boneL" name="shapesL" value="boneL" checked>
@@ -93,13 +123,8 @@ export default async function decorate(block) {
           </div>
         </div>
         <div class="col4">
-          <h5>Key features:</h5>
-            <ul>
-              <li>Made of steel with a special coating for a porcelain look and feel</li>
-              <li>Lifetime warranty if the tag is damaged or unreadable (not if it's lost)</li>
-              <li>Long lasting and durable</li>
-              <li>Includes your pet's name and unique microchip number</li>
-            </ul>
+          <h5>${primaryTagColumn4Title}</h5>
+          ${primaryTagColumn4Description}
         </div>
       </div>
     </form>
@@ -107,22 +132,20 @@ export default async function decorate(block) {
     <form id="pet-tags-metal-form">
       <div class="title-wrapper">
         <div class="title-column">
-          <h4>Standard Metal ID Tags</h4>
+          <h4>${secondaryTagHeaderTitle}</h4>
         </div>
         <div class="title-column">
-          <p class="price">$${pricePerTagMetal}</p>
-          <p>(plus shipping)</p>
+          <p class="price">${secondaryTagHeaderContent1Top}</p>
+          <p>${secondaryTagHeaderContent1Bottom}</p>
         </div>
       </div>
       <div class="wrapper grid-wrapper-x4">
         <div class="col1 image-above-text">
           <img id="imageTagTypeMetal" src="${imagePath}teal-heart.png" alt="teal heart metal tag">
-          <a href="${buyNowLink}">
-            <button type="button">Buy Now</button>
-          </a>
+          ${secondaryTagCTA}
         </div>
         <div class="col2">
-          <h5>Choose from 3 colors:</h5>
+          <h5>${secondaryTagColumn2Title}</h5>
           <div class="grid-wrapper-x3">
             <div class="radio-wrapper circular">
               <input type="radio" id="red" name="colors" value="red">
@@ -148,7 +171,7 @@ export default async function decorate(block) {
           </div>
         </div>
         <div class="col3">
-          <h5>Choose from 2 shapes:</h5>
+          <h5>${secondaryTagColumn3Title}</h5>
             <div class="grid-wrapper-x2">
             <div class="radio-wrapper shape-item">
               <input type="radio" id="boneM" name="shapesM" value="boneM">
@@ -167,11 +190,8 @@ export default async function decorate(block) {
           </div>
         </div>
         <div class="col4">
-          <h5>Key features:</h5>
-            <ul>
-              <li>Long lasting and durable</li>
-              <li>Includes your pet's name and unique microchip number</li>
-            </ul>
+          <h5>${secondaryTagColumn4Title}</h5>
+          ${secondaryTagColumn4Description}
         </div>
       </div>            
     </form>
