@@ -106,7 +106,7 @@ export default function formDecoration(block) {
       <span class="checkmark"></span>
       <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
       <div class="error-message"></div>
-      <div class="promocode__details">*Only one promotional/coupon code can be used per transaction</div>
+      <div class="promo-code__details">*Only one promotional/coupon code can be used per transaction</div>
     </div>
   `;
 
