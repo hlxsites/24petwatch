@@ -16,6 +16,7 @@ import {
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { getIsMultiPet } from './costco-promo.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
@@ -163,7 +164,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
     try {
       purchaseSummary = await getPurchaseSummary(ownerData.id);
-
       totalShipping = purchaseSummary.petSummaries.reduce((sum, pet) => {
         const shipping = pet.nonInsurancePetSummary?.shipping || 0;
         return sum + shipping;
@@ -292,6 +292,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     `;
   }
 
+  const numberOfItems = petsList.length ?? 0;
+
   const petListHTML = petsList.map((pet) => {
     const selectedProduct = getSelectedProduct(pet.id);
     if (!selectedProduct) {
@@ -303,7 +305,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             <p>${getSelectedProductAdditionalInfo(selectedProduct.itemId).name}</p>
             <div class="item-menu">
                 <a data-pet-id="${pet.id}" class="edit-pet">Edit</a>
-                <a data-pet-id="${pet.id}" class="remove-pet">Remove</a>
+                ${numberOfItems > 1 ? `<a data-pet-id="${pet.id}" class="remove-pet">Remove</a>` : ''}
             </div>
         </div>
         <div class="item-info">
@@ -335,13 +337,13 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     </div>
   </dialog>
   ${petListHTML.join('')}
-  <div class="new-pet-form">
+  ${getIsMultiPet ? `<div class="new-pet-form">
     <div class="new-pet-form-header">
       <span>Add Another Pet</span>
       <span id="add-another-pet">Add</span>
     </div>
     <div id="form-wrapper"></div>
-  </div>
+  </div>` : ''}
   <div class="payment-summary">
     <h5>Payment Summary</h5>
     <div class="payments">
@@ -497,14 +499,15 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   const addPetButton = document.getElementById('add-another-pet');
   const formWrapper = document.getElementById('form-wrapper');
-
-  addPetButton.onclick = () => {
-    if (formWrapper.innerHTML === '') {
-      formDecoration(formWrapper, apiBaseUrl);
-      // set sessionStorage with add action
-      sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.add);
-    } else {
-      formWrapper.innerHTML = '';
-    }
-  };
+  if (addPetButton) {
+    addPetButton.onclick = () => {
+      if (formWrapper.innerHTML === '') {
+        formDecoration(formWrapper, apiBaseUrl);
+        // set sessionStorage with add action
+        sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.add);
+      } else {
+        formWrapper.innerHTML = '';
+      }
+    };
+  }
 }

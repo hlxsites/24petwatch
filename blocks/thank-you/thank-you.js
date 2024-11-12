@@ -4,6 +4,7 @@ import {
   COOKIE_NAME_SAVED_OWNER_ID,
   deleteCookie,
   SS_KEY_FORM_ENTRY_URL,
+  LS_KEY_FIGO_COSTCO,
   CURRENCY_CANADA,
   CURRENCY_US,
 } from '../../scripts/24petwatch-utils.js';
@@ -97,6 +98,8 @@ export default async function decorate() {
   deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
   // unset sessionStorage form entry URL
   sessionStorage.removeItem(SS_KEY_FORM_ENTRY_URL);
+  // unset localStorage values related to Costco promo
+  localStorage.removeItem(LS_KEY_FIGO_COSTCO);
 
   const urlParams = new URLSearchParams(window.location.search);
   const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
@@ -212,7 +215,6 @@ export default async function decorate() {
   // remove pet tags cookie
   if (!isMembershipFlow) {
     deleteCookie(COOKIE_NAME_FOR_PET_TAGS);
-    sessionStorage.removeItem(SS_KEY_FIGO_COSTCO); 
   }
 
   // Salesforce Upsert
