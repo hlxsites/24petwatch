@@ -370,14 +370,19 @@ main .plans-quote form {
 }
 
 main .plans-quote form button#apply-promo-code {
-  position: absolute;
   font-size: 1rem;
-  right: 0;
-  top: 1.2rem;
-  margin: 0;
+  margin: 1rem 0 0;
   padding: 0 2rem;
   height: 1.7rem;
-  width: 7rem;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    position: absolute;
+    right: 0;
+    top: 1.2rem;
+    margin: 0;
+    width: 7rem;
+  }
 }
 
 main .plans-quote form button#apply-promo-code:hover {
@@ -394,7 +399,10 @@ main .plans-quote form .promocode-wrapper.error button#apply-promo-code {
 
 main .plans-quote form .promocode-wrapper span.checkmark {
   top: 1.4rem;
-  right: 7.25rem;
+
+  @media (min-width: 1024px) {
+    right: 7.25rem;
+  }
 }
 
 main .plans-quote form .checkbox-text-wrapper {
