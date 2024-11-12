@@ -123,6 +123,12 @@ main .plans-quote form .promocode-wrapper {
   margin-bottom: 3.25rem;
 }
 
+main .plans-quote form input[type="text"],
+main .plans-quote form input[type="email"] {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 main .plans-quote.first-step > div > div:nth-child(1) > p:first-of-type {
   background-color: #007680;
   color: #fff;
