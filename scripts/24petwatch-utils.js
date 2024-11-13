@@ -19,6 +19,11 @@ export function getQueryParam(param, defaultValue = null) {
   return urlParams.has(param) ? urlParams.get(param) : defaultValue;
 }
 
+export function hasQueryParam(param, defaultValue = false) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.has(param) && urlParams.get(param).trim() !== '' ? true : defaultValue;
+}
+
 // ----- dataLayer event helpers -----
 export const DL_EVENTS = {
   add: 'add_to_cart',

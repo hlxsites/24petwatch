@@ -12,7 +12,7 @@ export const COSTCO_FIGO_PROMO_ITEMS = {
 // set eligibility flag based on the following values
 const eligibilityCriteria = {
   level: ['Executive'],
-  type: ['Costco', 'Family-Employee'],
+  type: ['Costco', 'Employee-family'],
   status: 'Active',
   policyStatus: ['Future', 'Active'],
 };
@@ -27,6 +27,7 @@ export const getIsMultiPet = costcoFigoStoredValues.multiPet ?? true;
 export const isCostcoFigo = costcoFigoStoredValues.isEligible ?? false;
 export const getSavedCouponCode = costcoFigoStoredValues.couponCode ?? null;
 export const getSavedPolicyId = costcoFigoStoredValues.policyId ?? null;
+export const hasCostcoFigoStored = costcoFigoStoredData !== null;
 
 // is costco figo flow
 function isCostcoFigoFlow(policyId) {

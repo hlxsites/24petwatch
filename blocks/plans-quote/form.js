@@ -5,6 +5,7 @@ import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   SS_KEY_FORM_ENTRY_URL,
+  LS_KEY_FIGO_COSTCO,
   CURRENCY_CANADA,
   CURRENCY_US,
   EMAIL_REGEX,
@@ -14,7 +15,9 @@ import {
   PET_PLANS_ANNUAL_URL,
   PET_PLANS_SUMMARY_QUOTE_URL,
   setCookie,
+  deleteCookie,
   getQueryParam,
+  hasQueryParam,
   getCookie,
   isSummaryPage,
   getSelectedProductAdditionalInfo,
@@ -28,6 +31,7 @@ import {
   COSTCO_FIGO_PROMO_ITEMS,
   getSavedCouponCode,
   getIsMultiPet,
+  hasCostcoFigoStored,
 } from './costco-promo.js';
 
 const US_LEGAL_HEADER = '';
@@ -50,6 +54,7 @@ const apiBaseUrl = await getAPIBaseUrl();
 const APIClientObj = new APIClient(apiBaseUrl);
 
 const costcoFigoPolicyId = getQueryParam(COSTCO_FIGO_PROMO_ITEMS.policyIdKey);
+const isEditing = hasQueryParam('petId');
 
 let isMultiPet = getIsMultiPet;
 
@@ -893,8 +898,14 @@ export default function formDecoration(block) {
     return breedName;
   }
 
+  async function resetCostcoFigoData() {
+    localStorage.removeItem(LS_KEY_FIGO_COSTCO);
+    isMultiPet = true;
+  }
+
   async function executeCostcoFigoPromoCheck() {
     // Check if we have a costco figo promo policy id from query string
+    // Check if we are editing a pet
     if (costcoFigoPolicyId) {
       let hasValidCoupon = false;
       let costcoCoupon = null;
@@ -902,29 +913,40 @@ export default function formDecoration(block) {
       // check if we can apply a promo coupon for costco figo
       const costcoFigoCouponData = await checkCostcoFigoPromo(costcoFigoPolicyId, countryId);
       if (costcoFigoCouponData) {
-        isMultiPet = costcoFigoCouponData.multiPet ?? null;
+        isMultiPet = costcoFigoCouponData.multiPet ?? true;
         costcoCoupon = costcoFigoCouponData.couponCode ?? null;
         hasValidCoupon = !!costcoFigoCouponData.couponCode;
       }
-
-      if (hasValidCoupon && costcoCoupon !== null) {
+      // If we have a coupon, trigger tge promocodeHandler
+      if (hasValidCoupon && costcoCoupon !== null && !hasCostcoFigoStored) {
         // add promo code to promo field
         promocodeInput.value = costcoCoupon.trim();
         // disable field
         promocodeInput.disabled = true;
         // validate promo
         await promocodeHandler();
+      } else {
+        // we don't have a valid code and have stored policy data
+        await resetCostcoFigoData();
+        deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
       }
+    } else {
+      // no policy Id parameter, reset any data
+      await resetCostcoFigoData();
     }
   }
 
   async function prefillFormIfPossible() {
-    Loader.showLoader();
-    await executeCostcoFigoPromoCheck();
-    Loader.hideLoader();
-    if (isMultiPet !== null && isMultiPet === false) {
-      // don't prepopulate any other data if multipet value exists and is false
-      return;
+    // if not summary page and not editing pet, check costco promo
+    if (!isSummaryPage() && !isEditing) {
+      Loader.showLoader();
+      await executeCostcoFigoPromoCheck();
+      Loader.hideLoader();
+
+      // if multipet is false, don't try and prefill data
+      if (!isMultiPet) {
+        return;
+      }
     }
 
     const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
