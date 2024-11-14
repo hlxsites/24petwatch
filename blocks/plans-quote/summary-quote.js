@@ -179,23 +179,23 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   async function sendDataToSalesforce(owner, products, pets) {
     Loader.showLoader();
     if (!owner || !owner.email || !owner.id) {
-      // eslint-disable-next-line no-console
-      console.error('invalid owner data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!products || !products[0] || !products[0].petID) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid selected products data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid pets list data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!entryURL) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid entry URL');
+      Loader.hideLoader();
+      return;
     }
 
     if (selectedProducts.length > 0 && petsList.length > 0) {
@@ -347,7 +347,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   <div class="payment-summary">
     <h5>Payment Summary</h5>
     <div class="payments">
-        ${purchaseSummary.summary.discount ? `<div><div>Discount</div><div>-$${purchaseSummary.summary.discount}</div></div>` : ''}
+        ${purchaseSummary.summary?.discount ? `<div><div>Discount</div><div>-$${purchaseSummary.summary.discount}</div></div>` : ''}
         <div>
             <div>Monthly Fee</div>
             <div>$0.00</div>
@@ -355,15 +355,15 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         ${(totalShipping > 0) ? `<div><div>Shipping of Tag</div><div>$${totalShipping.toFixed(2)}</div></div>` : ''}
         <div>
             <div>Subtotal</div>
-            <div>$${purchaseSummary.summary.subTotal}</div>
+            <div>$${purchaseSummary.summary?.subTotal ?? '0.00'}</div>
         </div>
         <div>
             <div>Sales Tax</div>
-            <div>$${purchaseSummary.summary.salesTaxes}</div>
+            <div>$${purchaseSummary.summary?.salesTaxes ?? '0.00'}</div>
         </div>
         <div class="due-today">
             <div>Due Today</div>
-            <div>$${purchaseSummary.summary.totalDueToday}</div>
+            <div>$${purchaseSummary.summary?.totalDueToday ?? '0.00'}</div>
         </div>
     </div>
   </div>
@@ -467,6 +467,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   });
 
   const proceedToPaymentButton = document.getElementById('proceedToPayment');
+
+  if (proceedToPaymentButton) {
+    // if we don't have purchase summary, disable the button
+    proceedToPaymentButton.disabled = purchaseSummary.summary === undefined;
+  }
 
   function replaceUrlPlaceholders(urlTemplate, ...values) {
     return urlTemplate.replace(
