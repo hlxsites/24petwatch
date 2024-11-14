@@ -76,6 +76,23 @@ main .plans-quote form input:not(:placeholder-shown)~label {
   transform: unset;
 }
 
+main .plans-quote form .wrapper.disabled-field > input {
+  cursor: not-allowed;
+  pointer-events: none;
+  user-select: none;
+  position: relative;
+}
+
+main .plans-quote form .wrapper.disabled-field::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
 main .plans-quote form .wrapper:not(.flex-wrapper) label {
   padding-bottom: 0;
 }

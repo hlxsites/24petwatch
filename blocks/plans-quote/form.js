@@ -240,6 +240,19 @@ export default function formDecoration(block) {
   const cancelButton = document.getElementById('cancel');
   const addPetButton = document.getElementById('add-pet');
 
+  function disableField(element) {
+    const container = element.parentElement;
+    container.classList.add('disabled-field');
+    element.disabled = true;
+    element.addEventListener('focus', (event) => {
+      event.target.blur();
+    });
+    element.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+    });
+    element.setAttribute('tab-index', '-1');
+  }
+
   function showGeneralErrorMessage(errorMessage) {
     const errorElement = document.querySelector('.error-message.general-error-message');
     errorElement.textContent = errorMessage;
@@ -929,7 +942,7 @@ export default function formDecoration(block) {
         // add promo code to promo field
         promocodeInput.value = costcoCoupon.trim();
         // disable field
-        promocodeInput.disabled = true;
+        disableField(promocodeInput);
         // validate promo
         await promocodeHandler();
       } else {
