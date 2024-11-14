@@ -75,6 +75,12 @@ async function getPurchaseSummary(ownerId) {
 }
 
 export default function formDecoration(block) {
+  // if we are not editing, is not summary page and multipet is false
+  if (!isSummaryPage() && !isEditing && !isMultiPet) {
+    // delete the saved owner id cookie
+    deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
+  }
+
   // prepare for Canada vs US
   const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
@@ -899,13 +905,14 @@ export default function formDecoration(block) {
   }
 
   async function resetCostcoFigoData() {
-    localStorage.removeItem(LS_KEY_FIGO_COSTCO);
-    isMultiPet = true;
+    if (hasCostcoFigoStored) {
+      localStorage.removeItem(LS_KEY_FIGO_COSTCO);
+      isMultiPet = true;
+    }
   }
 
   async function executeCostcoFigoPromoCheck() {
     // Check if we have a costco figo promo policy id from query string
-    // Check if we are editing a pet
     if (costcoFigoPolicyId) {
       let hasValidCoupon = false;
       let costcoCoupon = null;
@@ -917,8 +924,8 @@ export default function formDecoration(block) {
         costcoCoupon = costcoFigoCouponData.couponCode ?? null;
         hasValidCoupon = !!costcoFigoCouponData.couponCode;
       }
-      // If we have a coupon, trigger tge promocodeHandler
-      if (hasValidCoupon && costcoCoupon !== null && !hasCostcoFigoStored) {
+      // If we have a coupon, trigger the promocodeHandler
+      if (hasValidCoupon && costcoCoupon !== null) {
         // add promo code to promo field
         promocodeInput.value = costcoCoupon.trim();
         // disable field
@@ -928,10 +935,9 @@ export default function formDecoration(block) {
       } else {
         // we don't have a valid code and have stored policy data
         await resetCostcoFigoData();
-        deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
       }
     } else {
-      // no policy Id parameter, reset any data
+      // no policy Id parameter, reset any promo data
       await resetCostcoFigoData();
     }
   }
@@ -942,7 +948,6 @@ export default function formDecoration(block) {
       Loader.showLoader();
       await executeCostcoFigoPromoCheck();
       Loader.hideLoader();
-
       // if multipet is false, don't try and prefill data
       if (!isMultiPet) {
         return;
