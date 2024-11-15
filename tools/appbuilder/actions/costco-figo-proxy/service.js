@@ -51,7 +51,6 @@ async function main(params) {
         const data = params.payload || {};
         return await getPolicyData('get', params.COSTCO_REST_URI, params.COSTCO_TOKEN, data, logger);
 
-
     } catch (error) {
         // log any server errors
         logger.error(error)
@@ -78,7 +77,7 @@ async function getPolicyData(method, endpoint, token, payload, logger) {
     try {
         const jsonBody = JSON.parse(body);
         return {
-            statusCode: 200,
+            statusCode: res.status,
             body: jsonBody,
         }
     } catch (error) {
