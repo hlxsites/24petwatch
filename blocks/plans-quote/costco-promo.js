@@ -3,6 +3,7 @@ import {
   LS_KEY_FIGO_COSTCO,
 } from '../../scripts/24petwatch-utils.js';
 import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
+import { getConfigValue } from '../../scripts/configs.js';
 
 export const COSTCO_FIGO_PROMO_ITEMS = {
   policyIdKey: 'poid',
@@ -19,6 +20,7 @@ const eligibilityCriteria = {
 
 const apiBaseUrl = await getAPIBaseUrl();
 const APIClientObj = new APIClient(apiBaseUrl);
+const costcoFigoService = await getConfigValue('costco-figo-proxy');
 const costcoFigoStoredData = localStorage.getItem(LS_KEY_FIGO_COSTCO);
 const costcoFigoStoredValues = costcoFigoStoredData ? JSON.parse(costcoFigoStoredData) : {};
 const costcoFigosubId = COSTCO_FIGO_PROMO_ITEMS.subId;
@@ -56,7 +58,8 @@ async function getCostcoPolicyData(policyId) {
   };
 
   try {
-    const response = await fetch('https://462515-24petwatch-paul.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-costco-figo-services', options);
+    //const response = await fetch('https://462515-24petwatch-paul.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-costco-figo-services', options);
+    const response = await fetch(costcoFigoService, options);    
     if (response.ok) {
       const costcoMembershipData = await response.json();
       // if we have a record associated with the policy Id
