@@ -58,8 +58,7 @@ async function getCostcoPolicyData(policyId) {
   };
 
   try {
-    //const response = await fetch('https://462515-24petwatch-paul.adobeioruntime.net/api/v1/web/24petwatch-appbuilder/proxy-costco-figo-services', options);
-    const response = await fetch(costcoFigoService, options);    
+    const response = await fetch(costcoFigoService, options);
     if (response.ok) {
       const costcoMembershipData = await response.json();
       // if we have a record associated with the policy Id
