@@ -5,7 +5,6 @@ import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   SS_KEY_FORM_ENTRY_URL,
-  LS_KEY_FIGO_COSTCO,
   CURRENCY_CANADA,
   CURRENCY_US,
   EMAIL_REGEX,
@@ -31,7 +30,7 @@ import {
   COSTCO_FIGO_PROMO_ITEMS,
   getSavedCouponCode,
   getIsMultiPet,
-  hasCostcoFigoStored,
+  resetCostcoFigoData,
 } from './costco-promo.js';
 
 const US_LEGAL_HEADER = '';
@@ -917,13 +916,6 @@ export default function formDecoration(block) {
     return breedName;
   }
 
-  async function resetCostcoFigoData() {
-    if (hasCostcoFigoStored) {
-      localStorage.removeItem(LS_KEY_FIGO_COSTCO);
-      isMultiPet = true;
-    }
-  }
-
   async function executeCostcoFigoPromoCheck() {
     // Check if we have a costco figo promo policy id from query string
     if (costcoFigoPolicyId) {
@@ -948,10 +940,12 @@ export default function formDecoration(block) {
       } else {
         // we don't have a valid code and have stored policy data
         await resetCostcoFigoData();
+        isMultiPet = true;
       }
     } else {
       // no policy Id parameter, reset any promo data
       await resetCostcoFigoData();
+      isMultiPet = true;
     }
   }
 

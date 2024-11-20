@@ -24,12 +24,12 @@ const costcoFigoService = await getConfigValue('costco-figo-proxy');
 const costcoFigoStoredData = localStorage.getItem(LS_KEY_FIGO_COSTCO);
 const costcoFigoStoredValues = costcoFigoStoredData ? JSON.parse(costcoFigoStoredData) : {};
 const costcoFigosubId = COSTCO_FIGO_PROMO_ITEMS.subId;
+const hasCostcoFigoStored = costcoFigoStoredData !== null;
 
 export const getIsMultiPet = costcoFigoStoredValues.multiPet ?? true;
 export const isCostcoFigo = costcoFigoStoredValues.isEligible ?? false;
 export const getSavedCouponCode = costcoFigoStoredValues.couponCode ?? null;
 export const getSavedPolicyId = costcoFigoStoredValues.policyId ?? null;
-export const hasCostcoFigoStored = costcoFigoStoredData !== null;
 
 // is costco figo flow
 function isCostcoFigoFlow(policyId) {
@@ -128,4 +128,11 @@ export async function checkCostcoFigoPromo(policyId, countryCode) {
     }
   }
   return costcoFigoCouponData;
+}
+
+// remove storage data
+export async function resetCostcoFigoData() {
+  if (hasCostcoFigoStored) {
+    localStorage.removeItem(LS_KEY_FIGO_COSTCO);
+  }
 }
