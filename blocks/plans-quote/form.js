@@ -960,7 +960,7 @@ export default function formDecoration(block) {
         return;
       }
     }
-
+    // the owner info must come from the cookie
     const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
     // promo code from query param
     const promoCode = getQueryParam('promo_code');
