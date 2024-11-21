@@ -32,12 +32,8 @@ export const getSavedCouponCode = costcoFigoStoredValues.couponCode ?? null;
 export const getSavedPolicyId = costcoFigoStoredValues.policyId ?? null;
 
 // is costco figo flow
-function isCostcoFigoFlow(policyId) {
-  const membership = window.location.pathname.endsWith(PET_PLANS_ANNUAL_URL);
-  if (membership && policyId) {
-    return true;
-  }
-  return false;
+function isCostcoFigoFlow() {
+  return window.location.pathname.endsWith(PET_PLANS_ANNUAL_URL);
 }
 
 // get the data
@@ -98,7 +94,7 @@ async function isCostcoFigoEligible(policyId) {
 export async function checkCostcoFigoPromo(policyId, countryCode) {
   let costcoFigoCouponData = false;
   if (policyId && countryCode) {
-    if (isCostcoFigoFlow(policyId)) {
+    if (isCostcoFigoFlow()) {
       // returns boolean
       const isEligible = await isCostcoFigoEligible(policyId);
       if (isEligible) {
