@@ -305,4 +305,16 @@ export default class APIClient {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
     });
   }
+
+  assignNextAvailableCoupon(subscriberId, externalPolicyId, country) {
+    const path = 'Product/NonInsurance/AssignNextAvailableCoupon';
+    const params = {
+      subscriberId,
+      externalPolicyId,
+      country,
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
+    });
+  }
 }
