@@ -122,10 +122,11 @@ export default function formDecoration(block) {
   const promocodeFieldHTML = jsx`
     <div class="wrapper promocode-wrapper">
       <input type="text" id="promocode" name="promocode" placeholder="Enter Code">
-      <label for="promocode" class="float-label">Promo/Coupon Code (optional)<div>*Only one promotional/coupon code can be used per transaction</div></label>
+      <label for="promocode" class="float-label">Promo/Coupon Code</label>
       <span class="checkmark"></span>
       <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
       <div class="error-message"></div>
+      <div class="promo-code-details">*Only one promotional/coupon code can be used per transaction</div>
     </div>
   `;
 
