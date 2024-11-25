@@ -11,7 +11,7 @@ import {
   // getXWalkDomain,
   baseDomain,
 } from '../../scripts/lib-franklin.js';
-import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { trackGTMEvent } from '../../scripts/lib-martech-loader.js';
 import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 
 // let positionY = 0;

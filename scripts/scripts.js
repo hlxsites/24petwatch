@@ -1,4 +1,3 @@
-/* global alloy */
 import {
   sampleRUM,
   buildBlock,
@@ -14,19 +13,16 @@ import {
   loadBlocks,
   loadCSS,
   getMetadata,
-  toClassName,
   isCanada,
 } from './lib-franklin.js';
 
 import {
-  analyticsSetConsent,
-  createInlineScript,
-  getAlloyInitScript,
-  getGTMInitScript,
-  setupAnalyticsTrackingWithAlloy,
-  setupAnalyticsTrackingWithGTM,
-  analyticsTrackConversion, trackGTMEvent,
-} from './lib-analytics.js';
+  martechInit,
+  martechEager,
+  martechLazy,
+  martechDelayed,
+  updateUserConsent,
+} from './lib-martech-loader.js';
 
 const LCP_BLOCKS = []; // add your LCP blocks to the list
 
@@ -70,6 +66,9 @@ export function getPlaceholder(key, options = {}) {
   }
   return Object.entries(options).reduce((str, [k, v]) => str.replace(`{{${k}}}`, v), placeholders[key]);
 }
+const martechLoadedPromise = martechInit(
+  { personalization: !!getMetadata('target') },
+);
 
 /**
  * Builds hero block and prepends to main in a new section.
@@ -246,121 +245,13 @@ async function loadEager(doc) {
 
   const main = doc.querySelector('main');
   if (main) {
-    createInlineScript(document, document.body, getAlloyInitScript(), 'text/javascript');
-    createInlineScript(document, document.body, getGTMInitScript(), 'text/javascript');
     decorateMain(main);
     document.body.classList.add('appear');
-    await waitForLCP(LCP_BLOCKS);
+    await Promise.all([
+      martechLoadedPromise.then(martechEager),
+      waitForLCP(LCP_BLOCKS),
+    ]);
   }
-}
-
-async function initializeConversionTracking() {
-  const context = {
-    getMetadata,
-    toClassName,
-  };
-  // eslint-disable-next-line import/no-relative-packages
-  const { initConversionTracking } = await import('../plugins/rum-conversion/src/index.js');
-  await initConversionTracking.call(context, document);
-
-  // call upon conversion events, sends them to alloy
-  sampleRUM.always.on('convert', async (data) => {
-    const { element } = data;
-    if (!element || !alloy) {
-      return;
-    }
-    // form tracking related logic should be added here if need be.
-    // see https://github.com/adobe/franklin-rum-conversion#integration-with-analytics-solutions
-    analyticsTrackConversion({ ...data });
-  });
-}
-
-/**
- * instruments the tracking in the main
- * @param {Element} main The main element
- */
-function instrumentTrackingEvents(main) {
-  main.querySelectorAll('a')
-    .forEach((anchor) => {
-      anchor.addEventListener('click', (e) => {
-        const body = document.querySelector('body');
-        const linkText = (e.target.textContent || '').trim();
-        const linkUrl = e.target.href;
-        const pageUrl = window.location.href;
-        let ctaLocation = null;
-
-        const trackCTAEvent = (location) => {
-          const eventData = {
-            link_text: linkText,
-            link_url: linkUrl,
-          };
-          if (location) {
-            eventData.cta_location = location;
-          }
-          trackGTMEvent('cta_click', eventData);
-        };
-
-        // track cta clicks on main
-        if (e.target.classList.contains('button')) {
-          // track clicks on the Pumpkin Wellness Club page
-          if (e.target.closest('[class*="pumpkin-wellness"]')) {
-            if (e.target.closest('.hero-pumpkin-wellness')) {
-              ctaLocation = 'join_the_club_header';
-            } else if (e.target.closest('.how-it-works-pumpkin-wellness')) {
-              ctaLocation = 'pick_your_plan';
-            } else if (e.target.closest('.curated-products-pumpkin-wellness')) {
-              ctaLocation = 'join_the_club_footer';
-            }
-            trackCTAEvent(ctaLocation);
-
-          // track .button cta clicks for paid pages
-          } else if (body.className.includes('paid')) {
-            if (e.target.closest('.hero-paid-membership')) {
-              ctaLocation = 'hero_cta';
-            } else if (e.target.closest('.lifetime-paid-membership')) {
-              ctaLocation = 'lpm_cta';
-            } else if (e.target.closest('.callout-vet-helpline')) {
-              ctaLocation = 'vet_helpline_cta';
-            } else if (e.target.closest('.callout-faq')) {
-              ctaLocation = 'faq_cta';
-            } else if (linkUrl.includes('lifetime-protection-membership-plus')) {
-              ctaLocation = 'lpm_plus_cta';
-            } else if (linkUrl.includes('annual-protection-membership')) {
-              ctaLocation = 'annual_cta';
-            } else if (e.target.closest('.callout-get-a-quote1')) {
-              ctaLocation = 'body_1_cta';
-            } else if (e.target.closest('.callout-get-a-quote2')) {
-              ctaLocation = 'body_2_cta';
-            }
-            trackCTAEvent(ctaLocation);
-            return;
-          } else {
-            trackCTAEvent(null);
-            return;
-          }
-        }
-
-        // track clicks to call for telephone numbers
-        if (linkUrl.startsWith('tel')) {
-          trackGTMEvent('click_to_call', {
-            page_url: pageUrl,
-          });
-        }
-
-        // track clicks for Login to MyPetHealth
-        if (linkUrl === 'https://mypethealth.com/auth/login') {
-          trackGTMEvent('pet_lost_report_mypethealth_link');
-        }
-
-        // track clicks on the Paid: FAQ page
-        if (body.classList.contains('paid')) {
-          if (e.target.closest('.faq-paid-membership')) {
-            ctaLocation = 'faq_cta';
-          }
-          trackCTAEvent(ctaLocation);
-        }
-      });
-    });
 }
 
 function cleanLocalhostLinks(main) {
@@ -393,15 +284,17 @@ async function loadLazy(doc) {
   loadFooter(doc.querySelector('footer'));
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
 
-  await setupAnalyticsTrackingWithAlloy(document);
-  await setupAnalyticsTrackingWithGTM();
-  analyticsSetConsent(true);
-  await initializeConversionTracking();
-  instrumentTrackingEvents(main);
+  updateUserConsent({
+    collect: true, // analytics
+    personalize: true, // target
+  });
+
+  await martechLazy();
   cleanLocalhostLinks(main);
 }
 
@@ -414,7 +307,7 @@ function loadDelayed() {
   window.setTimeout(() => {
     window.hlx.plugins.load('delayed');
     window.hlx.plugins.run('loadDelayed');
-    // eslint-disable-next-line import/no-cycle
+    martechDelayed();
     return import('./delayed.js');
   }, 3000);
 }

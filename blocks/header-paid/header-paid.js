@@ -1,7 +1,7 @@
 import { jsx, changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { isCanada, decorateLinks } from '../../scripts/lib-franklin.js';
-import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { trackGTMEvent } from '../../scripts/lib-martech-loader.js';
 
 /**
  * instruments the tracking in the header

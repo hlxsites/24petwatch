@@ -14,7 +14,7 @@ import {
   DL_EVENTS,
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
-import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { trackGTMEvent } from '../../scripts/lib-martech-loader.js';
 import { getConfigValue } from '../../scripts/configs.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
