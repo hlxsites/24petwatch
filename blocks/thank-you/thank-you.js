@@ -8,7 +8,7 @@ import {
   CURRENCY_US,
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
-import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import { trackGTMEvent } from '../../scripts/lib-martech-loader.js';
 import { getConfigValue } from '../../scripts/configs.js';
 
 // prep for API calls
