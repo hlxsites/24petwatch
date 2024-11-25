@@ -7,7 +7,7 @@ import { getConfigValue } from '../../scripts/configs.js';
 
 export const COSTCO_FIGO_PROMO_ITEMS = {
   policyIdKey: 'poid',
-  subId: 'SBSUN000016',
+  subId: 'COSTCOFIGO',
 };
 
 // set eligibility flag based on the following values
