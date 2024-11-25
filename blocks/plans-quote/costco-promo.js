@@ -13,7 +13,6 @@ export const COSTCO_FIGO_PROMO_ITEMS = {
 // set eligibility flag based on the following values
 const eligibilityCriteria = {
   level: ['Executive'],
-  type: ['Costco', 'Employee-family'],
   status: 'Active',
   policyStatus: ['Future', 'Active'],
 };
@@ -75,13 +74,11 @@ async function isCostcoFigoEligible(policyId) {
   const record = await getCostcoPolicyData(policyId);
   if (record) {
     const status = record.Status__c ?? null;
-    const type = record.Type__c ?? null;
     const level = record.Level__c ?? null;
     const policyStatus = record.Insurance_Policy__r?.Status ?? null;
 
     if (status === eligibilityCriteria.status
       && eligibilityCriteria.level.includes(level)
-      && eligibilityCriteria.type.includes(type)
       && eligibilityCriteria.policyStatus.includes(policyStatus)) {
       eligibilityFlag = true;
     }
