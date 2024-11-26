@@ -920,12 +920,14 @@ export default function formDecoration(block) {
   async function executeCostcoFigoPromoCheck() {
     // Check if we have a costco figo promo policy id from query string
     if (costcoFigoPolicyId) {
+      console.log('poid', costcoFigoPolicyId);
       let hasValidCoupon = false;
       let costcoCoupon = null;
 
       // check if we can apply a promo coupon for costco figo
       const costcoFigoCouponData = await checkCostcoFigoPromo(costcoFigoPolicyId, countryId);
       if (costcoFigoCouponData) {
+        console.log('costcoFigoCouponData', costcoFigoCouponData);
         isMultiPet = costcoFigoCouponData.multiPet ?? true;
         costcoCoupon = costcoFigoCouponData.couponCode ?? null;
         hasValidCoupon = !!costcoFigoCouponData.couponCode;
