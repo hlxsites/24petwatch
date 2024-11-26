@@ -306,7 +306,7 @@ export default class APIClient {
     });
   }
 
-    /** Returns an object with a couponCode and allowMultiPet.
+  /** Returns an object with a couponCode and allowMultiPet.
    * @param subscriberId - string
    * @param externalPolicyId - string
    * @param country - number
