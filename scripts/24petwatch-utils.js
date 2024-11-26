@@ -36,7 +36,7 @@ export const DL_EVENTS = {
 // ----- sessionStorage / localStorage helpers -----
 export const SS_KEY_FORM_ENTRY_URL = 'formEntryURL';
 export const SS_KEY_SUMMARY_ACTION = 'summaryAction';
-export const LS_KEY_FIGO_COSTCO = 'costcoFigoPromo';
+export const LS_KEY_COSTCO_FIGO = 'costcoFigoPromo';
 
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';
