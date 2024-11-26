@@ -1,6 +1,6 @@
 import {
   PET_PLANS_ANNUAL_URL,
-  LS_KEY_FIGO_COSTCO,
+  LS_KEY_COSTCO_FIGO,
 } from '../../scripts/24petwatch-utils.js';
 import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import { getConfigValue } from '../../scripts/configs.js';
@@ -13,7 +13,6 @@ export const COSTCO_FIGO_PROMO_ITEMS = {
 // set eligibility flag based on the following values
 const eligibilityCriteria = {
   level: ['Executive'],
-  type: ['Costco', 'Employee-family'],
   status: 'Active',
   policyStatus: ['Future', 'Active'],
 };
@@ -21,7 +20,7 @@ const eligibilityCriteria = {
 const apiBaseUrl = await getAPIBaseUrl();
 const APIClientObj = new APIClient(apiBaseUrl);
 const costcoFigoService = await getConfigValue('costco-figo-proxy');
-const costcoFigoStoredData = localStorage.getItem(LS_KEY_FIGO_COSTCO);
+const costcoFigoStoredData = localStorage.getItem(LS_KEY_COSTCO_FIGO);
 const costcoFigoStoredValues = costcoFigoStoredData ? JSON.parse(costcoFigoStoredData) : {};
 const costcoFigosubId = COSTCO_FIGO_PROMO_ITEMS.subId;
 const hasCostcoFigoStored = costcoFigoStoredData !== null;
@@ -75,13 +74,11 @@ async function isCostcoFigoEligible(policyId) {
   const record = await getCostcoPolicyData(policyId);
   if (record) {
     const status = record.Status__c ?? null;
-    const type = record.Type__c ?? null;
     const level = record.Level__c ?? null;
     const policyStatus = record.Insurance_Policy__r?.Status ?? null;
 
     if (status === eligibilityCriteria.status
       && eligibilityCriteria.level.includes(level)
-      && eligibilityCriteria.type.includes(type)
       && eligibilityCriteria.policyStatus.includes(policyStatus)) {
       eligibilityFlag = true;
     }
@@ -113,7 +110,7 @@ export async function checkCostcoFigoPromo(policyId, countryCode) {
               isEligible,
             };
             // store object for next steps
-            localStorage.setItem(LS_KEY_FIGO_COSTCO, JSON.stringify(storedCostcoFigoData));
+            localStorage.setItem(LS_KEY_COSTCO_FIGO, JSON.stringify(storedCostcoFigoData));
             costcoFigoCouponData = storedCostcoFigoData;
           }
         } catch (status) {
@@ -129,6 +126,6 @@ export async function checkCostcoFigoPromo(policyId, countryCode) {
 // remove storage data
 export async function resetCostcoFigoData() {
   if (hasCostcoFigoStored) {
-    localStorage.removeItem(LS_KEY_FIGO_COSTCO);
+    localStorage.removeItem(LS_KEY_COSTCO_FIGO);
   }
 }
