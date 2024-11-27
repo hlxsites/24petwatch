@@ -78,8 +78,10 @@ main .plans-quote form input:not(:placeholder-shown)~label {
 
 main .plans-quote form .wrapper.disabled-field > input {
   cursor: not-allowed;
+  cursor: unset;
   pointer-events: none;
   user-select: none;
+  -webkit-user-select: none;
   position: relative;
 }
 
