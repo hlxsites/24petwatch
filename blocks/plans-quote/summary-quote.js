@@ -16,7 +16,7 @@ import {
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 import { getConfigValue } from '../../scripts/configs.js';
-import { getIsMultiPet } from './costco-promo.js';
+import { getIsMultiPet, isCostcoFigo } from './costco-promo.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
@@ -266,8 +266,13 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   function getAutoRenewTet(itemId) {
     if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
+      if (!isCostcoFigo) {
+        return jsx`
+        <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $19.95, plus applicable taxes (price is subject to change).</strong>
+        `;
+      }
       return jsx`
-      <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $19.95, plus applicable taxes (price is subject to change).</strong>
+      <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $0 (price is subject to change).</strong>
       `;
     }
 
@@ -313,7 +318,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
               <div class="pet-name">${pet.petName}<span class="item-info-fragment-button" data-pet-id="${pet.id}"></span></div>
               <div class="price-info">
                 <div class="price">$${selectedProduct.salesPrice}</div>
-                <div class="price-comment">${getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment}</div>
+                <div class="price-comment">${!isCostcoFigo ? getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment : getSelectedProductAdditionalInfo(selectedProduct.itemId).priceCommentPromo}</div>
               </div>
             </div>
             <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>

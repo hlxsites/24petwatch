@@ -126,12 +126,14 @@ export function getSelectedProductAdditionalInfo(itemId) {
     'Annual Plan-DOGS': {
       name: 'Annual Protection Membership',
       priceComment: 'for the first year $19.95/year thereafter',
+      priceCommentPromo: 'for the first year $0/year thereafter',
       pageLink: PET_PLANS_ANNUAL_URL,
       fragmentLink: '/lost-pet-protection/fragments/annual-info',
     },
     'Annual Plan-CATS': {
       name: 'Annual Protection Membership',
       priceComment: 'for the first year $19.95/year thereafter',
+      priceCommentPromo: 'for the first year $0/year thereafter',
       pageLink: PET_PLANS_ANNUAL_URL,
       fragmentLink: '/lost-pet-protection/fragments/annual-info',
     },
