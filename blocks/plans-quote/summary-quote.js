@@ -16,6 +16,7 @@ import {
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { getIsMultiPet, isCostcoFigo } from './costco-promo.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
@@ -163,7 +164,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
     try {
       purchaseSummary = await getPurchaseSummary(ownerData.id);
-
       totalShipping = purchaseSummary.petSummaries.reduce((sum, pet) => {
         const shipping = pet.nonInsurancePetSummary?.shipping || 0;
         return sum + shipping;
@@ -179,23 +179,23 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   async function sendDataToSalesforce(owner, products, pets) {
     Loader.showLoader();
     if (!owner || !owner.email || !owner.id) {
-      // eslint-disable-next-line no-console
-      console.error('invalid owner data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!products || !products[0] || !products[0].petID) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid selected products data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid pets list data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!entryURL) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid entry URL');
+      Loader.hideLoader();
+      return;
     }
 
     if (selectedProducts.length > 0 && petsList.length > 0) {
@@ -266,8 +266,13 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   function getAutoRenewTet(itemId) {
     if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
+      if (!isCostcoFigo) {
+        return jsx`
+        <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $19.95, plus applicable taxes (price is subject to change).</strong>
+        `;
+      }
       return jsx`
-      <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $19.95, plus applicable taxes (price is subject to change).</strong>
+      <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $0 (price is subject to change).</strong>
       `;
     }
 
@@ -292,6 +297,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     `;
   }
 
+  const numberOfItems = petsList.length ?? 0;
+
   const petListHTML = petsList.map((pet) => {
     const selectedProduct = getSelectedProduct(pet.id);
     if (!selectedProduct) {
@@ -303,7 +310,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             <p>${getSelectedProductAdditionalInfo(selectedProduct.itemId).name}</p>
             <div class="item-menu">
                 <a data-pet-id="${pet.id}" class="edit-pet">Edit</a>
-                <a data-pet-id="${pet.id}" class="remove-pet">Remove</a>
+                ${numberOfItems > 1 ? `<a data-pet-id="${pet.id}" class="remove-pet">Remove</a>` : ''}
             </div>
         </div>
         <div class="item-info">
@@ -311,7 +318,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
               <div class="pet-name">${pet.petName}<span class="item-info-fragment-button" data-pet-id="${pet.id}"></span></div>
               <div class="price-info">
                 <div class="price">$${selectedProduct.salesPrice}</div>
-                <div class="price-comment">${getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment}</div>
+                <div class="price-comment">${!isCostcoFigo ? getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment : getSelectedProductAdditionalInfo(selectedProduct.itemId).priceCommentPromo}</div>
               </div>
             </div>
             <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>
@@ -335,17 +342,17 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     </div>
   </dialog>
   ${petListHTML.join('')}
-  <div class="new-pet-form">
+  ${getIsMultiPet ? `<div class="new-pet-form">
     <div class="new-pet-form-header">
       <span>Add Another Pet</span>
       <span id="add-another-pet">Add</span>
     </div>
     <div id="form-wrapper"></div>
-  </div>
+  </div>` : ''}
   <div class="payment-summary">
     <h5>Payment Summary</h5>
     <div class="payments">
-        ${purchaseSummary.summary.discount ? `<div><div>Discount</div><div>-$${purchaseSummary.summary.discount}</div></div>` : ''}
+        ${purchaseSummary.summary?.discount ? `<div><div>Discount</div><div>-$${purchaseSummary.summary.discount}</div></div>` : ''}
         <div>
             <div>Monthly Fee</div>
             <div>$0.00</div>
@@ -353,15 +360,15 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         ${(totalShipping > 0) ? `<div><div>Shipping of Tag</div><div>$${totalShipping.toFixed(2)}</div></div>` : ''}
         <div>
             <div>Subtotal</div>
-            <div>$${purchaseSummary.summary.subTotal}</div>
+            <div>$${purchaseSummary.summary?.subTotal ?? '0.00'}</div>
         </div>
         <div>
             <div>Sales Tax</div>
-            <div>$${purchaseSummary.summary.salesTaxes}</div>
+            <div>$${purchaseSummary.summary?.salesTaxes ?? '0.00'}</div>
         </div>
         <div class="due-today">
             <div>Due Today</div>
-            <div>$${purchaseSummary.summary.totalDueToday}</div>
+            <div>$${purchaseSummary.summary?.totalDueToday ?? '0.00'}</div>
         </div>
     </div>
   </div>
@@ -466,6 +473,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   const proceedToPaymentButton = document.getElementById('proceedToPayment');
 
+  if (proceedToPaymentButton) {
+    // if we don't have purchase summary, disable the button
+    proceedToPaymentButton.disabled = purchaseSummary.summary === undefined;
+  }
+
   function replaceUrlPlaceholders(urlTemplate, ...values) {
     return urlTemplate.replace(
       /{(\d+)}/g,
@@ -497,14 +509,15 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   const addPetButton = document.getElementById('add-another-pet');
   const formWrapper = document.getElementById('form-wrapper');
-
-  addPetButton.onclick = () => {
-    if (formWrapper.innerHTML === '') {
-      formDecoration(formWrapper, apiBaseUrl);
-      // set sessionStorage with add action
-      sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.add);
-    } else {
-      formWrapper.innerHTML = '';
-    }
-  };
+  if (addPetButton) {
+    addPetButton.onclick = () => {
+      if (formWrapper.innerHTML === '') {
+        formDecoration(formWrapper, apiBaseUrl);
+        // set sessionStorage with add action
+        sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.add);
+      } else {
+        formWrapper.innerHTML = '';
+      }
+    };
+  }
 }

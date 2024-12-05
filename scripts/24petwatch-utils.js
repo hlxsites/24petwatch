@@ -19,6 +19,11 @@ export function getQueryParam(param, defaultValue = null) {
   return urlParams.has(param) ? urlParams.get(param) : defaultValue;
 }
 
+export function hasQueryParam(param, defaultValue = false) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.has(param) && urlParams.get(param).trim() !== '' ? true : defaultValue;
+}
+
 // ----- dataLayer event helpers -----
 export const DL_EVENTS = {
   add: 'add_to_cart',
@@ -31,6 +36,7 @@ export const DL_EVENTS = {
 // ----- sessionStorage / localStorage helpers -----
 export const SS_KEY_FORM_ENTRY_URL = 'formEntryURL';
 export const SS_KEY_SUMMARY_ACTION = 'summaryAction';
+export const LS_KEY_COSTCO_FIGO = 'costcoFigoPromo';
 
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';
@@ -120,12 +126,14 @@ export function getSelectedProductAdditionalInfo(itemId) {
     'Annual Plan-DOGS': {
       name: 'Annual Protection Membership',
       priceComment: 'for the first year $19.95/year thereafter',
+      priceCommentPromo: 'for the first year $0/year thereafter',
       pageLink: PET_PLANS_ANNUAL_URL,
       fragmentLink: '/lost-pet-protection/fragments/annual-info',
     },
     'Annual Plan-CATS': {
       name: 'Annual Protection Membership',
       priceComment: 'for the first year $19.95/year thereafter',
+      priceCommentPromo: 'for the first year $0/year thereafter',
       pageLink: PET_PLANS_ANNUAL_URL,
       fragmentLink: '/lost-pet-protection/fragments/annual-info',
     },

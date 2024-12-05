@@ -305,4 +305,22 @@ export default class APIClient {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
     });
   }
+
+  /** Returns an object with a couponCode and allowMultiPet.
+   * @param subscriberId - string
+   * @param externalPolicyId - string
+   * @param country - number
+   * @returns {Promise<unknown>}
+   */
+  assignNextAvailableCoupon(subscriberId, externalPolicyId, country) {
+    const path = 'Product/NonInsurance/AssignNextAvailableCoupon';
+    const params = {
+      subscriberId,
+      externalPolicyId,
+      country,
+    };
+    return new Promise((resolve, reject) => {
+      APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
+    });
+  }
 }
