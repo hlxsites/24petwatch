@@ -11,39 +11,27 @@ export default async function decorate(block) {
       blockMetadata[key] = value;
     }
   }
-  const { source, script } = blockMetadata;
 
+  block.innerText = '';
   block.setAttribute('id', '24petwatch-quote-form');
-  if (script === 'iframe') {
-    const frame = document.createElement('iframe');
-    frame.id = source;
-    frame.src = 'https://quote.petted.com/widget/petplace';
-    frame.setAttribute('loading', 'lazy');
 
-    block.innerText = '';
-    block.append(frame);
-  } else if (script === 'widget') {
-    block.innerText = '';
-    loadScript('https://quote.petted.com/Scripts/lib/widgets/petplace/quote-form/widget.min.js', { async: true }).then(() => {
-      if (window.QuoteEngine) {
-        window.QuoteEngine.setOptions({
-          targetId: '24petwatch-quote-form',
-          redirectUrl: 'https://quote.petted.com/quote',
-          baseUrl: 'https://quote.petted.com/',
-          urlParam: {
-            source,
-            utm_source: '',
-            utm_medium: '',
-            utm_campaign: '',
-            utm_content: '',
-            utm_term: '',
-          },
-          refCode: '24petwatch',
-        });
-        window.QuoteEngine.init();
-      }
-    });
-  } else {
-    block.innerText = '';
-  }
+  loadScript('https://quote.petplace.com/lib/widgets/petplace/quote-form/widget.min.js', { async: true }).then(() => {
+    if (window.QuoteEngine) {
+      window.QuoteEngine.setOptions({
+        targetId: '24petwatch-quote-form',
+        redirectUrl: 'https://quote.petplace.com/quote',
+        baseUrl: 'https://quote.petplace.com',
+        urlParam: {
+          source: blockMetadata.source || '',
+          utm_source: '',
+          utm_medium: '',
+          utm_campaign: '',
+          utm_content: '',
+          utm_term: '',
+        },
+        refCode: '24petwatch',
+      });
+      window.QuoteEngine.init();
+    }
+  });
 }
