@@ -369,7 +369,7 @@ function cleanLocalhostLinks(main) {
       if (anchor.href.startsWith('http://localhost:3001')) {
         const url = new URL(anchor.href);
         url.hostname = 'www.24petwatch.com';
-        url.scheme = 'https';
+        url.protocol = 'https';
         url.port = '';
         anchor.href = url.toString();
       }
