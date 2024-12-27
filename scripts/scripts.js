@@ -335,7 +335,14 @@ function instrumentTrackingEvents(main) {
             trackCTAEvent(ctaLocation);
             return;
           } else {
-            trackCTAEvent(null);
+            const containerBlock = e.target.closest('[data-block-name]');
+            const blockList = document.querySelectorAll(`[data-block-name=${containerBlock.dataset.blockName}]`);
+            blockList.forEach((block, key) => {
+              if (block === containerBlock) {
+                ctaLocation = `${containerBlock.dataset.blockName}_${key}`;
+              }
+            });
+            trackCTAEvent(ctaLocation);
             return;
           }
         }
