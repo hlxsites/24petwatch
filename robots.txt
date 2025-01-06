@@ -5,8 +5,6 @@ Disallow: /adoptionoffer*
 Disallow: /AdoptionOffer*
 Disallow: /trial/*
 Disallow: /ca/trial/*
-Disallow: /blog/experiments/experiment-blog
-Disallow: /blog/main-blog
 Allow: /
 Allow: /content*
 Sitemap: https://www.24petwatch.com/sitemap.xml
