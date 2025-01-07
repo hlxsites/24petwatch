@@ -74,8 +74,8 @@ async function getPurchaseSummary(ownerId) {
 }
 
 export default function formDecoration(block) {
-  // if we are not editing, is not summary page and multipet is false
-  if (!isSummaryPage() && !isEditing && !isMultiPet) {
+  // if we are not editing, is not summary page
+  if (!isSummaryPage() && !isEditing) {
     // delete the saved owner id cookie
     deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
   }
