@@ -187,6 +187,8 @@ export function changeDomain(block) {
  */
 export function addCanadaToLinks(block) {
   if (isCanada) {
+    const EXEMPT_PATHS = ['privacy-policy']; // add paths that should not be rewritten
+    // check each link in the block
     block.querySelectorAll('a').forEach((anchor) => {
       if (anchor.getAttribute('rel') === 'alternate') return;
       const url = new URL(anchor.href);
@@ -194,6 +196,8 @@ export function addCanadaToLinks(block) {
       if (url.hostname === window.location.hostname) {
         // change only for internal links
         if (!url.pathname.startsWith('/ca/')) {
+          // if any part of the url is in the exempt list, do not rewrite
+          if (EXEMPT_PATHS.some((path) => url.pathname.includes(path))) return;
           newUrl.pathname = `/ca${url.pathname}`;
           anchor.href = newUrl.toString();
         }
