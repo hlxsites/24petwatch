@@ -314,9 +314,10 @@ function instrumentTrackingEvents(main) {
               ctaLocation = 'pick_your_plan';
             } else if (e.target.closest('.curated-products-pumpkin-wellness')) {
               ctaLocation = 'join_the_club_footer';
+            } else {
+              ctaLocation = 'join_the_club_banner';
             }
             trackCTAEvent(ctaLocation);
-
           // track .button cta clicks for paid pages
           } else if (body.className.includes('paid')) {
             if (e.target.closest('.hero-paid-membership')) {
