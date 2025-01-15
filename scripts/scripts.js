@@ -372,6 +372,8 @@ function cleanLocalhostLinks(main) {
         url.protocol = window.location.protocol;
         url.port = window.location.port;
         anchor.href = url.toString();
+        // remove target="_blank" from localhost links
+        anchor.removeAttribute('target');
       }
     });
 }
