@@ -299,6 +299,7 @@ function instrumentTrackingEvents(header) {
         // track cta clicks on header
         if (e.target.classList.contains('button')) {
           trackGTMEvent('cta_click', {
+            cta_location: 'header_cta',
             link_text: linkText,
             link_url: linkUrl,
           });

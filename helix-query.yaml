@@ -6,7 +6,9 @@ indices:
       - /blog/**
     exclude:
       - /blog
+      - /blog/main-blog
       - /blog/fragments/**
+      - /blog/experiments/**
     target: /blog/query-index.json
     properties:
       lastModified:
@@ -30,6 +32,10 @@ indices:
       tags:
         select: head > meta[property="article:tag"]
         values: attribute(el, 'content')
+      robots:
+        select: head > meta[name="robots"]
+        value: |
+          attribute(el, 'content')
   blog_ca:
     include:
       - /ca/blog/**
@@ -58,6 +64,10 @@ indices:
       tags:
         select: head > meta[property="article:tag"]
         values: attribute(el, 'content')
+      robots:
+        select: head > meta[name="robots"]
+        value: |
+          attribute(el, 'content')
   site_us:
     include:
       - /**

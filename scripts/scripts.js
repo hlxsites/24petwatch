@@ -314,9 +314,10 @@ function instrumentTrackingEvents(main) {
               ctaLocation = 'pick_your_plan';
             } else if (e.target.closest('.curated-products-pumpkin-wellness')) {
               ctaLocation = 'join_the_club_footer';
+            } else {
+              ctaLocation = 'join_the_club_banner';
             }
             trackCTAEvent(ctaLocation);
-
           // track .button cta clicks for paid pages
           } else if (body.className.includes('paid')) {
             if (e.target.closest('.hero-paid-membership')) {
@@ -335,17 +336,53 @@ function instrumentTrackingEvents(main) {
               ctaLocation = 'body_1_cta';
             } else if (e.target.closest('.callout-get-a-quote2')) {
               ctaLocation = 'body_2_cta';
+            } else {
+              const containerBlock = e.target.closest('[data-block-name]');
+              // if containerBlock is null, fallback to sections
+              if (containerBlock) {
+                const blockList = document.querySelectorAll(`[data-block-name=${containerBlock.dataset.blockName}]`);
+                blockList.forEach((block, key) => {
+                  if (block === containerBlock) {
+                    ctaLocation = `${containerBlock.dataset.blockName}_${key}`;
+                  }
+                });
+              } else {
+                // check for the closest section
+                const parentSection = e.target.closest('.section');
+                if (parentSection) {
+                  const sectionList = document.querySelectorAll('.section');
+                  sectionList.forEach((section, key) => {
+                    if (section === parentSection) {
+                      ctaLocation = `section_${key}`;
+                    }
+                  });
+                }
+              }
             }
             trackCTAEvent(ctaLocation);
             return;
           } else {
             const containerBlock = e.target.closest('[data-block-name]');
-            const blockList = document.querySelectorAll(`[data-block-name=${containerBlock.dataset.blockName}]`);
-            blockList.forEach((block, key) => {
-              if (block === containerBlock) {
-                ctaLocation = `${containerBlock.dataset.blockName}_${key}`;
+            // if containerBlock is null, fallback to sections
+            if (containerBlock) {
+              const blockList = document.querySelectorAll(`[data-block-name=${containerBlock.dataset.blockName}]`);
+              blockList.forEach((block, key) => {
+                if (block === containerBlock) {
+                  ctaLocation = `${containerBlock.dataset.blockName}_${key}`;
+                }
+              });
+            } else {
+              // check for the closest section
+              const parentSection = e.target.closest('.section');
+              if (parentSection) {
+                const sectionList = document.querySelectorAll('.section');
+                sectionList.forEach((section, key) => {
+                  if (section === parentSection) {
+                    ctaLocation = `section_${key}`;
+                  }
+                });
               }
-            });
+            }
             trackCTAEvent(ctaLocation);
             return;
           }
