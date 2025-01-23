@@ -301,7 +301,7 @@ export default async function decorate(block) {
       } else {
         div.className = 'cards-card-body';
         const h4 = li.querySelector('h4');
-        if (h4) {
+        if (h4 && href) {
           wrapInAnchor(h4, href);
         }
       }
