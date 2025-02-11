@@ -77,6 +77,26 @@ application:
             inputs:
               LOG_LEVEL: debug
               COSTCO_REST_URI: $COSTCO_REST_URI
+          authentication-salesforce-heroes:
+            function: actions/salesforce-heroes-form/authentication.js
+            web: 'no'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              SFMC_HEROES_CLIENT_ID: $SFMC_HEROES_CLIENT_ID
+              SFMC_HEROES_CLIENT_SECRET: $SFMC_HEROES_CLIENT_SECRET
+              SFMC_HEROES_AUTH_URI: $SFMC_HEROES_AUTH_URI
+              SFMC_HEROES_ACCOUNT_ID: $SFMC_HEROES_ACCOUNT_ID
+              SFMC_HEROES_SCOPES: "offline list_and_subscribers_read list_and_subscribers_write data_extensions_read data_extensions_write"
+          salesforce-heroes-event:
+            function: actions/salesforce-heroes-form/salesforce.js
+            web: 'no'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              SFMC_HEROES_REST_EVENTS_URI: $SFMC_HEROES_REST_EVENTS_URI
+              SFMC_HEROES_REST_EVENTS_UPSERT_URI: $SFMC_HEROES_REST_EVENTS_UPSERT_URI
+              SFMC_HEROES_EVENT_DEFINITION: "APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1"
         sequences:
           proxy-pethealth-services:
             actions: authentication-pethealth, service-pethealth
@@ -89,4 +109,7 @@ application:
             web: 'yes'
           proxy-costco-figo-services:
             actions: authentication-costco-figo, service-costco-figo
+            web: 'yes'
+          proxy-salesforce-heroes-services:
+            actions: authentication-salesforce-heroes, salesforce-heroes-event
             web: 'yes'
