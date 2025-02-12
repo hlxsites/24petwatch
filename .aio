@@ -1,0 +1,152 @@
+{
+  "project": {
+    "id": "4566206088345226060",
+    "name": "24petwatch",
+    "title": "24PetWatch",
+    "org": {
+      "id": "462515",
+      "name": "PTZ INSURANCE AGENCY LTD",
+      "ims_org_id": "53E06E76604280A10A495E65@AdobeOrg",
+      "details": {
+        "services": [
+          {
+            "name": "API Mesh for Adobe Developer App Builder",
+            "code": "GraphQLServiceSDK",
+            "type": "adobeid"
+          },
+          {
+            "name": "Adobe Express Embed SDK",
+            "code": "CCEmbedCompanionAPI",
+            "type": "adobeid"
+          },
+          {
+            "name": "PDF Embed API",
+            "code": "ViewSDK",
+            "type": "adobeid"
+          },
+          {
+            "name": "Adobe Commerce with Adobe ID",
+            "code": "AdobeCommerceWithAdobeID",
+            "type": "adobeid"
+          },
+          {
+            "name": "Lightroom Services",
+            "code": "LightroomPartnersSDK",
+            "type": "adobeid"
+          },
+          {
+            "name": "Adobe Analytics",
+            "code": "AdobeAnalyticsSDK",
+            "type": "analytics"
+          },
+          {
+            "name": "Asset Compute",
+            "code": "AssetComputeSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Cloud Manager",
+            "code": "CloudManagerSDK",
+            "type": "entp"
+          },
+          {
+            "name": "I/O Management API",
+            "code": "AdobeIOManagementAPISDK",
+            "type": "entp"
+          },
+          {
+            "name": "Experience Platform API",
+            "code": "McDataServicesSdk",
+            "type": "entp"
+          },
+          {
+            "name": "Smart Content",
+            "code": "MCSmartContentServicesSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Adobe Status API",
+            "code": "StatusAPISDK",
+            "type": "entp"
+          },
+          {
+            "name": "Primetime Ad Insertion",
+            "code": "Ad Config Service",
+            "type": "entp"
+          },
+          {
+            "name": "Privacy Service API",
+            "code": "McGdprSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Places",
+            "code": "McPlacesSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Globalization Content Service",
+            "code": "gcs-partner",
+            "type": "entp"
+          },
+          {
+            "name": "Experience Cloud Setup Automation",
+            "code": "DxSetupAutomationSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Assurance API",
+            "code": "Griffon - Graffias",
+            "type": "entp"
+          },
+          {
+            "name": "Adobe Target",
+            "code": "AdobeTargetSDK",
+            "type": "entp"
+          },
+          {
+            "name": "User Management API",
+            "code": "UserMgmtSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Experience Platform Launch API",
+            "code": "McDtmSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Adobe I/O Events for Adobe Commerce",
+            "code": "commerceeventing",
+            "type": "entp"
+          },
+          {
+            "name": "I/O Events",
+            "code": "CloudIntegrationSDK",
+            "type": "entp"
+          },
+          {
+            "name": "Adobe Analytics",
+            "code": "AdobeAnalyticsSDK",
+            "type": "entp"
+          }
+        ]
+      }
+    },
+    "workspace": {
+      "id": "4566206088345297450",
+      "name": "paul",
+      "title": "paul",
+      "description": "",
+      "action_url": "https://462515-24petwatch-paul.adobeioruntime.net",
+      "app_url": "https://462515-24petwatch-paul.adobeio-static.net",
+      "details": {
+        "credentials": [],
+        "services": [],
+        "events": {
+          "registrations": []
+        },
+        "mesh": {}
+      }
+    }
+  }
+}
