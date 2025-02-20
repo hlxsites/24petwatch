@@ -53,7 +53,6 @@ async function main(params) {
 
     const response = await createRequest('post', params.SFMC_HEROES_REST_EVENTS_URI, params.SFMC_HEROES_TOKEN, [], data)
     if (response.status !== 201) {
-        
         return await updateRequest('put', params.SFMC_HEROES_REST_EVENTS_UPSERT_URI, params.SFMC_HEROES_TOKEN, [], data, logger)
     } else {
         return {statusCode: 200, body: {values: data.Data}};
@@ -98,8 +97,9 @@ async function updateRequest(method, url, token, queryParams, payload = false, l
 
     if (payload) {
         params.body = JSON.stringify({values: payload.Data})
-        if (payload.ContactKey) {
-            url = url + 'NominatorEmailAddress:' + payload.ContactKey; 
+        if (payload.ContactKey && payload.OrgKey) {
+            url = url + `NominatorEmailAddress:${payload.ContactKey},OrgEmailAddress:${payload.OrgKey}`;
+            //url = url + 'NominatorEmailAddress:'+payload.ContactKey+',OrgEmailAddress:'+payload.OrgKey; 
         }
     }
 
@@ -115,8 +115,9 @@ async function updateRequest(method, url, token, queryParams, payload = false, l
     try {
         const jsonBody = JSON.parse(body);
         return {
-            statusCode: 200,
+            statusCode: res.status,
             body: {
+                "body": jsonBody,
                 "action": "updated",
                 "values": payload.Data,
             },
