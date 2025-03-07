@@ -48,6 +48,15 @@ header .nav-wrapper[aria-expanded='true'] {
   overflow-wrap: break-word;
 }
 
+.header .promo-text a {
+  color: #fff;
+  font-family: var(--body-font-family);
+}
+
+.header .promo-text a::after {
+  display: none !important;
+}
+
 .header .nav-promo .close-btn,
 .header .nav-promo .close-btn-placeholder {
   height: 12px;

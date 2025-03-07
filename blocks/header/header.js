@@ -56,13 +56,16 @@ async function buildPromoBanner() {
     return null;
   }
 
-  const basePromoBannerUrl = 'drafts/mbazan/promo-banner';
+  const basePromoBannerUrl = `blog/fragments/${isCanada ? 'ca' : 'us'}/promo-banner`;
   const promoBannerResp = await fetch(`${basePromoBannerUrl}.plain.html`);
   if (!promoBannerResp.ok) {
     return null;
   }
   const promoBannerHtml = await promoBannerResp.text();
 
+  if (!promoBannerHtml.includes('<p>')) {
+    return null;
+  }
   const banner = document.createElement('div');
   banner.classList.add('nav-promo');
 
@@ -450,6 +453,7 @@ export default async function decorate(block) {
   navWrapper.append(nav);
   block.append(navWrapper);
 
+  // Append promo banner
   const promoBanner = await buildPromoBanner();
   if (promoBanner) {
     block.append(promoBanner);
