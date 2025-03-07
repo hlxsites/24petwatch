@@ -159,9 +159,9 @@ header {
   height: var(--header-height);
 }
 
-body.has-promo header {
+/* body.has-promo header {
 	height: calc(var(--nav-height) + var(--nav-promo-height))
-}
+} */
 
 h1,
 h2,

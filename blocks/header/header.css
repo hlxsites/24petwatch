@@ -29,39 +29,32 @@ header .nav-wrapper[aria-expanded='true'] {
 .header .nav-promo {
   display: flex;
   align-items: center;
-  justify-content: center;
-  color: #fff;
+  justify-content: space-around;
   background-color: #333f48;
   width: 100%;
-  height: var(--nav-promo-height);
-  font-size: 1rem;
-  margin-top: var(--nav-height);
+  min-height: var(--nav-promo-height);
   position: fixed;
+  top: 120px;
+  z-index: 999;
 }
 
-.header .nav-promo p {
-  font-size: 0.875rem;
-  /* 14px */
-  margin-top: 0;
-}
-
-.header .nav-promo a {
+.header .promo-text {
+  padding: 0 3rem;
+  font-size: 1rem;
   color: #fff;
 }
 
-.header .nav-promo span {
-  height: 18px;
-  width: 18px;
-  right: 1rem;
-  -webkit-mask: url("../../icons/close.svg");
-  mask: url("../../icons/close.svg");
-  mask-repeat: no-repeat;
-  mask-position: center;
-  position: absolute;
+.header .nav-promo .close-btn {
+  height: 12px;
+  width: 12px;
+  -webkit-mask: url("../../icons/close.svg") no-repeat center;
+  mask: url("../../icons/close.svg") no-repeat center;
   background: #fff;
   cursor: pointer;
   padding: 0.25rem;
+  margin-right: 1rem;
 }
+
 
 .header .nav-promo .hidden,
 
@@ -1313,23 +1306,14 @@ main .breadcrumbs ol li:last-of-type {
 }
 
 @media (max-width: 1023px) {
+  .header .nav-promo .close-btn {
+    height: 24px;
+    width: 24px;
+  }
+}
+
+@media (max-width: 719px) {
   .header .nav-promo {
-    justify-content: space-between;
-    padding: 1rem;
-  }
-
-  .header .nav-promo p {
-    padding-right: 1rem;
-    /* 16px */
-    margin-top: 0;
-  }
-
-  .header .nav-promo span {
-    mask-position: top;
-    height: 100%;
-    right: 0;
-    position: relative;
-    font-size: 1.125rem;
-    /* 18px */
+    top: 65px;
   }
 }

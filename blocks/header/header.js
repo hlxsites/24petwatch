@@ -51,39 +51,31 @@ function closeOnEscape(e) {
   }
 }
 
-async function buildPromoBanner(nav) {
+async function buildPromoBanner() {
   const basePromoBannerUrl = 'drafts/mbazan/promo-banner';
   const promoBannerResp = await fetch(`${basePromoBannerUrl}.plain.html`);
   if (!promoBannerResp.ok) {
-    return;
+    return null;
   }
   const promoBannerHtml = await promoBannerResp.text();
-  // promoBannerHtml is the html content of the promo banner <div> with a <p> inside
 
-  // const PROMO_BANNER = 'promo-banner';
-  // const isPromoBanner = sessionStorage.getItem(PROMO_BANNER);
-  // const helperClass = 'has-promo';
-  // if (promoBanner !== null) {
-  //   document.querySelector('body').classList.add(helperClass);
-  // }
-  // // hide promo banner if closed or hidden by author in meta
-  // if (isPromoBanner || !showPromoBanner) {
-  //   document.querySelector('body').classList.remove(helperClass);
-  //   promoBanner.classList.add('hidden');
-  // }
+  const banner = document.createElement('div');
+  banner.classList.add('nav-promo');
 
-  // const newSpan = document.createElement('span');
-  // newSpan.textContent = 'x';
-  // newSpan.addEventListener('click', () => {
-  //   sessionStorage.setItem(PROMO_BANNER, true);
-  //   promoBanner.classList.add('hidden');
-  //   document.querySelector('body').classList.remove(helperClass);
-  // });
+  const textContainer = document.createElement('div');
+  textContainer.classList.add('promo-text');
+  textContainer.innerHTML = promoBannerHtml;
 
-  // promoBanner.querySelector('p').after(newSpan);
-  // nav.after(promoBanner);
-  nav.innerHTML += promoBannerHtml;
+  const closeBtn = document.createElement('div');
+  closeBtn.classList.add('close-btn');
+  closeBtn.addEventListener('click', () => {
+    banner.classList.add('hidden');
+  });
 
+  banner.appendChild(textContainer);
+  banner.appendChild(closeBtn);
+
+  return banner;
 }
 
 function openOnKeydown(e) {
@@ -434,12 +426,9 @@ export default async function decorate(block) {
   }
 
   const html = await resp.text();
-  // decorate nav DOM
   const nav = document.createElement('nav');
   nav.id = 'nav';
   nav.innerHTML = html;
-
-  await buildPromoBanner(nav);
 
   const classes = ['brand', 'meganav', 'memberships', 'register', 'secondary'];
   classes.forEach((c, i) => {
@@ -451,6 +440,11 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  const promoBanner = await buildPromoBanner();
+  if (promoBanner) {
+    block.append(promoBanner);
+  }
 
   // Append membership hover content
   const membershipsHoverContent = nav.querySelector('.nav-memberships');
