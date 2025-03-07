@@ -52,6 +52,10 @@ function closeOnEscape(e) {
 }
 
 async function buildPromoBanner() {
+  if (localStorage.getItem('promoBannerClosed') === 'true') {
+    return null;
+  }
+
   const basePromoBannerUrl = 'drafts/mbazan/promo-banner';
   const promoBannerResp = await fetch(`${basePromoBannerUrl}.plain.html`);
   if (!promoBannerResp.ok) {
@@ -62,6 +66,9 @@ async function buildPromoBanner() {
   const banner = document.createElement('div');
   banner.classList.add('nav-promo');
 
+  const placeholder = document.createElement('div');
+  placeholder.classList.add('close-btn-placeholder');
+
   const textContainer = document.createElement('div');
   textContainer.classList.add('promo-text');
   textContainer.innerHTML = promoBannerHtml;
@@ -70,8 +77,10 @@ async function buildPromoBanner() {
   closeBtn.classList.add('close-btn');
   closeBtn.addEventListener('click', () => {
     banner.classList.add('hidden');
+    localStorage.setItem('promoBannerClosed', 'true');
   });
 
+  banner.appendChild(placeholder);
   banner.appendChild(textContainer);
   banner.appendChild(closeBtn);
 

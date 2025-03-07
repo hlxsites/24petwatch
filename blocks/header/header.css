@@ -29,30 +29,43 @@ header .nav-wrapper[aria-expanded='true'] {
 .header .nav-promo {
   display: flex;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
   background-color: #333f48;
   width: 100%;
   min-height: var(--nav-promo-height);
   position: fixed;
   top: 120px;
   z-index: 999;
+  padding: 0 1rem;
 }
 
 .header .promo-text {
-  padding: 0 3rem;
+  flex: 1;
+  text-align: center;
+  padding: 0 1rem;
   font-size: 1rem;
   color: #fff;
+  overflow-wrap: break-word;
+}
+
+.header .nav-promo .close-btn,
+.header .nav-promo .close-btn-placeholder {
+  height: 12px;
+  width: 12px;
+  margin: 0 1rem;
 }
 
 .header .nav-promo .close-btn {
-  height: 12px;
-  width: 12px;
   -webkit-mask: url("../../icons/close.svg") no-repeat center;
   mask: url("../../icons/close.svg") no-repeat center;
   background: #fff;
   cursor: pointer;
   padding: 0.25rem;
-  margin-right: 1rem;
+  margin-right: 2rem;
+}
+
+.header .nav-promo .close-btn-placeholder {
+  opacity: 0;
 }
 
 
@@ -1302,13 +1315,6 @@ main .breadcrumbs ol li:last-of-type {
 
   .nav-meganav .login>div>div:last-child>p {
     margin: 0;
-  }
-}
-
-@media (max-width: 1023px) {
-  .header .nav-promo .close-btn {
-    height: 24px;
-    width: 24px;
   }
 }
 
