@@ -51,6 +51,41 @@ function closeOnEscape(e) {
   }
 }
 
+async function buildPromoBanner(nav) {
+  const basePromoBannerUrl = 'drafts/mbazan/promo-banner';
+  const promoBannerResp = await fetch(`${basePromoBannerUrl}.plain.html`);
+  if (!promoBannerResp.ok) {
+    return;
+  }
+  const promoBannerHtml = await promoBannerResp.text();
+  // promoBannerHtml is the html content of the promo banner <div> with a <p> inside
+
+  // const PROMO_BANNER = 'promo-banner';
+  // const isPromoBanner = sessionStorage.getItem(PROMO_BANNER);
+  // const helperClass = 'has-promo';
+  // if (promoBanner !== null) {
+  //   document.querySelector('body').classList.add(helperClass);
+  // }
+  // // hide promo banner if closed or hidden by author in meta
+  // if (isPromoBanner || !showPromoBanner) {
+  //   document.querySelector('body').classList.remove(helperClass);
+  //   promoBanner.classList.add('hidden');
+  // }
+
+  // const newSpan = document.createElement('span');
+  // newSpan.textContent = 'x';
+  // newSpan.addEventListener('click', () => {
+  //   sessionStorage.setItem(PROMO_BANNER, true);
+  //   promoBanner.classList.add('hidden');
+  //   document.querySelector('body').classList.remove(helperClass);
+  // });
+
+  // promoBanner.querySelector('p').after(newSpan);
+  // nav.after(promoBanner);
+  nav.innerHTML += promoBannerHtml;
+
+}
+
 function openOnKeydown(e) {
   const focused = document.activeElement;
   const isNavDrop = focused.className === 'nav-drop';
@@ -378,7 +413,7 @@ export default async function decorate(block) {
   // fetch nav content
   const navMeta = getMetadata('nav');
   block.textContent = '';
-  let baseHeaderUrl = '/blog/fragments/us/mega-nav';
+  let baseHeaderUrl = '/drafts/mbazan/mega-nav';
   if (isCanada) {
     baseHeaderUrl = '/blog/fragments/ca/mega-nav';
   }
@@ -394,7 +429,6 @@ export default async function decorate(block) {
 
   const navPath = navMeta ? new URL(navMeta).pathname : baseHeaderUrl;
   const resp = await fetch(`${navPath}.plain.html`);
-
   if (!resp.ok) {
     return;
   }
@@ -404,6 +438,8 @@ export default async function decorate(block) {
   const nav = document.createElement('nav');
   nav.id = 'nav';
   nav.innerHTML = html;
+
+  await buildPromoBanner(nav);
 
   const classes = ['brand', 'meganav', 'memberships', 'register', 'secondary'];
   classes.forEach((c, i) => {
@@ -618,33 +654,6 @@ export default async function decorate(block) {
   //     });
   //   });
   // }
-
-  // promo banner
-  const PROMO_BANNER = 'promo-banner';
-  const isPromoBanner = sessionStorage.getItem(PROMO_BANNER);
-  const showPromoBanner = getMetadata('show-promo-banner').toLowerCase() !== 'false';
-  const promoBanner = nav.querySelector('.nav-promo');
-  const helperClass = 'has-promo';
-  if (promoBanner !== null) {
-    document.querySelector('body').classList.add(helperClass);
-  }
-
-  // hide promo banner if closed or hidden by author in meta
-  if (isPromoBanner || !showPromoBanner) {
-    document.querySelector('body').classList.remove(helperClass);
-    promoBanner.classList.add('hidden');
-  }
-
-  const newSpan = document.createElement('span');
-  newSpan.textContent = 'x';
-  newSpan.addEventListener('click', () => {
-    sessionStorage.setItem(PROMO_BANNER, true);
-    promoBanner.classList.add('hidden');
-    document.querySelector('body').classList.remove(helperClass);
-  });
-
-  promoBanner.querySelector('p').after(newSpan);
-  nav.after(promoBanner);
 
   // hamburger for mobile
   const hamburger = document.createElement('div');
