@@ -51,6 +51,7 @@ function closeOnEscape(e) {
   }
 }
 
+// promo banner
 async function buildPromoBanner() {
   if (localStorage.getItem('promoBannerClosed') === 'true') {
     return null;
@@ -62,10 +63,10 @@ async function buildPromoBanner() {
     return null;
   }
   const promoBannerHtml = await promoBannerResp.text();
-
   if (!promoBannerHtml.includes('<p>')) {
     return null;
   }
+
   const banner = document.createElement('div');
   banner.classList.add('nav-promo');
 
@@ -78,14 +79,18 @@ async function buildPromoBanner() {
 
   const closeBtn = document.createElement('div');
   closeBtn.classList.add('close-btn');
+  closeBtn.textContent = 'x';
   closeBtn.addEventListener('click', () => {
     banner.classList.add('hidden');
     localStorage.setItem('promoBannerClosed', 'true');
+    document.body.classList.remove('has-promo');
   });
 
   banner.appendChild(placeholder);
   banner.appendChild(textContainer);
   banner.appendChild(closeBtn);
+
+  document.body.classList.add('has-promo');
 
   return banner;
 }

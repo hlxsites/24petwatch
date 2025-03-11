@@ -20,6 +20,10 @@ header .nav-wrapper[aria-expanded='true'] {
   min-height: 99vh;
 }
 
+body.has-promo header .nav-wrapper[aria-expanded='true'] {
+  z-index: 1000;
+}
+
 /* promo banner */
 
 .hidden {
@@ -30,7 +34,7 @@ header .nav-wrapper[aria-expanded='true'] {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #333f48;
+  background-color: #333F48;
   width: 100%;
   min-height: var(--nav-promo-height);
   position: fixed;
@@ -59,12 +63,11 @@ header .nav-wrapper[aria-expanded='true'] {
 
 .header .nav-promo .close-btn,
 .header .nav-promo .close-btn-placeholder {
-  height: 12px;
-  width: 12px;
   margin: 0 1rem;
 }
 
 .header .nav-promo .close-btn {
+  color: transparent;
   -webkit-mask: url("../../icons/close.svg") no-repeat center;
   mask: url("../../icons/close.svg") no-repeat center;
   background: #fff;
@@ -227,6 +230,11 @@ header nav .nav-meganav .mega-nav>div {
 }
 
 /* nav-memberships on hover */
+
+body.has-promo .header .nav-memberships,
+body.has-promo .header .nav-register {
+  margin-top: 20px;
+}
 
 .header .nav-memberships,
 .header .nav-register {

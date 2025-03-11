@@ -104,7 +104,7 @@
 
   /* nav height */
   --nav-height: 65px;
-  --nav-promo-height: 84px;
+  --nav-promo-height: 66px;
   --header-height: var(--nav-height);
 
   /* border */
@@ -112,9 +112,10 @@
 }
 
 @media (min-width: 1024px) {
-  :root {
-    --nav-promo-height: 50px
-  }
+	:root {
+		--nav-height: 96px;
+		--nav-promo-height: 66px
+	}
 }
 
 @media (min-width: 720px) {
@@ -159,9 +160,9 @@ header {
   height: var(--header-height);
 }
 
-/* body.has-promo header {
-	height: calc(var(--nav-height) + var(--nav-promo-height))
-} */
+body.has-promo header {
+	height: calc(var(--nav-height) + var(--nav-promo-height) + 20px)
+}
 
 h1,
 h2,
