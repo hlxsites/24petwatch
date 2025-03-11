@@ -12,7 +12,7 @@ import {
   baseDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
-import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
+import { changeDomain, addCanadaToLinks, buildPromoBanner } from '../../scripts/scripts.js';
 
 // let positionY = 0;
 // const SCROLL_STEP = 25;
@@ -49,50 +49,6 @@ function closeOnEscape(e) {
       nav.querySelector('button').focus();
     }
   }
-}
-
-// promo banner
-async function buildPromoBanner() {
-  if (localStorage.getItem('promoBannerClosed') === 'true') {
-    return null;
-  }
-
-  const basePromoBannerUrl = `blog/fragments/${isCanada ? 'ca' : 'us'}/promo-banner`;
-  const promoBannerResp = await fetch(`${basePromoBannerUrl}.plain.html`);
-  if (!promoBannerResp.ok) {
-    return null;
-  }
-  const promoBannerHtml = await promoBannerResp.text();
-  if (!promoBannerHtml.includes('<p>')) {
-    return null;
-  }
-
-  const banner = document.createElement('div');
-  banner.classList.add('nav-promo');
-
-  const placeholder = document.createElement('div');
-  placeholder.classList.add('close-btn-placeholder');
-
-  const textContainer = document.createElement('div');
-  textContainer.classList.add('promo-text');
-  textContainer.innerHTML = promoBannerHtml;
-
-  const closeBtn = document.createElement('div');
-  closeBtn.classList.add('close-btn');
-  closeBtn.textContent = 'x';
-  closeBtn.addEventListener('click', () => {
-    banner.classList.add('hidden');
-    localStorage.setItem('promoBannerClosed', 'true');
-    document.body.classList.remove('has-promo');
-  });
-
-  banner.appendChild(placeholder);
-  banner.appendChild(textContainer);
-  banner.appendChild(closeBtn);
-
-  document.body.classList.add('has-promo');
-
-  return banner;
 }
 
 function openOnKeydown(e) {
