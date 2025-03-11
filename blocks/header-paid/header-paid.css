@@ -26,23 +26,24 @@ header.header-paid-wrapper .section {
   box-shadow: 0 2px 6px 0 rgba(0 0 0 / 22%);
 }
 
-header.header-paid-wrapper .columns > div {
+header.header-paid-wrapper .columns>div {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
   justify-content: space-between;
 }
 
-header.header-paid-wrapper .columns > div > div {
-  flex: 0 1 auto; /* Allows the items to grow and shrink */
+header.header-paid-wrapper .columns>div>div {
+  flex: 0 1 auto;
+  /* Allows the items to grow and shrink */
 }
 
-header.header-paid-wrapper .columns > div > .columns-img-col {
+header.header-paid-wrapper .columns>div>.columns-img-col {
   order: 0;
 }
 
 header.header-paid-wrapper .columns img,
-header.header-paid-wrapper .columns > div > .columns-img-col img {
+header.header-paid-wrapper .columns>div>.columns-img-col img {
   max-width: 228px;
   max-height: 26px;
   width: 100%;
@@ -80,7 +81,11 @@ header.header-paid-wrapper a:any-link {
   display: none !important;
 }
 
-/* === NAV PROMO BANNER === */
+/* promo banner */
+
+.hidden {
+  display: none !important;
+}
 
 .header-paid .nav-promo {
   display: flex;
@@ -90,7 +95,7 @@ header.header-paid-wrapper a:any-link {
   width: 100%;
   min-height: var(--nav-promo-height);
   position: fixed;
-  top: 120px;
+  top: 70px;
   z-index: 999;
   padding: 0 1rem;
 }
@@ -104,25 +109,25 @@ header.header-paid-wrapper a:any-link {
   overflow-wrap: break-word;
 }
 
-.header-paid .promo-text p {
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  margin: 0;
-}
-
-.header-paid .promo-text a {
-  color: #fff;
+.header-paid .nav-promo .promo-text a {
   font-family: var(--body-font-family);
+  font-size: 1rem;
+  color: #fff;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+  margin: 0;
+  white-space: nowrap;
+  overflow: visible;
+  text-overflow: unset;
   text-decoration: underline;
-  font-weight: 300;
+  font-weight: 400;
 }
 
 .header-paid .promo-text a::after {
   display: none !important;
 }
 
-/* Close button */
 .header-paid .nav-promo .close-btn,
 .header-paid .nav-promo .close-btn-placeholder {
   margin: 0 1rem;
@@ -142,28 +147,14 @@ header.header-paid-wrapper a:any-link {
   opacity: 0;
 }
 
-.header-paid .nav-promo a:any-link {
-  text-decoration: underline;
-  color: #fff;
-  font-family: var(--body-font-family);
-  text-align: center;
-  font-size: 1rem;
-  overflow-wrap: break-word;
-  background-color: transparent;
-  margin: 0;
-  font-weight: 300;
-  padding: 0;
-}
-
-/* Responsive adjustments */
 @media (min-width: 768px) {
   header.header-paid-wrapper .section {
     padding: 0;
   }
 }
 
-@media (max-width: 719px) {
+@media (max-width: 767px) {
   .header-paid .nav-promo {
-    top: 65px; /* Si el header es más chico en móviles */
+    top: 100px;
   }
 }

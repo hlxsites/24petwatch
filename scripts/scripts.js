@@ -209,15 +209,14 @@ export function addCanadaToLinks(block) {
  * Adds a promo banner to the page.
  * @param {Element} block The block element
  */
+
 export async function buildPromoBanner() {
-  console.log('In promo banner');
   if (localStorage.getItem('promoBannerClosed') === 'true') {
     return null;
   }
 
   const basePromoBannerUrl = `/blog/fragments/${isCanada ? 'ca' : 'us'}/promo-banner`;
   const promoBannerResp = await fetch(`${basePromoBannerUrl}.plain.html`);
-  console.log('promoBannerResp', promoBannerResp);
   if (!promoBannerResp.ok) {
     return null;
   }
