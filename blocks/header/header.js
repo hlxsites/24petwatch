@@ -378,7 +378,7 @@ export default async function decorate(block) {
   // fetch nav content
   const navMeta = getMetadata('nav');
   block.textContent = '';
-  let baseHeaderUrl = '/drafts/mbazan/mega-nav';
+  let baseHeaderUrl = '/drafts/fragments/us/mega-nav';
   if (isCanada) {
     baseHeaderUrl = '/blog/fragments/ca/mega-nav';
   }
