@@ -35,7 +35,6 @@ header.header-paid-wrapper .columns>div {
 
 header.header-paid-wrapper .columns>div>div {
   flex: 0 1 auto;
-  /* Allows the items to grow and shrink */
 }
 
 header.header-paid-wrapper .columns>div>.columns-img-col {
@@ -77,12 +76,6 @@ header.header-paid-wrapper a:any-link {
 }
 
 /* Hidden elements */
-.hidden {
-  display: none !important;
-}
-
-/* promo banner */
-
 .hidden {
   display: none !important;
 }
@@ -135,7 +128,6 @@ header.header-paid-wrapper a:any-link {
 
 .header-paid .nav-promo .close-btn {
   color: transparent;
-  -webkit-mask: url("../../icons/close.svg") no-repeat center;
   mask: url("../../icons/close.svg") no-repeat center;
   background: #fff;
   cursor: pointer;

@@ -326,7 +326,6 @@ button {
 }
 
 @media (min-width: 768px) {
-
   a.button:any-link,
   button {
     display: inline-block;
@@ -578,7 +577,6 @@ main .section.no-radius {
 }
 
 @media (width >=768px) {
-
   .headings-left-revert-in-narrow h1,
   .headings-left-revert-in-narrow h2,
   .headings-left-revert-in-narrow h3,
@@ -750,7 +748,6 @@ a[href$=".pdf"]::before {
 }
 
 @media (max-width: 1200px) {
-
   main .section.block-with-header,
   main .columns.block-with-header div {
     margin: 2.5rem 1rem;
@@ -1129,8 +1126,6 @@ form button.teal:hover {
   content: "";
   display: block;
   border-bottom: 1px solid #000;
-  /* Change color as needed */
   width: 100%;
   margin-top: 10px;
-  /* Adjust margin as needed */
 }

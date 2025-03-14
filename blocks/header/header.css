@@ -1,3 +1,4 @@
+/* stylelint-disable no-descending-specificity */
 header {
   height: var(--header-height);
 }
@@ -68,7 +69,6 @@ body.has-promo header .nav-wrapper[aria-expanded='true'] {
 
 .header .nav-promo .close-btn {
   color: transparent;
-  -webkit-mask: url("../../icons/close.svg") no-repeat center;
   mask: url("../../icons/close.svg") no-repeat center;
   background: #fff;
   cursor: pointer;
@@ -281,7 +281,6 @@ body.has-promo .header .nav-register {
   font-style: normal;
   font-weight: 350;
   line-height: 36px;
-  /* 171.429% */
 }
 
 .header .nav-memberships .pet-protection-memberships>div>div:first-child>picture>img,
