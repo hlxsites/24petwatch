@@ -37,11 +37,11 @@ body.has-promo header .nav-wrapper[aria-expanded='true'] {
   justify-content: space-between;
   background-color: #333F48;
   width: 100%;
-  min-height: var(--nav-promo-height);
+  height: var(--nav-promo-height);
   position: fixed;
-  top: 120px;
-  z-index: 999;
-  padding: 0 1rem;
+  top: calc(var(--nav-height) + var(--nav-margin-top));
+  z-index: 1;
+  padding: 0 0 0 1rem;
 }
 
 .header .promo-text {
@@ -60,6 +60,10 @@ body.has-promo header .nav-wrapper[aria-expanded='true'] {
 
 .header .promo-text a::after {
   display: none !important;
+}
+
+.header .promo-text p {
+  line-height: 1rem;
 }
 
 .header .nav-promo .close-btn,
@@ -105,7 +109,7 @@ header nav {
     display: flex;
     justify-content: space-between;
     padding: 0;
-    margin-top: 44.5px;
+    margin-top: var(--nav-margin-top);
     gap: 0;
   }
 
@@ -220,22 +224,11 @@ header nav .nav-meganav .mega-nav>div {
 }
 
 /* set display to block on hover */
-
-/* .nav-meganav .login:hover > div > div:last-child {
-  display: block;
-} */
-
 .nav-meganav .login>div>div:last-child p:hover {
   text-decoration: underline;
 }
 
 /* nav-memberships on hover */
-
-body.has-promo .header .nav-memberships,
-body.has-promo .header .nav-register {
-  margin-top: 20px;
-}
-
 .header .nav-memberships,
 .header .nav-register {
   position: absolute;
@@ -1194,6 +1187,10 @@ header nav>.nav-secondary .language-selector>ul>li>a {
     width: 100pt;
     justify-content: center;
   }
+
+  .header .nav-promo {
+    padding: 0 1rem;
+  }
 }
 
 @media (min-width: 1330px) {
@@ -1332,10 +1329,8 @@ main .breadcrumbs ol li:last-of-type {
   .nav-meganav .login>div>div:last-child>p {
     margin: 0;
   }
-}
 
-@media (max-width: 719px) {
-  .header .nav-promo {
-    top: 65px;
+  .header .promo-text {
+    padding: 0;
   }
 }

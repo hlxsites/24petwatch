@@ -211,7 +211,7 @@ export function addCanadaToLinks(block) {
  */
 
 export async function buildPromoBanner() {
-  if (localStorage.getItem('promoBannerClosed') === 'true') {
+  if (sessionStorage.getItem('promoBannerClosed') === 'true') {
     return null;
   }
 
@@ -240,7 +240,7 @@ export async function buildPromoBanner() {
   closeBtn.textContent = 'x';
   closeBtn.addEventListener('click', () => {
     banner.classList.add('hidden');
-    localStorage.setItem('promoBannerClosed', 'true');
+    sessionStorage.setItem('promoBannerClosed', 'true');
     document.body.classList.remove('has-promo');
   });
 
