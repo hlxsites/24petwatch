@@ -2,6 +2,10 @@ header.header-paid-wrapper {
   --header-height: 130px;
 }
 
+body.has-promo header.header-paid-wrapper {
+  height: calc(var(--header-height) + var(--nav-promo-height));
+}
+
 @media (min-width: 768px) {
   header.header-paid-wrapper {
     --header-height: 70px;
@@ -86,11 +90,11 @@ header.header-paid-wrapper a:any-link {
   justify-content: space-between;
   background-color: #333F48;
   width: 100%;
-  min-height: var(--nav-promo-height);
+  height: var(--nav-promo-height);
   position: fixed;
   top: 70px;
   z-index: 999;
-  padding: 0 1rem;
+  padding: 0 0 0 1rem;
 }
 
 .header-paid .promo-text {
@@ -121,6 +125,10 @@ header.header-paid-wrapper a:any-link {
   display: none !important;
 }
 
+.header-paid .promo-text p {
+  line-height: 1rem;
+}
+
 .header-paid .nav-promo .close-btn,
 .header-paid .nav-promo .close-btn-placeholder {
   margin: 0 1rem;
@@ -147,6 +155,7 @@ header.header-paid-wrapper a:any-link {
 
 @media (max-width: 767px) {
   .header-paid .nav-promo {
-    top: 100px;
+    top: var(--header-height);
+    padding: 0 1rem;
   }
 }

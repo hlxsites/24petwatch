@@ -106,6 +106,7 @@
   --nav-height: 65px;
   --nav-promo-height: 66px;
   --header-height: var(--nav-height);
+  --nav-margin-top: 0px;
 
   /* border */
   --border-color: #c5c9cb;
@@ -122,6 +123,7 @@
   :root {
     --nav-height: 80px;
     --header-height: calc(44px + var(--nav-height));
+    --nav-margin-top: 44.5px;
   }
 }
 
@@ -160,8 +162,8 @@ header {
   height: var(--header-height);
 }
 
-body.has-promo header {
-	height: calc(var(--nav-height) + var(--nav-promo-height) + 20px)
+body.has-promo header:not(.header-paid-wrapper) {
+	height: calc(var(--nav-height) + var(--nav-promo-height) + var(--nav-margin-top));
 }
 
 h1,
