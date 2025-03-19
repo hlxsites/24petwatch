@@ -73,7 +73,7 @@ function getDatastreamConfiguration() {
   if (hostname?.endsWith('petwatch.com')) {
     edgeConfigId = '3843429b-2a2d-43ce-9227-6aa732ddf7da'; // 24petwatch(PROD)
   }
-  if (hostname?.endsWith('hlx.page') || hostname?.endsWith('hlx.live')) {
+  if (hostname?.endsWith('aem.page') || hostname?.endsWith('aem.live')) {
     edgeConfigId = '1b0ec0ce-b541-4d0f-a78f-fb2a6ca8713c'; // 24petwatch(STAGE)
   }
 
