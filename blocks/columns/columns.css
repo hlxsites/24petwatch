@@ -4,8 +4,8 @@
 }
 
 .columns h2 {
-  margin-top: .5rem;
-  margin-bottom: .625rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.625rem;
 }
 
 .columns hr {
@@ -52,7 +52,7 @@ main .lost-pet-data > div div {
 
 .columns-home-pumpkin-wellness .button-container ~ p {
   font-size: 0.625rem;
-  color: #333F48;
+  color: #333f48;
 }
 
 .columns.transfer-microchip-registration-how-to > div {
@@ -116,7 +116,8 @@ main .lost-pet-data > div div {
   overflow: hidden;
 }
 
-.columns.teaser > div, .columns.gray > div {
+.columns.teaser > div,
+.columns.gray > div {
   padding: 0;
 }
 
@@ -147,17 +148,20 @@ main .lost-pet-data > div div:first-child {
   flex: 0 0 80px;
 }
 
-.columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
+.columns.teaser > div > div:last-child,
+.columns.gray > div > div:first-child {
   margin-bottom: 1.25rem;
   padding-left: 0.9375rem;
   padding-right: 0.9375rem;
 }
 
-.columns.teaser p.button-container, .columns.gray p.button-container {
+.columns.teaser p.button-container,
+.columns.gray p.button-container {
   margin: 0;
 }
 
-.columns.teaser p.button-container a.buttonm, .columns.gray p.button-container a.button {
+.columns.teaser p.button-container a.buttonm,
+.columns.gray p.button-container a.button {
   margin: 0.3125rem auto;
 }
 
@@ -228,7 +232,6 @@ main .columns.cat-dog-background > div > div:last-child {
   background-position-y: bottom;
 }
 
-
 main .columns.cat-dog-background-lpp > div > div:last-child {
   @media (max-width: 767px) {
     background-size: contain;
@@ -258,7 +261,7 @@ main .columns.cat-dog-background-lpp > div > div:last-child {
   flex-basis: 35%;
 }
 
-main .section.about-us-icons img  {
+main .section.about-us-icons img {
   min-height: 80px;
 }
 
@@ -304,7 +307,8 @@ main .section.about-us-icons img  {
     text-align: left;
   }
 
-  .columns.teaser > div > div:last-child, .columns.gray > div > div:first-child {
+  .columns.teaser > div > div:last-child,
+  .columns.gray > div > div:first-child {
     padding: 3.125rem;
   }
 
@@ -390,7 +394,10 @@ main .section.cat-dog-background {
   margin-top: auto;
 }
 
-.columns.transfer-microchip-registration-learn-more > div > div > p:first-child {
+.columns.transfer-microchip-registration-learn-more
+  > div
+  > div
+  > p:first-child {
   text-align: center;
 }
 
@@ -403,6 +410,12 @@ main .section.cat-dog-background {
 .columns.transfer-microchip-registration-learn-more a.button.secondary:hover {
   background: var(--button-secondary-hover-color);
   color: var(--background-color);
+}
+
+.columns-text-center {
+  h2 {
+    text-align: center;
+  }
 }
 
 /* .columns.image-to-buttom > div {

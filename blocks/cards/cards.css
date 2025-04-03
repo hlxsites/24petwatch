@@ -54,12 +54,12 @@
   margin-top: 8px;
 }
 
-.cards-content-center .cards-card-body p{
+.cards-content-center .cards-card-body p {
   text-align: center;
 }
 
 .cards .cards-card-body p:last-of-type {
-    align-self: flex-end;
+  align-self: flex-end;
 }
 
 .cards .cards-card-body p:last-of-type a {
@@ -99,7 +99,7 @@
 
 .cards-pagination ul li > a {
   font-family: var(--body-font-family);
-  font-size: .75rem;
+  font-size: 0.75rem;
   line-height: 1.313rem;
   color: var(--text-color);
   text-decoration: none;
@@ -138,7 +138,8 @@
   flex-direction: column;
 }
 
-.cards-filterselect .total, .cards-filterselect label {
+.cards-filterselect .total,
+.cards-filterselect label {
   font-family: var(--heading-font-family);
   font-weight: 700;
   line-height: 1.625rem;
@@ -200,10 +201,10 @@
 /* About Us Page | Connect and Care section | Grid */
 .cards.connect-and-care-grid.block ul {
   grid-template-areas:
-    "main"
-    "firstcard"
-    "secondcard";
-    grid-gap: inherit;
+    'main'
+    'firstcard'
+    'secondcard';
+  grid-gap: inherit;
 }
 
 .cards.connect-and-care-grid.block ul li:first-child > div:first-child {
@@ -215,7 +216,7 @@
 }
 
 .cards.connect-and-care-grid ul li:nth-child(2),
-.cards.connect-and-care-grid ul li:nth-child(3)  {
+.cards.connect-and-care-grid ul li:nth-child(3) {
   background-color: var(--cool-background-color);
   border-radius: 10px;
   margin: 1rem 0;
@@ -256,9 +257,9 @@
 
 .cards.collar-sizes ul li {
   box-sizing: border-box;
-  border: .1875rem solid #e5e5e5;
+  border: 0.1875rem solid #e5e5e5;
   border-radius: 10px;
-  box-shadow:none;
+  box-shadow: none;
   padding: 1rem;
   margin: 1rem;
 }
@@ -279,8 +280,8 @@
     grid-template-columns: 2fr 1fr;
     grid-gap: 10px;
     grid-template-areas:
-    "main firstcard"
-    "main secondcard";
+      'main firstcard'
+      'main secondcard';
   }
 
   .cards.pet-recovery-cards ul {
@@ -314,15 +315,25 @@
     grid-template-columns: repeat(6, 1fr);
     grid-gap: 10px;
     grid-template-areas:
-    "item1 item1 item2 item2 item3 item3"
-    "item4 item4 item4 item5 item5 item5";
+      'item1 item1 item2 item2 item3 item3'
+      'item4 item4 item4 item5 item5 item5';
   }
 
-  .cards.collar-sizes ul li:nth-child(1) { grid-area: item1; }
-  .cards.collar-sizes ul li:nth-child(2) { grid-area: item2; }
-  .cards.collar-sizes ul li:nth-child(3) { grid-area: item3; }
-  .cards.collar-sizes ul li:nth-child(4) { grid-area: item4; }
-  .cards.collar-sizes ul li:nth-child(5) { grid-area: item5; }
+  .cards.collar-sizes ul li:nth-child(1) {
+    grid-area: item1;
+  }
+  .cards.collar-sizes ul li:nth-child(2) {
+    grid-area: item2;
+  }
+  .cards.collar-sizes ul li:nth-child(3) {
+    grid-area: item3;
+  }
+  .cards.collar-sizes ul li:nth-child(4) {
+    grid-area: item4;
+  }
+  .cards.collar-sizes ul li:nth-child(5) {
+    grid-area: item5;
+  }
 }
 
 .cards.connect-and-care-grid > ul > li {
@@ -423,7 +434,7 @@
 }
 
 .bytetag-reviews ul li {
-  border: .1875rem solid var(--nav-secondary-color);
+  border: 0.1875rem solid var(--nav-secondary-color);
   border-radius: 10px;
   box-shadow: none;
   overflow: hidden;
@@ -432,4 +443,17 @@
 
 .bytetag-reviews svg {
   height: 15px;
+}
+
+.cards-container.teal-bg .cards-card-body {
+  p,
+  a {
+    color: black !important;
+  }
+}
+
+.cards-container.teal-bg .default-content-wrapper {
+  h2 {
+    margin: 20px 0px 40px 0px;
+  }
 }
