@@ -97,6 +97,10 @@
   justify-content: center;
 }
 
+.cards .cards-card-body a {
+  font-family: var(--body-font-family);
+}
+
 .cards-pagination ul li > a {
   font-family: var(--body-font-family);
   font-size: 0.75rem;
