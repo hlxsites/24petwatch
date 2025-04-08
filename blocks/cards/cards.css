@@ -97,9 +97,12 @@
   justify-content: center;
 }
 
+.cards-hyperlink-text p {
+  font-style: italic;
+}
+
 .cards .cards-card-body a {
   font-family: var(--body-font-family);
-  font-style: italic;
 }
 
 .cards-pagination ul li > a {
