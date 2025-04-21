@@ -268,7 +268,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
       if (!isCostcoFigo) {
         return jsx`
-        <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $19.95, plus applicable taxes (price is subject to change).</strong>
+        <strong>Automatically renew your Annual Protection Membership one year from date of purchase for $19.95/year (plus applicable taxes). You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change.</strong>
         `;
       }
       return jsx`
@@ -277,23 +277,12 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
 
     return jsx`
-    <strong>Auto-renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions to keep enjoying these benefits once your complimentary access expires after 1 year:</strong><br />
+    <strong>Automatically renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions annually for $19.95/year (plus applicable taxes) once your complimentary access expires after 1 year to keep enjoying these benefits:</strong><br />
     <ul>
         <li>Critical medical and behavioral information will be relayed to the shelter or vet they're brought to when found</li>
         <li>Anytime access to veterinary professionals through live chat, email or by phone</li>
     </ul>
-    `;
-  }
-
-  function getInfoHTML(itemId) {
-    if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
-      return '';
-    }
-
-    return jsx`
-    <div class="auto-renew-info">
-        <div class="auto-renew-info-text">As part of the Lifetime Protection Membership, these two benefits are free for the first year. Renew them together for just $19.95 per year (plus applicable taxes. Price is subject to change). Your credit card will be charged on your renewal date, which is one year from today.</div>
-    </div>
+    <strong>You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change.</strong>
     `;
   }
 
@@ -326,7 +315,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         <div class="auto-renew">
             <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
             <div class="auto-renew-text">${getAutoRenewTet(selectedProduct.itemId)}</div>
-            ${getInfoHTML(selectedProduct.itemId)}
         </div>
     </div>
     `;
