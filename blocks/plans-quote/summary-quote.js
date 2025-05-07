@@ -268,7 +268,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
       if (!isCostcoFigo) {
         return jsx`
-        <strong>Automatically renew your Annual Protection Membership one year from date of purchase for $19.95/year (plus applicable taxes). You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change.</strong>
+        <strong>Automatically renew your Annual Protection Membership one year from date of purchase for $19.95/year (plus applicable taxes). You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change and will be communicated to you prior to any charge. Please see additional terms below.</strong>
         `;
       }
       return jsx`
@@ -277,12 +277,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
 
     return jsx`
-    <strong>Automatically renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions annually for $19.95/year (plus applicable taxes) once your complimentary access expires after 1 year to keep enjoying these benefits:</strong><br />
-    <ul>
-        <li>Critical medical and behavioral information will be relayed to the shelter or vet they're brought to when found</li>
-        <li>Anytime access to veterinary professionals through live chat, email or by phone</li>
-    </ul>
-    <strong>You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change.</strong>
+    <strong>Automatically renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions one year from date of purchase for $19.95/year (plus applicable taxes) once your complimentary access expires after 1 year. You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change and will be communicated to you prior to any charge. Please see additional terms below.</strong>
     `;
   }
 
