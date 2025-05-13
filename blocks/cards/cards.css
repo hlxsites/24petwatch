@@ -469,3 +469,7 @@
     margin: 20px 0 40px;
   }
 }
+
+.cards-pumpkin-wellness .cards > ul > li img {
+  aspect-ratio: unset;
+}
