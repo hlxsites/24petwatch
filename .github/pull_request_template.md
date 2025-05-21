@@ -10,5 +10,5 @@
 ## Validate Changes ##
 <-- Include steps to test or links to content packages as needed -->
 
-- Before: https://main--24petwatch--hlxsites.hlx.page/
-- After: https://<branch>--24petwatch--hlxsites.hlx.page/
+- Before: https://main--24petwatch--hlxsites.aem.page/
+- After: https://<branch>--24petwatch--hlxsites.aem.page/
