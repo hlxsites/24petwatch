@@ -139,6 +139,31 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   }
 
+  function checkAutoRenewCheckboxes() {
+    const autoRenewCheckboxes = document.querySelectorAll('.auto-renew-checkbox');
+    let allAutoRenewChecked = true;
+
+    // foreach checkbbox, check if it is checked
+    autoRenewCheckboxes.forEach((checkbox) => {
+      const isChecked = checkbox.checked;
+      if (!isChecked) {
+        allAutoRenewChecked = false;
+      }
+    });
+
+    return allAutoRenewChecked;
+  }
+
+  // checks if the proceed to payment button should be enabled or disabled
+  function checkProceedButton() {
+    const button = document.getElementById('proceedToPayment');
+    const autoRenewChecked = checkAutoRenewCheckboxes();
+    if (button) {
+      // if we don't have purchase summary, disable the button
+      button.disabled = purchaseSummary.summary === undefined || autoRenewChecked === false;
+    }
+  }
+
   Loader.showLoader();
   try {
     ownerData = await APIClientObj.getOwner(ownerId);
@@ -308,7 +333,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>
         </div>
         <div class="auto-renew">
-            <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
+            <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" /></div>
             <div class="auto-renew-text">${getAutoRenewTet(selectedProduct.itemId)}</div>
         </div>
     </div>
@@ -415,6 +440,9 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   async function updateAutoRenewHandler(target) {
     Loader.showLoader();
+
+    checkProceedButton();
+
     const petID = target.getAttribute('data-pet-id');
     const recID = target.getAttribute('data-rec-id');
     const isChecked = target.checked;
@@ -454,12 +482,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   });
 
-  const proceedToPaymentButton = document.getElementById('proceedToPayment');
-
-  if (proceedToPaymentButton) {
-    // if we don't have purchase summary, disable the button
-    proceedToPaymentButton.disabled = purchaseSummary.summary === undefined;
-  }
+  checkProceedButton();
 
   function replaceUrlPlaceholders(urlTemplate, ...values) {
     return urlTemplate.replace(
@@ -467,6 +490,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       (match, index) => (typeof values[index] !== 'undefined' ? values[index] : match),
     );
   }
+
+  const proceedToPaymentButton = document.getElementById('proceedToPayment');
 
   proceedToPaymentButton.onclick = async () => {
     try {
