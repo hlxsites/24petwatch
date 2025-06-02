@@ -97,6 +97,15 @@ application:
               SFMC_HEROES_REST_EVENTS_URI: $SFMC_HEROES_REST_EVENTS_URI
               SFMC_HEROES_REST_EVENTS_UPSERT_URI: $SFMC_HEROES_REST_EVENTS_UPSERT_URI
               SFMC_HEROES_EVENT_DEFINITION: "APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1"
+          recaptcha-24pet:
+            function: actions/recaptcha-24pet/index.js
+            web: 'yes'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+            annotions:
+              require-adobe-auth: false
+              final: true
         sequences:
           proxy-pethealth-services:
             actions: authentication-pethealth, service-pethealth
