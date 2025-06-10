@@ -22,7 +22,7 @@ async function main(params) {
   // create a Logger
   const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' });
   // 24PW PRD credentials
-  const captchaSecret = '6LdPqFMrAAAAABdRk4GUC_oNf96GmcmHtyiGtK6B';
+  const captchaSecret = '6Lfm81crAAAAAMlB6L0zRd7GXxgfPYUzyD9I9UA7';
 
   try {
     // 'info' is the default level if not set
