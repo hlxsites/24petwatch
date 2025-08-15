@@ -252,9 +252,10 @@ export default class APIClient {
    * @param productId - int
    * @param quantity - int
    * @param isAutoRenew - boolean
+   * @param itemId - string (optional, used for Pumpkin Wellness Club)
    * @returns {Promise<unknown>}
    */
-  saveSelectedProduct(petId, productId, quantity = 1, isAutoRenew = false) {
+  saveSelectedProduct(petId, productId, quantity = 1, isAutoRenew = true, itemId = '') {
     // warning: although this is a POST request, the data is sent as query parameters
 
     const quoteRecId = asInt(productId);
@@ -268,6 +269,12 @@ export default class APIClient {
       quantity: qty,
       autoRenew,
     };
+
+    // if we have a non empty value for itemId
+    if (itemId) {
+      params.itemId = itemId.toString();
+    }
+
     return new Promise((resolve, reject) => {
       APIClient.callAPI(`${this.basePath}/${path}`, APIClient.METHOD_POST, params, null, resolve, reject, 'json');
     });

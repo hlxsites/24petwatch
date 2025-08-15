@@ -11,7 +11,9 @@ import {
   CURRENCY_CANADA,
   CURRENCY_US,
   SS_KEY_SUMMARY_ACTION,
+  SS_KEY_AUTO_RENEW_PUMPKIN,
   DL_EVENTS,
+  PUMPKIN_ITEM_ID,
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
@@ -26,6 +28,10 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
   const entryURL = sessionStorage.getItem(SS_KEY_FORM_ENTRY_URL);
+  const autoRenewClasses = {
+    autoRenewCheckbox: 'auto-renew-checkbox',
+    autoRenewCheckboxPumpkin: 'auto-renew-checkbox-pumpkin',
+  };
 
   let ownerData = [];
   let petsList = [];
@@ -139,28 +145,21 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   }
 
-  function checkAutoRenewCheckboxes() {
-    const autoRenewCheckboxes = document.querySelectorAll('.auto-renew-checkbox');
-    let allAutoRenewChecked = true;
+  function setPumpkinAutoRenewCheckboxState(petId, isChecked) {
+    sessionStorage.setItem(`${SS_KEY_AUTO_RENEW_PUMPKIN}-${petId}`, isChecked);
+  }
 
-    // foreach checkbbox, check if it is checked
-    autoRenewCheckboxes.forEach((checkbox) => {
-      const isChecked = checkbox.checked;
-      if (!isChecked) {
-        allAutoRenewChecked = false;
-      }
-    });
-
-    return allAutoRenewChecked;
+  function getPumpkinAutoRenewCheckboxState(petId) {
+    const state = sessionStorage.getItem(`${SS_KEY_AUTO_RENEW_PUMPKIN}-${petId}`) || 'true';
+    return state;
   }
 
   // checks if the proceed to payment button should be enabled or disabled
   function checkProceedButton() {
     const button = document.getElementById('proceedToPayment');
-    const autoRenewChecked = checkAutoRenewCheckboxes();
     if (button) {
       // if we don't have purchase summary, disable the button
-      button.disabled = purchaseSummary.summary === undefined || autoRenewChecked === false;
+      button.disabled = purchaseSummary.summary === undefined;
     }
   }
 
@@ -289,20 +288,31 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     window.location.reload();
   }
 
-  function getAutoRenewTet(itemId) {
+  function getAutoRenewText(itemId) {
     if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
       if (!isCostcoFigo) {
         return jsx`
-        <strong>Automatically renew your Annual Protection Membership one year from date of purchase for $19.95/year (plus applicable taxes). You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change and will be communicated to you prior to any charge. Please see additional terms below.</strong>
+        <strong>Turn on auto-renew for Annual Protection Membership one year from date of purchase for $19.95/year (plus tax). Don't worry - you can cancel anytime in your account dashboard.</strong>
         `;
       }
       return jsx`
       <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $0 (price is subject to change).</strong>
       `;
     }
-
     return jsx`
-    <strong>Automatically renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions one year from date of purchase for $19.95/year (plus applicable taxes) once your complimentary access expires after 1 year. You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change and will be communicated to you prior to any charge. Please see additional terms below.</strong>
+    <strong>Turn on auto-renew for 24PetMedAlert® and 24/7 Vet Helpline subscription bundle one year from date of purchase for $19.95/year (plus tax). Don't worry - you can cancel anytime in your account dashboard.</strong>
+    `;
+  }
+
+  function getPumpkinAutoRenewText(selectedProduct) {
+    if (selectedProduct.itemId === 'Annual Plan-DOGS' || selectedProduct.itemId === 'Annual Plan-CATS') {
+      return '';
+    }
+    return jsx`
+      <div class="auto-renew">
+          <div class="auto-renew-checkbox-container"><input type="checkbox" class="${autoRenewClasses.autoRenewCheckboxPumpkin}" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${getPumpkinAutoRenewCheckboxState(selectedProduct.petID) !== 'false' ? 'checked' : ''} data-checked-state="${getPumpkinAutoRenewCheckboxState(selectedProduct.petID)}" /></div>
+          <div class="auto-renew-text"><strong>Turn on auto-renew for Pumpkin Wellness Club subscription one month from date of purchase for $19.95/month (plus tax). Don't worry - you can cancel anytime in your account dashboard.</strong></div>
+      </div>
     `;
   }
 
@@ -332,9 +342,12 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             </div>
             <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>
         </div>
-        <div class="auto-renew">
-            <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" /></div>
-            <div class="auto-renew-text">${getAutoRenewTet(selectedProduct.itemId)}</div>
+        <div class="auto-renew-container">
+          ${!isCanada ? getPumpkinAutoRenewText(selectedProduct) : ''}
+          <div class="auto-renew">
+              <div class="auto-renew-checkbox-container"><input type="checkbox" class="${autoRenewClasses.autoRenewCheckbox}" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
+              <div class="auto-renew-text">${getAutoRenewText(selectedProduct.itemId)}</div>
+          </div>
         </div>
     </div>
     `;
@@ -382,7 +395,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   </div>
   <div class="bottom-section">
     <div class="amount-info">This amount will appear as PTZ*24PTWTCH* on your credit card or bank statement.</div>
-    <button id="proceedToPayment">Proceed to Payment</button>
+    <button id="proceedToPayment" disabled>Proceed to Payment</button>
   </div>
   `;
 
@@ -403,12 +416,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   // Trigger cart view DL event
   if (purchaseSummary) {
-    // to avoid page view DL events on page refresh after add and remove
-    // const lastFormAction = sessionStorage.getItem(SS_KEY_SUMMARY_ACTION);
-    // if (!lastFormAction || (lastFormAction && !lastFormAction.includes(DL_EVENTS.remove))) {
-    // setDataLayer(purchaseSummary, DL_EVENTS.view);
-    // }
-    // leave default cart view on any page refresh
     setDataLayer(purchaseSummary, DL_EVENTS.view);
   }
 
@@ -440,18 +447,34 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   async function updateAutoRenewHandler(target) {
     Loader.showLoader();
-
-    checkProceedButton();
-
     const petID = target.getAttribute('data-pet-id');
     const recID = target.getAttribute('data-rec-id');
     const isChecked = target.checked;
+
     try {
       await APIClientObj.saveSelectedProduct(petID, recID, 1, isChecked);
     } catch (status) {
       // eslint-disable-next-line no-console
       console.log('Failed to update the auto-renew for pet:', petID, ' status:', status);
     }
+
+    Loader.hideLoader();
+  }
+
+  async function updateAutoRenewPumpkinHandler(target) {
+    Loader.showLoader();
+    const petID = target.getAttribute('data-pet-id');
+    const recID = target.getAttribute('data-rec-id');
+    const isChecked = target.checked;
+
+    try {
+      await APIClientObj.saveSelectedProduct(petID, recID, 1, isChecked, PUMPKIN_ITEM_ID);
+      setPumpkinAutoRenewCheckboxState(petID, isChecked);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to update the auto-renew for pet:', petID, ' status:', status);
+    }
+
     Loader.hideLoader();
   }
 
@@ -471,8 +494,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       case event.target.classList.contains('remove-pet'):
         removePetHandler(event.target.getAttribute('data-pet-id'));
         break;
-      case event.target.classList.contains('auto-renew-checkbox'):
+      case event.target.classList.contains(`${autoRenewClasses.autoRenewCheckbox}`):
         updateAutoRenewHandler(event.target);
+        break;
+      case event.target.classList.contains(`${autoRenewClasses.autoRenewCheckboxPumpkin}`):
+        updateAutoRenewPumpkinHandler(event.target);
         break;
       case event.target.classList.contains('item-info-fragment-button'):
         itemInfoFragmentButtonHandler(event.target);
@@ -482,6 +508,41 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   });
 
+  function saveAutoRenewStates() {
+    Loader.showLoader();
+    // create an array of all checkboxes
+    const autoRenewCheckboxes = document.querySelectorAll(`.${autoRenewClasses.autoRenewCheckbox}, .${autoRenewClasses.autoRenewCheckboxPumpkin}`);
+    // if no checkboxes found, return
+    if (autoRenewCheckboxes.length === 0) {
+      return;
+    }
+
+    // foreach checkbox, check if it is checked
+    autoRenewCheckboxes.forEach(async (checkbox) => {
+      const isChecked = checkbox.checked;
+      const petId = checkbox.getAttribute('data-pet-id');
+      const recId = checkbox.getAttribute('data-rec-id');
+      const itemId = checkbox.classList.contains(autoRenewClasses.autoRenewCheckboxPumpkin) ? PUMPKIN_ITEM_ID : '';
+
+      try {
+        await APIClientObj.saveSelectedProduct(petId, recId, 1, isChecked, itemId);
+        // save states to sessionStorage for pumpkin as this is not accessible from the API
+        if (itemId && itemId === PUMPKIN_ITEM_ID) {
+          setPumpkinAutoRenewCheckboxState(petId, isChecked);
+        }
+      } catch (status) {
+        // eslint-disable-next-line no-console
+        console.log('Failed to update the auto-renew for pet:', petId, ' status:', status);
+      }
+
+      Loader.hideLoader();
+    });
+  }
+
+  // run a check on all auto-renew checkboxes to save their states
+  saveAutoRenewStates();
+
+  // check if we can enable the proceed to payment button
   checkProceedButton();
 
   function replaceUrlPlaceholders(urlTemplate, ...values) {
