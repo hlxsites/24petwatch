@@ -1,4 +1,9 @@
-import { jsx, changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
+import {
+  jsx,
+  changeDomain,
+  addCanadaToLinks,
+  buildPromoBanner,
+} from '../../scripts/scripts.js';
 import { loadFragment } from '../fragment/fragment.js';
 import { isCanada, decorateLinks } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
@@ -50,6 +55,10 @@ export default async function decorate(block) {
   const headerContainer = document.querySelector('#header-paid');
   headerContainer.append(headerPaidContent);
 
+  const promoBanner = await buildPromoBanner();
+  if (promoBanner) {
+    block.append(promoBanner);
+  }
   changeDomain(block);
   addCanadaToLinks(block);
   decorateLinks(block);

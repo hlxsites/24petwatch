@@ -205,6 +205,53 @@ export function addCanadaToLinks(block) {
     });
   }
 }
+/**
+ * Adds a promo banner to the page.
+ * @param {Element} block The block element
+ */
+
+export async function buildPromoBanner() {
+  if (sessionStorage.getItem('promoBannerClosed') === 'true') {
+    return null;
+  }
+
+  const basePromoBannerUrl = `/blog/fragments/${isCanada ? 'ca' : 'us'}/promo-banner`;
+  const promoBannerResp = await fetch(`${basePromoBannerUrl}.plain.html`);
+  if (!promoBannerResp.ok) {
+    return null;
+  }
+  const promoBannerHtml = await promoBannerResp.text();
+  if (!promoBannerHtml.includes('<p>')) {
+    return null;
+  }
+
+  const banner = document.createElement('div');
+  banner.classList.add('nav-promo');
+
+  const placeholder = document.createElement('div');
+  placeholder.classList.add('close-btn-placeholder');
+
+  const textContainer = document.createElement('div');
+  textContainer.classList.add('promo-text');
+  textContainer.innerHTML = promoBannerHtml;
+
+  const closeBtn = document.createElement('div');
+  closeBtn.classList.add('close-btn');
+  closeBtn.textContent = 'x';
+  closeBtn.addEventListener('click', () => {
+    banner.classList.add('hidden');
+    sessionStorage.setItem('promoBannerClosed', 'true');
+    document.body.classList.remove('has-promo');
+  });
+
+  banner.appendChild(placeholder);
+  banner.appendChild(textContainer);
+  banner.appendChild(closeBtn);
+
+  document.body.classList.add('has-promo');
+
+  return banner;
+}
 
 /**
  * Decorates the main element.
