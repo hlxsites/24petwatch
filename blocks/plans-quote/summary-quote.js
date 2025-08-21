@@ -139,6 +139,31 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   }
 
+  function checkAutoRenewCheckboxes() {
+    const autoRenewCheckboxes = document.querySelectorAll('.auto-renew-checkbox');
+    let allAutoRenewChecked = true;
+
+    // foreach checkbbox, check if it is checked
+    autoRenewCheckboxes.forEach((checkbox) => {
+      const isChecked = checkbox.checked;
+      if (!isChecked) {
+        allAutoRenewChecked = false;
+      }
+    });
+
+    return allAutoRenewChecked;
+  }
+
+  // checks if the proceed to payment button should be enabled or disabled
+  function checkProceedButton() {
+    const button = document.getElementById('proceedToPayment');
+    const autoRenewChecked = checkAutoRenewCheckboxes();
+    if (button) {
+      // if we don't have purchase summary, disable the button
+      button.disabled = purchaseSummary.summary === undefined || autoRenewChecked === false;
+    }
+  }
+
   Loader.showLoader();
   try {
     ownerData = await APIClientObj.getOwner(ownerId);
@@ -268,7 +293,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
       if (!isCostcoFigo) {
         return jsx`
-        <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $19.95, plus applicable taxes (price is subject to change).</strong>
+        <strong>Automatically renew your Annual Protection Membership one year from date of purchase for $19.95/year (plus applicable taxes). You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change and will be communicated to you prior to any charge. Please see additional terms below.</strong>
         `;
       }
       return jsx`
@@ -277,23 +302,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
 
     return jsx`
-    <strong>Auto-renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions to keep enjoying these benefits once your complimentary access expires after 1 year:</strong><br />
-    <ul>
-        <li>Critical medical and behavioral information will be relayed to the shelter or vet they're brought to when found</li>
-        <li>Anytime access to veterinary professionals through live chat, email or by phone</li>
-    </ul>
-    `;
-  }
-
-  function getInfoHTML(itemId) {
-    if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
-      return '';
-    }
-
-    return jsx`
-    <div class="auto-renew-info">
-        <div class="auto-renew-info-text">As part of the Lifetime Protection Membership, these two benefits are free for the first year. Renew them together for just $19.95 per year (plus applicable taxes. Price is subject to change). Your credit card will be charged on your renewal date, which is one year from today.</div>
-    </div>
+    <strong>Automatically renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions one year from date of purchase for $19.95/year (plus applicable taxes) once your complimentary access expires after 1 year. You can turn off auto-renewal anytime through your account dashboard or by contacting customer service. Price is subject to change and will be communicated to you prior to any charge. Please see additional terms below.</strong>
     `;
   }
 
@@ -324,9 +333,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>
         </div>
         <div class="auto-renew">
-            <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
+            <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" /></div>
             <div class="auto-renew-text">${getAutoRenewTet(selectedProduct.itemId)}</div>
-            ${getInfoHTML(selectedProduct.itemId)}
         </div>
     </div>
     `;
@@ -432,6 +440,9 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   async function updateAutoRenewHandler(target) {
     Loader.showLoader();
+
+    checkProceedButton();
+
     const petID = target.getAttribute('data-pet-id');
     const recID = target.getAttribute('data-rec-id');
     const isChecked = target.checked;
@@ -471,12 +482,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   });
 
-  const proceedToPaymentButton = document.getElementById('proceedToPayment');
-
-  if (proceedToPaymentButton) {
-    // if we don't have purchase summary, disable the button
-    proceedToPaymentButton.disabled = purchaseSummary.summary === undefined;
-  }
+  checkProceedButton();
 
   function replaceUrlPlaceholders(urlTemplate, ...values) {
     return urlTemplate.replace(
@@ -484,6 +490,8 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       (match, index) => (typeof values[index] !== 'undefined' ? values[index] : match),
     );
   }
+
+  const proceedToPaymentButton = document.getElementById('proceedToPayment');
 
   proceedToPaymentButton.onclick = async () => {
     try {

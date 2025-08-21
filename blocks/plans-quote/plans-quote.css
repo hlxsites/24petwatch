@@ -277,7 +277,7 @@ main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-heade
 
 main .plans-quote.summary-quote > div.item > div.auto-renew {
   display: inline-flex;
-  margin: 1rem 1.5rem;
+  margin: 2.5rem 0;
 }
 
 main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-checkbox-container {
@@ -285,7 +285,11 @@ main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-che
 }
 
 main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
-  margin: 0 4rem;
+  margin: 0;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text ul {
+  padding-left: 1.5rem;
 }
 
 main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info {
@@ -322,6 +326,7 @@ main .plans-quote.summary-quote > div.new-pet-form {
   box-sizing: border-box;
   border-radius: 20px;
   padding: 20px 30px;
+  margin: 2.5rem 0;
 }
 
 main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header {
@@ -372,9 +377,14 @@ main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.avai
   line-height: 2.375rem;
 }
 
+main .plans-quote.summary-quote > div.payment-summary {
+  max-width: 37.5rem; /* 600px */
+  margin: 0 auto; 
+}
+
 main .plans-quote.summary-quote > div.payment-summary > div.payments {
   border-top: 2px solid #edf2f7;
-  padding: 0 2rem;
+  padding: 0;
 }
 
 main .plans-quote.summary-quote > div.payment-summary > div.payments > div {
@@ -469,6 +479,7 @@ main .plans-quote form .flex-wrapper .error-message {
 
 main .plans-quote .bottom-section {
   text-align: center;
+  margin-top: 1rem;
 }
 
 main .plans-quote .bottom-section .amount-info {
@@ -665,6 +676,16 @@ main div.section.plans-quote-container {
   form label {
     font-size: .75rem;
   }
+
+  main .plans-quote.summary-quote > div.item > div.item-info {
+    margin: 0;
+    border-radius: 20px;
+  }
+
+  main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-checkbox-container {
+    margin: .25rem 1rem 0 0;
+  }
+
 }
 
 @media (max-width: 670px) {
