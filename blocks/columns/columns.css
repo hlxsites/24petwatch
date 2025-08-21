@@ -222,6 +222,15 @@ main .lost-pet-data > div div:first-child {
   line-height: 1.938rem;
 }
 
+.columns.lpm-multi > div p {
+  margin-bottom: 0.5rem;
+}
+
+.columns.lpm-multi > div em {
+  color: #646F76;
+  font-size: 0.75rem;
+}
+
 main .columns.cat-dog-background > div > div:last-child {
   margin-top: -310px;
   background-image: url('/images/cat-dog-1.png');
@@ -387,6 +396,10 @@ main .section.cat-dog-background {
 
 .columns.collar-package hr {
   margin: 0;
+}
+
+.columns.lpm-multi > div p:not(:first-of-type) {
+  margin-top: 0;
 }
 
 .columns.transfer-microchip-registration-learn-more p.button-container {

@@ -138,6 +138,16 @@ main .plans-quote.first-step > div > div:nth-child(2) > div > p {
   text-align: center;
 }
 
+main .plans-quote.first-step > div > div:nth-child(2) > div > p > em {
+  display: block;
+  margin-top: 0.5rem; /* 8px */
+  color: #677179;
+  font-size: 0.625rem; /* 10px */
+  font-style: italic;
+  font-weight: 400;
+  line-height: normal;
+}
+
 main .plans-quote form .promocode-wrapper {
   margin-bottom: 3.25rem;
 }
@@ -192,7 +202,8 @@ main .plans-quote.first-step > div > div:nth-child(2) > h2 {
 main .plans-quote.first-step > div > div:nth-child(2) > div > p > span.icon
 {
   height: 65px;
-  width: 65px;
+  width: auto;
+  max-width: 120px;
 }
 
 main .plans-quote.summary-quote > div.item > div.item-header {
@@ -207,6 +218,10 @@ main .plans-quote.summary-quote > div.item > div.item-header {
 
 main .plans-quote.summary-quote > div.item > div.item-header > p {
   margin: 1.5rem 0 1.5rem 1.5rem;
+}
+
+main .plans-quote.first-step > div > div:nth-child(2) > div > p:first-of-type {
+  margin-bottom: 0.75rem; /* 12px */
 }
 
 main .plans-quote.summary-quote > div.item > div.item-header > div.item-menu > a {
@@ -275,24 +290,31 @@ main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-heade
   font-weight: 700;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew {
-  display: inline-flex;
+main .plans-quote.summary-quote > div.item > div.auto-renew-container {
   margin: 2.5rem 0;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-checkbox-container {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew {
+  display: inline-flex;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew:not(:first-of-type) {
+  margin: 1.5rem 0 0; /* 24px */
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-checkbox-container {
   margin: .25rem 1rem;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-text {
   margin: 0;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text ul {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-text ul {
   padding-left: 1.5rem;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-info {
   margin: .25rem 4rem;
   width: 1.2rem;
   height: 1.2rem;
@@ -302,7 +324,7 @@ main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-inf
   position: relative;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info > div.auto-renew-info-text {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-info > div.auto-renew-info-text {
   display: none;
   position: absolute;
   width: 300px;
@@ -316,7 +338,7 @@ main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-inf
   border-radius: .5rem;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info:hover > div.auto-renew-info-text {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-info:hover > div.auto-renew-info-text {
   display: block;
 }
 
@@ -669,7 +691,7 @@ main div.section.plans-quote-container {
 }
 
 @media (max-width: 768px) {
-  main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
+  main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-text {
     margin: 0 .5rem;
   }
 
@@ -682,7 +704,7 @@ main div.section.plans-quote-container {
     border-radius: 20px;
   }
 
-  main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-checkbox-container {
+  main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-checkbox-container {
     margin: .25rem 1rem 0 0;
   }
 
