@@ -31,3 +31,11 @@
   line-height: .938rem;
   text-align: center;
 }
+
+.plans-quote-perks-decorator > div > div > div > p > em {
+  display: block;
+  color: #646F76;
+  font-size: 0.75rem;
+  font-style: normal;
+  margin-top: 0.5rem; /* 8px */
+}
