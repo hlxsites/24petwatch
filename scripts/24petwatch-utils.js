@@ -13,6 +13,8 @@ export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|
 export const CURRENCY_CANADA = 'CAD';
 export const CURRENCY_US = 'USD';
 
+export const PUMPKIN_ITEM_ID = 'PLH_000016'; // Pumpkin Wellness Club item ID
+
 // ----- general helpers -----
 export function getQueryParam(param, defaultValue = null) {
   const urlParams = new URLSearchParams(window.location.search);
@@ -36,6 +38,7 @@ export const DL_EVENTS = {
 // ----- sessionStorage / localStorage helpers -----
 export const SS_KEY_FORM_ENTRY_URL = 'formEntryURL';
 export const SS_KEY_SUMMARY_ACTION = 'summaryAction';
+export const SS_KEY_AUTO_RENEW_PUMPKIN = 'autoRenewPumpkin';
 export const LS_KEY_COSTCO_FIGO = 'costcoFigoPromo';
 
 // ----- cookie helpers -----
