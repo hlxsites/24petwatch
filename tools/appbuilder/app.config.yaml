@@ -77,6 +77,13 @@ application:
             inputs:
               LOG_LEVEL: debug
               COSTCO_REST_URI: $COSTCO_REST_URI
+          service-costco-eligibility-flag:
+            function: actions/costco-figo-eligibility/service.js
+            web: 'no'
+            runtime: nodejs:20
+            inputs:
+              LOG_LEVEL: debug
+              COSTCO_REST_URI: $COSTCO_REST_URI
           authentication-salesforce-heroes:
             function: actions/salesforce-heroes-form/authentication.js
             web: 'no'
@@ -121,4 +128,7 @@ application:
             web: 'yes'
           proxy-salesforce-heroes-services:
             actions: authentication-salesforce-heroes, salesforce-heroes-event
+            web: 'yes'
+          costco-eligibility-flag:
+            actions: authentication-costco-figo, service-costco-eligibility-flag
             web: 'yes'
