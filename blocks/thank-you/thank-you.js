@@ -1,8 +1,10 @@
 import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
+  COOKIE_NAME_FOR_PET_TAGS,
   COOKIE_NAME_SAVED_OWNER_ID,
   deleteCookie,
   SS_KEY_FORM_ENTRY_URL,
+  LS_KEY_COSTCO_FIGO,
   CURRENCY_CANADA,
   CURRENCY_US,
 } from '../../scripts/24petwatch-utils.js';
@@ -96,12 +98,17 @@ export default async function decorate() {
   deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
   // unset sessionStorage form entry URL
   sessionStorage.removeItem(SS_KEY_FORM_ENTRY_URL);
+  // unset localStorage values related to Costco promo
+  localStorage.removeItem(LS_KEY_COSTCO_FIGO);
 
   const urlParams = new URLSearchParams(window.location.search);
   const paymentProcessorId = urlParams.get('PaymentProcessorCustomerId');
   const data = await getPaymentCustomerIDFromUUID(paymentProcessorId);
-  let getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
   const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
+  const productTypes = [];
+  const dlItems = [];
+  let getOwnerDetails = await getOwner(data.paymentPortalCustomerId);
+  let totalShipping = 0;
 
   await putUpdateOwnerSaleStatus(getOwnerDetails.id);
 
@@ -117,8 +124,9 @@ export default async function decorate() {
 
   const h1 = document.querySelector('h1');
   const {
-    cartFlow, firstName, lastName, nonInsPromoCode,
+    cartFlow, firstName, lastName,
   } = getOwnerDetails;
+  const isMembershipFlow = cartFlow === 2;
   const { petSummaries } = getPurchaseSummaryDetails;
   const contentColumn = document.querySelector('.thank-you-purchase .columns > div:nth-child(1) > div');
 
@@ -142,6 +150,24 @@ export default async function decorate() {
     ul.innerHTML += membershipItem;
 
     contentColumn.appendChild(ul);
+
+    // update analytics values if cart flow is membership
+    if (isMembershipFlow) {
+      totalShipping += pet.nonInsurancePetSummary.shipping;
+      productTypes.push(pet.membershipName ?? '');
+      // push each item object to items array
+      dlItems.push({
+        item_name: pet.membershipName ?? '',
+        currency: currencyValue,
+        discount: pet.nonInsurancePetSummary?.discount ?? '',
+        item_category: 'membership', // membership
+        item_variant: '', // okay to be left empty
+        price: pet.nonInsurancePetSummary?.amount ?? '',
+        quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+        microchip_number: pet.microChipNumber ?? '',
+        product_type: pet.membershipName ?? '',
+      });
+    }
   });
 
   // build sub-total, tax, and total of items purchased
@@ -167,25 +193,29 @@ export default async function decorate() {
 
   contentColumn.appendChild(totals);
 
-  const trackingData = {
-    ecommerce: {
-      microchip_number: petSummaries[0].microChipNumber,
-      product_type: petSummaries[0].membershipName,
-      transaction_id: externalTransactionID,
-      affiliation: '24petwatch',
-      tax: summary.salesTaxes,
-      payment_type: paymentMethod,
-      value: summary.totalDueToday,
-      currency: currencyValue,
-      shipping: petSummaries[0].nonInsurancePetSummary.shipping,
-      coupon: nonInsPromoCode,
-      flow: cartFlow,
-      customerid: getOwnerDetails.id,
-    },
-  };
+  if (isMembershipFlow) {
+    const trackingData = {
+      ecommerce: {
+        transaction_id: externalTransactionID,
+        affiliation: '24petwatch',
+        value: summary.totalDueToday ?? '',
+        tax: summary.salesTaxes ?? '',
+        shipping: totalShipping ? Number(totalShipping) : 0,
+        currency: currencyValue,
+        payment_type: paymentMethod,
+        product_type: productTypes.join(', '),
+        items: dlItems,
+      },
+    };
 
-  // send the GTM event
-  trackGTMEvent('purchase', trackingData);
+    // send the GTM event
+    trackGTMEvent('purchase', trackingData);
+  }
+
+  // remove pet tags cookie
+  if (!isMembershipFlow) {
+    deleteCookie(COOKIE_NAME_FOR_PET_TAGS);
+  }
 
   // Salesforce Upsert
   async function setUpsertToSalesforce(email) {

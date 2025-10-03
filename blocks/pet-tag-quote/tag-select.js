@@ -389,7 +389,7 @@ export default async function decorateStep2(block) {
           <div class="wrapper wrapper-text-center">
             <button type="button" id="addToCartM" ${disableActionButtons}>Add to Cart</button>
           </div>
-          <p class="content-center">Order by phone: <a href="tel:18665972424">1-866-597-2424</a></p>
+          <p class="content-center">Order by phone: <a href="tel:18338868002">1-833-886-8002</a></p>
         </div>
       </div>
       <!-- lifetime tags -->
@@ -462,7 +462,7 @@ export default async function decorateStep2(block) {
           <div class="wrapper wrapper-text-center">
             <button type="button" id="addToCartL" ${disableActionButtons}>Add to Cart</button>
           </div>
-          <p class="content-center">Order by phone: <a href="tel:18665972424">1-866-597-2424</a></p>
+          <p class="content-center">Order by phone: <a href="tel:18338868002">1-833-886-8002</a></p>
         </div>
       </div>
       

@@ -1,10 +1,12 @@
 import { jsx } from '../../scripts/scripts.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import Loader from './loader.js';
-import APIClient from '../../scripts/24petwatch-api.js';
+import APIClient, { getAPIBaseUrl } from '../../scripts/24petwatch-api.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
   SS_KEY_FORM_ENTRY_URL,
+  CURRENCY_CANADA,
+  CURRENCY_US,
   EMAIL_REGEX,
   MICROCHIP_REGEX,
   PET_PLANS_LPM_URL,
@@ -12,13 +14,24 @@ import {
   PET_PLANS_ANNUAL_URL,
   PET_PLANS_SUMMARY_QUOTE_URL,
   setCookie,
+  deleteCookie,
   getQueryParam,
+  hasQueryParam,
   getCookie,
   isSummaryPage,
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
+  DL_EVENTS,
 } from '../../scripts/24petwatch-utils.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
+import {
+  checkCostcoFigoPromo,
+  COSTCO_FIGO_PROMO_ITEMS,
+  getSavedCouponCode,
+  getIsMultiPet,
+  resetCostcoFigoData,
+} from './costco-promo.js';
 
 const US_LEGAL_HEADER = '';
 const US_LEGAL_CONSENT_FOR_PROMO_CONTACT = 'With your 24Pet® microchip, Pethealth Services (USA) Inc. may offer you free lost pet services, as well as exclusive offers, promotions and the latest information from 24Pet regarding microchip services. Additionally, PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may offer you promotions and the latest information from 24Petprotect™ regarding pet insurance services and products. By checking “Continue”, Pethealth Services (USA) Inc. and PTZ Insurance Agency, Ltd. including its parents, PetPartners, Inc. and Independence Pet Group, Inc. and their subsidiaries (“collectively PTZ Insurance Agency, Ltd”) may contact you via commercial electronic messages, automatic telephone dialing systems, prerecorded/automated messages or text messages at the telephone number provided above, including your mobile number. These calls or emails are not a condition of the purchase of any goods or services. You understand that if you choose not to provide your consent, you will not receive the above-mentioned communications or free lost pet services, which includes being contacted with information in the event that your pet goes missing. You may withdraw your consent at any time.';
@@ -36,8 +49,39 @@ const usedChipNumbers = new Set();
 
 const promoResultKey = await getConfigValue('promo-result');
 
-export default function formDecoration(block, apiBaseUrl) {
+const apiBaseUrl = await getAPIBaseUrl();
+const APIClientObj = new APIClient(apiBaseUrl);
+
+const costcoFigoPolicyId = getQueryParam(COSTCO_FIGO_PROMO_ITEMS.policyIdKey);
+const isEditing = hasQueryParam('petId');
+
+let isMultiPet = getIsMultiPet;
+
+// eslint-disable-next-line no-shadow
+async function getPurchaseSummary(ownerId) {
+  Loader.showLoader();
+  // eslint-disable-next-line no-shadow
+  let purchaseSummary = {};
+  try {
+    purchaseSummary = await APIClientObj.getPurchaseSummary(ownerId);
+  } catch (status) {
+    // eslint-disable-next-line no-console
+    console.log('Failed to get the purchase summary for owner:', ownerId, ' status:', status);
+  }
+  Loader.hideLoader();
+
+  return purchaseSummary;
+}
+
+export default function formDecoration(block) {
+  // if we are not editing, is not summary page
+  if (!isSummaryPage() && !isEditing) {
+    // delete the saved owner id cookie
+    deleteCookie(COOKIE_NAME_SAVED_OWNER_ID);
+  }
+
   // prepare for Canada vs US
+  const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
   const zipcodeLabel = isCanada ? 'Postal code*' : 'Zip code*';
   const zipcodePlaceholder = isCanada ? 'A1A 1A1' : '00000';
   const privacyPolicyURL = isCanada ? '/ca/privacy-policy' : '/privacy-policy';
@@ -78,10 +122,11 @@ export default function formDecoration(block, apiBaseUrl) {
   const promocodeFieldHTML = jsx`
     <div class="wrapper promocode-wrapper">
       <input type="text" id="promocode" name="promocode" placeholder="Enter Code">
-      <label for="promocode" class="float-label">Promo/Coupon Code (optional)<div>*Only one promotional/coupon code can be used per transaction</div></label>
+      <label for="promocode" class="float-label">Promo/Coupon Code</label>
       <span class="checkmark"></span>
       <button type="button" id="apply-promo-code" class="secondary" disabled>Apply</button>
       <div class="error-message"></div>
+      <div class="promo-code-details">*Only one promotional/coupon code can be used per transaction</div>
     </div>
   `;
 
@@ -177,7 +222,6 @@ export default function formDecoration(block, apiBaseUrl) {
 
   Loader.addLoader();
 
-  const APIClientObj = new APIClient(apiBaseUrl);
   const countryId = isCanada ? 1 : 2;
   const formData = {};
   const breedLists = {};
@@ -195,6 +239,19 @@ export default function formDecoration(block, apiBaseUrl) {
   const submitButton = document.getElementById('submit');
   const cancelButton = document.getElementById('cancel');
   const addPetButton = document.getElementById('add-pet');
+
+  function disableField(element) {
+    const container = element.parentElement;
+    container.classList.add('disabled-field');
+    element.disabled = true;
+    element.addEventListener('focus', (event) => {
+      event.target.blur();
+    });
+    element.addEventListener('mousedown', (event) => {
+      event.preventDefault();
+    });
+    element.setAttribute('tab-index', '-1');
+  }
 
   function showGeneralErrorMessage(errorMessage) {
     const errorElement = document.querySelector('.error-message.general-error-message');
@@ -645,11 +702,48 @@ export default function formDecoration(block, apiBaseUrl) {
     }
   }
 
+  function setDataLayer(data) {
+    const dlItems = [];
+    const productTypes = [];
+
+    if ('petSummaries' in data) {
+      const { petSummaries } = data;
+      if (petSummaries && petSummaries.length > 0) {
+        petSummaries.forEach((pet) => {
+          productTypes.push(pet.membershipName ?? '');
+          // push each item object to items array
+          dlItems.push({
+            item_name: pet.membershipName ?? '',
+            currency: currencyValue,
+            discount: pet.nonInsurancePetSummary?.discount ?? '',
+            item_category: 'membership',
+            item_variant: '', // okay to be left empty
+            microchip_number: pet.microChipNumber ?? '',
+            product_type: pet.membershipName ?? '',
+            price: pet.nonInsurancePetSummary?.amount ?? '',
+            quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+          });
+        });
+
+        const trackingData = {
+          ecommerce: {
+            product_type: productTypes.join(', '),
+            items: dlItems,
+          },
+        };
+
+        // send the GTM event
+        trackGTMEvent(DL_EVENTS.add, trackingData);
+      }
+    }
+  }
+
   async function executeSubmit() {
     Loader.showLoader();
 
     const ownerId = (!formData.ownerId) ? '' : formData.ownerId;
     await saveOwner(ownerId); // Create or Update the owner
+
     if (!formData.ownerId) {
       // eslint-disable-next-line no-console
       console.log('Failed to save the owner.');
@@ -688,6 +782,11 @@ export default function formDecoration(block, apiBaseUrl) {
       return;
     }
 
+    const getPurchaseSummaryDetails = await getPurchaseSummary(formData.ownerId);
+
+    // call instrument tracking
+    setDataLayer(getPurchaseSummaryDetails);
+
     Loader.hideLoader();
 
     // remember the critical information for future steps
@@ -705,6 +804,11 @@ export default function formDecoration(block, apiBaseUrl) {
       Loader.hideLoader();
       return;
     }
+
+    const getPurchaseSummaryDetails = await getPurchaseSummary(formData.ownerId);
+
+    // call instrument tracking
+    setDataLayer(getPurchaseSummaryDetails);
 
     Loader.hideLoader();
     window.location.reload();
@@ -813,10 +917,52 @@ export default function formDecoration(block, apiBaseUrl) {
     return breedName;
   }
 
+  async function executeCostcoFigoPromoCheck() {
+    // Check if we have a costco figo promo policy id from query string
+    if (costcoFigoPolicyId) {
+      let hasValidCoupon = false;
+      let costcoCoupon = null;
+
+      // check if we can apply a promo coupon for costco figo
+      const costcoFigoCouponData = await checkCostcoFigoPromo(costcoFigoPolicyId, countryId);
+      if (costcoFigoCouponData) {
+        isMultiPet = costcoFigoCouponData.multiPet ?? true;
+        costcoCoupon = costcoFigoCouponData.couponCode ?? null;
+        hasValidCoupon = !!costcoFigoCouponData.couponCode;
+      }
+      // If we have a coupon, trigger the promocodeHandler
+      if (hasValidCoupon && costcoCoupon !== null) {
+        // add promo code to promo field
+        promocodeInput.value = costcoCoupon.trim();
+        // disable field
+        disableField(promocodeInput);
+        // validate promo
+        await promocodeHandler();
+      } else {
+        // we don't have a valid code and have stored policy data
+        await resetCostcoFigoData();
+        isMultiPet = true;
+      }
+    } else {
+      // no policy Id parameter, reset any promo data
+      await resetCostcoFigoData();
+      isMultiPet = true;
+    }
+  }
+
   async function prefillFormIfPossible() {
+    // if not summary page and not editing pet, check costco promo
+    if (!isSummaryPage() && !isEditing) {
+      Loader.showLoader();
+      await executeCostcoFigoPromoCheck();
+      Loader.hideLoader();
+      // if multipet is false, don't try and prefill data
+      if (!isMultiPet) {
+        return;
+      }
+    }
     // the owner info must come from the cookie
     const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
-
     // promo code from query param
     const promoCode = getQueryParam('promo_code');
     if (promoCode) {
@@ -918,9 +1064,14 @@ export default function formDecoration(block, apiBaseUrl) {
       promocodeInput.value = data.couponCode;
       Loader.showLoader();
       await promocodeHandler();
+      // if coupon code is the costco figo coupon code, disable input
+      if (data.couponCode === getSavedCouponCode) {
+        promocodeInput.disabled = true;
+      }
       Loader.hideLoader();
     }
   }
+
   prefillFormIfPossible();
 
   // Add event listener

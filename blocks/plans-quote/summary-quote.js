@@ -8,8 +8,17 @@ import {
   getCookie,
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
+  CURRENCY_CANADA,
+  CURRENCY_US,
+  SS_KEY_SUMMARY_ACTION,
+  SS_KEY_AUTO_RENEW_PUMPKIN,
+  DL_EVENTS,
+  PUMPKIN_ITEM_ID,
 } from '../../scripts/24petwatch-utils.js';
+import { isCanada } from '../../scripts/lib-franklin.js';
+import { trackGTMEvent } from '../../scripts/lib-analytics.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { getIsMultiPet, isCostcoFigo } from './costco-promo.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
   // initialize form based on results from the previous step
@@ -19,6 +28,10 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
   const entryURL = sessionStorage.getItem(SS_KEY_FORM_ENTRY_URL);
+  const autoRenewClasses = {
+    autoRenewCheckbox: 'auto-renew-checkbox',
+    autoRenewCheckboxPumpkin: 'auto-renew-checkbox-pumpkin',
+  };
 
   let ownerData = [];
   let petsList = [];
@@ -40,6 +53,114 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     Loader.hideLoader();
 
     return purchaseSummary;
+  }
+
+  async function getPet(petId) {
+    try {
+      const data = await APIClientObj.getPet(petId);
+      return data;
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to get the pet', ' status:', status);
+      return [];
+    }
+  }
+
+  function setDataLayer(data, event, petData = '') {
+    const currencyValue = isCanada ? CURRENCY_CANADA : CURRENCY_US;
+    const dlItems = [];
+    // set items array
+    if ('petSummaries' in data) {
+      const { petSummaries } = data;
+      if (petSummaries && petSummaries.length > 0) {
+        petSummaries.forEach((pet) => {
+          // push each item object to items array
+          dlItems.push({
+            item_name: pet.membershipName ?? '',
+            currency: currencyValue,
+            discount: pet.nonInsurancePetSummary?.discount ?? '',
+            item_category: 'membership', // membership
+            item_variant: '', // okay to be left empty
+            price: pet.nonInsurancePetSummary?.amount ?? '',
+            quantity: pet.nonInsurancePetSummary?.membership?.quantity ?? '1',
+            microchip_number: pet.microChipNumber ?? '',
+            product_type: pet.membershipName ?? '',
+          });
+        });
+      }
+    }
+    // cart view
+    if (event === DL_EVENTS.view) {
+      const viewCartDL = {
+        ecommerce: {
+          value: purchaseSummary?.summary?.totalDueToday,
+          currency: currencyValue,
+          items: dlItems,
+        },
+      };
+      // Add view cart event
+      trackGTMEvent(DL_EVENTS.view, viewCartDL);
+    }
+    // remove from cart
+    if (event === DL_EVENTS.remove) {
+      // check we have all required data
+      if ('petSummaries' in data && 'microchipId' in petData) {
+        const { petSummaries } = data;
+        const microchip = petData.microchipId;
+        const petIndex = petSummaries.findIndex((item) => item.microChipNumber === microchip);
+        const petSummary = petSummaries[petIndex];
+        if (petSummary) {
+          // remove cart DL object
+          const removeCartDL = {
+            ecommerce: {
+              items: [{
+                item_name: petSummary.membershipName ?? '',
+                currency: currencyValue,
+                discount: petSummary.nonInsurancePetSummary?.discount ?? '',
+                item_category: 'membership', // membership
+                item_variant: '', // okay to be left empty
+                price: petSummary.nonInsurancePetSummary?.amount ?? '',
+                quantity: 1,
+                microchip_number: microchip ?? '',
+                product_type: petSummary.membershipName ?? '',
+              }],
+            },
+          };
+          // Add view cart event
+          trackGTMEvent(DL_EVENTS.remove, removeCartDL);
+        }
+      }
+    }
+    // begin checkout
+    if (event === DL_EVENTS.checkout) {
+      const checkoutCartDL = {
+        ecommerce: {
+          value: purchaseSummary?.summary?.totalDueToday,
+          currency: currencyValue,
+          items: dlItems,
+        },
+      };
+      // Add checkout cart event
+      trackGTMEvent(DL_EVENTS.checkout, checkoutCartDL);
+    }
+  }
+
+  function setPumpkinAutoRenewCheckboxState(petId, isChecked) {
+    sessionStorage.setItem(`${SS_KEY_AUTO_RENEW_PUMPKIN}-${petId}`, isChecked);
+  }
+
+  function getPumpkinAutoRenewCheckboxState(petId) {
+    const state = sessionStorage.getItem(`${SS_KEY_AUTO_RENEW_PUMPKIN}-${petId}`) || 'true';
+    return state;
+  }
+
+  // checks if the proceed to payment button should be enabled or disabled
+  function checkProceedButton() {
+    const button = document.getElementById('proceedToPayment');
+    if (button) {
+      // if we don't have purchase summary, disable the button
+      button.disabled = purchaseSummary.summary === undefined;
+    }
   }
 
   Loader.showLoader();
@@ -67,7 +188,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
     try {
       purchaseSummary = await getPurchaseSummary(ownerData.id);
-
       totalShipping = purchaseSummary.petSummaries.reduce((sum, pet) => {
         const shipping = pet.nonInsurancePetSummary?.shipping || 0;
         return sum + shipping;
@@ -83,50 +203,52 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   async function sendDataToSalesforce(owner, products, pets) {
     Loader.showLoader();
     if (!owner || !owner.email || !owner.id) {
-      // eslint-disable-next-line no-console
-      console.error('invalid owner data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!products || !products[0] || !products[0].petID) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid selected products data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid pets list data');
+      Loader.hideLoader();
+      return;
     }
 
     if (!entryURL) {
-      // eslint-disable-next-line no-console
-      console.error('Invalid entry URL');
+      Loader.hideLoader();
+      return;
     }
 
-    const payload = {
-      payload: {
-        Data: {
+    if (selectedProducts.length > 0 && petsList.length > 0) {
+      const payload = {
+        payload: {
+          Data: {
+            ContactKey: ownerData.email,
+            EmailAddress: ownerData.email,
+            OrderCompleted: false,
+            OwnerId: ownerData.id,
+            PetId: selectedProducts[0].petID,
+            PetName: petsList[0].petName,
+            SiteURL: entryURL,
+            Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
+          },
+          EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
           ContactKey: ownerData.email,
-          EmailAddress: ownerData.email,
-          OrderCompleted: false,
-          OwnerId: ownerData.id,
-          PetId: selectedProducts[0].petID,
-          PetName: petsList[0].petName,
-          SiteURL: entryURL,
-          Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
         },
-        EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
-        ContactKey: ownerData.email,
-      },
-    };
+      };
 
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    };
-    await fetch(salesforceProxyEndpoint, options);
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      };
+      await fetch(salesforceProxyEndpoint, options);
+    }
 
     Loader.hideLoader();
   }
@@ -149,43 +271,52 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   async function removePet(petId) {
     Loader.showLoader();
+    // capture pet info before delete
+    const petInfo = await getPet(petId);
     try {
       await APIClientObj.deletePet(petId);
     } catch (status) {
       // eslint-disable-next-line no-console
       console.log('Failed to delete the pet:', petId, ' status:', status);
     }
+    // set dataLayer
+    if (purchaseSummary && petInfo) {
+      sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.remove);
+      setDataLayer(purchaseSummary, DL_EVENTS.remove, petInfo);
+    }
     Loader.hideLoader();
     window.location.reload();
   }
 
-  function getAutoRenewTet(itemId) {
+  function getAutoRenewText(itemId) {
     if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
+      if (!isCostcoFigo) {
+        return jsx`
+        <strong>Turn on auto-renew for Annual Protection Membership one year from date of purchase for $19.95/year (plus tax). Don't worry - you can cancel anytime in your account dashboard.</strong>
+        `;
+      }
       return jsx`
-      <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $19.95, plus applicable taxes (price is subject to change).</strong>
+      <strong>Your Annual Membership will automatically renew on your renewal date which is one year from today. The renewal rate is currently $0 (price is subject to change).</strong>
       `;
     }
-
     return jsx`
-    <strong>Auto-renew your 24PetMedAlert® and 24/7 Vet Helpline subscriptions to keep enjoying these benefits once your complimentary access expires after 1 year:</strong><br />
-    <ul>
-        <li>Critical medical and behavioral information will be relayed to the shelter or vet they're brought to when found</li>
-        <li>Anytime access to veterinary professionals through live chat, email or by phone</li>
-    </ul>
+    <strong>Turn on auto-renew for 24PetMedAlert® and 24/7 Vet Helpline subscription bundle one year from date of purchase for $19.95/year (plus tax). Don't worry - you can cancel anytime in your account dashboard.</strong>
     `;
   }
 
-  function getInfoHTML(itemId) {
-    if (itemId === 'Annual Plan-DOGS' || itemId === 'Annual Plan-CATS') {
+  function getPumpkinAutoRenewText(selectedProduct) {
+    if (selectedProduct.itemId === 'Annual Plan-DOGS' || selectedProduct.itemId === 'Annual Plan-CATS') {
       return '';
     }
-
     return jsx`
-    <div class="auto-renew-info">
-        <div class="auto-renew-info-text">As part of the Lifetime Protection Membership, these two benefits are free for the first year. Renew them together for just $19.95 per year (plus applicable taxes. Price is subject to change). Your credit card will be charged on your renewal date, which is one year from today.</div>
-    </div>
+      <div class="auto-renew">
+          <div class="auto-renew-checkbox-container"><input type="checkbox" class="${autoRenewClasses.autoRenewCheckboxPumpkin}" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${getPumpkinAutoRenewCheckboxState(selectedProduct.petID) !== 'false' ? 'checked' : ''} data-checked-state="${getPumpkinAutoRenewCheckboxState(selectedProduct.petID)}" /></div>
+          <div class="auto-renew-text"><strong>Turn on auto-renew for Pumpkin Wellness Club subscription one month from date of purchase for $19.95/month (plus tax). Don't worry - you can cancel anytime in your account dashboard.</strong></div>
+      </div>
     `;
   }
+
+  const numberOfItems = petsList.length ?? 0;
 
   const petListHTML = petsList.map((pet) => {
     const selectedProduct = getSelectedProduct(pet.id);
@@ -198,7 +329,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             <p>${getSelectedProductAdditionalInfo(selectedProduct.itemId).name}</p>
             <div class="item-menu">
                 <a data-pet-id="${pet.id}" class="edit-pet">Edit</a>
-                <a data-pet-id="${pet.id}" class="remove-pet">Remove</a>
+                ${numberOfItems > 1 ? `<a data-pet-id="${pet.id}" class="remove-pet">Remove</a>` : ''}
             </div>
         </div>
         <div class="item-info">
@@ -206,15 +337,17 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
               <div class="pet-name">${pet.petName}<span class="item-info-fragment-button" data-pet-id="${pet.id}"></span></div>
               <div class="price-info">
                 <div class="price">$${selectedProduct.salesPrice}</div>
-                <div class="price-comment">${getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment}</div>
+                <div class="price-comment">${!isCostcoFigo ? getSelectedProductAdditionalInfo(selectedProduct.itemId).priceComment : getSelectedProductAdditionalInfo(selectedProduct.itemId).priceCommentPromo}</div>
               </div>
             </div>
             <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>
         </div>
-        <div class="auto-renew">
-            <div class="auto-renew-checkbox-container"><input type="checkbox" class="auto-renew-checkbox" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
-            <div class="auto-renew-text">${getAutoRenewTet(selectedProduct.itemId)}</div>
-            ${getInfoHTML(selectedProduct.itemId)}
+        <div class="auto-renew-container">
+          ${!isCanada ? getPumpkinAutoRenewText(selectedProduct) : ''}
+          <div class="auto-renew">
+              <div class="auto-renew-checkbox-container"><input type="checkbox" class="${autoRenewClasses.autoRenewCheckbox}" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
+              <div class="auto-renew-text">${getAutoRenewText(selectedProduct.itemId)}</div>
+          </div>
         </div>
     </div>
     `;
@@ -230,17 +363,17 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     </div>
   </dialog>
   ${petListHTML.join('')}
-  <div class="new-pet-form">
+  ${getIsMultiPet ? `<div class="new-pet-form">
     <div class="new-pet-form-header">
       <span>Add Another Pet</span>
       <span id="add-another-pet">Add</span>
     </div>
     <div id="form-wrapper"></div>
-  </div>
+  </div>` : ''}
   <div class="payment-summary">
     <h5>Payment Summary</h5>
     <div class="payments">
-        ${purchaseSummary.summary.discount ? `<div><div>Discount</div><div>-$${purchaseSummary.summary.discount}</div></div>` : ''}
+        ${purchaseSummary.summary?.discount ? `<div><div>Discount</div><div>-$${purchaseSummary.summary.discount}</div></div>` : ''}
         <div>
             <div>Monthly Fee</div>
             <div>$0.00</div>
@@ -248,21 +381,21 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
         ${(totalShipping > 0) ? `<div><div>Shipping of Tag</div><div>$${totalShipping.toFixed(2)}</div></div>` : ''}
         <div>
             <div>Subtotal</div>
-            <div>$${purchaseSummary.summary.subTotal}</div>
+            <div>$${purchaseSummary.summary?.subTotal ?? '0.00'}</div>
         </div>
         <div>
             <div>Sales Tax</div>
-            <div>$${purchaseSummary.summary.salesTaxes}</div>
+            <div>$${purchaseSummary.summary?.salesTaxes ?? '0.00'}</div>
         </div>
         <div class="due-today">
             <div>Due Today</div>
-            <div>$${purchaseSummary.summary.totalDueToday}</div>
+            <div>$${purchaseSummary.summary?.totalDueToday ?? '0.00'}</div>
         </div>
     </div>
   </div>
   <div class="bottom-section">
     <div class="amount-info">This amount will appear as PTZ*24PTWTCH* on your credit card or bank statement.</div>
-    <button id="proceedToPayment">Proceed to Payment</button>
+    <button id="proceedToPayment" disabled>Proceed to Payment</button>
   </div>
   `;
 
@@ -280,6 +413,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   const confirmationDialogNote = document.getElementById('confirmation-dialog-note');
   const confirmationDialogYes = document.getElementById('confirmation-dialog-yes');
   const confirmationDialogNo = document.getElementById('confirmation-dialog-no');
+
+  // Trigger cart view DL event
+  if (purchaseSummary) {
+    setDataLayer(purchaseSummary, DL_EVENTS.view);
+  }
 
   function editPetHandler(petID) {
     confirmationDialogHeader.textContent = 'Edit Confirmation';
@@ -312,12 +450,31 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     const petID = target.getAttribute('data-pet-id');
     const recID = target.getAttribute('data-rec-id');
     const isChecked = target.checked;
+
     try {
       await APIClientObj.saveSelectedProduct(petID, recID, 1, isChecked);
     } catch (status) {
       // eslint-disable-next-line no-console
       console.log('Failed to update the auto-renew for pet:', petID, ' status:', status);
     }
+
+    Loader.hideLoader();
+  }
+
+  async function updateAutoRenewPumpkinHandler(target) {
+    Loader.showLoader();
+    const petID = target.getAttribute('data-pet-id');
+    const recID = target.getAttribute('data-rec-id');
+    const isChecked = target.checked;
+
+    try {
+      await APIClientObj.saveSelectedProduct(petID, recID, 1, isChecked, PUMPKIN_ITEM_ID);
+      setPumpkinAutoRenewCheckboxState(petID, isChecked);
+    } catch (status) {
+      // eslint-disable-next-line no-console
+      console.log('Failed to update the auto-renew for pet:', petID, ' status:', status);
+    }
+
     Loader.hideLoader();
   }
 
@@ -337,8 +494,11 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       case event.target.classList.contains('remove-pet'):
         removePetHandler(event.target.getAttribute('data-pet-id'));
         break;
-      case event.target.classList.contains('auto-renew-checkbox'):
+      case event.target.classList.contains(`${autoRenewClasses.autoRenewCheckbox}`):
         updateAutoRenewHandler(event.target);
+        break;
+      case event.target.classList.contains(`${autoRenewClasses.autoRenewCheckboxPumpkin}`):
+        updateAutoRenewPumpkinHandler(event.target);
         break;
       case event.target.classList.contains('item-info-fragment-button'):
         itemInfoFragmentButtonHandler(event.target);
@@ -348,7 +508,42 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     }
   });
 
-  const proceedToPaymentButton = document.getElementById('proceedToPayment');
+  function saveAutoRenewStates() {
+    Loader.showLoader();
+    // create an array of all checkboxes
+    const autoRenewCheckboxes = document.querySelectorAll(`.${autoRenewClasses.autoRenewCheckbox}, .${autoRenewClasses.autoRenewCheckboxPumpkin}`);
+    // if no checkboxes found, return
+    if (autoRenewCheckboxes.length === 0) {
+      return;
+    }
+
+    // foreach checkbox, check if it is checked
+    autoRenewCheckboxes.forEach(async (checkbox) => {
+      const isChecked = checkbox.checked;
+      const petId = checkbox.getAttribute('data-pet-id');
+      const recId = checkbox.getAttribute('data-rec-id');
+      const itemId = checkbox.classList.contains(autoRenewClasses.autoRenewCheckboxPumpkin) ? PUMPKIN_ITEM_ID : '';
+
+      try {
+        await APIClientObj.saveSelectedProduct(petId, recId, 1, isChecked, itemId);
+        // save states to sessionStorage for pumpkin as this is not accessible from the API
+        if (itemId && itemId === PUMPKIN_ITEM_ID) {
+          setPumpkinAutoRenewCheckboxState(petId, isChecked);
+        }
+      } catch (status) {
+        // eslint-disable-next-line no-console
+        console.log('Failed to update the auto-renew for pet:', petId, ' status:', status);
+      }
+
+      Loader.hideLoader();
+    });
+  }
+
+  // run a check on all auto-renew checkboxes to save their states
+  saveAutoRenewStates();
+
+  // check if we can enable the proceed to payment button
+  checkProceedButton();
 
   function replaceUrlPlaceholders(urlTemplate, ...values) {
     return urlTemplate.replace(
@@ -357,10 +552,17 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     );
   }
 
+  const proceedToPaymentButton = document.getElementById('proceedToPayment');
+
   proceedToPaymentButton.onclick = async () => {
     try {
       const data = await APIClientObj.postSalesForPayment(ownerData.id, ownerData.cartFlow);
       if (data.isSuccess) {
+        // trigger DL event
+        if (purchaseSummary) {
+          sessionStorage.removeItem(SS_KEY_SUMMARY_ACTION);
+          setDataLayer(purchaseSummary, DL_EVENTS.checkout);
+        }
         window.location.href = replaceUrlPlaceholders(
           data.paymentProcessorRedirectBackURL,
           data.paymentProcessingUserId,
@@ -376,12 +578,15 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
   const addPetButton = document.getElementById('add-another-pet');
   const formWrapper = document.getElementById('form-wrapper');
-
-  addPetButton.onclick = () => {
-    if (formWrapper.innerHTML === '') {
-      formDecoration(formWrapper, apiBaseUrl);
-    } else {
-      formWrapper.innerHTML = '';
-    }
-  };
+  if (addPetButton) {
+    addPetButton.onclick = () => {
+      if (formWrapper.innerHTML === '') {
+        formDecoration(formWrapper, apiBaseUrl);
+        // set sessionStorage with add action
+        sessionStorage.setItem(SS_KEY_SUMMARY_ACTION, DL_EVENTS.add);
+      } else {
+        formWrapper.innerHTML = '';
+      }
+    };
+  }
 }

@@ -1,5 +1,6 @@
 import { jsx, loadScript } from '../../scripts/scripts.js';
 import { getConfigValue } from '../../scripts/configs.js';
+import { isCanada } from '../../scripts/lib-franklin.js';
 
 async function executeSubmit(block, requestBody) {
   const reportLostEndpoint = await getConfigValue('found-pet-endpoint');
@@ -15,7 +16,8 @@ async function executeSubmit(block, requestBody) {
     });
 
     if (response.ok) {
-      window.location.href = '/lost-pet-protection/report-lost-found-pet/thank-you';
+      const urlPath = isCanada ? '/ca/lost-pet-protection/report-lost-found-pet/thank-you' : '/lost-pet-protection/report-lost-found-pet/thank-you';
+      window.location.href = urlPath;
     } else {
       form.classList.add('submission-message');
       form.innerHTML = 'There was an error with your submission. Please try again.';
@@ -82,7 +84,7 @@ export default async function decorate(block) {
       <label for="microchipId" class="float-label">Microchip number (up to 15 digits)*</label>
       <span class="checkmark"></span>
       <div class="error-message"></div>
-      <div class="info-icon"><div class="info-content">Not sure of your pet's microchip number? Please contact us immediately at 1-866-597-2424.</div></div>
+      <div class="info-icon"><div class="info-content">Not sure of your pet's microchip number? Please contact us immediately at 1-833-886-8002.</div></div>
     </div>
 
     <h2>Contact Information</h2>

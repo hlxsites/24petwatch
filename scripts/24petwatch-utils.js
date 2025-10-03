@@ -10,8 +10,10 @@ export const MICROCHIP_REGEX = /^([A-Z0-9]{15}|[A-Z0-9]{10}|[A-Z0-9]{9})$/i;
 export const POSTAL_CODE_CANADA_REGEX = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
-export const CURRENCY_CANADA = 'cad';
-export const CURRENCY_US = 'usd';
+export const CURRENCY_CANADA = 'CAD';
+export const CURRENCY_US = 'USD';
+
+export const PUMPKIN_ITEM_ID = 'PLH_000016'; // Pumpkin Wellness Club item ID
 
 // ----- general helpers -----
 export function getQueryParam(param, defaultValue = null) {
@@ -19,8 +21,25 @@ export function getQueryParam(param, defaultValue = null) {
   return urlParams.has(param) ? urlParams.get(param) : defaultValue;
 }
 
+export function hasQueryParam(param, defaultValue = false) {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.has(param) && urlParams.get(param).trim() !== '' ? true : defaultValue;
+}
+
+// ----- dataLayer event helpers -----
+export const DL_EVENTS = {
+  add: 'add_to_cart',
+  remove: 'remove_from_cart',
+  view: 'view_cart',
+  checkout: 'begin_checkout',
+  purchase: 'purchase',
+};
+
 // ----- sessionStorage / localStorage helpers -----
 export const SS_KEY_FORM_ENTRY_URL = 'formEntryURL';
+export const SS_KEY_SUMMARY_ACTION = 'summaryAction';
+export const SS_KEY_AUTO_RENEW_PUMPKIN = 'autoRenewPumpkin';
+export const LS_KEY_COSTCO_FIGO = 'costcoFigoPromo';
 
 // ----- cookie helpers -----
 export const COOKIE_NAME_FOR_PET_TAGS = 'ph.PetTagQuote';
@@ -110,12 +129,14 @@ export function getSelectedProductAdditionalInfo(itemId) {
     'Annual Plan-DOGS': {
       name: 'Annual Protection Membership',
       priceComment: 'for the first year $19.95/year thereafter',
+      priceCommentPromo: 'for the first year $0/year thereafter',
       pageLink: PET_PLANS_ANNUAL_URL,
       fragmentLink: '/lost-pet-protection/fragments/annual-info',
     },
     'Annual Plan-CATS': {
       name: 'Annual Protection Membership',
       priceComment: 'for the first year $19.95/year thereafter',
+      priceCommentPromo: 'for the first year $0/year thereafter',
       pageLink: PET_PLANS_ANNUAL_URL,
       fragmentLink: '/lost-pet-protection/fragments/annual-info',
     },

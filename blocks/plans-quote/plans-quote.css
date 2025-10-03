@@ -68,19 +68,38 @@ main .plans-quote form .checkbox-text-wrapper > div {
   box-sizing: border-box;
 }
 
-main .plans-quote form .promocode-wrapper label {
-  top: -30px;
+main .plans-quote form .wrapper > label {
+  padding-left: 0;
 }
 
 main .plans-quote form input:not(:placeholder-shown)~label {
   transform: unset;
 }
 
+main .plans-quote form .wrapper.disabled-field > input {
+  cursor: not-allowed;
+  cursor: unset;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+}
+
+main .plans-quote form .wrapper.disabled-field::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+}
+
 main .plans-quote form .wrapper:not(.flex-wrapper) label {
   padding-bottom: 0;
 }
 
-main .plans-quote form .promocode-wrapper label > div {
+.plans-quote .promo-code-details {
   display: block;
   font-size: 0.8rem;
   color: #333f48;
@@ -119,8 +138,24 @@ main .plans-quote.first-step > div > div:nth-child(2) > div > p {
   text-align: center;
 }
 
+main .plans-quote.first-step > div > div:nth-child(2) > div > p > em {
+  display: block;
+  margin-top: 0.5rem; /* 8px */
+  color: #677179;
+  font-size: 0.625rem; /* 10px */
+  font-style: italic;
+  font-weight: 400;
+  line-height: normal;
+}
+
 main .plans-quote form .promocode-wrapper {
   margin-bottom: 3.25rem;
+}
+
+main .plans-quote form input[type="text"],
+main .plans-quote form input[type="email"] {
+  padding-left: 0;
+  padding-right: 0;
 }
 
 main .plans-quote.first-step > div > div:nth-child(1) > p:first-of-type {
@@ -167,7 +202,8 @@ main .plans-quote.first-step > div > div:nth-child(2) > h2 {
 main .plans-quote.first-step > div > div:nth-child(2) > div > p > span.icon
 {
   height: 65px;
-  width: 65px;
+  width: auto;
+  max-width: 120px;
 }
 
 main .plans-quote.summary-quote > div.item > div.item-header {
@@ -182,6 +218,10 @@ main .plans-quote.summary-quote > div.item > div.item-header {
 
 main .plans-quote.summary-quote > div.item > div.item-header > p {
   margin: 1.5rem 0 1.5rem 1.5rem;
+}
+
+main .plans-quote.first-step > div > div:nth-child(2) > div > p:first-of-type {
+  margin-bottom: 0.75rem; /* 12px */
 }
 
 main .plans-quote.summary-quote > div.item > div.item-header > div.item-menu > a {
@@ -250,20 +290,31 @@ main .plans-quote.summary-quote > div.item > div.item-info > div.item-info-heade
   font-weight: 700;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew {
-  display: inline-flex;
-  margin: 1rem 1.5rem;
+main .plans-quote.summary-quote > div.item > div.auto-renew-container {
+  margin: 2.5rem 0;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-checkbox-container {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew {
+  display: inline-flex;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew:not(:first-of-type) {
+  margin: 1.5rem 0 0; /* 24px */
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-checkbox-container {
   margin: .25rem 1rem;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
-  margin: 0 4rem;
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-text {
+  margin: 0;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-text ul {
+  padding-left: 1.5rem;
+}
+
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-info {
   margin: .25rem 4rem;
   width: 1.2rem;
   height: 1.2rem;
@@ -273,7 +324,7 @@ main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-inf
   position: relative;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info > div.auto-renew-info-text {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-info > div.auto-renew-info-text {
   display: none;
   position: absolute;
   width: 300px;
@@ -287,7 +338,7 @@ main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-inf
   border-radius: .5rem;
 }
 
-main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-info:hover > div.auto-renew-info-text {
+main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-info:hover > div.auto-renew-info-text {
   display: block;
 }
 
@@ -297,6 +348,7 @@ main .plans-quote.summary-quote > div.new-pet-form {
   box-sizing: border-box;
   border-radius: 20px;
   padding: 20px 30px;
+  margin: 2.5rem 0;
 }
 
 main .plans-quote.summary-quote > div.new-pet-form > div.new-pet-form-header {
@@ -347,9 +399,14 @@ main .plans-quote.summary-quote > div.new-pet-form > div#form-wrapper > div.avai
   line-height: 2.375rem;
 }
 
+main .plans-quote.summary-quote > div.payment-summary {
+  max-width: 37.5rem; /* 600px */
+  margin: 0 auto; 
+}
+
 main .plans-quote.summary-quote > div.payment-summary > div.payments {
   border-top: 2px solid #edf2f7;
-  padding: 0 2rem;
+  padding: 0;
 }
 
 main .plans-quote.summary-quote > div.payment-summary > div.payments > div {
@@ -370,14 +427,19 @@ main .plans-quote form {
 }
 
 main .plans-quote form button#apply-promo-code {
-  position: absolute;
   font-size: 1rem;
-  right: .5rem;
-  bottom: 1rem;
-  margin: 0;
+  margin: 1rem 0 0;
   padding: 0 2rem;
   height: 1.7rem;
-  width: 7rem;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    position: absolute;
+    right: 0;
+    top: 1.2rem;
+    margin: 0;
+    width: 7rem;
+  }
 }
 
 main .plans-quote form button#apply-promo-code:hover {
@@ -393,7 +455,11 @@ main .plans-quote form .promocode-wrapper.error button#apply-promo-code {
 }
 
 main .plans-quote form .promocode-wrapper span.checkmark {
-  right: 8rem;
+  top: 1.4rem;
+
+  @media (min-width: 1024px) {
+    right: 7.25rem;
+  }
 }
 
 main .plans-quote form .checkbox-text-wrapper {
@@ -435,6 +501,7 @@ main .plans-quote form .flex-wrapper .error-message {
 
 main .plans-quote .bottom-section {
   text-align: center;
+  margin-top: 1rem;
 }
 
 main .plans-quote .bottom-section .amount-info {
@@ -624,13 +691,23 @@ main div.section.plans-quote-container {
 }
 
 @media (max-width: 768px) {
-  main .plans-quote.summary-quote > div.item > div.auto-renew > div.auto-renew-text {
+  main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-text {
     margin: 0 .5rem;
   }
 
   form label {
     font-size: .75rem;
   }
+
+  main .plans-quote.summary-quote > div.item > div.item-info {
+    margin: 0;
+    border-radius: 20px;
+  }
+
+  main .plans-quote.summary-quote > div.item > div.auto-renew-container > div.auto-renew > div.auto-renew-checkbox-container {
+    margin: .25rem 1rem 0 0;
+  }
+
 }
 
 @media (max-width: 670px) {

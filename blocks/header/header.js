@@ -12,7 +12,7 @@ import {
   baseDomain,
 } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
-import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
+import { changeDomain, addCanadaToLinks, buildPromoBanner } from '../../scripts/scripts.js';
 
 // let positionY = 0;
 // const SCROLL_STEP = 25;
@@ -299,6 +299,7 @@ function instrumentTrackingEvents(header) {
         // track cta clicks on header
         if (e.target.classList.contains('button')) {
           trackGTMEvent('cta_click', {
+            cta_location: 'header_cta',
             link_text: linkText,
             link_url: linkUrl,
           });
@@ -393,13 +394,11 @@ export default async function decorate(block) {
 
   const navPath = navMeta ? new URL(navMeta).pathname : baseHeaderUrl;
   const resp = await fetch(`${navPath}.plain.html`);
-
   if (!resp.ok) {
     return;
   }
 
   const html = await resp.text();
-  // decorate nav DOM
   const nav = document.createElement('nav');
   nav.id = 'nav';
   nav.innerHTML = html;
@@ -414,6 +413,12 @@ export default async function decorate(block) {
   navWrapper.className = 'nav-wrapper';
   navWrapper.append(nav);
   block.append(navWrapper);
+
+  // Append promo banner
+  const promoBanner = await buildPromoBanner();
+  if (promoBanner) {
+    block.append(promoBanner);
+  }
 
   // Append membership hover content
   const membershipsHoverContent = nav.querySelector('.nav-memberships');
