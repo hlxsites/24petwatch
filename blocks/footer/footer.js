@@ -171,6 +171,22 @@ export default async function decorate(block) {
         footer.appendChild(logo);
       } else {
         footer.appendChild(div);
+        // find the last child of the div, which is expected to be the copyright paragraph
+        const lastChild = div.lastElementChild;
+        // add Osano link before the last child
+        const osanoLink = '<a href="#" onclick="Osano.cm.showDoNotSell()">Do Not Sell or Share My Personal Information</a>';
+        const osanoClass = 'osano-do-not-sell';
+        const osanoDoNotSell = document.createElement('p');
+        osanoDoNotSell.innerHTML = osanoLink;
+        osanoDoNotSell.classList.add(`${osanoClass}`);
+
+        // by default add before last p
+        if (lastChild && lastChild.tagName === 'P') {
+          // Adding Osano Do Not Sell link
+          div.insertBefore(osanoDoNotSell, lastChild);
+        } else {
+          div.appendChild(osanoDoNotSell);
+        }
       }
     });
 

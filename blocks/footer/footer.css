@@ -180,6 +180,10 @@ footer .footer .footer-heading-section li a span.icon {
   margin-right: 4px;
 }
 
+footer .footer .osano-do-not-sell {
+  margin: 0.5rem 0;
+}
+
 @media (min-width: 768px) {
   footer {
     padding: 65px 90pt;
