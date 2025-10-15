@@ -5,15 +5,14 @@ export const PET_PLANS_LPM_URL = '/lps-quote'; // aka 'PET_PLANS_LPS_URL'
 export const PET_PLANS_LPM_PLUS_URL = '/lpm-plus';
 export const PET_PLANS_ANNUAL_URL = '/annual-quote';
 export const PET_PLANS_SUMMARY_QUOTE_URL = '/summary-quote';
-
 export const MICROCHIP_REGEX = /^([A-Z0-9]{15}|[A-Z0-9]{10}|[A-Z0-9]{9})$/i;
 export const POSTAL_CODE_CANADA_REGEX = /^[ABCEGHJ-NPRSTVXY]\d[ABCEGHJ-NPRSTV-Z][ -]?\d[ABCEGHJ-NPRSTV-Z]\d$/i;
 export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
 export const CURRENCY_CANADA = 'CAD';
 export const CURRENCY_US = 'USD';
-
 export const PUMPKIN_ITEM_ID = 'PLH_000016'; // Pumpkin Wellness Club item ID
+export const DNS_PLACEHOLDER = '{DNS}';
+export const DNS_LINK_TEXT = 'Do Not Sell or Share My Personal Information';
 
 // ----- general helpers -----
 export function getQueryParam(param, defaultValue = null) {

@@ -7,6 +7,7 @@ import {
   isCanada,
 } from '../../scripts/lib-franklin.js';
 import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
+import { DNS_LINK_TEXT, DNS_PLACEHOLDER } from '../../scripts/24petwatch-utils.js';
 
 const socialNetworks = ['Instagram', 'X', 'Facebook'];
 
@@ -171,21 +172,19 @@ export default async function decorate(block) {
         footer.appendChild(logo);
       } else {
         footer.appendChild(div);
-        // find the last child of the div, which is expected to be the copyright paragraph
-        const lastChild = div.lastElementChild;
-        // add Osano link before the last child
-        const osanoLink = '<a href="#" onclick="Osano.cm.showDoNotSell()">Do Not Sell or Share My Personal Information</a>';
-        const osanoClass = 'osano-do-not-sell';
-        const osanoDoNotSell = document.createElement('p');
-        osanoDoNotSell.innerHTML = osanoLink;
-        osanoDoNotSell.classList.add(`${osanoClass}`);
+      }
 
-        // by default add before last p
-        if (lastChild && lastChild.tagName === 'P') {
-          // Adding Osano Do Not Sell link
-          div.insertBefore(osanoDoNotSell, lastChild);
-        } else {
-          div.appendChild(osanoDoNotSell);
+      const uls = div.querySelectorAll('ul');
+      if (uls.length > 0) {
+        const lastUl = uls[uls.length - 1];
+        // Osano Do Not Sell link replacement
+        const listItems = lastUl.querySelectorAll('li');
+        // eslint-disable-next-line no-use-before-define,max-len
+        const itemWithPlaceholder = [...listItems].find((li) => li.textContent.includes(DNS_PLACEHOLDER));
+        if (itemWithPlaceholder) {
+          const osanoLink = `<a href="#" onclick="Osano.cm.showDoNotSell()">${DNS_LINK_TEXT}</a>`;
+          itemWithPlaceholder.innerHTML = osanoLink;
+          itemWithPlaceholder.classList.add('osano-do-not-sell');
         }
       }
     });
