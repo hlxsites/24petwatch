@@ -75,6 +75,20 @@ function wrapImgsInLinks(container) {
 }
 
 /**
+ * Replaces DNS placeholder with Osano "Do Not Sell" link
+ * @param {Element} footer The footer element
+ */
+function addOsanoDoNotSellLink(footer) {
+  const osanoPlaceholder = footer.querySelector('[data-osano-placeholder="true"]');
+  if (osanoPlaceholder) {
+    const osanoLink = `<a href="#" onclick="Osano.cm.showDoNotSell()">${DNS_LINK_TEXT}</a>`;
+    osanoPlaceholder.innerHTML = osanoLink;
+    osanoPlaceholder.classList.add('osano-do-not-sell');
+    osanoPlaceholder.removeAttribute('data-osano-placeholder');
+  }
+}
+
+/**
  * loads and decorates the footer
  * @param {Element} block The footer block element
  */
@@ -177,14 +191,13 @@ export default async function decorate(block) {
       const uls = div.querySelectorAll('ul');
       if (uls.length > 0) {
         const lastUl = uls[uls.length - 1];
-        // Osano Do Not Sell link replacement
+        // Osano Do Not Sell link replacement - store for later to avoid URL rewriting
         const listItems = lastUl.querySelectorAll('li');
         // eslint-disable-next-line no-use-before-define,max-len
         const itemWithPlaceholder = [...listItems].find((li) => li.textContent.includes(DNS_PLACEHOLDER));
         if (itemWithPlaceholder) {
-          const osanoLink = `<a href="#" onclick="Osano.cm.showDoNotSell()">${DNS_LINK_TEXT}</a>`;
-          itemWithPlaceholder.innerHTML = osanoLink;
-          itemWithPlaceholder.classList.add('osano-do-not-sell');
+          // Mark for later processing to avoid URL rewriting
+          itemWithPlaceholder.setAttribute('data-osano-placeholder', 'true');
         }
       }
     });
@@ -193,6 +206,7 @@ export default async function decorate(block) {
     changeDomain(footer);
     addCanadaToLinks(footer);
     decorateLinks(footer);
+    addOsanoDoNotSellLink(footer);
     instrumentTrackingEvents(footer);
     block.append(footer);
   }
