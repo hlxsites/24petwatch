@@ -7,6 +7,7 @@ import {
   isCanada,
 } from '../../scripts/lib-franklin.js';
 import { changeDomain, addCanadaToLinks } from '../../scripts/scripts.js';
+import { DNS_LINK_TEXT, DNS_PLACEHOLDER } from '../../scripts/24petwatch-utils.js';
 
 const socialNetworks = ['Instagram', 'X', 'Facebook'];
 
@@ -171,6 +172,20 @@ export default async function decorate(block) {
         footer.appendChild(logo);
       } else {
         footer.appendChild(div);
+      }
+
+      const uls = div.querySelectorAll('ul');
+      if (uls.length > 0) {
+        const lastUl = uls[uls.length - 1];
+        // Osano Do Not Sell link replacement
+        const listItems = lastUl.querySelectorAll('li');
+        // eslint-disable-next-line no-use-before-define,max-len
+        const itemWithPlaceholder = [...listItems].find((li) => li.textContent.includes(DNS_PLACEHOLDER));
+        if (itemWithPlaceholder) {
+          const osanoLink = `<a href="#" onclick="Osano.cm.showDoNotSell()">${DNS_LINK_TEXT}</a>`;
+          itemWithPlaceholder.innerHTML = osanoLink;
+          itemWithPlaceholder.classList.add('osano-do-not-sell');
+        }
       }
     });
 
