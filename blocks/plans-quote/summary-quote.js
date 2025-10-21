@@ -11,9 +11,7 @@ import {
   CURRENCY_CANADA,
   CURRENCY_US,
   SS_KEY_SUMMARY_ACTION,
-  SS_KEY_AUTO_RENEW_PUMPKIN,
   DL_EVENTS,
-  PUMPKIN_ITEM_ID,
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
@@ -30,7 +28,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   const entryURL = sessionStorage.getItem(SS_KEY_FORM_ENTRY_URL);
   const autoRenewClasses = {
     autoRenewCheckbox: 'auto-renew-checkbox',
-    autoRenewCheckboxPumpkin: 'auto-renew-checkbox-pumpkin',
   };
 
   let ownerData = [];
@@ -143,15 +140,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       // Add checkout cart event
       trackGTMEvent(DL_EVENTS.checkout, checkoutCartDL);
     }
-  }
-
-  function setPumpkinAutoRenewCheckboxState(petId, isChecked) {
-    sessionStorage.setItem(`${SS_KEY_AUTO_RENEW_PUMPKIN}-${petId}`, isChecked);
-  }
-
-  function getPumpkinAutoRenewCheckboxState(petId) {
-    const state = sessionStorage.getItem(`${SS_KEY_AUTO_RENEW_PUMPKIN}-${petId}`) || 'true';
-    return state;
   }
 
   // checks if the proceed to payment button should be enabled or disabled
@@ -304,18 +292,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     `;
   }
 
-  function getPumpkinAutoRenewText(selectedProduct) {
-    if (selectedProduct.itemId === 'Annual Plan-DOGS' || selectedProduct.itemId === 'Annual Plan-CATS') {
-      return '';
-    }
-    return jsx`
-      <div class="auto-renew">
-          <div class="auto-renew-checkbox-container"><input type="checkbox" class="${autoRenewClasses.autoRenewCheckboxPumpkin}" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${getPumpkinAutoRenewCheckboxState(selectedProduct.petID) !== 'false' ? 'checked' : ''} data-checked-state="${getPumpkinAutoRenewCheckboxState(selectedProduct.petID)}" /></div>
-          <div class="auto-renew-text"><strong>Turn on auto-renew for Pumpkin Wellness Club subscription one month from date of purchase for $19.95/month (plus tax). Don't worry - you can cancel anytime in your account dashboard.</strong></div>
-      </div>
-    `;
-  }
-
   const numberOfItems = petsList.length ?? 0;
 
   const petListHTML = petsList.map((pet) => {
@@ -343,7 +319,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
             <div class="item-info-fragment" id="item-info-fragment-${pet.id}" data-selected-product-id="${selectedProduct.itemId}"></div>
         </div>
         <div class="auto-renew-container">
-          ${!isCanada ? getPumpkinAutoRenewText(selectedProduct) : ''}
           <div class="auto-renew">
               <div class="auto-renew-checkbox-container"><input type="checkbox" class="${autoRenewClasses.autoRenewCheckbox}" data-rec-id="${selectedProduct.quoteRecId}" data-pet-id="${selectedProduct.petID}" ${selectedProduct.autoRenew ? ' checked' : ''} /></div>
               <div class="auto-renew-text">${getAutoRenewText(selectedProduct.itemId)}</div>
@@ -461,23 +436,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     Loader.hideLoader();
   }
 
-  async function updateAutoRenewPumpkinHandler(target) {
-    Loader.showLoader();
-    const petID = target.getAttribute('data-pet-id');
-    const recID = target.getAttribute('data-rec-id');
-    const isChecked = target.checked;
-
-    try {
-      await APIClientObj.saveSelectedProduct(petID, recID, 1, isChecked, PUMPKIN_ITEM_ID);
-      setPumpkinAutoRenewCheckboxState(petID, isChecked);
-    } catch (status) {
-      // eslint-disable-next-line no-console
-      console.log('Failed to update the auto-renew for pet:', petID, ' status:', status);
-    }
-
-    Loader.hideLoader();
-  }
-
   function itemInfoFragmentButtonHandler(target) {
     const petID = target.getAttribute('data-pet-id');
     const itemInfoFragment = document.getElementById(`item-info-fragment-${petID}`);
@@ -497,9 +455,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       case event.target.classList.contains(`${autoRenewClasses.autoRenewCheckbox}`):
         updateAutoRenewHandler(event.target);
         break;
-      case event.target.classList.contains(`${autoRenewClasses.autoRenewCheckboxPumpkin}`):
-        updateAutoRenewPumpkinHandler(event.target);
-        break;
       case event.target.classList.contains('item-info-fragment-button'):
         itemInfoFragmentButtonHandler(event.target);
         break;
@@ -511,7 +466,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   function saveAutoRenewStates() {
     Loader.showLoader();
     // create an array of all checkboxes
-    const autoRenewCheckboxes = document.querySelectorAll(`.${autoRenewClasses.autoRenewCheckbox}, .${autoRenewClasses.autoRenewCheckboxPumpkin}`);
+    const autoRenewCheckboxes = document.querySelectorAll(`.${autoRenewClasses.autoRenewCheckbox}`);
     // if no checkboxes found, return
     if (autoRenewCheckboxes.length === 0) {
       return;
@@ -522,14 +477,10 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
       const isChecked = checkbox.checked;
       const petId = checkbox.getAttribute('data-pet-id');
       const recId = checkbox.getAttribute('data-rec-id');
-      const itemId = checkbox.classList.contains(autoRenewClasses.autoRenewCheckboxPumpkin) ? PUMPKIN_ITEM_ID : '';
+      const itemId = '';
 
       try {
         await APIClientObj.saveSelectedProduct(petId, recId, 1, isChecked, itemId);
-        // save states to sessionStorage for pumpkin as this is not accessible from the API
-        if (itemId && itemId === PUMPKIN_ITEM_ID) {
-          setPumpkinAutoRenewCheckboxState(petId, isChecked);
-        }
       } catch (status) {
         // eslint-disable-next-line no-console
         console.log('Failed to update the auto-renew for pet:', petId, ' status:', status);
