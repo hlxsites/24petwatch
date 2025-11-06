@@ -22,11 +22,11 @@ async function main(params) {
   // create a Logger
   const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' });
   // 24PW PRD credentials
-  const captchaSecret = '6LffTwQsAAAAAOzLe00QPIOjOr01wYVyQKRZRins';
+  const captchaSecret = '6LdpPxIqAAAAAOBI1_Bj5BJUv5luwoMBGM06WtsL';
 
   try {
     // 'info' is the default level if not set
-    logger.info('Calling the main action');
+    logger.info('Calling the main action.');
 
     // log parameters, only if params.LOG_LEVEL === 'debug'
     logger.error(stringParameters(params));
@@ -59,12 +59,10 @@ async function main(params) {
     logger.debug('reCAPTCHA response:', data);
 
     if (!captchaResponse.ok || !data.success) {
-      return errorResponse(400, 'Captcha Invalid', logger);
+      return errorResponse(400, 'Captcha Invalid!', logger);
     }
 
     // Send body to final endpoint
-    // TODO: Remove commented endpoint once the approach is approved
-    // const finalEndpoint = 'https://www.24petwatch.com/content/24petwatch/us/en/contact-us/jcr:content/root/container/container/container/container_copy_56622/contactus_1508797198.contactus.json';
     //const finalEndpoint = 'https://main--24petwatch--hlxsites.hlx.page/contact-us-form';
     const finalEndpoint = 'https://form.aem.page/main--24petwatch--hlxsites/contact-us-form';
     const finalResponse = await fetch(finalEndpoint, {
