@@ -22,7 +22,7 @@ async function main(params) {
   // create a Logger
   const logger = Core.Logger('main', { level: params.LOG_LEVEL || 'info' });
   // 24PW PRD credentials
-  const captchaSecret = '6LffTwQsAAAAAE85JQK4CArkGBjBbjIdWTBAnLwW';
+  const captchaSecret = '6LffTwQsAAAAAOzLe00QPIOjOr01wYVyQKRZRins';
 
   try {
     // 'info' is the default level if not set
@@ -65,7 +65,8 @@ async function main(params) {
     // Send body to final endpoint
     // TODO: Remove commented endpoint once the approach is approved
     // const finalEndpoint = 'https://www.24petwatch.com/content/24petwatch/us/en/contact-us/jcr:content/root/container/container/container/container_copy_56622/contactus_1508797198.contactus.json';
-    const finalEndpoint = 'https://main--24petwatch--hlxsites.hlx.page/contact-us-form';
+    //const finalEndpoint = 'https://main--24petwatch--hlxsites.hlx.page/contact-us-form';
+    const finalEndpoint = 'https://form.aem.page/main--24petwatch--hlxsites/contact-us-form';
     const finalResponse = await fetch(finalEndpoint, {
       method: 'POST',
       headers: {
