@@ -521,8 +521,10 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
     });
   }
 
-  // set PWC default opt-in
-  setPWCDefaultOptin();
+  // set PWC default opt-in US only
+  if (!isCanada) {
+    setPWCDefaultOptin();
+  }
 
   // run a check on all auto-renew checkboxes to save their states
   saveAutoRenewStates();
