@@ -12,6 +12,8 @@ import {
   CURRENCY_US,
   SS_KEY_SUMMARY_ACTION,
   DL_EVENTS,
+  PUMPKIN_ITEM_ID,
+  PUMPKIN_DEFAULT_OPTIN,
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
@@ -488,6 +490,40 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
 
       Loader.hideLoader();
     });
+  }
+
+  // foreach pet, set the PWC default opt-in
+  async function setPWCDefaultOptin() {
+    if (petsList.length === 0) {
+      return;
+    }
+
+    petsList.forEach(async (pet) => {
+      const selectedProduct = getSelectedProduct(pet.id);
+      if (!selectedProduct) {
+        return;
+      }
+
+      const { petID, quoteRecId } = selectedProduct;
+
+      try {
+        await APIClientObj.saveSelectedProduct(
+          petID,
+          quoteRecId,
+          1,
+          PUMPKIN_DEFAULT_OPTIN,
+          PUMPKIN_ITEM_ID,
+        );
+      } catch (status) {
+        // eslint-disable-next-line no-console
+        console.log('Failed to update the PWC opt-in for pet:', petID, ' status:', status);
+      }
+    });
+  }
+
+  // set PWC default opt-in US only
+  if (!isCanada) {
+    setPWCDefaultOptin();
   }
 
   // run a check on all auto-renew checkboxes to save their states

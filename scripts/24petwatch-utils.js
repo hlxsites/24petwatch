@@ -11,6 +11,7 @@ export const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|
 export const CURRENCY_CANADA = 'CAD';
 export const CURRENCY_US = 'USD';
 export const PUMPKIN_ITEM_ID = 'PLH_000016'; // Pumpkin Wellness Club item ID
+export const PUMPKIN_DEFAULT_OPTIN = true; // default opt-in for Pumpkin Wellness Club
 export const DNS_PLACEHOLDER = '{DNS}';
 export const DNS_LINK_TEXT = 'Do Not Sell or Share My Personal Information';
 
