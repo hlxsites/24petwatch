@@ -8,6 +8,7 @@ export const calcEnvironment = () => {
       'aem-dev\\.24petwatch\\.com': 'dev',
       'aem-stage\\.24petwatch\\.com': 'stage',
       '.*\\.hlx\\.page': 'dev',
+      '.*\\.aem\\.page': 'dev',
       localhost: 'dev',
     };
 
