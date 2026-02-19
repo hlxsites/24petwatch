@@ -4,7 +4,6 @@ import Loader from './loader.js';
 import formDecoration from './form.js';
 import {
   COOKIE_NAME_SAVED_OWNER_ID,
-  SS_KEY_FORM_ENTRY_URL,
   getCookie,
   getSelectedProductAdditionalInfo,
   getItemInfoFragment,
@@ -17,7 +16,6 @@ import {
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
-import { getConfigValue } from '../../scripts/configs.js';
 import { getIsMultiPet, isCostcoFigo } from './costco-promo.js';
 
 export default async function decorateSummaryQuote(block, apiBaseUrl) {
@@ -25,9 +23,7 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   const APIClientObj = new APIClient(apiBaseUrl);
   Loader.addLoader();
 
-  const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
   const ownerId = getCookie(COOKIE_NAME_SAVED_OWNER_ID);
-  const entryURL = sessionStorage.getItem(SS_KEY_FORM_ENTRY_URL);
   const autoRenewClasses = {
     autoRenewCheckbox: 'auto-renew-checkbox',
   };
@@ -189,67 +185,6 @@ export default async function decorateSummaryQuote(block, apiBaseUrl) {
   }
 
   Loader.hideLoader();
-
-  async function sendDataToSalesforce(owner, products, pets) {
-    Loader.showLoader();
-    if (!owner || !owner.email || !owner.id) {
-      Loader.hideLoader();
-      return;
-    }
-
-    if (!products || !products[0] || !products[0].petID) {
-      Loader.hideLoader();
-      return;
-    }
-
-    if (!pets || !pets[0] || !pets[0].petName || !pets[0].speciesId === undefined) {
-      Loader.hideLoader();
-      return;
-    }
-
-    if (!entryURL) {
-      Loader.hideLoader();
-      return;
-    }
-
-    if (selectedProducts.length > 0 && petsList.length > 0) {
-      const payload = {
-        payload: {
-          Data: {
-            ContactKey: ownerData.email,
-            EmailAddress: ownerData.email,
-            OrderCompleted: false,
-            OwnerId: ownerData.id,
-            PetId: selectedProducts[0].petID,
-            PetName: petsList[0].petName,
-            SiteURL: entryURL,
-            Species: petsList[0].speciesId === 1 ? 'Dog' : 'Cat',
-          },
-          EventDefinitionKey: 'APIEvent-6723a35b-b066-640c-1d7b-222f98caa9e1',
-          ContactKey: ownerData.email,
-        },
-      };
-
-      const options = {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      };
-      await fetch(salesforceProxyEndpoint, options);
-    }
-
-    Loader.hideLoader();
-  }
-
-  // Send data for abandoned cart journey
-  try {
-    await sendDataToSalesforce(ownerData, selectedProducts, petsList);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('There was an error sending the data to Salesforce', error);
-  }
 
   function getSelectedProduct(petId) {
     return selectedProducts.find((item) => item.petID === petId);

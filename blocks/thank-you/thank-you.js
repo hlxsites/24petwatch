@@ -10,15 +10,10 @@ import {
 } from '../../scripts/24petwatch-utils.js';
 import { isCanada } from '../../scripts/lib-franklin.js';
 import { trackGTMEvent } from '../../scripts/lib-analytics.js';
-import { getConfigValue } from '../../scripts/configs.js';
 
 // prep for API calls
 const apiBaseUrl = await getAPIBaseUrl();
-
 const APIClientObj = new APIClient(apiBaseUrl);
-
-// salesforce proxy
-const salesforceProxyEndpoint = await getConfigValue('salesforce-proxy');
 
 // Sequence of steps to get the owner info from the API
 
@@ -215,35 +210,6 @@ export default async function decorate() {
   // remove pet tags cookie
   if (!isMembershipFlow) {
     deleteCookie(COOKIE_NAME_FOR_PET_TAGS);
-  }
-
-  // Salesforce Upsert
-  async function setUpsertToSalesforce(email) {
-    const payload = {
-      payload: {
-        Data: {
-          OrderCompleted: true,
-        },
-        ContactKey: email,
-      },
-    };
-
-    const options = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(payload),
-    };
-    await fetch(salesforceProxyEndpoint, options);
-  }
-
-  // Send data for abandoned cart journey
-  try {
-    await setUpsertToSalesforce(getOwnerDetails.email);
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('There was an error sending the data to Salesforce', error);
   }
 
   const printButton = document.createElement('button');
