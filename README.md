@@ -2,8 +2,8 @@
 Your project's description...
 
 ## Environments
-- Preview: https://main--24petwatch--hlxsites.hlx.page/
-- Live: https://main--24petwatch--hlxsites.hlx.live/
+- Preview: https://main--24petwatch--hlxsites.aem.page/
+- Live: https://main--24petwatch--hlxsites.aem.live/
 
 ## Installation
 
@@ -40,6 +40,6 @@ graph LR
 ### CDN Setup
 
 The CDN has the following configuration:
-* `main--24petwatch--hlxsites.hlx.live` will handle `/blocks/*`, `/blog*`, `/styles/*`, `/scripts/*`
-* `main--24petwatch-crosswalk-prod--hlxsites.hlx.live` will handle `/`, `/ca`, `/media`, `/fragments/*`
+* `main--24petwatch--hlxsites.aem.live` will handle `/blocks/*`, `/blog*`, `/styles/*`, `/scripts/*`
+* `main--24petwatch-crosswalk-prod--hlxsites.aem.live` will handle `/`, `/ca`, `/media`, `/fragments/*`
 * `author-pXXXXXX-eYYYYY.adobeaemcloud.com/` will handle the rest
